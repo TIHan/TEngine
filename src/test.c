@@ -12,9 +12,9 @@ int main ()
   int sockfd;
 
   memset (&hints, 0, sizeof hints);
-  hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = SOCK_STREAM;
-  hints.ai_flags = AI_PASSIVE;
+  hints.ai_family = AF_INET;		// IPv4
+  hints.ai_socktype = SOCK_DGRAM;	// User Datagram Protocrol
+  hints.ai_flags = AI_PASSIVE;		// Use my local address.
 
   getaddrinfo (NULL, "4767", &hints, &res);
 
