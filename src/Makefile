@@ -1,7 +1,7 @@
-CXX		= g++
-CXXFLAGS	= -Wall -pedantic-errors -g
-SOURCES		= test.cpp
-OBJECTS		= $(SOURCES:.cpp=.o)
+CXX		= gcc
+CXXFLAGS	= -Wall -pedantic-errors -g -std=c99
+SOURCES		= test.c
+OBJECTS		= $(SOURCES:.c=.o)
 EXECUTABLE	= datagame-protocol-test
 
 all: $(SOURCES) $(EXECUTABLE)
