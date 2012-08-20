@@ -1,4 +1,4 @@
 datagame-protocol
 =================
 
-Currently, this will be used at a test for Datagram sockets.
+Currently, this will be used as a test for Datagram sockets.
