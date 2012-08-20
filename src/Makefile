@@ -1,5 +1,5 @@
 CXX		= gcc
-CXXFLAGS	= -Wall -pedantic-errors -g -std=c99
+CXXFLAGS	= -Wall -pedantic-errors -g -std=c99 `sdl-config --cflags --libs`
 SOURCES		= test.c
 OBJECTS		= $(SOURCES:.c=.o)
 EXECUTABLE	= datagame-protocol-test
@@ -12,5 +12,5 @@ $(EXECUTABLE): $(OBJECTS)
 clean:
 	rm -f $(OBJECTS) $(EXECUTABLE)
 
-.cpp.o:
+.c.o:
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
