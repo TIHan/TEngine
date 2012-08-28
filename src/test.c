@@ -13,16 +13,42 @@
 static int server_socket_func (void *data);
 static int client_socket_func (void *data);
 
+static int g_iSocketFileDescriptorIpV4 = -1;
+static int g_iSocketFileDescriptorIpV6 = -1;
+
+int dgp_init (unsigned short port)
+{
+  struct addrinfo hints, *res;
+  char portbuf[sizeof port];
+  
+  memset (&hints, 0, sizeof hints);
+  hints.ai_family = AF_UNSPEC;          // IPv4 and/or IPv6
+  hints.ai_socktype = SOCK_DGRAM;       // User Datagram Protocol
+  hints.ai_flags = AI_PASSIVE;          // Use my local address.
+  
+ // itoa (port, portbuff, 10);
+  
+  if (getaddrinfo (NULL, portbuf, &hints, &res) != 0)
+  {
+    fprintf (stderr, "(dgp_init) Error: Unable to get address info.\n");
+    return 1;
+  }
+  
+  
+  
+  return 0;
+}
+
 int main ()
 {
   // [WS] Initialize SDL.
   SDL_Init (SDL_INIT_EVERYTHING);
   
   SDL_Thread *thread = SDL_CreateThread (server_socket_func, NULL);
-  SDL_Thread *client_thread = SDL_CreateThread (client_socket_func, NULL);
+ // SDL_Thread *client_thread = SDL_CreateThread (client_socket_func, NULL);
   
   SDL_WaitThread (thread, NULL);
-  SDL_WaitThread (client_thread, NULL);
+ // SDL_WaitThread (client_thread, NULL);
 
   return -1;
 }
@@ -74,20 +100,20 @@ static int server_socket_func (void *data)
       exit (1);
     }
     
-    printf ("Server received %d bytes.\n", receive_length);
+    printf ("Server Received: %d bytes.\n", receive_length);
     
     union
     {
       int i;
       unsigned char buffer[4];
     } unpack;
-    
+        
     unpack.buffer[0] = buffer[0];
     unpack.buffer[1] = buffer[1];
     unpack.buffer[2] = buffer[2];
     unpack.buffer[3] = buffer[3];
 
-    printf ("Server Received: %d\n", unpack.i);
+    printf ("Server Received Number: %d\n", unpack.i);
     SDL_Delay (10);
   }
   
@@ -142,6 +168,14 @@ static int client_socket_func (void *data)
     }
     
     printf ("\nClient Sent: %d bytes.\n", send_length);
+    
+    char cont;
+    printf ("Continue? ");
+    scanf ("%1s", &	cont);
+    
+    if (cont == 'n')
+      exit(1);
+    
     SDL_Delay (10);
   } 
 }
