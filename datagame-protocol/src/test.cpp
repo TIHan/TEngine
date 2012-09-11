@@ -1,4 +1,19 @@
 #ifdef __GNUC__
+  #include <sys/types.h>
+  #include <sys/socket.h>
+  #include <netdb.h>
+  #include <arpa/inet.h>
+  #include <netinet/in.h>
+ #include <cstring>
+#elif _MSC_VER
+  #include <winsock2.h>
+  #include <ws2tcpip.h>
+
+  #pragma comment(lib, "ws2_32.lib")
+#endif
+#include <stdio.h>
+
+#ifdef __GNUC__
   typedef int8_t dgp_int8;
   typedef uint8_t dgp_uint8;
   typedef int16_t dgp_int16;
@@ -26,19 +41,6 @@ typedef struct _dgp_uint128
 typedef void* dgp_pointer;
 typedef float dgp_float;
 typedef double dgp_double;
-
-#ifdef __GNUC__
-  #include <sys/socket.h>
-  #include <netdb.h>
-  #include <arpa/inet.h>
-  #include <netinet/in.h>
-#elif _MSC_VER
-  #include <winsock2.h>
-  #include <ws2tcpip.h>
-
-  #pragma comment(lib, "ws2_32.lib")
-#endif
-#include <stdio.h>
 
 #define MAX_BUFFER_LENGTH 1024
 
@@ -95,6 +97,8 @@ dgp_int32 main ()
 {
   dgp_init (46767);
   //WSACleanup ();
+#ifdef _MSC_VER
     system ("pause");
+#endif
   return -1;
 }
