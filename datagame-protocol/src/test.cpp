@@ -66,7 +66,6 @@ dgp_int32 dgp_init (dgp_uint16 port) {
   memset (&hints, 0, sizeof hints);
   hints.ai_family = AF_UNSPEC;          /* IPv4 and/or IPv6 */
   hints.ai_socktype = SOCK_DGRAM;       /* User Datagram Protocol */
-  hints.ai_flags = AI_PASSIVE;          /* Use my local address. */
   
   if (getaddrinfo (NULL, "46767", &hints, &res) != 0) {
     fprintf (stderr, "(dgp_init) Error: Unable to get address info.\n");
