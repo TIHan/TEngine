@@ -4,7 +4,7 @@
   #include <netdb.h>
   #include <arpa/inet.h>
   #include <netinet/in.h>
- #include <cstring>
+  #include <cstring>
 #elif _MSC_VER
   #include <winsock2.h>
   #include <ws2tcpip.h>
@@ -76,11 +76,13 @@ dgp_int32 dgp_init (dgp_uint16 port) {
   for (p = res;p != NULL; p = p->ai_next) {
     if (p->ai_family == AF_INET) {
       g_iSocketFileDescriptorIpV4 = socket (p->ai_family, p->ai_socktype, p->ai_protocol);
-      inet_ntop (p->ai_family, p, ip, sizeof ip);
+      struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+      inet_ntop (p->ai_family, &ipv4->sin_addr, ip, sizeof ip);
       printf ("IPv4: %s\n", ip);
     } else if (p->ai_family == AF_INET6) {
       g_iSocketFileDescriptorIpV6 = socket (p->ai_family, p->ai_socktype, p->ai_protocol);
-      inet_ntop (p->ai_family, p, ip, sizeof ip);
+      struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)p->ai_addr;
+      inet_ntop (p->ai_family, &ipv6->sin6_addr, ip, sizeof ip);
       printf ("IPv6: %s\n", ip);
     }
   }
