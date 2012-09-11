@@ -13,3 +13,14 @@
 
 # Kate
 *~
+
+# MSVC
+Debug/*
+Release/*
+ipch/*
+*.sdf
+*.user
+*.suo
+*.opensdf
+datagame-protocol/src/Debug
+datagame-protocol/src/Release
