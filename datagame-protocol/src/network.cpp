@@ -4,6 +4,8 @@
   #include <arpa/inet.h>
   #include <netinet/in.h>
   #include <cstring>
+#include <stdlib.h>
+#include <unistd.h>
 #elif _MSC_VER
   #include <winsock2.h>
   #include <ws2tcpip.h>
@@ -57,17 +59,19 @@ namespace dgp {
       fprintf (stderr, "(network) Error: Unable to create a socket.\n");
       return;
     }
+
+    freeaddrinfo (res);
   }
 
   network::~network () {
-    if (m_iFileDescriptorSocket != 0) {
-      if (shutdown (m_iFileDescriptorSocket, 2) != 0)
-        fprintf (stderr, "(~network) Error: Unable to shutdown IPv4 socket.\n");
+    if (m_iFileDescriptorSocket != -1) {
+      if (close (m_iFileDescriptorSocket) != 0)
+        fprintf (stderr, "(~network) Error: Unable to close IPv4 socket.\n");
     }
 
-    if (m_iFileDescriptorSocket6 != 0) {
-      if (shutdown (m_iFileDescriptorSocket6, 2) != 0)
-        fprintf (stderr, "(~network) Error: Unable to shutdown IPv6 socket.\n");
+    if (m_iFileDescriptorSocket6 != -1) {
+      if (close (m_iFileDescriptorSocket6) != 0)
+        fprintf (stderr, "(~network) Error: Unable to close IPv6 socket.\n");
     }
   }
 
