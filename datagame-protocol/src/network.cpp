@@ -17,7 +17,7 @@
 
 namespace dgp {
   network::network (dgpUshort usPort) {
-    dgpAddressInfo hints, *p;
+    dgpAddressInfo hints, *res, *p;
     dgpChar portbuf[sizeof usPort];
     m_iFileDescriptorSocket = -1;
     m_iFileDescriptorSocket6 = -1;
@@ -40,12 +40,12 @@ namespace dgp {
     hints.ai_family = AF_UNSPEC;          /* IPv4 and/or IPv6 */
     hints.ai_socktype = SOCK_DGRAM;       /* User Datagram Protocol */
   
-    if (getaddrinfo (NULL, "46767", &hints, &m_pAddressInfo) != 0) {
+    if (getaddrinfo (NULL, "46767", &hints, &res) != 0) {
       fprintf (stderr, "(network) Error: Unable to get address info.\n");
       return;
     }
   
-    for (p = m_pAddressInfo; p != NULL; p = p->ai_next) {
+    for (p = res; p != NULL; p = p->ai_next) {
       if (p->ai_family == AF_INET) {
         m_iFileDescriptorSocket = socket (p->ai_family, p->ai_socktype, p->ai_protocol);
         m_pAddress = (struct sockaddr_in *)p->ai_addr;
@@ -71,8 +71,6 @@ namespace dgp {
       if (this->close (m_iFileDescriptorSocket6) != 0)
         fprintf (stderr, "(~network) Error: Unable to close IPv6 socket.\n");
     }
-
-    freeaddrinfo (m_pAddressInfo);
   }
 
   dgpInt network::close (dgpInt sockfd) {
