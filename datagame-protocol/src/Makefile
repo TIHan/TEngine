@@ -1,6 +1,6 @@
 CXX		= g++
 CXXFLAGS	= -Wall -pedantic-errors -g
-SOURCES		= test.cpp
+SOURCES		= test.cpp network.cpp
 OBJECTS		= $(SOURCES:.cpp=.o)
 EXECUTABLE	= datagame-protocol-test
 
