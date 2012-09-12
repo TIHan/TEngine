@@ -17,7 +17,7 @@
 
 namespace dgp {
   network::network (dgpUshort usPort) {
-    dgpAddressInfo hints, *res, *p;
+    struct addrinfo hints, *res, *p;
     dgpChar portbuf[sizeof usPort];
     m_iFileDescriptorSocket = -1;
     m_iFileDescriptorSocket6 = -1;
@@ -63,17 +63,17 @@ namespace dgp {
 
   network::~network () {
     if (m_iFileDescriptorSocket != -1) {
-      if (this->close (m_iFileDescriptorSocket) != 0)
+      if (closeSocket (m_iFileDescriptorSocket) != 0)
         fprintf (stderr, "(~network) Error: Unable to close IPv4 socket.\n");
     }
 
     if (m_iFileDescriptorSocket6 != -1) {
-      if (this->close (m_iFileDescriptorSocket6) != 0)
+      if (closeSocket (m_iFileDescriptorSocket6) != 0)
         fprintf (stderr, "(~network) Error: Unable to close IPv6 socket.\n");
     }
   }
 
-  dgpInt network::close (dgpInt sockfd) {
+  dgpInt network::closeSocket (dgpInt sockfd) {
 #ifdef __GNUC__
     return close (sockfd);
 #elif _MSC_VER
