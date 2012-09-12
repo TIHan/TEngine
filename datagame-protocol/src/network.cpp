@@ -61,12 +61,12 @@ namespace dgp {
 
   network::~network () {
     if (m_iFileDescriptorSocket != 0) {
-      if (shutdown (m_iFileDescriptorSocket, SD_BOTH) != 0)
+      if (shutdown (m_iFileDescriptorSocket, 2) != 0)
         fprintf (stderr, "(~network) Error: Unable to shutdown IPv4 socket.\n");
     }
 
     if (m_iFileDescriptorSocket6 != 0) {
-      if (shutdown (m_iFileDescriptorSocket6, SD_BOTH) != 0)
+      if (shutdown (m_iFileDescriptorSocket6, 2) != 0)
         fprintf (stderr, "(~network) Error: Unable to shutdown IPv6 socket.\n");
     }
   }
@@ -84,4 +84,4 @@ namespace dgp {
       printf ("IPv6: %s\n", ip);
     }
   }
-};
+}

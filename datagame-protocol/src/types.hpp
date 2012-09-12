@@ -3,7 +3,7 @@
 
 namespace dgp {
 #ifdef __GNUC__
-  #include <sys/types.h>
+  #include <stdint.h>
 
   typedef char dgpChar;
   typedef int8_t dgpInt8;
