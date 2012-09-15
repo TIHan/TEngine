@@ -1,5 +1,5 @@
-#ifndef DGPNETWORK_HPP
-#define DGPNETWORK_HPP
+#ifndef NETWORK_HPP
+#define NETWORK_HPP
 
 #include "types.hpp"
 
@@ -28,4 +28,4 @@ namespace dgp {
   };
 }
 
-#endif // DGPNETWORK_HPP
+#endif // NETWORK_HPP
