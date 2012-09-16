@@ -2,23 +2,15 @@
 #define NETWORK_HPP
 
 #include "types.hpp"
+#include "socket.hpp"
 
 #define MAX_BUFFER_LENGTH 1024
 
 namespace dgp {
 
-  typedef struct sockaddr_in dgpAddress;
-  typedef struct sockaddr_in6 dgpAddress6;
-
   class network {
-    dgpInt m_iFileDescriptorSocket;
-    dgpInt m_iFileDescriptorSocket6;
-    dgpAddress *m_pAddress;
-    dgpAddress6 *m_pAddress6;
-
+    socket *m_pSocket;
     dgpByte *m_bStream;
-
-    dgpInt closeSocket (dgpInt sockfd);
 
   public:
     network (dgpUshort usPort);

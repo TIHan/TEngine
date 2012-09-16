@@ -4,9 +4,11 @@
 
 using namespace dgp;
 
+#define DEFAULT_PORT 46767
+
 dgpInt main ()
 {
-  network *network = new dgp::network (46767);
+  network *network = new dgp::network (DEFAULT_PORT);
   network->printAddresses ();
   delete network;
 #ifdef _MSC_VER

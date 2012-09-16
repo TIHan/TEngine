@@ -12,12 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="network.cpp" />
+    <ClCompile Include="socket.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="byteio.hpp" />
     <ClInclude Include="dgp.hpp" />
     <ClInclude Include="network.hpp" />
+    <ClInclude Include="socket.hpp" />
     <ClInclude Include="types.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
