@@ -1,5 +1,5 @@
 CXX		= g++
-CXXFLAGS	= -Wall -pedantic-errors -g
+CXXFLAGS	= -Wall -pedantic-errors -g -Wno-variadic-macros
 SOURCES		= test.cpp network.cpp socket.cpp
 OBJECTS		= $(SOURCES:.cpp=.o)
 EXECUTABLE	= datagame-protocol-test
