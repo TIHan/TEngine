@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include "types.hpp"
 #include "socket.hpp"
+#include "assert.hpp"
 
 // createSocket
 dgp::dgpInt createSocket(dgp::dgpInt domain, dgp::dgpInt type, dgp::dgpInt protocol) {
@@ -43,9 +44,8 @@ namespace dgp {
     struct addrinfo hints, *p;
     m_iSocket = -1;
     m_iSocket6 = -1;
-    m_pAddress = NULL;
-    m_pAddress6 = NULL;
-    m_usPort = 1;
+    m_pAddress = 0;
+    m_pAddress6 = 0;
 
 #ifdef _MSC_VER
     WSADATA wsaData;
@@ -80,7 +80,7 @@ namespace dgp {
   
     if (m_iSocket == -1 && m_iSocket6 == -1) {
       fprintf (stderr, "(network) Error: Unable to create a socket.\n");
-      return;
+      exit (1);
     }
   }
 
@@ -94,6 +94,9 @@ namespace dgp {
 
   // close
   void socket::close () {
+    assertReturn(m_pAddress)
+    assertReturn(m_iSocket != -1 || m_iSocket6 != -1)
+
     if (m_pAddressInfo) {
       freeaddrinfo (m_pAddressInfo);
     }
@@ -112,6 +115,9 @@ namespace dgp {
   // bind
   dgpInt socket::bind (dgpUshort usPort) {
     dgpInt success = 0;
+
+    assertReturnVal((m_iSocket != -1 && m_pAddress) ||
+      (m_iSocket6 != -1 && m_pAddress6), -1)
 
     if (m_iSocket != -1 && m_pAddress) {
           struct sockaddr_in *sockaddr = (struct sockaddr_in *)m_pAddress->ai_addr;
@@ -133,5 +139,21 @@ namespace dgp {
       }
     }
     return success;
+  }
+
+  // getAddressText
+  void socket::getAddressText (dgpChar *pszAddress, dgpChar *pszAddress6) {
+    assertReturn(m_pAddress || m_pAddress6)
+
+    memset (pszAddress, 0, INET_ADDRSTRLEN);
+    memset (pszAddress6, 0, INET6_ADDRSTRLEN);
+
+    if (m_pAddress) {
+      inet_ntop (AF_INET, &m_pAddress, pszAddress, sizeof pszAddress);
+    }
+
+    if (m_pAddress6) {
+      inet_ntop (AF_INET6, &m_pAddress6, pszAddress6, sizeof pszAddress6);
+    }
   }
  }

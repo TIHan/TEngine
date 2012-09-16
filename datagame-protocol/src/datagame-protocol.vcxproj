@@ -16,6 +16,7 @@
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="assert.hpp" />
     <ClInclude Include="byteio.hpp" />
     <ClInclude Include="dgp.hpp" />
     <ClInclude Include="network.hpp" />

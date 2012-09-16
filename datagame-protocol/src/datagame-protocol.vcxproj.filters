@@ -41,5 +41,8 @@
     <ClInclude Include="socket.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="assert.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

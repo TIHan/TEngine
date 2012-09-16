@@ -25,7 +25,6 @@ namespace dgp {
     struct addrinfo *m_pAddressInfo;
     struct addrinfo *m_pAddress;
     struct addrinfo *m_pAddress6;
-    dgpUshort m_usPort;
 
   public:
     socket ();
@@ -33,6 +32,7 @@ namespace dgp {
 
     void close ();
     dgpInt bind (dgpUshort usPort);
+    void getAddressText (dgpChar *pszAddress, dgpChar *pszAddress6);
 
   };
 }
