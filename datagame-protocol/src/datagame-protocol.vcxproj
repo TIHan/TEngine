@@ -19,6 +19,7 @@
     <ClInclude Include="assert.hpp" />
     <ClInclude Include="byteio.hpp" />
     <ClInclude Include="dgp.hpp" />
+    <ClInclude Include="error.hpp" />
     <ClInclude Include="network.hpp" />
     <ClInclude Include="socket.hpp" />
     <ClInclude Include="types.hpp" />

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "network.hpp"
 #include "socket.hpp"
+#include "assert.hpp"
 
 namespace dgp {
   network::network (dgpUshort usPort) {
@@ -16,12 +17,16 @@ namespace dgp {
     dgpChar ip[IP_STRLEN];
     dgpChar ip6[IP6_STRLEN];
 
+    assertReturn(m_pSocket)
+
     m_pSocket->getAddressText (ip, ip6);
 
-    if (ip)
+    if (ip[0]) {
       printf ("IPv4: %s\n", ip);
+    }
 
-    if (ip6)
+    if (ip6[0]) {
       printf ("IPv6: %s\n", ip6);
+    }
   }
 }

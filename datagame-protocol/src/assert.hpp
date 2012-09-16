@@ -3,15 +3,18 @@
 
 #include <stdio.h>
 
+#define ASSERT_WARNING \
+  printf ("(%s) Warning: Assertion failed at line %i.\n", __FUNCTION__, __LINE__); \
+
 #define assertReturn(expr) \
   if (!(expr)) { \
-    printf ("(%s) Warning: Assertion failed at line %i.\n", __FUNCTION__, __LINE__); \
+    ASSERT_WARNING \
     return; \
   } \
 
 #define assertReturnVal(expr, val) \
   if (!(expr)) { \
-    printf ("(%s) Warning: Assertion failed at line %i.\n", __FUNCTION__, __LINE__); \
+    ASSERT_WARNING \
     return val; \
   } \
 

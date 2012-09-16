@@ -17,6 +17,7 @@
 #include "types.hpp"
 #include "socket.hpp"
 #include "assert.hpp"
+#include "error.hpp"
 
 // createSocket
 dgp::dgpInt createSocket(dgp::dgpInt domain, dgp::dgpInt type, dgp::dgpInt protocol) {
@@ -54,7 +55,7 @@ namespace dgp {
     // Initialize Winsock
     wsaResult = WSAStartup (MAKEWORD(2,2), &wsaData);
     if (wsaResult != 0) {
-      printf("(network) Error: WSAStartup failed: %d\n", wsaResult);
+      ERROR_MESSAGE_FORMAT("WSAStartup failed with result %i", wsaResult)
       return;
     }
 #endif
@@ -64,7 +65,7 @@ namespace dgp {
     hints.ai_socktype = SOCK_DGRAM;       /* User Datagram Protocol */
   
     if (getaddrinfo (NULL, "1", &hints, &m_pAddressInfo) != 0) {
-      fprintf (stderr, "(network) Error: Unable to get address info.\n");
+      ERROR_MESSAGE("Unable to get address info")
       return;
     }
   
@@ -79,7 +80,7 @@ namespace dgp {
     }
   
     if (m_iSocket == -1 && m_iSocket6 == -1) {
-      fprintf (stderr, "(network) Error: Unable to create a socket.\n");
+      ERROR_MESSAGE("Unable to create a socket")
       exit (1);
     }
   }
@@ -103,18 +104,19 @@ namespace dgp {
 
     if (m_iSocket != -1) {
       if (closeSocket (m_iSocket) != 0)
-        fprintf (stderr, "(socket::close) Error: Unable to close IPv4 socket.\n");
+        ERROR_MESSAGE("Unable to close IPv4 socket")
     }
 
     if (m_iSocket6 != -1) {
       if (closeSocket (m_iSocket6) != 0)
-        fprintf (stderr, "(socket::close) Error: Unable to close IPv6 socket.\n");
+        ERROR_MESSAGE("Unable to close IPv6 socket")
     }
   }
 
   // bind
   dgpInt socket::bind (dgpUshort usPort) {
     dgpInt success = 0;
+    ERROR_MESSAGE_FORMAT("Unable to associated IPv4 socket with port %i %i %i", usPort, usPort, usPort)
 
     assertReturnVal((m_iSocket != -1 && m_pAddress) ||
       (m_iSocket6 != -1 && m_pAddress6), -1)
@@ -124,7 +126,7 @@ namespace dgp {
           sockaddr->sin_port = usPort;
 
       if (bindSocket (m_iSocket, m_pAddress->ai_addr, m_pAddress->ai_addrlen) != 0) {
-        fprintf (stderr, "(socket::listen) Error: Unable to associated IPv4 socket with port %i.\n", usPort);
+        ERROR_MESSAGE_FORMAT("Unable to associated IPv4 socket with port %i", usPort)
         success = -1;
       }
     }
@@ -134,7 +136,7 @@ namespace dgp {
           sockaddr->sin6_port = usPort;
 
       if (bindSocket (m_iSocket6, m_pAddress6->ai_addr, m_pAddress6->ai_addrlen) != 0) {
-        fprintf (stderr, "(socket::listen) Error: Unable to associated IPv6 socket with port %i.\n", usPort);
+        ERROR_MESSAGE_FORMAT("Unable to associated IPv4 socket with port %i", usPort)
         success = -1;
       }
     }
@@ -148,9 +150,15 @@ namespace dgp {
     if (m_pAddress) {
       inet_ntop (AF_INET, &(((struct sockaddr_in *)m_pAddress->ai_addr)->sin_addr), pszAddress, IP_STRLEN);
     }
+    else {
+      pszAddress[0] = 0;
+    }
 
     if (m_pAddress6) {
       inet_ntop (AF_INET6, &(((struct sockaddr_in6 *)m_pAddress6->ai_addr)->sin6_addr), pszAddress6, IP6_STRLEN);
+    }
+    else {
+      pszAddress6[0] = 0;
     }
   }
  }
