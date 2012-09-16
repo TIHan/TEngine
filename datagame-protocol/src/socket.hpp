@@ -22,6 +22,7 @@ namespace dgp {
   class socket {
     dgpInt m_iSocket;
     dgpInt m_iSocket6;
+    struct addrinfo *m_pAddressInfo;
     struct addrinfo *m_pAddress;
     struct addrinfo *m_pAddress6;
     dgpUshort m_usPort;

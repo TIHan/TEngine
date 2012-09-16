@@ -40,7 +40,7 @@ namespace dgp {
 
   // socket
   socket::socket () {
-    struct addrinfo hints, *res, *p;
+    struct addrinfo hints, *p;
     m_iSocket = -1;
     m_iSocket6 = -1;
     m_pAddress = NULL;
@@ -63,12 +63,12 @@ namespace dgp {
     hints.ai_family = AF_UNSPEC;          /* IPv4 and/or IPv6 */
     hints.ai_socktype = SOCK_DGRAM;       /* User Datagram Protocol */
   
-    if (getaddrinfo (NULL, "1", &hints, &res) != 0) {
+    if (getaddrinfo (NULL, "1", &hints, &m_pAddressInfo) != 0) {
       fprintf (stderr, "(network) Error: Unable to get address info.\n");
       return;
     }
   
-    for (p = res; p != NULL; p = p->ai_next) {
+    for (p = m_pAddressInfo; p != NULL; p = p->ai_next) {
       if (p->ai_family == AF_INET) {
         m_iSocket = createSocket (p->ai_family, p->ai_socktype, p->ai_protocol);
         m_pAddress = p;
@@ -94,6 +94,10 @@ namespace dgp {
 
   // close
   void socket::close () {
+    if (m_pAddressInfo) {
+      freeaddrinfo (m_pAddressInfo);
+    }
+
     if (m_iSocket != -1) {
       if (closeSocket (m_iSocket) != 0)
         fprintf (stderr, "(socket::close) Error: Unable to close IPv4 socket.\n");
