@@ -18,6 +18,9 @@
 
 #include "types.hpp"
 
+#define IP_STRLEN INET_ADDRSTRLEN
+#define IP6_STRLEN INET6_ADDRSTRLEN
+
 namespace dgp {
   class socket {
     dgpInt m_iSocket;

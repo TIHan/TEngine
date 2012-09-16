@@ -12,18 +12,16 @@ namespace dgp {
     delete m_pSocket;
   }
 
-
   void network::printAddresses () {
-    /*dgpChar ip[INET6_ADDRSTRLEN];
+    dgpChar ip[IP_STRLEN];
+    dgpChar ip6[IP6_STRLEN];
 
-    if (m_pAddress) {
-      inet_ntop (AF_INET, &m_pAddress->sin_addr, ip, sizeof ip);
+    m_pSocket->getAddressText (ip, ip6);
+
+    if (ip)
       printf ("IPv4: %s\n", ip);
-    }
 
-    if (m_pAddress6) {
-      inet_ntop (AF_INET6, &m_pAddress6->sin6_addr, ip, sizeof ip);
-      printf ("IPv6: %s\n", ip);
-    }*/
+    if (ip6)
+      printf ("IPv6: %s\n", ip6);
   }
 }

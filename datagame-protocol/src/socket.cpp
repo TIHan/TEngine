@@ -145,15 +145,12 @@ namespace dgp {
   void socket::getAddressText (dgpChar *pszAddress, dgpChar *pszAddress6) {
     assertReturn(m_pAddress || m_pAddress6)
 
-    memset (pszAddress, 0, INET_ADDRSTRLEN);
-    memset (pszAddress6, 0, INET6_ADDRSTRLEN);
-
     if (m_pAddress) {
-      inet_ntop (AF_INET, &m_pAddress, pszAddress, sizeof pszAddress);
+      inet_ntop (AF_INET, &(((struct sockaddr_in *)m_pAddress->ai_addr)->sin_addr), pszAddress, IP_STRLEN);
     }
 
     if (m_pAddress6) {
-      inet_ntop (AF_INET6, &m_pAddress6, pszAddress6, sizeof pszAddress6);
+      inet_ntop (AF_INET6, &(((struct sockaddr_in6 *)m_pAddress6->ai_addr)->sin6_addr), pszAddress6, IP6_STRLEN);
     }
   }
  }
