@@ -116,7 +116,6 @@ namespace dgp {
   // bind
   dgpInt socket::bind (dgpUshort usPort) {
     dgpInt success = 0;
-    ERROR_MESSAGE_FORMAT("Unable to associated IPv4 socket with port %i %i %i", usPort, usPort, usPort)
 
     assertReturnVal((m_iSocket != -1 && m_pAddress) ||
       (m_iSocket6 != -1 && m_pAddress6), -1)
