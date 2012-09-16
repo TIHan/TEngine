@@ -1,10 +1,12 @@
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
-namespace dgp {
 #ifdef __GNUC__
   #include <stdint.h>
+#endif
 
+namespace dgp {
+#ifdef __GNUC__
   typedef char dgpChar;
   typedef int8_t dgpInt8;
   typedef uint8_t dgpByte;
