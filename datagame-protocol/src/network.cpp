@@ -7,7 +7,7 @@ namespace dgp {
   network::network (dgpUshort usPort) {
     m_pSocket = new socket ();
     m_pSocket->bind (usPort);
-    m_pSocket->send ("LOLOL");
+    m_pSocket->send ("LOLOL", "localhost", "4767");
     m_pSocket->receive ((dgpChar *)m_bStream);
   }
 

@@ -61,8 +61,9 @@ namespace dgp {
 #endif
   
     memset (&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;          /* IPv4 and/or IPv6 */
+    hints.ai_family = AF_INET;          /* IPv4 and/or IPv6 */
     hints.ai_socktype = SOCK_DGRAM;       /* User Datagram Protocol */
+    hints.ai_flags = AI_PASSIVE;
   
     if (getaddrinfo (NULL, "4767", &hints, &m_pAddressInfo) != 0) {
       ERROR_MESSAGE("Unable to get address info")
@@ -169,22 +170,32 @@ namespace dgp {
     socklen_t addr_len = sizeof sock_addr;
     
     dgpInt bytes = 0;
-    if (bytes = recvfrom (m_iSocket6, pBuffer, MAX_BUFFER, 0, &sock_addr, &addr_len) == -1) {
-      if (bytes = recvfrom (m_iSocket, pBuffer, MAX_BUFFER, 0, &sock_addr, &addr_len) == -1) {
-        ERROR_MESSAGE("Failed to receive packet")
-        return -1;
-      }
+    if (bytes = recvfrom (m_iSocket, pBuffer, MAX_BUFFER, 0, &sock_addr, &addr_len) == -1) {
+      ERROR_MESSAGE("Failed to receive packet")
+      return -1;
     }
+
     printf ("Message received. Got %i bytes.\n", bytes);
     return 0;
   }
 
   // send
-  dgpInt socket::send (dgpChar *pBuffer) {
+  dgpInt socket::send (dgpChar *pBuffer, dgpChar *pHost, dgpChar *pPort) {
     assertReturnVal(m_iSocket != -1 || m_iSocket6 != -1, -1)
 
+    struct addrinfo hints, *res;
+    int result_getaddrinfo = getaddrinfo (pHost, pPort, &hints, &res);
+
+    if (result_getaddrinfo != 0)
+    {
+      fprintf (stderr, "getaddrinfo: %s\n", gai_strerror (result_getaddrinfo));
+      system("pause");
+      exit (1);
+    }
+
+    int sockfd = createSocket (res->ai_family, res->ai_socktype, res->ai_protocol);
     dgpInt bytes = 0;
-    if (bytes = sendto (m_iSocket, "LO", 4, 0, m_pAddress->ai_addr, m_pAddress->ai_addrlen) == -1) {
+    if (bytes = sendto (sockfd, "LO", 4, 0, res->ai_addr, res->ai_addrlen) == -1) {
       ERROR_MESSAGE("Failed to send packet")
       return -1;
     }
