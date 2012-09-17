@@ -191,7 +191,7 @@ namespace dgp {
 
   //**************************************************
   // send
-  dgpInt socket::send (dgpChar *pBuffer, dgpChar *pNodeName, dgpChar *pServiceName) {
+  dgpInt socket::send (const dgpChar *pBuffer, const dgpChar *pNodeName, const dgpChar *pServiceName) {
     assertReturnVal(m_iSocket != -1 || m_iSocket6 != -1, -1)
     
     int sendfd, bytes;
@@ -203,7 +203,7 @@ namespace dgp {
     hints.ai_socktype = SOCK_DGRAM;
 
     if (getaddrinfo (pNodeName, pServiceName, &hints, &addrinfo) != 0) {
-      ERROR_MESSAGE_FORMAT ("Can't get address info")
+      ERROR_MESSAGE("Can't get address info")
       return -1;
     }
     sendfd = createSocket (addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
