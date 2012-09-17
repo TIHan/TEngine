@@ -30,6 +30,8 @@ namespace dgp {
     struct addrinfo *m_pAddress;
     struct addrinfo *m_pAddress6;
 
+    dgpInt find (dgpChar *pNodeName, dgpChar *pServiceName, struct addrinfo *pAddressTo);
+
   public:
     socket ();
     ~socket ();
@@ -38,8 +40,7 @@ namespace dgp {
     dgpInt bind (dgpUshort usPort);
     void getAddressText (dgpChar *pszAddress, dgpChar *pszAddress6);
     dgpInt receive (dgpChar *pBuffer);
-    dgpInt send (dgpChar *pBuffer, dgpChar *pHost, dgpChar *pPort);
-
+    dgpInt send (dgpChar *pBuffer, dgpChar *pNodeName, dgpChar *pServiceName);
   };
 }
 

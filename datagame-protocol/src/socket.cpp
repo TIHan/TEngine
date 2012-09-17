@@ -20,17 +20,17 @@
 #include "error.hpp"
 
 // createSocket
-dgp::dgpInt createSocket(dgp::dgpInt domain, dgp::dgpInt type, dgp::dgpInt protocol) {
+static dgp::dgpInt createSocket(dgp::dgpInt domain, dgp::dgpInt type, dgp::dgpInt protocol) {
   return socket (domain, type, protocol);
 }
 
 // bindSocket
-dgp::dgpInt bindSocket(dgp::dgpInt sockfd, struct sockaddr *my_addr, dgp::dgpInt addrlen) {
+static dgp::dgpInt bindSocket(dgp::dgpInt sockfd, struct sockaddr *my_addr, dgp::dgpInt addrlen) {
   return bind (sockfd, my_addr, addrlen);
 }
 
 // closeSocket
-dgp::dgpInt closeSocket (dgp::dgpInt sockfd) {
+static dgp::dgpInt closeSocket (dgp::dgpInt sockfd) {
 #ifdef __GNUC__
     return close (sockfd);
 #elif _MSC_VER
@@ -64,7 +64,7 @@ namespace dgp {
     hints.ai_family = AF_INET;          /* IPv4 and/or IPv6 */
     hints.ai_socktype = SOCK_DGRAM;       /* User Datagram Protocol */
   
-    if (getaddrinfo (NULL, "4767", &hints, &m_pAddressInfo) != 0) {
+    if (getaddrinfo (NULL, "1", &hints, &m_pAddressInfo) != 0) {
       ERROR_MESSAGE("Unable to get address info")
       return;
     }
@@ -122,7 +122,7 @@ namespace dgp {
 
     if (m_iSocket != -1 && m_pAddress) {
           struct sockaddr_in *sockaddr = (struct sockaddr_in *)m_pAddress->ai_addr;
-        //  sockaddr->sin_port = usPort;
+          sockaddr->sin_port = ntohs (usPort);
 
       if (bindSocket (m_iSocket, m_pAddress->ai_addr, m_pAddress->ai_addrlen) != 0) {
         ERROR_MESSAGE_FORMAT("Unable to associated IPv4 socket with port %i", usPort)
@@ -132,7 +132,7 @@ namespace dgp {
 
     if (m_iSocket6 != -1 && m_pAddress6) {
           struct sockaddr_in6 *sockaddr = (struct sockaddr_in6 *)m_pAddress6->ai_addr;
-       //   sockaddr->sin6_port = usPort;
+          sockaddr->sin6_port = ntohs (usPort);
 
       if (bindSocket (m_iSocket6, m_pAddress6->ai_addr, m_pAddress6->ai_addrlen) != 0) {
         ERROR_MESSAGE_FORMAT("Unable to associated IPv4 socket with port %i", usPort)
@@ -180,27 +180,58 @@ namespace dgp {
   }
 
   // send
-  dgpInt socket::send (dgpChar *pBuffer, dgpChar *pHost, dgpChar *pPort) {
+  dgpInt socket::send (dgpChar *pBuffer, dgpChar *pNodeName, dgpChar *pServiceName) {
     assertReturnVal(m_iSocket != -1 || m_iSocket6 != -1, -1)
+    
+    int sendfd;
+    struct addrinfo *addrinfo;
 
-    struct addrinfo hints, *res;
+    struct addrinfo hints;
+
     memset (&hints, 0, sizeof hints);
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
 
-    if (getaddrinfo (pHost, pPort, &hints, &res) != 0) {
+    if (getaddrinfo (pNodeName, pServiceName, &hints, &addrinfo) != 0) {
       ERROR_MESSAGE_FORMAT ("Can't get address info")
       return -1;
     }
+    sendfd = createSocket (addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
 
-    int sockfd = createSocket (res->ai_family, res->ai_socktype, res->ai_protocol);
+    int i; 
+    printf ("Enter Number: ");
+    scanf ("%d", &i);
+    
+    unsigned char buffer[MAX_BUFFER];
+    
+    buffer[0] = i;
+    buffer[1] = i >> 8;
+    buffer[2] = i >> 16;
+    buffer[3] = i >> 24;
+    
+    printf ("Client Sent Number: %d\n", i);
 
-    int bytes;
-    if (bytes = sendto (sockfd, pBuffer, 4, 0, res->ai_addr, res->ai_addrlen) == -1) {
+    int bytes = sendto (sendfd, (dgpChar*)buffer, 4, 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
+    if (bytes == -1) {
       ERROR_MESSAGE("Failed to send packet")
       return -1;
     }
     printf ("Message sent. Got %i bytes.\n", bytes);
     return 0;
+  }
+
+  // find
+  dgpInt socket::find (dgpChar *pNodeName, dgpChar *pServiceName, struct addrinfo *pAddressTo) {
+    struct addrinfo hints;
+
+    memset (&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_DGRAM;
+
+    if (getaddrinfo (pNodeName, pServiceName, &hints, &pAddressTo) != 0) {
+      ERROR_MESSAGE_FORMAT ("Can't get address info")
+      return -1;
+    }
+    return createSocket (pAddressTo->ai_family, pAddressTo->ai_socktype, pAddressTo->ai_protocol);
   }
  }
