@@ -38,7 +38,7 @@ namespace dgp {
     dgpInt bind (dgpUshort usPort);
     void getAddressText (dgpChar *pszAddress, dgpChar *pszAddress6);
     dgpInt receive (dgpChar *pBuffer);
-    dgpInt socket::send (dgpChar *pBuffer, dgpChar *pHost, dgpChar *pPort);
+    dgpInt send (dgpChar *pBuffer, dgpChar *pHost, dgpChar *pPort);
 
   };
 }
