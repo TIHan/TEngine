@@ -63,13 +63,12 @@ namespace dgp {
     memset (&hints, 0, sizeof hints);
     hints.ai_family = AF_INET;          /* IPv4 and/or IPv6 */
     hints.ai_socktype = SOCK_DGRAM;       /* User Datagram Protocol */
-    hints.ai_flags = AI_PASSIVE;
   
-    if (getaddrinfo (NULL, "4767", &hints, &m_pAddressInfo) != 0) {
+    if (getaddrinfo ("localhost", "4767", &hints, &m_pAddressInfo) != 0) {
       ERROR_MESSAGE("Unable to get address info")
       return;
     }
-  
+
     for (p = m_pAddressInfo; p != NULL; p = p->ai_next) {
       if (p->ai_family == AF_INET) {
         m_iSocket = createSocket (p->ai_family, p->ai_socktype, p->ai_protocol);
@@ -79,7 +78,7 @@ namespace dgp {
         m_pAddress6 = p;
       }
     }
-  
+
     if (m_iSocket == -1 && m_iSocket6 == -1) {
       ERROR_MESSAGE("Unable to create a socket")
       exit (1);
@@ -184,18 +183,32 @@ namespace dgp {
     assertReturnVal(m_iSocket != -1 || m_iSocket6 != -1, -1)
 
     struct addrinfo hints, *res;
-    int result_getaddrinfo = getaddrinfo (pHost, pPort, &hints, &res);
+    memset (&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_DGRAM;
 
-    if (result_getaddrinfo != 0)
-    {
-      fprintf (stderr, "getaddrinfo: %s\n", gai_strerror (result_getaddrinfo));
-      system("pause");
-      exit (1);
+    if (getaddrinfo (pHost, pPort, &hints, &res) != 0) {
+      ERROR_MESSAGE_FORMAT ("Can't get address info")
+      return -1;
     }
 
     int sockfd = createSocket (res->ai_family, res->ai_socktype, res->ai_protocol);
-    dgpInt bytes = 0;
-    if (bytes = sendto (sockfd, "LO", 4, 0, res->ai_addr, res->ai_addrlen) == -1) {
+
+    int i; 
+    printf ("Enter Number: ");
+    scanf_s ("%d", &i);
+    
+    char buffer[MAX_BUFFER];
+    
+    buffer[0] = i;
+    buffer[1] = i >> 8;
+    buffer[2] = i >> 16;
+    buffer[3] = i >> 24;
+    
+    printf ("Client Sent Number: %d\n", i);
+
+    int bytes;
+    if (bytes = sendto (sockfd, buffer, 4, 0, res->ai_addr, res->ai_addrlen) == -1) {
       ERROR_MESSAGE("Failed to send packet")
       return -1;
     }
