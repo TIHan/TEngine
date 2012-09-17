@@ -5,7 +5,7 @@
 
 using namespace dgp;
 
-#define DEFAULT_PORT 46767
+#define DEFAULT_PORT 4767
 
 dgpInt main ()
 {

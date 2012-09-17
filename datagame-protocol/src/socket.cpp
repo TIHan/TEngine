@@ -64,7 +64,7 @@ namespace dgp {
     hints.ai_family = AF_UNSPEC;          /* IPv4 and/or IPv6 */
     hints.ai_socktype = SOCK_DGRAM;       /* User Datagram Protocol */
   
-    if (getaddrinfo (NULL, "1", &hints, &m_pAddressInfo) != 0) {
+    if (getaddrinfo (NULL, "4767", &hints, &m_pAddressInfo) != 0) {
       ERROR_MESSAGE("Unable to get address info")
       return;
     }
@@ -159,5 +159,36 @@ namespace dgp {
     else {
       pszAddress6[0] = 0;
     }
+  }
+
+  // receive
+  dgpInt socket::receive (dgpChar *pBuffer) {
+    assertReturnVal(m_iSocket != -1 || m_iSocket6 != -1, -1)
+
+    struct sockaddr sock_addr;
+    socklen_t addr_len = sizeof sock_addr;
+    
+    dgpInt bytes = 0;
+    if (bytes = recvfrom (m_iSocket6, pBuffer, MAX_BUFFER, 0, &sock_addr, &addr_len) == -1) {
+      if (bytes = recvfrom (m_iSocket, pBuffer, MAX_BUFFER, 0, &sock_addr, &addr_len) == -1) {
+        ERROR_MESSAGE("Failed to receive packet")
+        return -1;
+      }
+    }
+    printf ("Message received. Got %i bytes.\n", bytes);
+    return 0;
+  }
+
+  // send
+  dgpInt socket::send (dgpChar *pBuffer) {
+    assertReturnVal(m_iSocket != -1 || m_iSocket6 != -1, -1)
+
+    dgpInt bytes = 0;
+    if (bytes = sendto (m_iSocket, "LO", 4, 0, m_pAddress->ai_addr, m_pAddress->ai_addrlen) == -1) {
+      ERROR_MESSAGE("Failed to send packet")
+      return -1;
+    }
+    printf ("Message sent. Got %i bytes.\n", bytes);
+    return 0;
   }
  }

@@ -20,6 +20,7 @@
 
 #define IP_STRLEN INET_ADDRSTRLEN
 #define IP6_STRLEN INET6_ADDRSTRLEN
+#define MAX_BUFFER 1400
 
 namespace dgp {
   class socket {
@@ -36,6 +37,8 @@ namespace dgp {
     void close ();
     dgpInt bind (dgpUshort usPort);
     void getAddressText (dgpChar *pszAddress, dgpChar *pszAddress6);
+    dgpInt receive (dgpChar *pBuffer);
+    dgpInt send (dgpChar *pBuffer);
 
   };
 }
