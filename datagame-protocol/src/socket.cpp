@@ -64,7 +64,7 @@ namespace dgp {
     hints.ai_family = AF_INET;          /* IPv4 and/or IPv6 */
     hints.ai_socktype = SOCK_DGRAM;       /* User Datagram Protocol */
   
-    if (getaddrinfo ("localhost", "4767", &hints, &m_pAddressInfo) != 0) {
+    if (getaddrinfo (NULL, "4767", &hints, &m_pAddressInfo) != 0) {
       ERROR_MESSAGE("Unable to get address info")
       return;
     }
@@ -122,7 +122,7 @@ namespace dgp {
 
     if (m_iSocket != -1 && m_pAddress) {
           struct sockaddr_in *sockaddr = (struct sockaddr_in *)m_pAddress->ai_addr;
-          sockaddr->sin_port = usPort;
+        //  sockaddr->sin_port = usPort;
 
       if (bindSocket (m_iSocket, m_pAddress->ai_addr, m_pAddress->ai_addrlen) != 0) {
         ERROR_MESSAGE_FORMAT("Unable to associated IPv4 socket with port %i", usPort)
@@ -132,7 +132,7 @@ namespace dgp {
 
     if (m_iSocket6 != -1 && m_pAddress6) {
           struct sockaddr_in6 *sockaddr = (struct sockaddr_in6 *)m_pAddress6->ai_addr;
-          sockaddr->sin6_port = usPort;
+       //   sockaddr->sin6_port = usPort;
 
       if (bindSocket (m_iSocket6, m_pAddress6->ai_addr, m_pAddress6->ai_addrlen) != 0) {
         ERROR_MESSAGE_FORMAT("Unable to associated IPv4 socket with port %i", usPort)
@@ -168,8 +168,9 @@ namespace dgp {
     struct sockaddr sock_addr;
     socklen_t addr_len = sizeof sock_addr;
     
-    dgpInt bytes = 0;
-    if (bytes = recvfrom (m_iSocket, pBuffer, MAX_BUFFER, 0, &sock_addr, &addr_len) == -1) {
+    dgpChar buffer[MAX_BUFFER];
+    dgpInt bytes = recvfrom (m_iSocket, buffer, MAX_BUFFER - 1, 0, &sock_addr, &addr_len);
+    if (bytes == -1) {
       ERROR_MESSAGE("Failed to receive packet")
       return -1;
     }
@@ -194,21 +195,8 @@ namespace dgp {
 
     int sockfd = createSocket (res->ai_family, res->ai_socktype, res->ai_protocol);
 
-    int i; 
-    printf ("Enter Number: ");
-    scanf_s ("%d", &i);
-    
-    char buffer[MAX_BUFFER];
-    
-    buffer[0] = i;
-    buffer[1] = i >> 8;
-    buffer[2] = i >> 16;
-    buffer[3] = i >> 24;
-    
-    printf ("Client Sent Number: %d\n", i);
-
     int bytes;
-    if (bytes = sendto (sockfd, buffer, 4, 0, res->ai_addr, res->ai_addrlen) == -1) {
+    if (bytes = sendto (sockfd, pBuffer, 4, 0, res->ai_addr, res->ai_addrlen) == -1) {
       ERROR_MESSAGE("Failed to send packet")
       return -1;
     }
