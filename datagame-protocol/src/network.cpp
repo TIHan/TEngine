@@ -31,4 +31,8 @@ namespace dgp {
       printf ("IPv6: %s\n", ip6);
     }
   }
+
+  void network::connect (const dgpChar *szAddress, const dgpChar *szPort) {
+    m_pSocket->send ("connect", szAddress, szPort);
+  }
 }

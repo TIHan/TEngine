@@ -62,9 +62,9 @@ namespace dgp {
 #endif
   
     memset (&hints, 0, sizeof hints);
-    hints.ai_family = AF_INET;          /* IPv4 and/or IPv6 */
+    hints.ai_family = AF_UNSPEC;          /* IPv4 and/or IPv6 */
     hints.ai_socktype = SOCK_DGRAM;       /* User Datagram Protocol */
-  
+
     if (getaddrinfo (NULL, "", &hints, &m_pAddressInfo) != 0) {
       ERROR_MESSAGE("Unable to get address info")
       return;
@@ -171,13 +171,14 @@ namespace dgp {
   dgpInt socket::receive (dgpChar *pBuffer) {
     assertReturnVal(m_iSocket != -1 || m_iSocket6 != -1, -1)
 
-    struct sockaddr sock_addr;
+    struct sockaddr_storage sock_addr;
     socklen_t addr_len = sizeof sock_addr;
     
     dgpChar buffer[MAX_BUFFER];
-    dgpInt bytes = recvfrom (m_iSocket, buffer, sizeof buffer, 0, &sock_addr, &addr_len);
+    dgpInt bytes = recvfrom (m_iSocket6, buffer, sizeof buffer, 0, (sockaddr *)&sock_addr, &addr_len);
     if (bytes == -1) {
       ERROR_MESSAGE("Failed to receive packet")
+      printf ("%i\n", WSAGetLastError());
       return -1;
     }
 
@@ -191,7 +192,7 @@ namespace dgp {
 
   //**************************************************
   // send
-  dgpInt socket::send (const dgpChar *pBuffer, const dgpChar *pNodeName, const dgpChar *pServiceName) {
+  dgpInt socket::send (const dgpChar *pBuffer, const dgpChar *szNodeName, const dgpChar *szServiceName) {
     assertReturnVal(m_iSocket != -1 || m_iSocket6 != -1, -1)
     
     int sendfd, bytes;
@@ -199,10 +200,10 @@ namespace dgp {
     struct addrinfo hints;
 
     memset (&hints, 0, sizeof hints);
-    hints.ai_family = AF_INET;
+    hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_DGRAM;
 
-    if (getaddrinfo (pNodeName, pServiceName, &hints, &addrinfo) != 0) {
+    if (getaddrinfo (szNodeName, szServiceName, &hints, &addrinfo) != 0) {
       ERROR_MESSAGE("Can't get address info")
       return -1;
     }

@@ -17,6 +17,7 @@ namespace dgp {
     ~network ();
 
     void printAddresses ();
+    void connect (const dgpChar *szAddress, const dgpChar *szPort);
   };
 }
 

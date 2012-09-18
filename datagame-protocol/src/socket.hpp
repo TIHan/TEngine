@@ -38,7 +38,7 @@ namespace dgp {
     dgpInt bind (dgpUshort usPort);
     void getAddressText (dgpChar *pszAddress, dgpChar *pszAddress6);
     dgpInt receive (dgpChar *pBuffer);
-    dgpInt send (const dgpChar *pBuffer, const dgpChar *pNodeName, const dgpChar *pServiceName);
+    dgpInt send (const dgpChar *pBuffer, const dgpChar *szNodeName, const dgpChar *szServiceName);
   };
 }
 
