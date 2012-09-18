@@ -9,11 +9,9 @@ using namespace dgp;
 
 dgpInt main ()
 {
-  for (int i = 0; i < 2; i++) {
   network *network = new dgp::network (DEFAULT_PORT);
   network->printAddresses ();
   delete network;
-  }
 #ifdef _MSC_VER
     system ("pause");
 #endif

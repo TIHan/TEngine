@@ -175,7 +175,7 @@ namespace dgp {
     socklen_t addr_len = sizeof sock_addr;
     
     dgpChar buffer[MAX_BUFFER];
-    dgpInt bytes = recvfrom (m_iSocket, buffer, sizeof buffer, 0, (sockaddr *)&sock_addr, &addr_len);
+    dgpInt bytes = recvfrom (m_iSocket6, buffer, sizeof buffer, 0, (sockaddr *)&sock_addr, &addr_len);
     if (bytes == -1) {
       ERROR_MESSAGE("Failed to receive packet")
       return -1;
@@ -186,7 +186,8 @@ namespace dgp {
     data[bytes] = '\0';
 
     printf ("Message received. Got %i bytes. %s\n", bytes, data);
-    delete data;
+
+    delete data; // [WS] Free it up.
     return 0;
   }
 
@@ -215,6 +216,8 @@ namespace dgp {
       return -1;
     }
     printf ("Message sent. Got %i bytes.\n", bytes);
+
+    // [WS] Close socket and free address info.
     freeaddrinfo (addrinfo);
     closeSocket (sendfd);
     return 0;
