@@ -214,6 +214,7 @@ namespace dgp {
       return -1;
     }
     printf ("Message sent. Got %i bytes.\n", bytes);
+    freeaddrinfo (addrinfo);
     return 0;
   }
  }
