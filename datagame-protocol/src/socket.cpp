@@ -178,7 +178,6 @@ namespace dgp {
     dgpInt bytes = recvfrom (m_iSocket6, buffer, sizeof buffer, 0, (sockaddr *)&sock_addr, &addr_len);
     if (bytes == -1) {
       ERROR_MESSAGE("Failed to receive packet")
-      printf ("%i\n", WSAGetLastError());
       return -1;
     }
 
