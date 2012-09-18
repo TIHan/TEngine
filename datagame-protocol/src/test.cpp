@@ -9,7 +9,7 @@ using namespace dgp;
 
 dgpInt main ()
 {
-  for (int i = 0; i < 5000; i++) {
+  for (int i = 0; i < 2; i++) {
   network *network = new dgp::network (DEFAULT_PORT);
   network->printAddresses ();
   delete network;
