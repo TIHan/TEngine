@@ -18,25 +18,27 @@
 
 #include "types.hpp"
 
-#define IP_STRLEN INET_ADDRSTRLEN
-#define IP6_STRLEN INET6_ADDRSTRLEN
-#define MAX_BUFFER 1400
+#define IP_STRLEN INET6_ADDRSTRLEN
+#define MAX_BUFFER 512
+#define IPV4 AF_INET
+#define IPV6 AF_INET6
 
 namespace dgp {
   class socket {
     dgpInt m_iSocket;
-    dgpInt m_iSocket6;
     struct addrinfo *m_pAddressInfo;
     struct addrinfo *m_pAddress;
-    struct addrinfo *m_pAddress6;
+    dgpByte m_bFamily;
 
+    void initialize (dgpByte bFamily);
   public:
     socket ();
+    explicit socket (dgpByte bFamily);
     ~socket ();
 
     void close ();
     dgpInt bind (dgpUshort usPort);
-    void getAddressText (dgpChar *pszAddress, dgpChar *pszAddress6);
+    void getAddressText (dgpChar *pszAddress);
     dgpInt receive (dgpChar *pBuffer);
     dgpInt send (const dgpChar *pBuffer, const dgpChar *szNodeName, const dgpChar *szServiceName);
   };

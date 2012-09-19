@@ -5,9 +5,9 @@
 
 namespace dgp {
   network::network (dgpUshort usPort) {
-    m_pSocket = new socket ();
+    m_pSocket = new socket (IPV4);
     m_pSocket->bind (usPort);
-    m_pSocket->send ("testsdfsdfsfsdfsf", "localhost", "4767");
+    m_pSocket->send ("hello", "localhost", "4767");
     m_pSocket->receive ((dgpChar *)m_bStream);
   }
 
@@ -17,18 +17,13 @@ namespace dgp {
 
   void network::printAddresses () {
     dgpChar ip[IP_STRLEN];
-    dgpChar ip6[IP6_STRLEN];
 
     assertReturn(m_pSocket)
 
-    m_pSocket->getAddressText (ip, ip6);
+    m_pSocket->getAddressText (ip);
 
     if (ip[0]) {
-      printf ("IPv4: %s\n", ip);
-    }
-
-    if (ip6[0]) {
-      printf ("IPv6: %s\n", ip6);
+      printf ("IP: %s\n", ip);
     }
   }
 
