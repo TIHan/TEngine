@@ -5,14 +5,14 @@
 namespace dgp {
   byteStream::byteStream () {
     m_pbStream = new dgpByte[MAX_BUFFER];
-    m_pbStartStream = m_pbStream;
+    m_pbPosition = m_pbStream;
     m_nStreamRefCount = 0;
     m_nSize = 0;
   }
 
   byteStream::~byteStream () {
     assertReturn (m_pbStream && m_nStreamRefCount == 0)
-    delete [] m_pbStartStream;
+    delete [] m_pbStream;
   }
 
   dgpByte* byteStream::getStream () {
@@ -34,13 +34,14 @@ namespace dgp {
     assertReturn (m_pbStream && m_nStreamRefCount == 0)
     delete [] m_pbStream;
     m_pbStream = new dgpByte[MAX_BUFFER];
+    m_pbPosition = m_pbStream;
   }
 
   dgpByte byteStream::readByte () {
     assertReturnVal (m_pbStream, 0)
     
-    dgpByte value = *m_pbStream;
-    m_pbStream += sizeof dgpByte;
+    dgpByte value = *m_pbPosition;
+    m_pbPosition += sizeof (dgpByte);
     return value;
   }
 

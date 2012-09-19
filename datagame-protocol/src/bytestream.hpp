@@ -8,7 +8,7 @@
 namespace dgp {
   class byteStream {
     dgpByte *m_pbStream;
-    dgpByte *m_pbStartStream;
+    dgpByte *m_pbPosition;
     size_t m_nSize;
     size_t m_nStreamRefCount;
 
