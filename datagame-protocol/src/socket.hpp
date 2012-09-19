@@ -19,7 +19,6 @@
 #include "types.hpp"
 
 #define IP_STRLEN INET6_ADDRSTRLEN
-#define MAX_BUFFER 512
 #define IPV4 AF_INET
 #define IPV6 AF_INET6
 
@@ -39,8 +38,8 @@ namespace dgp {
     void close ();
     dgpInt bind (dgpUshort usPort);
     void getAddressText (dgpChar *pszAddress);
-    dgpInt receive (dgpByte *pBuffer);
-    dgpInt send (dgpByte *pBuffer, size_t bufferSize, const dgpChar *szNodeName, const dgpChar *szServiceName);
+    dgpInt receive (dgpByte *pBuffer, const size_t bufferSize);
+    dgpInt send (dgpByte *pBuffer, const size_t bufferSize, const dgpChar *szNodeName, const dgpChar *szServiceName);
   };
 }
 

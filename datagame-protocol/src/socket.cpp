@@ -148,32 +148,25 @@ namespace dgp {
 
   //**************************************************
   // receive
-  dgpInt socket::receive (dgpByte *pBuffer) {
+  dgpInt socket::receive (dgpByte *pBuffer, const size_t bufferSize) {
     assertReturnVal(m_iSocket != -1, -1)
 
     struct sockaddr_storage sock_addr;
     socklen_t addr_len = sizeof sock_addr;
     
-    dgpChar buffer[MAX_BUFFER];
-    dgpInt bytes = recvfrom (m_iSocket, buffer, sizeof buffer, 0, (sockaddr *)&sock_addr, &addr_len);
+    dgpInt bytes = recvfrom (m_iSocket, (dgpChar *)pBuffer, bufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
     if (bytes == -1) {
       ERROR_MESSAGE("Failed to receive packet")
       return -1;
     }
 
-    dgpByte *data = new dgpByte[bytes + 1];
-    memcpy (data, buffer, bytes);
-    data[bytes] = '\0';
-
-    printf ("Message received. Got %i bytes. %s\n", bytes, data);
-
-    pBuffer = data;
+    printf ("Message received. Got %i bytes.\n", bytes);
     return 0;
   }
 
   //**************************************************
   // send
-  dgpInt socket::send (dgpByte *pBuffer, size_t bufferSize, const dgpChar *szNodeName, const dgpChar *szServiceName) {
+  dgpInt socket::send (dgpByte *pBuffer, const size_t bufferSize, const dgpChar *szNodeName, const dgpChar *szServiceName) {
     assertReturnVal(m_iSocket != -1, -1)
     
     int sendfd, bytes;

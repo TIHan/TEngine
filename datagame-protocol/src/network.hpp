@@ -3,16 +3,12 @@
 
 #include "types.hpp"
 #include "socket.hpp"
-
-#define MAX_BUFFER_LENGTH 1024
+#include "bytestream.hpp"
 
 namespace dgp {
-
   class network {
     socket *m_pSocket;
-    dgpByte *m_bStream;
-    size_t m_streamSize;
-    dgpByte *m_bReceiveStream;
+    byteStream *m_pByteStream;
 
   public:
     network (dgpUshort usPort);

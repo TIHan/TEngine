@@ -11,14 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="byteio.cpp" />
+    <ClCompile Include="bytestream.cpp" />
     <ClCompile Include="network.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assert.hpp" />
-    <ClInclude Include="byteio.hpp" />
+    <ClInclude Include="bytestream.hpp" />
     <ClInclude Include="dgp.hpp" />
     <ClInclude Include="error.hpp" />
     <ClInclude Include="network.hpp" />

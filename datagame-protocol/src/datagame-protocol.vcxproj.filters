@@ -24,7 +24,7 @@
     <ClCompile Include="socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="byteio.cpp">
+    <ClCompile Include="bytestream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,9 +38,6 @@
     <ClInclude Include="dgp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="byteio.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="socket.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -48,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="error.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bytestream.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
