@@ -23,26 +23,26 @@ namespace dgp {
     void clear ();
 
     // Read
-    /*dgpChar readChar ();
-    dgpInt8 readInt8 ();*/
+    dgpChar readChar ();
+    dgpInt8 readInt8 ();
     dgpByte readByte ();
-    /*dgpShort readShort ();
+    dgpShort readShort ();
     dgpUshort readUshort ();
     dgpInt readInt ();
     dgpUint readUint ();
     dgpLong readLong ();
-    dgpUlong readUlong ();*/
+    dgpUlong readUlong ();
 
     // Write
-    /*void writeChar (dgpChar value);
-    void writeInt8 (dgpInt8 value);*/
+    void writeChar (dgpChar value);
+    void writeInt8 (dgpInt8 value);
     void writeByte (dgpByte value);
-    /*void writeShort (dgpShort value);
+    void writeShort (dgpShort value);
     void writeUshort (dgpUshort value);
     void writeInt (dgpInt value);
     void writeUint (dgpUint value);
     void writeLong (dgpLong value);
-    void writeUlong (dgpUlong value);*/
+    void writeUlong (dgpUlong value);
   };
 }
 
