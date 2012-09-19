@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="byteio.cpp" />
     <ClCompile Include="network.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="test.cpp" />

@@ -7,8 +7,6 @@ namespace dgp {
   network::network (dgpUshort usPort) {
     m_pSocket = new socket (IPV4);
     m_pSocket->bind (usPort);
-    m_pSocket->send ("hello", "localhost", "4767");
-    m_pSocket->receive ((dgpChar *)m_bStream);
   }
 
   network::~network () {
@@ -28,6 +26,6 @@ namespace dgp {
   }
 
   void network::connect (const dgpChar *szAddress, const dgpChar *szPort) {
-    m_pSocket->send ("connect", szAddress, szPort);
+   // m_pSocket->send ("connect", szAddress, szPort);
   }
 }

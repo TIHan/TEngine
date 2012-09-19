@@ -11,6 +11,8 @@ namespace dgp {
   class network {
     socket *m_pSocket;
     dgpByte *m_bStream;
+    size_t m_streamSize;
+    dgpByte *m_bReceiveStream;
 
   public:
     network (dgpUshort usPort);

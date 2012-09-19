@@ -100,16 +100,12 @@ namespace dgp {
   //**************************************************
   // close
   void socket::close () {
-    assertReturn(m_iSocket != -1)
+    assertReturn(m_iSocket != -1 && m_pAddressInfo)
 
-    if (m_pAddressInfo) {
-      freeaddrinfo (m_pAddressInfo);
-    }
-
-    if (m_iSocket != -1) {
-      if (closeSocket (m_iSocket) != 0)
-        ERROR_MESSAGE("Unable to close socket")
-        return;
+    freeaddrinfo (m_pAddressInfo);
+    if (closeSocket (m_iSocket) != 0) {
+      ERROR_MESSAGE("Unable to close socket")
+      return;
     }
   }
 
@@ -152,7 +148,7 @@ namespace dgp {
 
   //**************************************************
   // receive
-  dgpInt socket::receive (dgpChar *pBuffer) {
+  dgpInt socket::receive (dgpByte *pBuffer) {
     assertReturnVal(m_iSocket != -1, -1)
 
     struct sockaddr_storage sock_addr;
@@ -165,24 +161,23 @@ namespace dgp {
       return -1;
     }
 
-    dgpChar *data = new dgpChar[bytes + 1];
-    strncpy (data, buffer, bytes);
+    dgpByte *data = new dgpByte[bytes + 1];
+    memcpy (data, buffer, bytes);
     data[bytes] = '\0';
 
     printf ("Message received. Got %i bytes. %s\n", bytes, data);
 
-    delete data; // [WS] Free it up.
+    pBuffer = data;
     return 0;
   }
 
   //**************************************************
   // send
-  dgpInt socket::send (const dgpChar *pBuffer, const dgpChar *szNodeName, const dgpChar *szServiceName) {
+  dgpInt socket::send (dgpByte *pBuffer, size_t bufferSize, const dgpChar *szNodeName, const dgpChar *szServiceName) {
     assertReturnVal(m_iSocket != -1, -1)
     
     int sendfd, bytes;
-    struct addrinfo *addrinfo;
-    struct addrinfo hints;
+    struct addrinfo hints, *addrinfo;
 
     memset (&hints, 0, sizeof hints);
     hints.ai_family = m_bFamily;
@@ -194,7 +189,7 @@ namespace dgp {
     }
     sendfd = createSocket (addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
 
-    bytes = sendto (sendfd, pBuffer, strlen (pBuffer), 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
+    bytes = sendto (sendfd, (const dgpChar *)pBuffer, bufferSize, 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
     if (bytes == -1) {
       ERROR_MESSAGE("Failed to send packet")
       return -1;
