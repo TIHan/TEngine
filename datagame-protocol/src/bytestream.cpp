@@ -16,7 +16,7 @@ namespace dgp {
     ASSERT_RETURN (m_pbStream && m_nStreamRefCount == 0)
     
     if (m_nSize != 0) {
-      WARNING_MESSAGE_FORMAT("Not all bytes were read. Please clear or read the remaining %ld byte(s).", m_nSize)
+      WARNING_MESSAGE_FORMAT("Not all bytes were read. Please clear or read the remaining %d byte(s).", m_nSize)
     }
     delete [] m_pbStream;
   }
@@ -71,7 +71,7 @@ namespace dgp {
 
     m_nSize += sizeof (value);
     if (m_nSize > MAX_BUFFER) {
-      WARNING_MESSAGE_FORMAT("Bytestream is too large for %ld size.", m_nSize)
+      WARNING_MESSAGE_FORMAT("Bytestream is too large for %d size.", m_nSize)
       return;
     }
     m_pbStream[m_nSize - 1] = value;
