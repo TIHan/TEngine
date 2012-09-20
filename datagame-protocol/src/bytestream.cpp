@@ -56,7 +56,7 @@ namespace dgp {
   dgpChar* byteStream::readString () {
     ASSERT_RETURN_VAL (m_pbStream, 0)
     
-    dgpUint size = 2;
+    dgpUint size = 1;
     for (dgpByte *p = m_pbPosition; *p != '\0'; p++) {
       size++;
     }
@@ -85,7 +85,7 @@ namespace dgp {
       return;
     }
 
-    for (dgpUint i = 0; i < size - 1; i++) {
+    for (dgpUint i = 0; i < size; i++) {
         *m_pbPosition = value[i];
         m_pbPosition++;
     }
