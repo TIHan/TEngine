@@ -2,7 +2,6 @@
 #define BYTESTREAM_HPP
 
 #include "types.hpp"
-#include <string>
 #include "assert.hpp"
 #include "warning.hpp"
 

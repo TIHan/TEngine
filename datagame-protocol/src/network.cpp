@@ -23,6 +23,7 @@ namespace dgp {
     //dgpInt MY_BYTE = m_pByteStream->read<dgpInt> ();
     //printf ("my byte: %i\n", MY_BYTE);
     printf ("SAY: %s\n", HEY);
+    delete [] HEY;
     m_pByteStream->unrefStream ();
     delete m_pByteStream;
   }

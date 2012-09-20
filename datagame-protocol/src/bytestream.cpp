@@ -1,3 +1,4 @@
+#include <string.h>
 #include "types.hpp"
 #include "assert.hpp"
 #include "error.hpp"
