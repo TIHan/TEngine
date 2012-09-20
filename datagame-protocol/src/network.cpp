@@ -6,7 +6,7 @@
 
 namespace dgp {
   network::network (dgpUshort usPort) {
-    size_t byteSize;
+    dgpUint byteSize;
 
     m_pSocket = new socket (IPV4);
     m_pByteStream = new byteStream ();

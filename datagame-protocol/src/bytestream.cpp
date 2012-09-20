@@ -27,11 +27,11 @@ namespace dgp {
     return m_pbStream;
   }
 
-  size_t byteStream::getSize () {
+  dgpUint byteStream::getSize () {
     return m_nSize;
   }
 
-  void byteStream::setSize (size_t nSize) {
+  void byteStream::setSize (dgpUint nSize) {
     if (nSize > MAX_BUFFER) {
       WARNING_MESSAGE("Size is too large.")
       return;

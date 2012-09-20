@@ -9,16 +9,16 @@ namespace dgp {
   class byteStream {
     dgpByte *m_pbStream;
     dgpByte *m_pbPosition;
-    size_t m_nSize;
-    size_t m_nStreamRefCount;
+    dgpUint m_nSize;
+    dgpUint m_nStreamRefCount;
 
   public:
     byteStream();
     ~byteStream();
 
     dgpByte* getStream ();
-    size_t getSize ();
-    void setSize (size_t nSize);
+    dgpUint getSize ();
+    void setSize (dgpUint nSize);
 
     void unrefStream ();
     void clear ();

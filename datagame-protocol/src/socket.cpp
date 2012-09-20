@@ -155,7 +155,7 @@ namespace dgp {
 
   //**************************************************
   // receive
-  dgpInt socket::receive (dgpByte *pBuffer, const size_t bufferSize) {
+  dgpInt socket::receive (dgpByte *pBuffer, const dgpUint bufferSize) {
     ASSERT_RETURN_VAL(m_iSocket != -1, -1)
 
     struct sockaddr_storage sock_addr;
@@ -173,7 +173,7 @@ namespace dgp {
 
   //**************************************************
   // send
-  dgpInt socket::send (dgpByte *pBuffer, const size_t bufferSize, const dgpChar *szNodeName, const dgpChar *szServiceName) {
+  dgpInt socket::send (dgpByte *pBuffer, const dgpUint bufferSize, const dgpChar *szNodeName, const dgpChar *szServiceName) {
     ASSERT_RETURN_VAL(m_iSocket != -1, -1)
     
     int sendfd, bytes;
