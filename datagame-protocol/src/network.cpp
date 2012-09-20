@@ -12,7 +12,7 @@ namespace dgp {
     m_pByteStream = new byteStream ();
 
     m_pSocket->bind (usPort);
-    m_pByteStream->write<dgpInt> (18);
+    m_pByteStream->write<dgpInt> (-18);
     m_pSocket->send (m_pByteStream->getStream (), m_pByteStream->getSize (), "localhost", "4767");
     m_pByteStream->unrefStream ();
     m_pByteStream->clear ();

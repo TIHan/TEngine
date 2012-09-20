@@ -51,7 +51,7 @@ namespace dgp {
       T val;
     } unpack;
 
-    for (int i = 0; i < sizeof (T); i++) {
+    for (dgpUint i = 0; i < sizeof (T); i++) {
       unpack.byte[i] = *m_pbPosition;
       m_pbPosition++;
     }
@@ -76,7 +76,7 @@ namespace dgp {
     } pack;
 
     pack.val = value;
-    for (int i = 0; i < sizeof (T); i++) {
+    for (dgpUint i = 0; i < sizeof (T); i++) {
       *m_pbPosition = pack.byte[i];
       m_pbPosition++;
     }
