@@ -13,21 +13,13 @@ namespace dgp {
 
     m_pSocket->bind (usPort);
     m_pByteStream->writeByte (18);
-        m_pByteStream->writeByte (70);
-            m_pByteStream->writeByte (60);
-                m_pByteStream->writeByte (50);
     m_pSocket->send (m_pByteStream->getStream (), m_pByteStream->getSize (), "localhost", "4767");
     m_pByteStream->unrefStream ();
     m_pByteStream->clear ();
     byteSize = m_pSocket->receive (m_pByteStream->getStream (), MAX_BUFFER);
-    m_pByteStream->setSize (5);
+    m_pByteStream->setSize (byteSize);
     dgpByte MY_BYTE = m_pByteStream->readByte ();
-    dgpByte MY_BYTE3 = m_pByteStream->readByte ();
-    dgpByte MY_BYTE4 = m_pByteStream->readByte ();
-        dgpByte MY_BYTE5 = m_pByteStream->readByte ();
     printf ("my byte: %i\n", MY_BYTE);
-        printf ("my byte2: %i\n", MY_BYTE3);
-            printf ("my byte2: %i\n", MY_BYTE4);
     m_pByteStream->unrefStream ();
     delete m_pByteStream;
   }
