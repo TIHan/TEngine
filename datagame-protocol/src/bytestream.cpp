@@ -51,29 +51,4 @@ namespace dgp {
     m_pbPosition = m_pbStream;
     m_nSize = 0;
   }
-
-  dgpByte byteStream::readByte () {
-    ASSERT_RETURN_VAL (m_pbStream, 0)
-    
-    dgpByte value = *m_pbPosition;
-    m_nSize -= sizeof (value);
-
-    if (m_nSize > MAX_BUFFER) {
-      WARNING_MESSAGE("Buffer overflow when reading bytestream.")
-      return 0;
-    }
-    m_pbPosition += sizeof (dgpByte);
-    return value;
-  }
-
-  void byteStream::writeByte (dgpByte value) {
-    ASSERT_RETURN (m_pbStream)
-
-    m_nSize += sizeof (value);
-    if (m_nSize > MAX_BUFFER) {
-      WARNING_MESSAGE_FORMAT("Bytestream is too large for %d size.", m_nSize)
-      return;
-    }
-    m_pbStream[m_nSize - 1] = value;
-  }
 }

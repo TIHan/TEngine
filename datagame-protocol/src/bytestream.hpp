@@ -2,6 +2,8 @@
 #define BYTESTREAM_HPP
 
 #include "types.hpp"
+#include "assert.hpp"
+#include "warning.hpp"
 
 #define MAX_BUFFER 512
 
@@ -24,27 +26,61 @@ namespace dgp {
     void clear ();
 
     // Read
-    dgpChar readChar ();
-    dgpInt8 readInt8 ();
-    dgpByte readByte ();
-    dgpShort readShort ();
-    dgpUshort readUshort ();
-    dgpInt readInt ();
-    dgpUint readUint ();
-    dgpLong readLong ();
-    dgpUlong readUlong ();
+    template <class T>
+    T read ();
 
     // Write
-    void writeChar (dgpChar value);
-    void writeInt8 (dgpInt8 value);
     void writeByte (dgpByte value);
-    void writeShort (dgpShort value);
-    void writeUshort (dgpUshort value);
-    void writeInt (dgpInt value);
-    void writeUint (dgpUint value);
-    void writeLong (dgpLong value);
-    void writeUlong (dgpUlong value);
+    template <class T>
+    void write (T value);
   };
+
+  template <class T>
+  T byteStream::read () {
+    ASSERT_RETURN_VAL (m_pbStream, 0)
+
+    dgpUint size = sizeof (T);
+    m_nSize -= size;
+    if (m_nSize > MAX_BUFFER) {
+      WARNING_MESSAGE("Buffer overflow when reading bytestream.")
+      return 0;
+    }
+
+    union unpack_t {
+      dgpByte byte[sizeof (T)];
+      T val;
+    } unpack;
+
+    for (int i = 0; i < sizeof (T); i++) {
+      unpack.byte[i] = *m_pbPosition;
+      m_pbPosition++;
+    }
+    
+    T value = unpack.val;
+    return value;
+  }
+
+  template <class T>
+  void byteStream::write (T value) {
+    ASSERT_RETURN (m_pbStream)
+
+    m_nSize += sizeof (T);
+    if (m_nSize > MAX_BUFFER) {
+      WARNING_MESSAGE_FORMAT("Bytestream is too large for %d size.", m_nSize)
+      return;
+    }
+
+    union pack_t {
+      dgpByte byte[sizeof (T)];
+      T val;
+    } pack;
+
+    pack.val = value;
+    for (int i = 0; i < sizeof (T); i++) {
+      *m_pbPosition = pack.byte[i];
+      m_pbPosition++;
+    }
+  }
 }
 
 #endif // BYTESTREAM_HPP
