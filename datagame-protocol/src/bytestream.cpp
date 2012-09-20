@@ -56,7 +56,7 @@ namespace dgp {
   dgpChar* byteStream::readString () {
     ASSERT_RETURN_VAL (m_pbStream, 0)
     
-    dgpUint size = 1;
+    dgpUint size = 2;
     for (dgpByte *p = m_pbPosition; *p != '\0'; p++) {
       size++;
     }
@@ -79,19 +79,18 @@ namespace dgp {
     ASSERT_RETURN (m_pbStream)
 
     dgpUint size = strlen (value);
-    m_nSize += size;
+    m_nSize += size + 1;
     if (m_nSize > MAX_BUFFER) {
       WARNING_MESSAGE_FORMAT("Bytestream is too large for %d size.", m_nSize)
       return;
     }
 
-    for (dgpUint i = 0; i < size; i++) {
+    for (dgpUint i = 0; i < size - 1; i++) {
         *m_pbPosition = value[i];
         m_pbPosition++;
     }
 
     *m_pbPosition = '\0';
     m_pbPosition++;
-    m_nSize++;
   }
 }
