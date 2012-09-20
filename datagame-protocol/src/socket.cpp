@@ -155,13 +155,13 @@ namespace dgp {
 
   //**************************************************
   // receive
-  dgpInt socket::receive (dgpByte *pBuffer, const dgpUint bufferSize) {
+  dgpInt socket::receive (dgpByte *pBuffer, const dgpUint nBufferSize) {
     ASSERT_RETURN_VAL(m_iSocket != -1, -1)
 
     struct sockaddr_storage sock_addr;
     socklen_t addr_len = sizeof sock_addr;
     
-    dgpInt bytes = recvfrom (m_iSocket, (dgpChar *)pBuffer, bufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
+    dgpInt bytes = recvfrom (m_iSocket, (dgpChar *)pBuffer, nBufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
     if (bytes == -1) {
       WARNING_MESSAGE("Failed to receive packet")
       return bytes;
@@ -173,7 +173,7 @@ namespace dgp {
 
   //**************************************************
   // send
-  dgpInt socket::send (dgpByte *pBuffer, const dgpUint bufferSize, const dgpChar *szNodeName, const dgpChar *szServiceName) {
+  dgpInt socket::send (dgpByte *pBuffer, const dgpUint nBufferSize, const dgpChar *szNodeName, const dgpChar *szServiceName) {
     ASSERT_RETURN_VAL(m_iSocket != -1, -1)
     
     int sendfd, bytes;
@@ -188,7 +188,7 @@ namespace dgp {
       return -1;
     }
     sendfd = createSocket (addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
-    bytes = sendto (sendfd, (const dgpChar *)pBuffer, bufferSize, 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
+    bytes = sendto (sendfd, (const dgpChar *)pBuffer, nBufferSize, 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
 
     // [WS] Close socket and free address info.
     freeaddrinfo (addrinfo);
