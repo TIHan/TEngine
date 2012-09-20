@@ -50,5 +50,8 @@
     <ClInclude Include="bytestream.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="warning.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

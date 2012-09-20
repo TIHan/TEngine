@@ -1,5 +1,7 @@
 #include "types.hpp"
 #include "assert.hpp"
+#include "error.hpp"
+#include "warning.hpp"
 #include "bytestream.hpp"
 
 namespace dgp {
@@ -11,12 +13,16 @@ namespace dgp {
   }
 
   byteStream::~byteStream () {
-    assertReturn (m_pbStream && m_nStreamRefCount == 0)
+    ASSERT_RETURN (m_pbStream && m_nStreamRefCount == 0)
+    
+    if (m_nSize != 0) {
+      WARNING_MESSAGE_FORMAT("Not all bytes were read. Please clear or read the remaining %i byte(s).", m_nSize)
+    }
     delete [] m_pbStream;
   }
 
   dgpByte* byteStream::getStream () {
-    assertReturnVal (m_pbStream, 0)
+    ASSERT_RETURN_VAL (m_pbStream, 0)
     m_nStreamRefCount++;
     return m_pbStream;
   }
@@ -25,30 +31,49 @@ namespace dgp {
     return m_nSize;
   }
 
+  void byteStream::setSize (size_t nSize) {
+    if (nSize > MAX_BUFFER) {
+      WARNING_MESSAGE("Size is too large.")
+      return;
+    }
+    m_nSize = nSize;
+  }
+
   void byteStream::unrefStream () {
-    assertReturn (m_nStreamRefCount > 0)
+    ASSERT_RETURN (m_nStreamRefCount > 0)
     m_nStreamRefCount--;
   }
 
   void byteStream::clear () {
-    assertReturn (m_pbStream && m_nStreamRefCount == 0)
+    ASSERT_RETURN (m_pbStream && m_nStreamRefCount == 0)
     delete [] m_pbStream;
     m_pbStream = new dgpByte[MAX_BUFFER];
     m_pbPosition = m_pbStream;
+    m_nSize = 0;
   }
 
   dgpByte byteStream::readByte () {
-    assertReturnVal (m_pbStream, 0)
+    ASSERT_RETURN_VAL (m_pbStream, 0)
     
     dgpByte value = *m_pbPosition;
+    m_nSize -= sizeof (value);
+
+    if (m_nSize > MAX_BUFFER) {
+      WARNING_MESSAGE("Buffer overflow when reading bytestream.")
+      return 0;
+    }
     m_pbPosition += sizeof (dgpByte);
     return value;
   }
 
   void byteStream::writeByte (dgpByte value) {
-    assertReturn (m_pbStream)
+    ASSERT_RETURN (m_pbStream)
 
-    m_pbStream[m_nSize] = value;
-    m_nSize += sizeof value;
+    m_nSize += sizeof (value);
+    if (m_nSize > MAX_BUFFER) {
+      WARNING_MESSAGE("Bytestream is too large for %i size.", m_nSize)
+      return;
+    }
+    m_pbStream[m_nSize - 1] = value;
   }
 }

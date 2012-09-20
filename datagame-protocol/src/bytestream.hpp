@@ -18,6 +18,7 @@ namespace dgp {
 
     dgpByte* getStream ();
     size_t getSize ();
+    void setSize (size_t nSize);
 
     void unrefStream ();
     void clear ();

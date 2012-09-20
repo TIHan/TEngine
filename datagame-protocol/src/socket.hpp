@@ -19,10 +19,13 @@
 #include "types.hpp"
 
 #define IP_STRLEN INET6_ADDRSTRLEN
-#define IPV4 AF_INET
-#define IPV6 AF_INET6
 
 namespace dgp {
+  enum socketFamily {
+    IPV4,
+    IPV6
+  };
+
   class socket {
     dgpInt m_iSocket;
     struct addrinfo *m_pAddressInfo;

@@ -24,6 +24,7 @@
     <ClInclude Include="network.hpp" />
     <ClInclude Include="socket.hpp" />
     <ClInclude Include="types.hpp" />
+    <ClInclude Include="warning.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B29EC2F4-DDBE-42A0-A5F7-0A1F14BFD1C5}</ProjectGuid>

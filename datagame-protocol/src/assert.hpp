@@ -6,13 +6,18 @@
 #define ASSERT_WARNING \
   printf ("(%s) Warning: Assertion failed at line %i.\n", __FUNCTION__, __LINE__); \
 
-#define assertReturn(expr) \
+#define ASSERT(expr) \
+  if (!(expr)) { \
+    ASSERT_WARNING \
+  } \
+
+#define ASSERT_RETURN(expr) \
   if (!(expr)) { \
     ASSERT_WARNING \
     return; \
   } \
 
-#define assertReturnVal(expr, val) \
+#define ASSERT_RETURN_VAL(expr, val) \
   if (!(expr)) { \
     ASSERT_WARNING \
     return val; \
