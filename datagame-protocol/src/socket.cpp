@@ -140,7 +140,7 @@ namespace dgp {
 
     if (m_pAddress) {
       switch (m_bFamily) {
-      case IPV6:
+      case AF_INET6:
         inet_ntop (m_bFamily, &(((struct sockaddr_in6 *)m_pAddress->ai_addr)->sin6_addr), pszAddress, IP_STRLEN);
         break;
       default:
