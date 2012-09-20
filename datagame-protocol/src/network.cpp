@@ -12,14 +12,17 @@ namespace dgp {
     m_pByteStream = new byteStream ();
 
     m_pSocket->bind (usPort);
-    m_pByteStream->write<dgpInt> (-18);
+   // m_pByteStream->write<dgpInt> (-18);
+    m_pByteStream->writeString ("HELLO");
     m_pSocket->send (m_pByteStream->getStream (), m_pByteStream->getSize (), "localhost", "4767");
     m_pByteStream->unrefStream ();
     m_pByteStream->clear ();
     byteSize = m_pSocket->receive (m_pByteStream->getStream (), MAX_BUFFER);
     m_pByteStream->setSize (byteSize);
-    dgpInt MY_BYTE = m_pByteStream->read<dgpInt> ();
-    printf ("my byte: %i\n", MY_BYTE);
+    dgpChar *HEY = m_pByteStream->readString ();
+    //dgpInt MY_BYTE = m_pByteStream->read<dgpInt> ();
+    //printf ("my byte: %i\n", MY_BYTE);
+    printf ("SAY: %s\n", HEY);
     m_pByteStream->unrefStream ();
     delete m_pByteStream;
   }

@@ -51,4 +51,46 @@ namespace dgp {
     m_pbPosition = m_pbStream;
     m_nSize = 0;
   }
+
+  dgpChar* byteStream::readString () {
+    ASSERT_RETURN_VAL (m_pbStream, 0)
+    
+    dgpUint size = 1;
+    for (dgpByte *p = m_pbPosition; *p != '\0'; p++) {
+      size++;
+    }
+
+    m_nSize -= size;
+    if (m_nSize > MAX_BUFFER) {
+      WARNING_MESSAGE("Buffer overflow when reading bytestream.")
+      return 0;
+    }
+
+    dgpChar *value = new dgpChar[size];
+    for (dgpUint i = 0; i < size; i++) {
+      value[i] = *m_pbPosition;
+      m_pbPosition++;
+    }
+    return value;
+  }
+
+  void byteStream::writeString (const dgpChar *value) {
+    ASSERT_RETURN (m_pbStream)
+
+    dgpUint size = strlen (value);
+    m_nSize += size;
+    if (m_nSize > MAX_BUFFER) {
+      WARNING_MESSAGE_FORMAT("Bytestream is too large for %d size.", m_nSize)
+      return;
+    }
+
+    for (dgpUint i = 0; i < size; i++) {
+        *m_pbPosition = value[i];
+        m_pbPosition++;
+    }
+
+    *m_pbPosition = '\0';
+    m_pbPosition++;
+    m_nSize++;
+  }
 }

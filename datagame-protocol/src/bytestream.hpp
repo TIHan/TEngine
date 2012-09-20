@@ -2,6 +2,7 @@
 #define BYTESTREAM_HPP
 
 #include "types.hpp"
+#include <string>
 #include "assert.hpp"
 #include "warning.hpp"
 
@@ -28,11 +29,12 @@ namespace dgp {
     // Read
     template <class T>
     T read ();
+    dgpChar* readString ();
 
     // Write
-    void writeByte (dgpByte value);
     template <class T>
     void write (T value);
+    void writeString (const dgpChar *value);
   };
 
   template <class T>
