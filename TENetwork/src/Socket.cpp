@@ -150,11 +150,11 @@ namespace TE {
     
     TEint bytes = recvfrom (m_iSocket, (TEchar *)pBuffer, nBufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
     if (bytes == -1) {
-      WARNING_MESSAGE("Failed to receive packet")
+      WARNING_MESSAGE("Failed to receive packet.")
       return bytes;
     }
 
-    printf ("Message received. Got %i bytes.\n", bytes);
+    printf ("Got %i bytes.\n", bytes);
     return bytes;
   }
 
@@ -180,11 +180,11 @@ namespace TE {
     CloseSocket (sendfd);
 
     if (bytes == -1) {
-      WARNING_MESSAGE("Failed to send packet")
+      WARNING_MESSAGE("Failed to send packet.")
       return bytes;
     }
 
-    printf ("Message sent. Got %i bytes.\n", bytes);
+    printf ("Sent %i bytes.\n", bytes);
     return bytes;
   }
  }

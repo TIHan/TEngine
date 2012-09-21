@@ -6,7 +6,13 @@
 #include "ByteStream.hpp"
 
 namespace TE {
-  class Network {
+  class INetwork {
+  public:
+    virtual void PrintAddresses () = 0;
+    virtual void Connect (const TEchar *szAddress, const TEchar *szPort) = 0;
+  };
+
+  class Network : INetwork {
     Socket *m_pSocket;
     ByteStream *m_pByteStream;
 

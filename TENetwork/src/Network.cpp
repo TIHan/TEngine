@@ -6,22 +6,24 @@
 
 namespace TE {
   Network::Network (TEushort usPort) {
-    TEuint byteSize;
+    TEint byteSize;
 
     m_pSocket = new Socket (IPV4);
     m_pByteStream = new ByteStream ();
 
     m_pSocket->Bind (usPort);
-    m_pByteStream->writeString ("LOHELLOHELLOHELLOHELLOHELLLOELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLLOHELLOHELLOHELLOHELLOHELLOHELLOHELLOHELLOHELLOHELLOHELLOHELLO");
-    m_pSocket->Send (m_pByteStream->getStream (), m_pByteStream->getSize (), "localhost", "4767");
-    m_pByteStream->unrefStream ();
-    m_pByteStream->clear ();
-    byteSize = m_pSocket->Receive (m_pByteStream->getStream (), MAX_BUFFER);
-    m_pByteStream->setSize (byteSize);
-    TEchar *HEY = m_pByteStream->readString ();
+    m_pByteStream->WriteString ("LOHELLHELLOHELLOH");
+    m_pByteStream->Write<TEint>(16);
+    m_pSocket->Send (m_pByteStream->GetStream (), m_pByteStream->GetSize (), "localhost", "4767");
+    m_pByteStream->UnrefStream ();
+    m_pByteStream->Clear ();
+    byteSize = m_pSocket->Receive (m_pByteStream->GetStream (), MAX_BUFFER);
+    m_pByteStream->SetSize (byteSize);
+    TEchar *HEY = m_pByteStream->ReadString ();
     printf ("SAY: %s\n", HEY);
+    TEint asdf = m_pByteStream->Read<TEint> ();
     delete [] HEY;
-    m_pByteStream->unrefStream ();
+    m_pByteStream->UnrefStream ();
     delete m_pByteStream;
   }
 

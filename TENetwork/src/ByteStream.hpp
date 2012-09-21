@@ -7,7 +7,16 @@
 #define MAX_BUFFER 512
 
 namespace TE {
-  class ByteStream {
+  class IByteStream {
+  public:
+    virtual TEbyte* GetStream () = 0;
+    virtual TEuint GetSize () = 0;
+    virtual void SetSize (TEuint nSize) = 0;
+    virtual void UnrefStream () = 0;
+    virtual void Clear () = 0;
+  };
+
+  class ByteStream : IByteStream {
     TEbyte *m_pbStream;
     TEbyte *m_pbPosition;
     TEuint m_nSize;
@@ -17,26 +26,26 @@ namespace TE {
     ByteStream();
     ~ByteStream();
 
-    TEbyte* getStream ();
-    TEuint getSize ();
-    void setSize (TEuint nSize);
+    TEbyte* GetStream ();
+    TEuint GetSize ();
+    void SetSize (TEuint nSize);
 
-    void unrefStream ();
-    void clear ();
+    void UnrefStream ();
+    void Clear ();
 
     // Read
     template <class T>
-    T read ();
-    TEchar* readString ();
+    T Read ();
+    TEchar* ReadString ();
 
     // Write
     template <class T>
-    void write (T value);
-    void writeString (const TEchar *value);
+    void Write (T value);
+    void WriteString (const TEchar *value);
   };
 
   template <class T>
-  T ByteStream::read () {
+  T ByteStream::Read () {
     TEuint size = sizeof (T);
     if (m_nSize - size > MAX_BUFFER) {
       WARNING_MESSAGE("Overflow on reading.")
@@ -58,7 +67,7 @@ namespace TE {
   }
 
   template <class T>
-  void ByteStream::write (T value) {
+  void ByteStream::Write (T value) {
     TEuint size = sizeof (T);
     if (m_nSize + size > MAX_BUFFER) {
       WARNING_MESSAGE("Overflow on writing.")

@@ -26,7 +26,15 @@ namespace TE {
     IPV6
   };
 
-  class Socket {
+  class ISocket {
+  public:
+    virtual void Close () = 0;
+    virtual TEint Bind (TEushort usPort) = 0;
+    virtual TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize) = 0;
+    virtual TEint Send (TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) = 0;
+  };
+
+  class Socket : ISocket {
     TEint m_iSocket;
     struct addrinfo *m_pAddressInfo;
     struct addrinfo *m_pAddress;
