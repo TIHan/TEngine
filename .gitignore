@@ -22,5 +22,9 @@ ipch/*
 *.user
 *.suo
 *.opensdf
-datagame-protocol/src/Debug
-datagame-protocol/src/Release
+*/src/Debug
+*/src/Release
+*/src/ipch
+
+# Executable
+te-network
