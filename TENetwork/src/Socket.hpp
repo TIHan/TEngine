@@ -2,7 +2,7 @@
 #define __SOCKET_HPP_
 
 #ifdef __GNUC__
-  #include <sys/Socket.h>
+  #include <sys/socket.h>
   #include <netdb.h>
   #include <arpa/inet.h>
   #include <netinet/in.h>
