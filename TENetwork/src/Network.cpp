@@ -13,7 +13,6 @@ namespace TE {
 
     m_pSocket->Bind (usPort);
     m_pByteStream->WriteString ("LOHELLHELLOHELLOH");
-    m_pByteStream->Write<TEint>(16);
     m_pSocket->Send (m_pByteStream->GetStream (), m_pByteStream->GetSize (), "localhost", "4767");
     m_pByteStream->UnrefStream ();
     m_pByteStream->Clear ();
@@ -21,7 +20,6 @@ namespace TE {
     m_pByteStream->SetSize (byteSize);
     TEchar *HEY = m_pByteStream->ReadString ();
     printf ("SAY: %s\n", HEY);
-    TEint asdf = m_pByteStream->Read<TEint> ();
     delete [] HEY;
     m_pByteStream->UnrefStream ();
     delete m_pByteStream;

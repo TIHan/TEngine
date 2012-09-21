@@ -49,7 +49,7 @@ namespace TE {
     TEuint size = sizeof (T);
     if (m_nSize - size > MAX_BUFFER) {
       WARNING_MESSAGE("Overflow on reading.")
-      return NULL;
+      return 0;
     }
 
     union unpack_t {
