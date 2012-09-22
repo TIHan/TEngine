@@ -45,7 +45,7 @@ namespace TE {
   template <class T>
   T ByteStream::Read () {
     TEuint size = sizeof (T);
-    if (m_nSize - size > MAX_BUFFER) {
+    if (m_nSize - size > m_nMaxSize) {
       WARNING_MESSAGE("Overflow on reading.")
       return 0;
     }
@@ -70,7 +70,7 @@ namespace TE {
   template <class T>
   void ByteStream::Write (const T value) {
     TEuint size = sizeof (T);
-    if (m_nSize + size > MAX_BUFFER) {
+    if (m_nSize + size > m_nMaxSize) {
       WARNING_MESSAGE("Overflow on writing.")
       return;
     }
