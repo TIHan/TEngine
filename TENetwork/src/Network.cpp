@@ -5,7 +5,7 @@
 #include "Messages.hpp"
 
 namespace TE {
-  Network::Network (TEushort usPort) {
+  Network::Network (const TEushort usPort) {
     TEint byteSize;
 
     m_pSocket = new Socket (IPV4);

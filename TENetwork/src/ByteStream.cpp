@@ -69,7 +69,7 @@ namespace TE {
 
     if (m_nSize - size > m_nMaxSize) {
       WARNING_MESSAGE("Overflow on reading string.")
-      return 0;
+      return NULL;
     }
 
     TEchar *value = new TEchar[size];
@@ -109,6 +109,7 @@ namespace TE {
       WARNING_MESSAGE("Overflow on writing stream.")
       return;
     }
+
     for (TEuint i = 0; i < nSize; i++) {
       *m_pbWritePosition = pbStream[i];
       m_pbWritePosition++;

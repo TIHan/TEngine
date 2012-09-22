@@ -38,7 +38,7 @@ static TE::TEint CloseSocket (TE::TEint sockfd) {
 }
 
 namespace TE {
-  void Socket::Initialize (TEbyte bFamily) {
+  void Socket::Initialize (const TEbyte bFamily) {
     struct addrinfo hints, *p;
     m_iSocket = -1;
     m_pAddress = 0;
@@ -62,7 +62,7 @@ namespace TE {
     }
 #endif
   
-    memset (&hints, 0, sizeof hints);
+    memset (&hints, NULL, sizeof hints);
     hints.ai_family = m_bFamily;
     hints.ai_socktype = SOCK_DGRAM;
 
@@ -87,7 +87,7 @@ namespace TE {
     Initialize (IPV4);
   }
 
-  Socket::Socket (TEbyte bFamily) {
+  Socket::Socket (const TEbyte bFamily) {
     Initialize (bFamily);
   }
 
@@ -112,7 +112,7 @@ namespace TE {
 
   //**************************************************
   // bind
-  TEint Socket::Bind (TEushort usPort) {
+  TEint Socket::Bind (const TEushort usPort) {
     if (m_iSocket != -1 && m_pAddress) {
           struct sockaddr_in *sockaddr = (struct sockaddr_in *)m_pAddress->ai_addr;
           sockaddr->sin_port = ntohs (usPort);
@@ -160,7 +160,7 @@ namespace TE {
 
   //**************************************************
   // send
-  TEint Socket::Send (TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) {    
+  TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) {    
     int sendfd, bytes;
     struct addrinfo hints, *addrinfo;
 

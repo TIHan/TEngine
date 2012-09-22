@@ -29,9 +29,9 @@ namespace TE {
   class ISocket {
   public:
     virtual void Close () = 0;
-    virtual TEint Bind (TEushort usPort) = 0;
+    virtual TEint Bind (const TEushort usPort) = 0;
     virtual TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize) = 0;
-    virtual TEint Send (TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) = 0;
+    virtual TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) = 0;
   };
 
   class Socket : ISocket {
@@ -40,17 +40,17 @@ namespace TE {
     struct addrinfo *m_pAddress;
     TEbyte m_bFamily;
 
-    void Initialize (TEbyte bFamily);
+    void Initialize (const TEbyte bFamily);
   public:
     Socket ();
-    explicit Socket (TEbyte bFamily);
+    explicit Socket (const TEbyte bFamily);
     ~Socket ();
 
     void Close ();
-    TEint Bind (TEushort usPort);
+    TEint Bind (const TEushort usPort);
     void GetAddressText (TEchar *pszAddress);
     TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize);
-    TEint Send (TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName);
+    TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName);
   };
 }
 

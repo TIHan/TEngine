@@ -41,11 +41,11 @@
 
 #define ERROR_MESSAGE(str) \
   fprintf (stderr, "(%s) Line %i Error: %s\n", __FUNCTION__, __LINE__, str); \
+  exit (1); \
 
 #define ERROR_MESSAGE_FORMAT(str, ...) \
   char newstr[MAX_ERROR_LEN]; \
   sprintf (newstr, str, __VA_ARGS__); \
   ERROR_MESSAGE(newstr) \
-  exit (1); \
 
 #endif /* __MESSAGES_HPP_ */

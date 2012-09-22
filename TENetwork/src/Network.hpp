@@ -17,7 +17,7 @@ namespace TE {
     ByteStream *m_pByteStream;
 
   public:
-    Network (TEushort usPort);
+    explicit Network (const TEushort usPort);
     ~Network ();
 
     void PrintAddresses ();

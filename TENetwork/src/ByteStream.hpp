@@ -59,6 +59,7 @@ namespace TE {
       unpack.byte[i] = *m_pbReadPosition;
       m_pbReadPosition++;
     }
+
     m_nSize -= size;
     T value = unpack.val;
     return value;
