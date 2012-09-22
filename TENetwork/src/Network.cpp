@@ -9,19 +9,26 @@ namespace TE {
     TEint byteSize;
 
     m_pSocket = new Socket (IPV4);
-    m_pByteStream = new ByteStream ();
+    m_pByteStream = new ByteStream (512);
 
     m_pSocket->Bind (usPort);
     m_pByteStream->WriteString ("LOHELLHELLOHELLOH");
-    m_pSocket->Send (m_pByteStream->GetStream (), m_pByteStream->GetSize (), "localhost", "4767");
-    m_pByteStream->UnrefStream ();
+
+    TEbyte *sendBuffer = m_pByteStream->GetCopyOfStream ();
+    m_pSocket->Send (sendBuffer, m_pByteStream->GetSize (), "localhost", "4767");
+    delete sendBuffer;
+
     m_pByteStream->Clear ();
-    byteSize = m_pSocket->Receive (m_pByteStream->GetStream (), MAX_BUFFER);
-    m_pByteStream->SetSize (byteSize);
+
+    TEuint maxSize = m_pByteStream->GetMaxSize ();
+    TEbyte *receiveBuffer = new TEbyte[maxSize];
+    byteSize = m_pSocket->Receive (receiveBuffer, maxSize);
+
+    m_pByteStream->WriteStream (receiveBuffer, byteSize);
+    delete receiveBuffer;
     TEchar *HEY = m_pByteStream->ReadString ();
     printf ("SAY: %s\n", HEY);
     delete [] HEY;
-    m_pByteStream->UnrefStream ();
     delete m_pByteStream;
   }
 

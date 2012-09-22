@@ -4,33 +4,27 @@
 #include "Types.hpp"
 #include "Messages.hpp"
 
-#define MAX_BUFFER 512
-
 namespace TE {
   class IByteStream {
   public:
-    virtual TEbyte* GetStream () = 0;
     virtual TEuint GetSize () = 0;
-    virtual void SetSize (TEuint nSize) = 0;
-    virtual void UnrefStream () = 0;
     virtual void Clear () = 0;
   };
 
   class ByteStream : IByteStream {
     TEbyte *m_pbStream;
-    TEbyte *m_pbPosition;
+    TEbyte *m_pbReadPosition;
+    TEbyte *m_pbWritePosition;
     TEuint m_nSize;
-    TEuint m_nStreamRefCount;
+    TEuint m_nMaxSize;
 
   public:
-    ByteStream();
+    explicit ByteStream(TEuint nMaxSize);
     ~ByteStream();
 
-    TEbyte* GetStream ();
+    TEbyte* GetCopyOfStream ();
     TEuint GetSize ();
-    void SetSize (TEuint nSize);
-
-    void UnrefStream ();
+    TEuint GetMaxSize ();
     void Clear ();
 
     // Read
@@ -40,10 +34,14 @@ namespace TE {
 
     // Write
     template <class T>
-    void Write (T value);
+    void Write (const T value);
     void WriteString (const TEchar *value);
+    void WriteStream (const TEbyte *pbStream, const TEuint nSize);
   };
 
+  /*!
+   *
+   */
   template <class T>
   T ByteStream::Read () {
     TEuint size = sizeof (T);
@@ -58,16 +56,19 @@ namespace TE {
     } unpack;
 
     for (TEuint i = 0; i < size; i++) {
-      unpack.byte[i] = *m_pbPosition;
-      m_pbPosition++;
+      unpack.byte[i] = *m_pbReadPosition;
+      m_pbReadPosition++;
     }
     m_nSize -= size;
     T value = unpack.val;
     return value;
   }
 
+  /*!
+   *
+   */
   template <class T>
-  void ByteStream::Write (T value) {
+  void ByteStream::Write (const T value) {
     TEuint size = sizeof (T);
     if (m_nSize + size > MAX_BUFFER) {
       WARNING_MESSAGE("Overflow on writing.")
@@ -81,8 +82,8 @@ namespace TE {
 
     pack.val = value;
     for (TEuint i = 0; i < size; i++) {
-      *m_pbPosition = pack.byte[i];
-      m_pbPosition++;
+      *m_pbWritePosition = pack.byte[i];
+      m_pbWritePosition++;
     }
     m_nSize += size;
   }
