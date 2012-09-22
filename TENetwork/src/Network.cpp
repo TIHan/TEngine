@@ -16,7 +16,7 @@ namespace TE {
 
     TEbyte *sendBuffer = m_pByteStream->GetCopyOfStream ();
     m_pSocket->Send (sendBuffer, m_pByteStream->GetSize (), "localhost", "4767");
-    delete sendBuffer;
+    delete [] sendBuffer;
 
     m_pByteStream->Clear ();
 
@@ -25,7 +25,7 @@ namespace TE {
     byteSize = m_pSocket->Receive (receiveBuffer, maxSize);
 
     m_pByteStream->WriteStream (receiveBuffer, byteSize);
-    delete receiveBuffer;
+    delete [] receiveBuffer;
     TEchar *HEY = m_pByteStream->ReadString ();
     printf ("SAY: %s\n", HEY);
     delete [] HEY;
