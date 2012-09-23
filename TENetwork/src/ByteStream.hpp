@@ -18,10 +18,10 @@ namespace TE {
     virtual void WriteStream (const TEbyte *pbStream, const TEuint nSize) = 0;
 
     template <class T>
-    T Read () {};
+    T Read () {}
 
     template <class T>
-    void Write (const T value) {};
+    void Write (const T value) {}
   };
 
   class ByteStream : public IByteStream {
