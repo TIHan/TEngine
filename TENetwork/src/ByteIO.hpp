@@ -34,7 +34,11 @@
 
 namespace TE {
   namespace ByteIO {
-    TEchar* ReadString ();
+    template <class T>
+    T Read (IByteStream *pByteStream);
+
+    template <class T>
+    void Write (IByteStream *pByteStream, T val);
   }
 }
 

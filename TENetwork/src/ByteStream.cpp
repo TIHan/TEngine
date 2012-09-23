@@ -86,7 +86,39 @@ namespace TE {
   /*!
    *
    */
-  TEchar* ByteStream::ReadString () {    
+  TEbyte ByteStream::ReadByte () {
+    TEuint size = sizeof (TEbyte);
+
+    if (m_nSize - size > m_nMaxSize) {
+      ERROR_MESSAGE("Overflow on reading.")
+    }
+
+    TEbyte val = *m_pbReadPosition;
+    m_pbReadPosition++;
+    m_nSize -= size;
+    return val;
+  }
+
+  /*!
+   *
+   */
+  void ByteStream::WriteByte (TEbyte byte) {
+    TEuint size = sizeof (TEbyte);
+
+    if (m_nSize + size > m_nMaxSize) {
+      ERROR_MESSAGE("Overflow on writing.")
+      return;
+    }
+
+    *m_pbWritePosition = byte;
+    m_pbWritePosition++;
+    m_nSize += size;
+  }
+
+  /*!
+   *
+   */
+  TEchar* ByteStream::ReadString () {
     TEuint size = 1;
     for (TEbyte *p = m_pbReadPosition; *p != '\0'; p++) {
       size++;
