@@ -13,6 +13,7 @@ namespace TE {
 
     m_pSocket->Bind (usPort);
     m_pByteStream->WriteString ("LOHELLHELLOHELLOH");
+    m_pByteStream->Write<TEint> (5);
 
     TEbyte *sendBuffer = m_pByteStream->GetCopyOfStream ();
     m_pSocket->Send (sendBuffer, m_pByteStream->GetSize (), "localhost", "4767");
