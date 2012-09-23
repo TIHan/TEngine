@@ -33,10 +33,18 @@
 
 #define MAX_LEN 256
 
+/* MESSAGE */
+
+#define MESSAGE(str) \
+  printf (str);
+
+#define MESSAGE_FORMAT(str, ...) \
+  printf (str, __VA_ARGS__);
+
 /* ASSERT */
 
 #define ASSERT_MESSAGE(str) \
-  printf ("(%s) Line %i Assertion: %s\n", __FUNCTION__, __LINE__, str);
+  MESSAGE_FORMAT ("(%s) Line %i Assertion: %s\n", __FUNCTION__, __LINE__, str);
 
 #define ASSERT_MESSAGE_FORMAT(str, ...) \
   char newstr[MAX_LEN]; \
@@ -80,7 +88,7 @@
 /* WARNING */
 
 #define WARNING_MESSAGE(str) \
-  printf ("(%s) Line %i Warning: %s\n", __FUNCTION__, __LINE__, str); \
+  MESSAGE_FORMAT ("(%s) Line %i Warning: %s\n", __FUNCTION__, __LINE__, str)
 
 #define WARNING_MESSAGE_FORMAT(str, ...) \
   char newstr[MAX_LEN]; \

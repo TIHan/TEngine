@@ -55,7 +55,7 @@ namespace TE {
     m_pByteStream->WriteStream (receiveBuffer, byteSize);
     delete [] receiveBuffer;
     TEchar *HEY = m_pByteStream->ReadString ();
-    printf ("SAY: %s\n", HEY);
+    MESSAGE_FORMAT ("SAY: %s\n", HEY);
     delete [] HEY;
     delete m_pByteStream;
   }
