@@ -41,7 +41,7 @@ namespace TE {
     virtual void Clear () = 0;
 
     virtual TEbyte ReadByte () = 0;
-    virtual void WriteByte (TEbyte byte) = 0;
+    virtual void WriteByte (const TEbyte byte) = 0;
   };
 
   class ByteStream : public IByteStream {
@@ -61,7 +61,7 @@ namespace TE {
     void Clear ();
 
     TEbyte ReadByte ();
-    void WriteByte (TEbyte byte);
+    void WriteByte (const TEbyte byte);
   };
 }
 

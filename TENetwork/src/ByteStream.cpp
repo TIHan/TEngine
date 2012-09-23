@@ -102,7 +102,7 @@ namespace TE {
   /*!
    *
    */
-  void ByteStream::WriteByte (TEbyte byte) {
+  void ByteStream::WriteByte (const TEbyte byte) {
     TEuint size = sizeof (TEbyte);
 
     ERROR_IF(m_nSize + size > m_nMaxSize, "Overflow on writing.")
