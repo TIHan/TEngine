@@ -37,7 +37,6 @@ namespace TE {
   public:
     virtual ~INetwork () {};
     virtual void PrintAddresses () = 0;
-    virtual void Connect (const TEchar *szAddress, const TEchar *szPort) = 0;
   };
 
   class Network : public INetwork {
@@ -45,11 +44,10 @@ namespace TE {
     IByteStream *m_pByteStream;
 
   public:
-    explicit Network (const TEushort usPort);
+    explicit Network ();
     ~Network ();
 
     void PrintAddresses ();
-    void Connect (const TEchar *szAddress, const TEchar *szPort);
   };
 }
 

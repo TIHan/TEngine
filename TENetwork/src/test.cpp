@@ -9,9 +9,7 @@ using namespace TE;
 
 TEint main ()
 {
-  Network *network = new TE::Network (DEFAULT_PORT);
-  network->PrintAddresses ();
-  delete network;
+    Network *network = new Network ();
 #ifdef _MSC_VER
     system ("pause");
 #endif

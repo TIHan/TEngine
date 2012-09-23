@@ -33,13 +33,14 @@
 #include "ByteIO.hpp"
 
 namespace TE {
-  Network::Network (const TEushort usPort) {
-    TEint byteSize;
+  Network::Network () {
+    // Example
+    /*TEint byteSize;
 
     m_pSocket = new Socket (IPV4);
     m_pByteStream = new ByteStream (512);
 
-    m_pSocket->Bind (usPort);
+    m_pSocket->Bind (4767);
     ByteIO::WriteString(m_pByteStream, " lo\0l");
 
     TEbyte *sendBuffer = m_pByteStream->GetCopyOfStream ();
@@ -57,7 +58,7 @@ namespace TE {
     TEchar *HEY = ByteIO::ReadString (m_pByteStream);
     MESSAGE_FORMAT ("SAY: %s\n", HEY);
     delete [] HEY;
-    delete m_pByteStream;
+    delete m_pByteStream;*/
   }
 
   Network::~Network () {
@@ -71,9 +72,5 @@ namespace TE {
       printf ("IP: %s\n", ip);
       delete [] ip;
     }
-  }
-
-  void Network::Connect (const TEchar *szAddress, const TEchar *szPort) {
-   // m_pSocket->send ("connect", szAddress, szPort);
   }
 }
