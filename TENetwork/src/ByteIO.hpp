@@ -25,43 +25,17 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __TYPES_HPP_
-#define __TYPES_HPP_
+#ifndef __BYTEIO_HPP_
+#define __BYTEIO_HPP_
 
-#ifdef __GNUC__
-  #include <stdint.h>
-#endif
+#include "Types.hpp"
+#include "Messages.hpp"
+#include "ByteStream.hpp"
 
 namespace TE {
-#ifdef __GNUC__
-  typedef char TEchar;
-  typedef int8_t TEint8;
-  typedef uint8_t TEbyte;
-  typedef int16_t TEshort;
-  typedef uint16_t TEushort;
-  typedef int32_t TEint;
-  typedef uint32_t TEuint;
-  typedef int64_t TEint64;
-  typedef uint64_t TEuint64;
-#elif _MSC_VER
-  typedef char TEchar;
-  typedef signed __int8 TEint8;
-  typedef unsigned __int8 TEbyte;
-  typedef signed __int16 TEshort;
-  typedef unsigned __int16 TEushort;
-  typedef signed __int32 TEint;
-  typedef unsigned __int32 TEuint;
-  typedef signed __int64 TEint64;
-  typedef unsigned __int64 TEuint64;
-#endif
-
-  typedef struct _TEuint128 {
-    TEushort value[8];
-  } TEuint128;
-  
-  typedef void* TEpointer;
-  typedef float TEfloat;
-  typedef double TEdouble;
+  namespace ByteIO {
+    TEchar* ReadString ();
+  }
 }
 
-#endif /* __TYPES_HPP_ */
+#endif /* __BYTEIO_HPP_ */
