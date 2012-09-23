@@ -9,7 +9,7 @@ namespace TE {
    * a maximum size for the ByteStream buffer.
    *
    */
-  ByteStream::ByteStream (TEuint nMaxSize) {
+  ByteStream::ByteStream (const TEuint nMaxSize) {
     m_nMaxSize = nMaxSize;
     m_pbStream = new TEbyte[m_nMaxSize];
     m_pbReadPosition = m_pbStream;
@@ -68,7 +68,7 @@ namespace TE {
     }
 
     if (m_nSize - size > m_nMaxSize) {
-      WARNING_MESSAGE("Overflow on reading string.")
+      ERROR_MESSAGE("Overflow on reading string.")
       return NULL;
     }
 
@@ -87,8 +87,7 @@ namespace TE {
   void ByteStream::WriteString (const TEchar *value) {
     TEuint size = strlen (value);
     if (m_nSize + size + 1 > m_nMaxSize) {
-      WARNING_MESSAGE("Overflow on writing string.")
-      return;
+      ERROR_MESSAGE("Overflow on writing string.")
     }
 
     for (TEuint i = 0; i < size; i++) {
@@ -106,8 +105,7 @@ namespace TE {
    */
   void ByteStream::WriteStream (const TEbyte *pbStream, const TEuint nSize) {
     if (nSize + m_nSize > m_nMaxSize) {
-      WARNING_MESSAGE("Overflow on writing stream.")
-      return;
+      ERROR_MESSAGE("Overflow on writing stream.")
     }
 
     for (TEuint i = 0; i < nSize; i++) {

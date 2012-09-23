@@ -8,13 +8,14 @@
 namespace TE {
   class INetwork {
   public:
+    virtual ~INetwork () {};
     virtual void PrintAddresses () = 0;
     virtual void Connect (const TEchar *szAddress, const TEchar *szPort) = 0;
   };
 
-  class Network : INetwork {
-    Socket *m_pSocket;
-    ByteStream *m_pByteStream;
+  class Network : public INetwork {
+    ISocket *m_pSocket;
+    IByteStream *m_pByteStream;
 
   public:
     explicit Network (const TEushort usPort);

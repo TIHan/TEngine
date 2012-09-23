@@ -7,11 +7,24 @@
 namespace TE {
   class IByteStream {
   public:
+    virtual ~IByteStream () {};
+    virtual TEbyte* GetCopyOfStream () = 0;
     virtual TEuint GetSize () = 0;
+    virtual TEuint GetMaxSize () = 0;
     virtual void Clear () = 0;
+
+    virtual TEchar* ReadString () = 0;
+    virtual void WriteString (const TEchar *value) = 0;
+    virtual void WriteStream (const TEbyte *pbStream, const TEuint nSize) = 0;
+
+    template <class T>
+    T Read ();
+
+    template <class T>
+    void Write (const T value);
   };
 
-  class ByteStream : IByteStream {
+  class ByteStream : public IByteStream {
     TEbyte *m_pbStream;
     TEbyte *m_pbReadPosition;
     TEbyte *m_pbWritePosition;
@@ -19,7 +32,7 @@ namespace TE {
     TEuint m_nMaxSize;
 
   public:
-    explicit ByteStream(TEuint nMaxSize);
+    explicit ByteStream(const TEuint nMaxSize);
     ~ByteStream();
 
     TEbyte* GetCopyOfStream ();
@@ -27,16 +40,15 @@ namespace TE {
     TEuint GetMaxSize ();
     void Clear ();
 
-    // Read
-    template <class T>
-    T Read ();
     TEchar* ReadString ();
-
-    // Write
-    template <class T>
-    void Write (const T value);
     void WriteString (const TEchar *value);
     void WriteStream (const TEbyte *pbStream, const TEuint nSize);
+
+    template <class T>
+    T Read ();
+
+    template <class T>
+    void Write (const T value);
   };
 
   /*!
@@ -46,8 +58,7 @@ namespace TE {
   T ByteStream::Read () {
     TEuint size = sizeof (T);
     if (m_nSize - size > m_nMaxSize) {
-      WARNING_MESSAGE("Overflow on reading.")
-      return 0;
+      ERROR_MESSAGE("Overflow on reading.")
     }
 
     union unpack_t {
@@ -72,7 +83,7 @@ namespace TE {
   void ByteStream::Write (const T value) {
     TEuint size = sizeof (T);
     if (m_nSize + size > m_nMaxSize) {
-      WARNING_MESSAGE("Overflow on writing.")
+      ERROR_MESSAGE("Overflow on writing.")
       return;
     }
 

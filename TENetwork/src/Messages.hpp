@@ -2,8 +2,9 @@
 #define __MESSAGES_HPP_
 
 #include <stdio.h>
+#include <cstdlib>
 
-#define MAX_ERROR_LEN 256
+#define MAX_LEN 256
 
 /* ASSERT */
 
@@ -33,7 +34,7 @@
   printf ("(%s) Line %i Warning: %s\n", __FUNCTION__, __LINE__, str); \
 
 #define WARNING_MESSAGE_FORMAT(str, ...) \
-  char newstr[MAX_ERROR_LEN]; \
+  char newstr[MAX_LEN]; \
   sprintf (newstr, str, __VA_ARGS__); \
   WARNING_MESSAGE(newstr) \
 
@@ -44,7 +45,7 @@
   exit (1); \
 
 #define ERROR_MESSAGE_FORMAT(str, ...) \
-  char newstr[MAX_ERROR_LEN]; \
+  char newstr[MAX_LEN]; \
   sprintf (newstr, str, __VA_ARGS__); \
   ERROR_MESSAGE(newstr) \
 

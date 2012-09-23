@@ -28,13 +28,15 @@ namespace TE {
 
   class ISocket {
   public:
+    virtual ~ISocket () {};
     virtual void Close () = 0;
     virtual TEint Bind (const TEushort usPort) = 0;
+    virtual void GetAddressText (TEchar *pszAddress) = 0;
     virtual TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize) = 0;
     virtual TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) = 0;
   };
 
-  class Socket : ISocket {
+  class Socket : public ISocket {
     TEint m_iSocket;
     struct addrinfo *m_pAddressInfo;
     struct addrinfo *m_pAddress;

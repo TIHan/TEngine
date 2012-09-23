@@ -13,7 +13,6 @@
   #pragma comment(lib, "ws2_32.lib")
 #endif
 
-#include <stdio.h>
 #include "Types.hpp"
 #include "Socket.hpp"
 #include "Messages.hpp"
