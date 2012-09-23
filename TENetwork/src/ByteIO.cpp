@@ -36,49 +36,11 @@ namespace TE {
     /*!
      *
      */
-    template <class T>
-    T Read (IByteStream *pByteStream) {
-      TEuint size = sizeof (T);
-
-      union unpack_t {
-        TEbyte byte[sizeof (T)];
-        T val;
-      } unpack;
-
-      for (TEuint i = 0; i < size; i++) {
-        unpack.byte[i] = pByteStream->ReadByte ();
-      }
-
-      T value = unpack.val;
-      return value;
-    }
-
-    /*!
-     *
-     */
-    template <class T>
-    void Write (IByteStream *pByteStream, const T val) {
-      TEuint size = sizeof (T);
-
-      union pack_t {
-        TEbyte byte[sizeof (T)];
-        T val;
-      } pack;
-
-      pack.val = val;
-      for (TEuint i = 0; i < size; i++) {
-        pByteStream->WriteByte (pack.byte[i]);
-      }
-    }
-
-    /*!
-     *
-     */
     TEchar* ReadString (IByteStream *pByteStream) {
-      TEuint maxSize = pByteStream->GetMaxSize ();
-      TEchar *val = new TEchar[maxSize];
+      TEuint size = pByteStream->GetSize ();
+      TEchar *val = new TEchar[size];
 
-      for (TEuint i = 0; i < maxSize; i++) {
+      for (TEuint i = 0; i < size; i++) {
         val[i] = pByteStream->ReadByte ();
         
         if (val[i] == '\0') {
@@ -93,7 +55,10 @@ namespace TE {
      */
     void WriteString (IByteStream *pByteStream, const TEchar *sz) {
       TEuint size = strlen (sz);
+      TEuint stream = pByteStream->GetMaxSize () - pByteStream->GetSize ();
 
+      stream = stream != 0 ? stream - 1 : 0; 
+      size = stream < size ? stream : size;
       for (TEuint i = 0; i < size; i++) {
         pByteStream->WriteByte (sz[i]);
       }
@@ -104,7 +69,10 @@ namespace TE {
      *
      */
     void WriteStream (IByteStream *pByteStream, const TEbyte *pbStream, const TEuint nSize) {
-      for (TEuint i = 0; i < nSize; i++) {
+      TEuint stream = pByteStream->GetMaxSize () - pByteStream->GetSize ();
+      TEuint size = stream < nSize ? stream : nSize;
+
+      for (TEuint i = 0; i < size; i++) {
         pByteStream->WriteByte (pbStream[i]);
       }
     }

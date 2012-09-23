@@ -35,13 +35,14 @@
 namespace TE {
   Network::Network () {
     // Example
-    /*TEint byteSize;
+    TEint byteSize;
 
     m_pSocket = new Socket (IPV4);
     m_pByteStream = new ByteStream (512);
 
     m_pSocket->Bind (4767);
-    ByteIO::WriteString(m_pByteStream, " lo\0l");
+    ByteIO::WriteString(m_pByteStream, " lol");
+    ByteIO::Write<TEuint64> (m_pByteStream, -10);
 
     TEbyte *sendBuffer = m_pByteStream->GetCopyOfStream ();
     m_pSocket->Send (sendBuffer, m_pByteStream->GetSize (), "localhost", "4767");
@@ -57,8 +58,10 @@ namespace TE {
     delete [] receiveBuffer;
     TEchar *HEY = ByteIO::ReadString (m_pByteStream);
     MESSAGE_FORMAT ("SAY: %s\n", HEY);
+    TEint64 asdf = ByteIO::Read<TEint64> (m_pByteStream);
+    MESSAGE_FORMAT ("INT: %ld\n", asdf);
     delete [] HEY;
-    delete m_pByteStream;*/
+    delete m_pByteStream;
   }
 
   Network::~Network () {
