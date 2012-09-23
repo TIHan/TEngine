@@ -48,7 +48,7 @@
  *
  */
 static TE::TEint CreateSocket(TE::TEint domain, TE::TEint type, TE::TEint protocol) {
-  return socket (domain, type, protocol);
+  return (TE::TEint)socket (domain, type, protocol);
 }
 
 /*!
@@ -150,7 +150,7 @@ namespace TE {
           sockaddr->sin_port = ntohs (usPort);
       
       WARNING_IF_RETURN_VAL_FORMAT(
-        BindSocket(m_iSocket, m_pAddress->ai_addr, m_pAddress->ai_addrlen) != 0, 
+        BindSocket(m_iSocket, m_pAddress->ai_addr, (TEint)m_pAddress->ai_addrlen) != 0, 
         -1, 
         "Unable to associate socket with port %i.", usPort)
     }
@@ -195,7 +195,7 @@ namespace TE {
    *
    */
   TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) {
-    int sendfd, bytes;
+    TEint sendfd, bytes;
     struct addrinfo hints, *addrinfo;
 
     memset (&hints, 0, sizeof hints);
@@ -207,7 +207,7 @@ namespace TE {
       "Can't get address info.")
 
     sendfd = CreateSocket (addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
-    bytes = sendto (sendfd, (const TEchar *)pBuffer, nBufferSize, 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
+    bytes = sendto (sendfd, (const TEchar *)pBuffer, nBufferSize, 0, addrinfo->ai_addr, (TEint)addrinfo->ai_addrlen);
 
     // [WS] Close Socket and free address info.
     freeaddrinfo (addrinfo);

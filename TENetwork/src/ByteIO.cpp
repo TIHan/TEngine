@@ -54,7 +54,7 @@ namespace TE {
      *
      */
     void WriteString (IByteStream *pByteStream, const TEchar *sz) {
-      TEuint size = strlen (sz);
+      TEuint size = (TEint)strlen (sz);
       TEuint stream = pByteStream->GetMaxSize () - pByteStream->GetSize ();
 
       stream = stream != 0 ? stream - 1 : 0; 
