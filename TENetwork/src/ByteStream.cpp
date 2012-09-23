@@ -69,7 +69,7 @@ namespace TE {
 
     if (m_nSize - size > m_nMaxSize) {
       ERROR_MESSAGE("Overflow on reading string.")
-      return NULL;
+      return 0;
     }
 
     TEchar *value = new TEchar[size];

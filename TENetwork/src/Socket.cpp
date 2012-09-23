@@ -61,15 +61,15 @@ namespace TE {
     }
 #endif
   
-    memset (&hints, NULL, sizeof hints);
+    memset (&hints, 0, sizeof hints);
     hints.ai_family = m_bFamily;
     hints.ai_socktype = SOCK_DGRAM;
 
-    if (getaddrinfo (NULL, "", &hints, &m_pAddressInfo) != 0) {
+    if (getaddrinfo (0, "", &hints, &m_pAddressInfo) != 0) {
       ERROR_MESSAGE("Unable to get address info")
     }
 
-    for (p = m_pAddressInfo; p != NULL; p = p->ai_next) {
+    for (p = m_pAddressInfo; p != 0; p = p->ai_next) {
       if (p->ai_family == m_bFamily) {
         m_iSocket = CreateSocket (p->ai_family, p->ai_socktype, p->ai_protocol);
         m_pAddress = p;
