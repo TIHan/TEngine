@@ -30,6 +30,7 @@
 #include "Socket.hpp"
 #include "Network.hpp"
 #include "Messages.hpp"
+#include "ByteIO.hpp"
 
 namespace TE {
   Network::Network (const TEushort usPort) {
@@ -39,7 +40,7 @@ namespace TE {
     m_pByteStream = new ByteStream (512);
 
     m_pSocket->Bind (usPort);
-    m_pByteStream->WriteString ("LOHELLHELLOHELLOH");
+    ByteIO::WriteString(m_pByteStream, " lo\0l");
 
     TEbyte *sendBuffer = m_pByteStream->GetCopyOfStream ();
     m_pSocket->Send (sendBuffer, m_pByteStream->GetSize (), "localhost", "4767");
@@ -51,9 +52,9 @@ namespace TE {
     TEbyte *receiveBuffer = new TEbyte[maxSize];
     byteSize = m_pSocket->Receive (receiveBuffer, maxSize);
 
-    m_pByteStream->WriteStream (receiveBuffer, byteSize);
+    ByteIO::WriteStream (m_pByteStream, receiveBuffer, byteSize);
     delete [] receiveBuffer;
-    TEchar *HEY = m_pByteStream->ReadString ();
+    TEchar *HEY = ByteIO::ReadString (m_pByteStream);
     MESSAGE_FORMAT ("SAY: %s\n", HEY);
     delete [] HEY;
     delete m_pByteStream;

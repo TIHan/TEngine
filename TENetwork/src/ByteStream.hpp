@@ -42,10 +42,6 @@ namespace TE {
 
     virtual TEbyte ReadByte () = 0;
     virtual void WriteByte (TEbyte byte) = 0;
-
-    virtual TEchar* ReadString () = 0;
-    virtual void WriteString (const TEchar *sz) = 0;
-    virtual void WriteStream (const TEbyte *pbStream, const TEuint nSize) = 0;
   };
 
   class ByteStream : public IByteStream {
@@ -66,41 +62,7 @@ namespace TE {
 
     TEbyte ReadByte ();
     void WriteByte (TEbyte byte);
-
-    TEchar* ReadString ();
-    void WriteString (const TEchar *sz);
-    void WriteStream (const TEbyte *pbStream, const TEuint nSize);
-
-    template <class T>
-    T Read ();
-
-    template <class T>
-    void Write (const T value);
   };
-
-  /*!
-   *
-   */
-  template <class T>
-  void ByteStream::Write (const T value) {
-    TEuint size = sizeof (T);
-    if (m_nSize + size > m_nMaxSize) {
-      ERROR_MESSAGE("Overflow on writing.")
-      return;
-    }
-
-    union pack_t {
-      TEbyte byte[sizeof (T)];
-      T val;
-    } pack;
-
-    pack.val = value;
-    for (TEuint i = 0; i < size; i++) {
-      *m_pbWritePosition = pack.byte[i];
-      m_pbWritePosition++;
-    }
-    m_nSize += size;
-  }
 }
 
 #endif /* __BYTESTREAM_HPP_ */

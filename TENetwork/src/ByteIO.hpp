@@ -38,7 +38,12 @@ namespace TE {
     T Read (IByteStream *pByteStream);
 
     template <class T>
-    void Write (IByteStream *pByteStream, T val);
+    void Write (IByteStream *pByteStream, const T val);
+
+    TEchar* ReadString (IByteStream *pByteStream);
+    void WriteString (IByteStream *pByteStream, const TEchar *sz);
+
+    void WriteStream (IByteStream *pByteStream, const TEbyte *pbStream, const TEuint nSize);
   }
 }
 

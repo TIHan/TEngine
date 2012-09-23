@@ -25,6 +25,7 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <string.h>
 #include "Types.hpp"
 #include "Messages.hpp"
 #include "ByteStream.hpp"
@@ -32,7 +33,7 @@
 
 namespace TE {
   namespace ByteIO {
-    /*
+    /*!
      *
      */
     template <class T>
@@ -52,11 +53,11 @@ namespace TE {
       return value;
     }
 
-    /*
+    /*!
      *
      */
     template <class T>
-    void Write (IByteStream *pByteStream, T val) {
+    void Write (IByteStream *pByteStream, const T val) {
       TEuint size = sizeof (T);
 
       union pack_t {
@@ -67,6 +68,44 @@ namespace TE {
       pack.val = val;
       for (TEuint i = 0; i < size; i++) {
         pByteStream->WriteByte (pack.byte[i]);
+      }
+    }
+
+    /*!
+     *
+     */
+    TEchar* ReadString (IByteStream *pByteStream) {
+      TEuint maxSize = pByteStream->GetMaxSize ();
+      TEchar *val = new TEchar[maxSize];
+
+      for (TEuint i = 0; i < maxSize; i++) {
+        val[i] = pByteStream->ReadByte ();
+        
+        if (val[i] == '\0') {
+          break;
+        }
+      }
+      return val;
+    }
+
+    /*!
+     *
+     */
+    void WriteString (IByteStream *pByteStream, const TEchar *sz) {
+      TEuint size = strlen (sz);
+
+      for (TEuint i = 0; i < size; i++) {
+        pByteStream->WriteByte (sz[i]);
+      }
+      pByteStream->WriteByte ('\0');
+    }
+
+    /*!
+     *
+     */
+    void WriteStream (IByteStream *pByteStream, const TEbyte *pbStream, const TEuint nSize) {
+      for (TEuint i = 0; i < nSize; i++) {
+        pByteStream->WriteByte (pbStream[i]);
       }
     }
   }

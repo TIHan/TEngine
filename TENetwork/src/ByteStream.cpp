@@ -52,6 +52,9 @@ namespace TE {
     delete [] m_pbStream;
   }
 
+  /*!
+   *
+   */
   TEbyte* ByteStream::GetCopyOfStream () {
     TEbyte *stream = new TEbyte[m_nMaxSize];
     memcpy (stream, m_pbStream, m_nMaxSize);
@@ -89,10 +92,7 @@ namespace TE {
   TEbyte ByteStream::ReadByte () {
     TEuint size = sizeof (TEbyte);
 
-    if (m_nSize - size > m_nMaxSize) {
-      ERROR_MESSAGE("Overflow on reading.")
-    }
-
+    ERROR_IF(m_nSize - size > m_nMaxSize, "Overflow on reading.")
     TEbyte val = *m_pbReadPosition;
     m_pbReadPosition++;
     m_nSize -= size;
@@ -105,62 +105,9 @@ namespace TE {
   void ByteStream::WriteByte (TEbyte byte) {
     TEuint size = sizeof (TEbyte);
 
-    if (m_nSize + size > m_nMaxSize) {
-      ERROR_MESSAGE("Overflow on writing.")
-      return;
-    }
-
+    ERROR_IF(m_nSize + size > m_nMaxSize, "Overflow on writing.")
     *m_pbWritePosition = byte;
     m_pbWritePosition++;
     m_nSize += size;
-  }
-
-  /*!
-   *
-   */
-  TEchar* ByteStream::ReadString () {
-    TEuint size = 1;
-    for (TEbyte *p = m_pbReadPosition; *p != '\0'; p++) {
-      size++;
-    }
-    ERROR_IF(m_nSize - size > m_nMaxSize, "Overflow on reading string.")
-
-    TEchar *value = new TEchar[size];
-    for (TEuint i = 0; i < size; i++) {
-      value[i] = *m_pbReadPosition;
-      m_pbReadPosition++;
-    }
-    m_nSize -= size;
-    return value;
-  }
-
-  /*!
-   *
-   */
-  void ByteStream::WriteString (const TEchar *sz) {
-    TEuint size = strlen (sz);
-    ERROR_IF(m_nSize + size + 1 > m_nMaxSize, "Overflow on writing string.")
-
-    for (TEuint i = 0; i < size; i++) {
-        *m_pbWritePosition = sz[i];
-        m_pbWritePosition++;
-    }
-
-    *m_pbWritePosition = '\0';
-    m_pbWritePosition++;
-    m_nSize += size + 1;
-  }
-
-  /*!
-   *
-   */
-  void ByteStream::WriteStream (const TEbyte *pbStream, const TEuint nSize) {
-    ERROR_IF(nSize + m_nSize > m_nMaxSize, "Overflow on writing stream.")
-
-    for (TEuint i = 0; i < nSize; i++) {
-      *m_pbWritePosition = pbStream[i];
-      m_pbWritePosition++;
-    }
-    m_nSize += nSize;
   }
 }
