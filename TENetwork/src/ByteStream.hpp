@@ -41,7 +41,7 @@ namespace TE {
     virtual void Clear () = 0;
 
     virtual TEchar* ReadString () = 0;
-    virtual void WriteString (const TEchar *value) = 0;
+    virtual void WriteString (const TEchar *sz) = 0;
     virtual void WriteStream (const TEbyte *pbStream, const TEuint nSize) = 0;
 
     template <class T>
@@ -68,7 +68,7 @@ namespace TE {
     void Clear ();
 
     TEchar* ReadString ();
-    void WriteString (const TEchar *value);
+    void WriteString (const TEchar *sz);
     void WriteStream (const TEbyte *pbStream, const TEuint nSize);
 
     template <class T>

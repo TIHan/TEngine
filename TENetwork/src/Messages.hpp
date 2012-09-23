@@ -36,24 +36,46 @@
 /* ASSERT */
 
 #define ASSERT_MESSAGE(str) \
-  printf ("(%s) Line %i Assertion: %s\n", __FUNCTION__, __LINE__, str); \
+  printf ("(%s) Line %i Assertion: %s\n", __FUNCTION__, __LINE__, str);
+
+#define ASSERT_MESSAGE_FORMAT(str, ...) \
+  char newstr[MAX_LEN]; \
+  sprintf (newstr, str, __VA_ARGS__); \
+  ASSERT_MESSAGE(newstr)
 
 #define ASSERT(expr, str) \
   if (!(expr)) { \
     ASSERT_MESSAGE(str) \
-  } \
+  }
+
+#define ASSERT_FORMAT(expr, str, ...) \
+  if (!(expr)) { \
+    ASSERT_MESSAGE_FORMAT(str, __VA_ARGS__) \
+  }
 
 #define ASSERT_RETURN(expr, str) \
   if (!(expr)) { \
     ASSERT_MESSAGE(str) \
     return; \
-  } \
+  }
+
+#define ASSERT_RETURN_FORMAT(expr, str, ...) \
+  if (!(expr)) { \
+    ASSERT_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    return; \
+  }
 
 #define ASSERT_RETURN_VAL(expr, val, str) \
   if (!(expr)) { \
     ASSERT_MESSAGE(str) \
     return val; \
-  } \
+  }
+
+#define ASSERT_RETURN_VAL_FORMAT(expr, val, str, ...) \
+  if (!(expr)) { \
+    ASSERT_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    return val; \
+  }
 
 /* WARNING */
 
@@ -63,17 +85,68 @@
 #define WARNING_MESSAGE_FORMAT(str, ...) \
   char newstr[MAX_LEN]; \
   sprintf (newstr, str, __VA_ARGS__); \
-  WARNING_MESSAGE(newstr) \
+  WARNING_MESSAGE(newstr)
+
+#define WARNING_IF(expr, str) \
+  if ((expr)) { \
+    WARNING_MESSAGE(str) \
+  }
+
+#define WARNING_IF_FORMAT(expr, str, ...) \
+  if ((expr)) { \
+    WARNING_MESSAGE_FORMAT(str, __VA_ARGS__) \
+  }
+
+#define WARNING_IF_RETURN(expr, str) \
+  if ((expr)) { \
+    WARNING_MESSAGE(str) \
+    return; \
+  }
+
+#define WARNING_IF_RETURN_FORMAT(expr, str, ...) \
+  if ((expr)) { \
+    WARNING_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    return; \
+  }
+
+#define WARNING_IF_RETURN_VAL(expr, val, str) \
+  if ((expr)) { \
+    WARNING_MESSAGE(str) \
+    return val; \
+  }
+
+#define WARNING_IF_RETURN_VAL_FORMAT(expr, val, str, ...) \
+  if ((expr)) { \
+    WARNING_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    return val; \
+  }
 
 /* ERROR */
 
-#define ERROR_MESSAGE(str) \
-  fprintf (stderr, "(%s) Line %i Error: %s\n", __FUNCTION__, __LINE__, str); \
-  exit (1); \
+#ifdef __GNUC__
+  #define ERROR_MESSAGE(str) \
+    fprintf (stderr, "(%s) Line %i Error: %s\n", __FUNCTION__, __LINE__, str); \
+    exit (1);
+#elif _MSC_VER
+  #define ERROR_MESSAGE(str) \
+    fprintf (stderr, "(%s) Line %i Error: %s\n", __FUNCTION__, __LINE__, str); \
+    system ("pause"); \
+    exit (1);
+#endif
 
 #define ERROR_MESSAGE_FORMAT(str, ...) \
   char newstr[MAX_LEN]; \
   sprintf (newstr, str, __VA_ARGS__); \
-  ERROR_MESSAGE(newstr) \
+  ERROR_MESSAGE(newstr)
+
+#define ERROR_IF(expr, str) \
+  if ((expr)) { \
+    ERROR_MESSAGE(str) \
+  }
+
+#define ERROR_IF_FORMAT(expr, str, ...) \
+  if ((expr)) { \
+    ERROR_MESSAGE_FORMAT(str, __VA_ARGS__) \
+  }
 
 #endif /* __MESSAGES_HPP_ */

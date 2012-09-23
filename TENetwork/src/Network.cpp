@@ -65,8 +65,7 @@ namespace TE {
   }
 
   void Network::PrintAddresses () {
-    TEchar ip[IP_STRLEN];
-    m_pSocket->GetAddressText (ip);
+    TEchar *ip = m_pSocket->GetAddressText ();
 
     if (ip[0]) {
       printf ("IP: %s\n", ip);

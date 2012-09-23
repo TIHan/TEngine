@@ -44,17 +44,23 @@
 #include "Socket.hpp"
 #include "Messages.hpp"
 
-// createSocket
+/*!
+ *
+ */
 static TE::TEint CreateSocket(TE::TEint domain, TE::TEint type, TE::TEint protocol) {
   return socket (domain, type, protocol);
 }
 
-// bindSocket
+/*!
+ *
+ */
 static TE::TEint BindSocket(TE::TEint sockfd, struct sockaddr *my_addr, TE::TEint addrlen) {
   return bind (sockfd, my_addr, addrlen);
 }
 
-// closeSocket
+/*!
+ *
+ */
 static TE::TEint CloseSocket (TE::TEint sockfd) {
 #ifdef __GNUC__
     return close (sockfd);
@@ -64,6 +70,9 @@ static TE::TEint CloseSocket (TE::TEint sockfd) {
 }
 
 namespace TE {
+  /*!
+   *
+   */
   void Socket::Initialize (const TEbyte bFamily) {
     struct addrinfo hints, *p;
     m_iSocket = -1;
@@ -107,18 +116,24 @@ namespace TE {
       ERROR_MESSAGE("Unable to create a Socket")
     }
   }
-  //**************************************************
-  // Socket
+
+  /*!
+   *
+   */
   Socket::Socket () {
     Initialize (IPV4);
   }
 
+  /*!
+   *
+   */
   Socket::Socket (const TEbyte bFamily) {
     Initialize (bFamily);
   }
 
-  //**************************************************
-  // ~Socket
+  /*!
+   *
+   */
   Socket::~Socket () {
     Close ();
 #ifdef _MSC_VER
@@ -126,8 +141,9 @@ namespace TE {
 #endif
   }
 
-  //**************************************************
-  // close
+  /*!
+   *
+   */
   void Socket::Close () {
     freeaddrinfo (m_pAddressInfo);
     if (CloseSocket (m_iSocket) != 0) {
@@ -136,8 +152,9 @@ namespace TE {
     }
   }
 
-  //**************************************************
-  // bind
+  /*!
+   *
+   */
   TEint Socket::Bind (const TEushort usPort) {
     if (m_iSocket != -1 && m_pAddress) {
           struct sockaddr_in *sockaddr = (struct sockaddr_in *)m_pAddress->ai_addr;
@@ -151,25 +168,30 @@ namespace TE {
     return 0;
   }
 
-  //**************************************************
-  // getAddressText
-  void Socket::GetAddressText (TEchar *pszAddress) {
+  /*!
+   *
+   */
+  TEchar* Socket::GetAddressText () {
+    TEchar *address = new TEchar[IP_STRLEN];
+
     if (m_pAddress) {
       switch (m_bFamily) {
       case AF_INET6:
-        inet_ntop (m_bFamily, &(((struct sockaddr_in6 *)m_pAddress->ai_addr)->sin6_addr), pszAddress, IP_STRLEN);
+        inet_ntop (m_bFamily, &(((struct sockaddr_in6 *)m_pAddress->ai_addr)->sin6_addr), address, IP_STRLEN);
         break;
       default:
-        inet_ntop (m_bFamily, &(((struct sockaddr_in *)m_pAddress->ai_addr)->sin_addr), pszAddress, IP_STRLEN);
+        inet_ntop (m_bFamily, &(((struct sockaddr_in *)m_pAddress->ai_addr)->sin_addr), address, IP_STRLEN);
         break;
       }
+      return address;
     } else {
-      pszAddress[0] = 0;
+      return 0;
     }
   }
 
-  //**************************************************
-  // receive
+  /*!
+   *
+   */
   TEint Socket::Receive (TEbyte *pBuffer, const TEuint nBufferSize) {
     struct sockaddr_storage sock_addr;
     socklen_t addr_len = sizeof sock_addr;
@@ -184,8 +206,9 @@ namespace TE {
     return bytes;
   }
 
-  //**************************************************
-  // send
+  /*!
+   *
+   */
   TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) {    
     int sendfd, bytes;
     struct addrinfo hints, *addrinfo;

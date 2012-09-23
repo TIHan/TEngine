@@ -47,10 +47,8 @@ namespace TE {
   /*!
    *
    */
-  ByteStream::~ByteStream () {    
-    if (m_nSize != 0) {
-      WARNING_MESSAGE_FORMAT("Not all bytes were read. Please clear or read the remaining %d byte(s).", m_nSize)
-    }
+  ByteStream::~ByteStream () {
+    WARNING_IF_FORMAT(m_nSize != 0, "Not all bytes were read. Please clear or read the remaining %d byte(s).", m_nSize)
     delete [] m_pbStream;
   }
 
@@ -93,11 +91,7 @@ namespace TE {
     for (TEbyte *p = m_pbReadPosition; *p != '\0'; p++) {
       size++;
     }
-
-    if (m_nSize - size > m_nMaxSize) {
-      ERROR_MESSAGE("Overflow on reading string.")
-      return 0;
-    }
+    ERROR_IF(m_nSize - size > m_nMaxSize, "Overflow on reading string.")
 
     TEchar *value = new TEchar[size];
     for (TEuint i = 0; i < size; i++) {
@@ -111,14 +105,12 @@ namespace TE {
   /*!
    *
    */
-  void ByteStream::WriteString (const TEchar *value) {
-    TEuint size = strlen (value);
-    if (m_nSize + size + 1 > m_nMaxSize) {
-      ERROR_MESSAGE("Overflow on writing string.")
-    }
+  void ByteStream::WriteString (const TEchar *sz) {
+    TEuint size = strlen (sz);
+    ERROR_IF(m_nSize + size + 1 > m_nMaxSize, "Overflow on writing string.")
 
     for (TEuint i = 0; i < size; i++) {
-        *m_pbWritePosition = value[i];
+        *m_pbWritePosition = sz[i];
         m_pbWritePosition++;
     }
 
@@ -131,9 +123,7 @@ namespace TE {
    *
    */
   void ByteStream::WriteStream (const TEbyte *pbStream, const TEuint nSize) {
-    if (nSize + m_nSize > m_nMaxSize) {
-      ERROR_MESSAGE("Overflow on writing stream.")
-    }
+    ERROR_IF(nSize + m_nSize > m_nMaxSize, "Overflow on writing stream.")
 
     for (TEuint i = 0; i < nSize; i++) {
       *m_pbWritePosition = pbStream[i];
