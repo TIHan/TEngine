@@ -69,6 +69,7 @@ namespace TE {
 
     if (ip[0]) {
       printf ("IP: %s\n", ip);
+      delete [] ip;
     }
   }
 
