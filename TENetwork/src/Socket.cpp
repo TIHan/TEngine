@@ -92,29 +92,21 @@ namespace TE {
 
     // Initialize Winsock
     wsaResult = WSAStartup (MAKEWORD(2,2), &wsaData);
-    if (wsaResult != 0) {
-      ERROR_MESSAGE_FORMAT("WSAStartup failed with result %i", wsaResult)
-    }
+    ERROR_IF_FORMAT(wsaResult != 0, "WSAStartup failed with result %i", wsaResult)
 #endif
   
     memset (&hints, 0, sizeof hints);
     hints.ai_family = m_bFamily;
     hints.ai_socktype = SOCK_DGRAM;
 
-    if (getaddrinfo (0, "", &hints, &m_pAddressInfo) != 0) {
-      ERROR_MESSAGE("Unable to get address info")
-    }
-
+    ERROR_IF(getaddrinfo (0, "", &hints, &m_pAddressInfo) != 0, "Unable to get address info.")
     for (p = m_pAddressInfo; p != 0; p = p->ai_next) {
       if (p->ai_family == m_bFamily) {
         m_iSocket = CreateSocket (p->ai_family, p->ai_socktype, p->ai_protocol);
         m_pAddress = p;
       }
     }
-
-    if (m_iSocket == -1) {
-      ERROR_MESSAGE("Unable to create a Socket")
-    }
+    ERROR_IF(m_iSocket == -1, "Unable to create socket.")
   }
 
   /*!
@@ -146,10 +138,7 @@ namespace TE {
    */
   void Socket::Close () {
     freeaddrinfo (m_pAddressInfo);
-    if (CloseSocket (m_iSocket) != 0) {
-      WARNING_MESSAGE("Unable to close Socket")
-      return;
-    }
+    WARNING_IF(CloseSocket (m_iSocket) != 0, "Unable to close socket.")
   }
 
   /*!
@@ -159,11 +148,11 @@ namespace TE {
     if (m_iSocket != -1 && m_pAddress) {
           struct sockaddr_in *sockaddr = (struct sockaddr_in *)m_pAddress->ai_addr;
           sockaddr->sin_port = ntohs (usPort);
-
-      if (BindSocket (m_iSocket, m_pAddress->ai_addr, m_pAddress->ai_addrlen) != 0) {
-        WARNING_MESSAGE_FORMAT("Unable to associated Socket with port %i", usPort)
-        return -1;
-      }
+      
+      WARNING_IF_RETURN_VAL_FORMAT(
+        BindSocket(m_iSocket, m_pAddress->ai_addr, m_pAddress->ai_addrlen) != 0, 
+        -1, 
+        "Unable to associate socket with port %i.", usPort)
     }
     return 0;
   }
@@ -197,19 +186,15 @@ namespace TE {
     socklen_t addr_len = sizeof sock_addr;
     
     TEint bytes = recvfrom (m_iSocket, (TEchar *)pBuffer, nBufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
-    if (bytes == -1) {
-      WARNING_MESSAGE("Failed to receive packet.")
-      return bytes;
-    }
-
-    printf ("Got %i bytes.\n", bytes);
+    WARNING_IF_RETURN_VAL(bytes == -1, -1, "Failed to receive packet.")
+    MESSAGE_FORMAT ("Got %i bytes.\n", bytes);
     return bytes;
   }
 
   /*!
    *
    */
-  TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) {    
+  TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) {
     int sendfd, bytes;
     struct addrinfo hints, *addrinfo;
 
@@ -217,10 +202,10 @@ namespace TE {
     hints.ai_family = m_bFamily;
     hints.ai_socktype = SOCK_DGRAM;
 
-    if (getaddrinfo (szNodeName, szServiceName, &hints, &addrinfo) != 0) {
-      WARNING_MESSAGE("Can't get address info")
-      return -1;
-    }
+    WARNING_IF_RETURN_VAL(getaddrinfo (szNodeName, szServiceName, &hints, &addrinfo) != 0,
+      -1,
+      "Can't get address info.")
+
     sendfd = CreateSocket (addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
     bytes = sendto (sendfd, (const TEchar *)pBuffer, nBufferSize, 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
 
@@ -228,12 +213,8 @@ namespace TE {
     freeaddrinfo (addrinfo);
     CloseSocket (sendfd);
 
-    if (bytes == -1) {
-      WARNING_MESSAGE("Failed to send packet.")
-      return bytes;
-    }
-
-    printf ("Sent %i bytes.\n", bytes);
+    WARNING_IF(bytes == -1, "Failed to send packet.")
+    MESSAGE_FORMAT ("Sent %i bytes.\n", bytes);
     return bytes;
   }
  }
