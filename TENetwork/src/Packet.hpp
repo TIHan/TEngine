@@ -28,7 +28,6 @@
 #include "ByteStream.hpp"
 #include "Network.hpp"
 #include "Messages.hpp"
-#include "ByteIO.hpp"
 
 namespace TE {
   class Packet {

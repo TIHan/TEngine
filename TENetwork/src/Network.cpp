@@ -30,22 +30,22 @@
 #include "Socket.hpp"
 #include "Network.hpp"
 #include "Messages.hpp"
-#include "ByteIO.hpp"
 
 namespace TE {
   Network::Network () {
+    m_pSocket = new Socket (IPV4);
     // Example
-    TEint byteSize;
+    /*TEint byteSize;
 
     m_pSocket = new Socket (IPV4);
     m_pByteStream = new ByteStream (512);
 
     m_pSocket->Bind (4767);
-    ByteIO::WriteString(m_pByteStream, " lol");
-    ByteIO::Write<TEuint64> (m_pByteStream, -10);
+    m_pByteStream->WriteString(" lol");
+    m_pByteStream->Write<TEuint64> (-10);
 
     TEbyte *sendBuffer = m_pByteStream->GetCopyOfStream ();
-    m_pSocket->Send (sendBuffer, m_pByteStream->GetSize () - 1, "localhost", "4767");
+    m_pSocket->Send (sendBuffer, m_pByteStream->GetSize (), "localhost", "4767");
     delete [] sendBuffer;
 
     m_pByteStream->Clear ();
@@ -54,22 +54,19 @@ namespace TE {
     TEbyte *receiveBuffer = new TEbyte[maxSize];
     byteSize = m_pSocket->Receive (receiveBuffer, maxSize);
 
-    ByteIO::WriteStream (m_pByteStream, receiveBuffer, byteSize);
+    m_pByteStream->WriteStream (receiveBuffer, byteSize);
     delete [] receiveBuffer;
-    TEchar *HEY = ByteIO::ReadString (m_pByteStream);
+    TEchar *HEY = m_pByteStream->ReadString ();
     MESSAGE_FORMAT("SAY: %s\n", HEY)
-    TEuint64 asdf = ByteIO::Read<TEuint64> (m_pByteStream);
+    TEuint64 asdf = m_pByteStream->Read<TEuint64> ();
     MESSAGE_FORMAT("INT: %ld\n", asdf)
-    asdf = ByteIO::Read<TEuint64> (m_pByteStream);
-    asdf = ByteIO::Read<TEuint64> (m_pByteStream);
-    TEchar *dddEY = ByteIO::ReadString (m_pByteStream);
 
 
     if (m_pByteStream->HasError ()) {
       MESSAGE("BYTESTREAM HAS ERROR!\n")
     }
     delete [] HEY;
-    delete m_pByteStream;
+    delete m_pByteStream;*/
   }
 
   Network::~Network () {

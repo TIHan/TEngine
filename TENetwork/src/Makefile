@@ -1,6 +1,6 @@
 CXX		= g++
 CXXFLAGS	= -Wall -pedantic-errors -g -Wno-variadic-macros
-SOURCES		= test.cpp Network.cpp Socket.cpp ByteStream.cpp ByteIO.cpp Packet.cpp
+SOURCES		= test.cpp Network.cpp Socket.cpp ByteStream.cpp Packet.cpp
 OBJECTS		= $(SOURCES:.cpp=.o)
 EXECUTABLE	= te-network
 

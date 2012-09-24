@@ -34,7 +34,7 @@
 namespace TE {
   class IByteStream {
   public:
-    virtual ~IByteStream () {};
+    virtual ~IByteStream () { }
 
     virtual TEbyte* GetCopyOfStream () = 0;
     virtual TEuint GetSize () = 0;
@@ -44,6 +44,51 @@ namespace TE {
 
     virtual TEbyte ReadByte () = 0;
     virtual void WriteByte (const TEbyte byte) = 0;
+    virtual TEchar* ReadString () = 0;
+    virtual void WriteString (const TEchar *sz) = 0;
+    virtual void WriteStream (const TEbyte *pbStream, const TEuint nSize) = 0;
+
+    /*!
+     *
+     */
+    template <class T>
+    T Read () {
+      TEuint size = sizeof (T);
+
+      union unpack_t {
+        TEbyte byte[sizeof (T)];
+        T val;
+      } unpack;
+
+      for (TEuint i = 0; i < size; i++) {
+        if (HasError ()) {
+          return 0;
+        }
+        unpack.byte[i] = ReadByte ();
+      }
+      return unpack.val;
+    }
+
+    /*!
+     *
+     */
+    template <class T>
+    void Write (const T val) {
+      TEuint size = sizeof (T);
+
+      union pack_t {
+        TEbyte byte[sizeof (T)];
+        T val;
+      } pack;
+      pack.val = val;
+
+      for (TEuint i = 0; i < size; i++) {
+        if (HasError ()) {
+          return;
+        }
+        WriteByte (pack.byte[i]);
+      }
+    }
   };
 
   class ByteStream : public IByteStream {
@@ -66,6 +111,9 @@ namespace TE {
 
     TEbyte ReadByte ();
     void WriteByte (const TEbyte byte);
+    TEchar* ReadString ();
+    void WriteString (const TEchar *sz);
+    void WriteStream (const TEbyte *pbStream, const TEuint nSize);
   };
 }
 

@@ -127,4 +127,54 @@ namespace TE {
     m_pbWritePosition++;
     m_nSize += size;
   }
+
+  /*!
+   *
+   */
+  TEchar* ByteStream::ReadString () {
+    TEuint size = GetSize ();
+    TEchar *val = new TEchar[size];
+
+    for (TEuint i = 0; i < size; i++) {
+      if (HasError ()) {
+        delete [] val;
+        return 0;
+      }
+      val[i] = ReadByte ();        
+      if (val[i] == '\0') {
+        return val;
+      }
+    }
+    delete [] val;
+    return 0;
+  }
+
+  /*!
+   *
+   */
+  void ByteStream::WriteString (const TEchar *sz) {
+    TEuint size = (TEint)strlen (sz);
+
+    for (TEuint i = 0; i < size; i++) {
+      if (HasError ()) {
+        return;
+      }
+      WriteByte (sz[i]);
+      if (i + 1 >= size) {
+        WriteByte ('\0');
+      }
+    }
+  }
+
+  /*!
+   *
+   */
+  void ByteStream::WriteStream (const TEbyte *pbStream, const TEuint nSize) {
+    for (TEuint i = 0; i < nSize; i++) {
+      if (HasError ()) {
+        return;
+      }
+      WriteByte (pbStream[i]);
+    }
+  }
 }
