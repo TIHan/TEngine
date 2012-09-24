@@ -27,7 +27,7 @@
     <ClCompile Include="ByteStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ByteIO.cpp">
+    <ClCompile Include="Packet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,7 +50,7 @@
     <ClInclude Include="Messages.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ByteIO.hpp">
+    <ClInclude Include="Packet.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

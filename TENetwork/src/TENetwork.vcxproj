@@ -19,15 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ByteIO.cpp" />
     <ClCompile Include="ByteStream.cpp" />
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Socket.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ByteIO.hpp" />
     <ClInclude Include="ByteStream.hpp" />
+    <ClInclude Include="Packet.hpp" />
     <ClInclude Include="TENetwork.hpp" />
     <ClInclude Include="Messages.hpp" />
     <ClInclude Include="Network.hpp" />
