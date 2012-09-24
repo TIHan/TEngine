@@ -25,48 +25,18 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __BYTESTREAM_HPP_
-#define __BYTESTREAM_HPP_
-
-#include "Types.hpp"
+#include "ByteStream.hpp"
+#include "Network.hpp"
 #include "Messages.hpp"
+#include "ByteIO.hpp"
 
 namespace TE {
-  class IByteStream {
-  public:
-    virtual ~IByteStream () {};
-
-    virtual TEbyte* GetCopyOfStream () = 0;
-    virtual TEuint GetSize () = 0;
-    virtual TEuint GetMaxSize () = 0;
-    virtual void Clear () = 0;
-    virtual bool HasError () = 0;
-
-    virtual TEbyte ReadByte () = 0;
-    virtual void WriteByte (const TEbyte byte) = 0;
-  };
-
-  class ByteStream : public IByteStream {
-    TEbyte *m_pbStream;
-    TEbyte *m_pbReadPosition;
-    TEbyte *m_pbWritePosition;
-    TEuint m_nSize;
-    TEuint m_nMaxSize;
-    bool m_bError;
+  class Packet {
+   IByteStream *m_pByteStream;
+   bool m_bError;
 
   public:
-    explicit ByteStream(const TEuint nMaxSize);
-    ~ByteStream();
-
-    TEbyte* GetCopyOfStream ();
-    TEuint GetSize ();
-    TEuint GetMaxSize ();
-    void Clear ();
-    bool HasError ();
-
-    TEbyte ReadByte ();
-    void WriteByte (const TEbyte byte);
+    explicit Packet ();
+    ~Packet ();
   };
 }
-
-#endif /* __BYTESTREAM_HPP_ */

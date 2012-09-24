@@ -40,20 +40,19 @@ namespace TE {
     template <class T>
     T Read (IByteStream *pByteStream) {
       TEuint size = sizeof (T);
-      TEuint stream = pByteStream->GetSize ();
 
       union unpack_t {
         TEbyte byte[sizeof (T)];
         T val;
       } unpack;
 
-      size = stream < size ? stream : size;
       for (TEuint i = 0; i < size; i++) {
+        if (pByteStream->HasError ()) {
+          return 0;
+        }
         unpack.byte[i] = pByteStream->ReadByte ();
       }
-
-      T value = unpack.val;
-      return value;
+      return unpack.val;
     }
 
     /*!
@@ -62,7 +61,6 @@ namespace TE {
     template <class T>
     void Write (IByteStream *pByteStream, const T val) {
       TEuint size = sizeof (T);
-      TEuint stream = pByteStream->GetMaxSize () - pByteStream->GetSize ();
 
       union pack_t {
         TEbyte byte[sizeof (T)];
@@ -70,8 +68,10 @@ namespace TE {
       } pack;
       pack.val = val;
 
-      size = stream < size ? stream : size;
       for (TEuint i = 0; i < size; i++) {
+        if (pByteStream->HasError ()) {
+          return;
+        }
         pByteStream->WriteByte (pack.byte[i]);
       }
     }

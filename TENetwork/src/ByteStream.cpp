@@ -42,6 +42,7 @@ namespace TE {
     m_pbReadPosition = m_pbStream;
     m_pbWritePosition = m_pbStream;
     m_nSize = 0;
+    m_bError = false;
   }
 
   /*!
@@ -84,7 +85,15 @@ namespace TE {
     m_pbReadPosition = m_pbStream;
     m_pbWritePosition = m_pbStream;
     m_nSize = 0;
+    m_bError = false;
   }
+
+  /*!
+   *
+   */
+   bool ByteStream::HasError () {
+    return m_bError;
+   }
 
   /*!
    *
@@ -92,7 +101,11 @@ namespace TE {
   TEbyte ByteStream::ReadByte () {
     TEuint size = sizeof (TEbyte);
 
-    ERROR_IF(m_nSize - size > m_nMaxSize, "Overflow on reading.")
+    if (m_nSize - size > m_nMaxSize) {
+      m_bError = true;
+      return 0;
+    }
+
     TEbyte val = *m_pbReadPosition;
     m_pbReadPosition++;
     m_nSize -= size;
@@ -105,7 +118,11 @@ namespace TE {
   void ByteStream::WriteByte (const TEbyte byte) {
     TEuint size = sizeof (TEbyte);
 
-    ERROR_IF(m_nSize + size > m_nMaxSize, "Overflow on writing.")
+    if (m_nSize + size > m_nMaxSize) {
+      m_bError = true;
+      return;
+    }
+
     *m_pbWritePosition = byte;
     m_pbWritePosition++;
     m_nSize += size;

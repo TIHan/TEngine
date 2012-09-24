@@ -45,7 +45,7 @@ namespace TE {
     ByteIO::Write<TEuint64> (m_pByteStream, -10);
 
     TEbyte *sendBuffer = m_pByteStream->GetCopyOfStream ();
-    m_pSocket->Send (sendBuffer, m_pByteStream->GetSize (), "localhost", "4767");
+    m_pSocket->Send (sendBuffer, m_pByteStream->GetSize () - 1, "localhost", "4767");
     delete [] sendBuffer;
 
     m_pByteStream->Clear ();
@@ -57,9 +57,17 @@ namespace TE {
     ByteIO::WriteStream (m_pByteStream, receiveBuffer, byteSize);
     delete [] receiveBuffer;
     TEchar *HEY = ByteIO::ReadString (m_pByteStream);
-    MESSAGE_FORMAT ("SAY: %s\n", HEY);
-    TEint64 asdf = ByteIO::Read<TEint64> (m_pByteStream);
-    MESSAGE_FORMAT ("INT: %ld\n", asdf);
+    MESSAGE_FORMAT("SAY: %s\n", HEY)
+    TEuint64 asdf = ByteIO::Read<TEuint64> (m_pByteStream);
+    MESSAGE_FORMAT("INT: %ld\n", asdf)
+    asdf = ByteIO::Read<TEuint64> (m_pByteStream);
+    asdf = ByteIO::Read<TEuint64> (m_pByteStream);
+    TEchar *dddEY = ByteIO::ReadString (m_pByteStream);
+
+
+    if (m_pByteStream->HasError ()) {
+      MESSAGE("BYTESTREAM HAS ERROR!\n")
+    }
     delete [] HEY;
     delete m_pByteStream;
   }

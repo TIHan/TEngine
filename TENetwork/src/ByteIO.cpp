@@ -41,13 +41,17 @@ namespace TE {
       TEchar *val = new TEchar[size];
 
       for (TEuint i = 0; i < size; i++) {
-        val[i] = pByteStream->ReadByte ();
-        
+        if (pByteStream->HasError ()) {
+          delete [] val;
+          return 0;
+        }
+        val[i] = pByteStream->ReadByte ();        
         if (val[i] == '\0') {
-          break;
+          return val;
         }
       }
-      return val;
+      delete [] val;
+      return 0;
     }
 
     /*!
@@ -55,24 +59,26 @@ namespace TE {
      */
     void WriteString (IByteStream *pByteStream, const TEchar *sz) {
       TEuint size = (TEint)strlen (sz);
-      TEuint stream = pByteStream->GetMaxSize () - pByteStream->GetSize ();
 
-      stream = stream != 0 ? stream - 1 : 0; 
-      size = stream < size ? stream : size;
       for (TEuint i = 0; i < size; i++) {
+        if (pByteStream->HasError ()) {
+          return;
+        }
         pByteStream->WriteByte (sz[i]);
+        if (i + 1 >= size) {
+          pByteStream->WriteByte ('\0');
+        }
       }
-      pByteStream->WriteByte ('\0');
     }
 
     /*!
      *
      */
     void WriteStream (IByteStream *pByteStream, const TEbyte *pbStream, const TEuint nSize) {
-      TEuint stream = pByteStream->GetMaxSize () - pByteStream->GetSize ();
-      TEuint size = stream < nSize ? stream : nSize;
-
-      for (TEuint i = 0; i < size; i++) {
+      for (TEuint i = 0; i < nSize; i++) {
+        if (pByteStream->HasError ()) {
+          return;
+        }
         pByteStream->WriteByte (pbStream[i]);
       }
     }

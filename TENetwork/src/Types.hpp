@@ -59,7 +59,6 @@ namespace TE {
     TEushort value[8];
   } TEuint128;
   
-  typedef void* TEpointer;
   typedef float TEfloat;
   typedef double TEdouble;
 }
