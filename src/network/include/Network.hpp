@@ -25,17 +25,5 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "ByteStream.hpp"
-#include "Network.hpp"
-#include "Messages.hpp"
-#include "Packet.hpp"
-
-namespace TE {
-  Packet::Packet () {
-    m_pByteStream = new ByteStream (512);
-  }
-
-  Packet::~Packet () {
-    delete m_pByteStream; 
-  }
-}
+#define NO_TELIB
+#include "../Network.hpp"

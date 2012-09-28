@@ -25,19 +25,31 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <stdio.h>
-#include "ByteStream.hpp"
-#include "Socket.hpp"
 #include "Network.hpp"
-#include "Messages.hpp"
+#include "Socket.hpp"
 
 namespace TE {
-  Network::Network () {
-    m_pSocket = new Socket (IPV4);
+  class PNetwork : public INetwork {
+    ISocket *m_pSocket;
+    IByteStream *m_pByteStream;
+
+  public:
+    explicit PNetwork ();
+    ~PNetwork ();
+
+    void PrintAddresses ();
+    void Host (TEushort usPort);
+    void Send (IPacket *pPacket);
+    IPacket* Receive ();
+  };
+
+  /*!
+   *
+   */
+  PNetwork::PNetwork () : m_pSocket (new Socket()) {
     // Example
     /*TEint byteSize;
 
-    m_pSocket = new Socket (IPV4);
     m_pByteStream = new ByteStream (512);
 
     m_pSocket->Bind (4767);
@@ -61,7 +73,6 @@ namespace TE {
     TEuint64 asdf = m_pByteStream->Read<TEuint64> ();
     MESSAGE_FORMAT("INT: %ld\n", asdf)
 
-
     if (m_pByteStream->HasError ()) {
       MESSAGE("BYTESTREAM HAS ERROR!\n")
     }
@@ -69,16 +80,84 @@ namespace TE {
     delete m_pByteStream;*/
   }
 
-  Network::~Network () {
+  /*!
+   *
+   */
+  PNetwork::~PNetwork () {
     delete m_pSocket;
   }
 
-  void Network::PrintAddresses () {
+  /*!
+   *
+   */
+  void PNetwork::PrintAddresses () {
     TEchar *ip = m_pSocket->GetAddressText ();
 
     if (ip[0]) {
       printf ("IP: %s\n", ip);
       delete [] ip;
     }
+  }
+
+  /*!
+   *
+   */
+  void PNetwork::Host (TEushort usPort) {
+    m_pSocket->Bind (usPort);
+  }
+
+  /*!
+   *
+   */
+  void PNetwork::Send (IPacket *pPacket) {
+    m_pSocket->Send (pPacket->GetStream (), pPacket->GetSize (), pPacket->GetAddress ().c_str (), pPacket->GetPort ().c_str ());
+  }
+
+  /*!
+   *
+   */
+  IPacket* PNetwork::Receive () {
+    return 0;
+  }
+
+  /*!
+   *
+   */
+  Network::Network () : priv (new PNetwork ()) {
+  }
+
+  /*!
+   *
+   */
+  Network::~Network () {
+    delete priv;
+  }
+
+  /*!
+   *
+   */
+  void Network::PrintAddresses () {
+    priv->PrintAddresses ();
+  }
+
+  /*!
+   *
+   */
+  void Network::Host (TEushort usPort) {
+    priv->Host (usPort);
+  }
+
+  /*!
+   *
+   */
+  void Network::Send (IPacket *pPacket) {
+    priv->Send (pPacket);
+  }
+
+  /*!
+   *
+   */
+  IPacket* Network::Receive () {
+    return priv->Receive ();
   }
 }

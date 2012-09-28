@@ -25,42 +25,40 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __TYPES_HPP_
-#define __TYPES_HPP_
-
-#ifdef __GNUC__
-  #include <stdint.h>
+#ifndef NO_TELIB
+  #include <TELib.hpp>
 #endif
 
 namespace TE {
-#ifdef __GNUC__
-  typedef char TEchar;
-  typedef int8_t TEint8;
-  typedef uint8_t TEbyte;
-  typedef int16_t TEshort;
-  typedef uint16_t TEushort;
-  typedef int32_t TEint;
-  typedef uint32_t TEuint;
-  typedef int64_t TEint64;
-  typedef uint64_t TEuint64;
-#elif _MSC_VER
-  typedef char TEchar;
-  typedef signed __int8 TEint8;
-  typedef unsigned __int8 TEbyte;
-  typedef signed __int16 TEshort;
-  typedef unsigned __int16 TEushort;
-  typedef signed __int32 TEint;
-  typedef unsigned __int32 TEuint;
-  typedef signed __int64 TEint64;
-  typedef unsigned __int64 TEuint64;
-#endif
+  class IPacket {
+  public:
+    ~IPacket () {};
 
-  typedef struct _TEuint128 {
-    TEushort value[8];
-  } TEuint128;
-  
-  typedef float TEfloat;
-  typedef double TEdouble;
+    virtual bool HasError () = 0;
+    virtual TEuint GetSize () = 0;
+    virtual TEbyte* GetStream () = 0;
+    virtual string GetAddress () = 0;
+    virtual string GetPort () = 0;
+
+    virtual void SetAddress (string strAddress) = 0;
+    virtual void SetPort (string strPort) = 0;
+  };
+
+  class PPacket;
+  class Packet {
+   PPacket *priv;
+
+  public:
+    explicit Packet (IByteStream *pByteStream, string strAddress, string strPort);
+    ~Packet ();
+
+    bool HasError ();
+    TEuint GetSize ();
+    TEbyte* GetStream ();
+    string GetAddress ();
+    string GetPort ();
+
+    void SetAddress (string strAddress);
+    void SetPort (string strPort);
+  };
 }
-
-#endif /* __TYPES_HPP_ */

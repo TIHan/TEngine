@@ -1,4 +1,4 @@
-TENetwork
+TEngine
 =================
 
-A WIP network library for Windows/Linux. Currently supports UDP IPv4/IPv6 connections.
+A WIP custom engine.

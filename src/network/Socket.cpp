@@ -25,6 +25,8 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "Socket.hpp"
+
 #ifdef __GNUC__
   #include <sys/socket.h>
   #include <netdb.h>
@@ -39,10 +41,6 @@
 
   #pragma comment(lib, "ws2_32.lib")
 #endif
-
-#include "Types.hpp"
-#include "Socket.hpp"
-#include "Messages.hpp"
 
 /*!
  *
@@ -70,10 +68,29 @@ static TE::TEint CloseSocket (TE::TEint sockfd) {
 }
 
 namespace TE {
+  class PSocket : public ISocket {
+    TEint m_iSocket;
+    struct addrinfo *m_pAddressInfo;
+    struct addrinfo *m_pAddress;
+    TEbyte m_bFamily;
+
+    void Initialize (const TEbyte bFamily);
+
+  public:
+    PSocket ();
+    explicit PSocket (const TEbyte bFamily);
+    ~PSocket ();
+
+    void Close ();
+    TEint Bind (const TEushort usPort);
+    TEchar* GetAddressText ();
+    TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize);
+    TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *pszNodeName, const TEchar *pszServiceName);
+  };
   /*!
    *
    */
-  void Socket::Initialize (const TEbyte bFamily) {
+  void PSocket::Initialize (const TEbyte bFamily) {
     struct addrinfo hints, *p;
     m_iSocket = -1;
     m_pAddress = 0;
@@ -112,21 +129,21 @@ namespace TE {
   /*!
    *
    */
-  Socket::Socket () {
+  PSocket::PSocket () {
     Initialize (IPV4);
   }
 
   /*!
    *
    */
-  Socket::Socket (const TEbyte bFamily) {
+  PSocket::PSocket (const TEbyte bFamily) {
     Initialize (bFamily);
   }
 
   /*!
    *
    */
-  Socket::~Socket () {
+  PSocket::~PSocket () {
     Close ();
 #ifdef _MSC_VER
     WSACleanup ();
@@ -136,7 +153,7 @@ namespace TE {
   /*!
    *
    */
-  void Socket::Close () {
+  void PSocket::Close () {
     freeaddrinfo (m_pAddressInfo);
     WARNING_IF(CloseSocket (m_iSocket) != 0, "Unable to close socket.")
   }
@@ -144,7 +161,7 @@ namespace TE {
   /*!
    *
    */
-  TEint Socket::Bind (const TEushort usPort) {
+  TEint PSocket::Bind (const TEushort usPort) {
     if (m_iSocket != -1 && m_pAddress) {
           struct sockaddr_in *sockaddr = (struct sockaddr_in *)m_pAddress->ai_addr;
           sockaddr->sin_port = ntohs (usPort);
@@ -160,16 +177,16 @@ namespace TE {
   /*!
    *
    */
-  TEchar* Socket::GetAddressText () {
-    TEchar *address = new TEchar[IP_STRLEN];
-
+  TEchar* PSocket::GetAddressText () {
     if (m_pAddress) {
+      TEchar *address = new TEchar[INET6_ADDRSTRLEN];
+
       switch (m_bFamily) {
       case AF_INET6:
-        inet_ntop (m_bFamily, &(((struct sockaddr_in6 *)m_pAddress->ai_addr)->sin6_addr), address, IP_STRLEN);
+        inet_ntop (m_bFamily, &(((struct sockaddr_in6 *)m_pAddress->ai_addr)->sin6_addr), address, INET6_ADDRSTRLEN);
         break;
       default:
-        inet_ntop (m_bFamily, &(((struct sockaddr_in *)m_pAddress->ai_addr)->sin_addr), address, IP_STRLEN);
+        inet_ntop (m_bFamily, &(((struct sockaddr_in *)m_pAddress->ai_addr)->sin_addr), address, INET_ADDRSTRLEN);
         break;
       }
       return address;
@@ -181,7 +198,7 @@ namespace TE {
   /*!
    *
    */
-  TEint Socket::Receive (TEbyte *pBuffer, const TEuint nBufferSize) {
+  TEint PSocket::Receive (TEbyte *pBuffer, const TEuint nBufferSize) {
     struct sockaddr_storage sock_addr;
     socklen_t addr_len = sizeof sock_addr;
     
@@ -194,7 +211,7 @@ namespace TE {
   /*!
    *
    */
-  TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *szNodeName, const TEchar *szServiceName) {
+  TEint PSocket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *pszNodeName, const TEchar *pszServiceName) {
     TEint sendfd, bytes;
     struct addrinfo hints, *addrinfo;
 
@@ -202,7 +219,7 @@ namespace TE {
     hints.ai_family = m_bFamily;
     hints.ai_socktype = SOCK_DGRAM;
 
-    WARNING_IF_RETURN_VAL(getaddrinfo (szNodeName, szServiceName, &hints, &addrinfo) != 0,
+    WARNING_IF_RETURN_VAL(getaddrinfo (pszNodeName, pszServiceName, &hints, &addrinfo) != 0,
       -1,
       "Can't get address info.")
 
@@ -216,5 +233,35 @@ namespace TE {
     WARNING_IF(bytes == -1, "Failed to send packet.")
     MESSAGE_FORMAT ("Sent %i bytes.\n", bytes);
     return bytes;
+  }
+
+  Socket::Socket () : priv (new PSocket ()) {
+  }
+
+  Socket::Socket (const TEbyte bFamily) : priv (new PSocket (bFamily)) {
+  }
+
+  Socket::~Socket () {
+    delete priv;
+  }
+
+  void Socket::Close () {
+    priv->Close ();
+  }
+
+  TEint Socket::Bind (const TEushort usPort) {
+    return priv->Bind (usPort);
+  }
+
+  TEchar* Socket::GetAddressText () {
+    return priv->GetAddressText ();
+  }
+
+  TEint Socket::Receive (TEbyte *pBuffer, const TEuint nBufferSize) {
+    return priv->Receive (pBuffer, nBufferSize);
+  }
+
+  TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *pszNodeName, const TEchar *pszServiceName) {
+    return priv->Send (pBuffer, nBufferSize, pszNodeName, pszServiceName);
   }
  }

@@ -23,10 +23,10 @@ x64/*
 *.user
 *.suo
 *.opensdf
-*/src/Debug
-*/src/Release
-*/src/ipch
-*/src/x64
+*/Debug
+*/Release
+*/ipch
+*/x64
 
 # Executable
-te-network
+te
