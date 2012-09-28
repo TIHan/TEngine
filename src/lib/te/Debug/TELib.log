@@ -1,4 +1,0 @@
-﻿  ByteStream.cpp
-c:\users\william\desktop\tengine\src\lib\te\bytestream.cpp(121): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(371) : see declaration of 'sprintf'
-  TELib.vcxproj -> C:\Users\William\Desktop\TEngine\Debug\TELib.lib
