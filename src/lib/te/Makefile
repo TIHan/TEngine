@@ -12,5 +12,5 @@ $(OUTPUT): $(OBJECTS)
 clean:
 	rm -f $(OBJECTS) $(OUTPUT)
 
-.c.o:
+.cpp.o:
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
