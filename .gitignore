@@ -15,18 +15,14 @@
 *~
 
 # MSVC
-Debug/*
-Release/*
-ipch/*
-x64/*
+Debug
+Release
+ipch
+x64
 *.sdf
 *.user
 *.suo
 *.opensdf
-*/Debug
-*/Release
-*/ipch
-*/x64
 
 # Executable
-te
+te-test
