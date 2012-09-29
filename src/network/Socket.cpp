@@ -84,9 +84,10 @@ namespace TE {
     void Close ();
     TEint Bind (const TEushort usPort);
     TEchar* GetAddressText ();
-    TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize);
+    TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize, TEchar *pszNodeName, TEchar *pszServiceName);
     TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *pszNodeName, const TEchar *pszServiceName);
   };
+
   /*!
    *
    */
@@ -198,13 +199,12 @@ namespace TE {
   /*!
    *
    */
-  TEint PSocket::Receive (TEbyte *pBuffer, const TEuint nBufferSize) {
+  TEint PSocket::Receive (TEbyte *pBuffer, const TEuint nBufferSize, TEchar *pszNodeName, TEchar *pszServiceName) {
     struct sockaddr_storage sock_addr;
     socklen_t addr_len = sizeof sock_addr;
     
     TEint bytes = recvfrom (m_iSocket, (TEchar *)pBuffer, nBufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
     WARNING_IF_RETURN_VAL(bytes == -1, -1, "Failed to receive packet.")
-    MESSAGE_FORMAT ("Got %i bytes.\n", bytes);
     return bytes;
   }
 
@@ -231,9 +231,13 @@ namespace TE {
     CloseSocket (sendfd);
 
     WARNING_IF(bytes == -1, "Failed to send packet.")
-    MESSAGE_FORMAT ("Sent %i bytes.\n", bytes);
     return bytes;
   }
+
+  /****************************************************************************************************************************
+  *****************************************************************************************************************************
+  *****************************************************************************************************************************
+  ****************************************************************************************************************************/
 
   Socket::Socket () : priv (new PSocket ()) {
   }
@@ -257,8 +261,8 @@ namespace TE {
     return priv->GetAddressText ();
   }
 
-  TEint Socket::Receive (TEbyte *pBuffer, const TEuint nBufferSize) {
-    return priv->Receive (pBuffer, nBufferSize);
+  TEint Socket::Receive (TEbyte *pBuffer, const TEuint nBufferSize, TEchar *pszNodeName, TEchar *pszServiceName) {
+    return priv->Receive (pBuffer, nBufferSize, pszNodeName, pszServiceName);
   }
 
   TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *pszNodeName, const TEchar *pszServiceName) {

@@ -35,11 +35,12 @@ namespace TE {
 
   public:
     explicit PPacket (IByteStream *pByteStream, string strAddress, string strPort);
+    explicit PPacket (TEbyte *pBuffer, TEuint nMaxSize, TEuint nSize, string strAddress, string strPort);
     ~PPacket ();
 
     bool HasError ();
     TEuint GetSize ();
-    TEbyte* GetStream ();
+    TEbyte* GetCopyOfStream ();
     string GetAddress ();
     string GetPort ();
 
@@ -52,6 +53,16 @@ namespace TE {
    */
   PPacket::PPacket (IByteStream *pByteStream, string strAddress, string strPort) {
     m_pByteStream = pByteStream;
+    m_strAddress = strAddress;
+    m_strPort = strPort;
+  }
+
+  /*!
+   *
+   */
+  PPacket::PPacket (TEbyte *pBuffer, TEuint nMaxSize, TEuint nSize, string strAddress, string strPort) {
+    m_pByteStream = new ByteStream (nMaxSize);
+    m_pByteStream->WriteStream (pBuffer, nSize);
     m_strAddress = strAddress;
     m_strPort = strPort;
   }
@@ -80,7 +91,7 @@ namespace TE {
   /*!
    *
    */
-  TEbyte* PPacket::GetStream () {
+  TEbyte* PPacket::GetCopyOfStream () {
     return m_pByteStream->GetCopyOfStream ();
   }
 
@@ -112,11 +123,20 @@ namespace TE {
     m_strPort = strPort;
   }
 
+  /****************************************************************************************************************************
+  *****************************************************************************************************************************
+  *****************************************************************************************************************************
+  ****************************************************************************************************************************/
+
   /*!
    *
    */
   Packet::Packet (IByteStream *pByteStream, string strAddress, string strPort) : 
     priv (new PPacket (pByteStream, strAddress, strPort)) {
+  }
+
+  Packet::Packet (TEbyte *pBuffer, TEuint nMaxSize, TEuint nSize, string strAddress, string strPort) :
+    priv (new PPacket (pBuffer, nMaxSize, nSize, strAddress, strPort)) {
   }
 
   /*!
@@ -143,8 +163,8 @@ namespace TE {
   /*!
    *
    */
-  TEbyte* Packet::GetStream () {
-    return priv->GetStream ();
+  TEbyte* Packet::GetCopyOfStream () {
+    return priv->GetCopyOfStream ();
   }
 
   /*!

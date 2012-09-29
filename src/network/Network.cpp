@@ -31,10 +31,10 @@
 namespace TE {
   class PNetwork : public INetwork {
     ISocket *m_pSocket;
-    IByteStream *m_pByteStream;
+    TEuint m_nMaxTransUnit;
 
   public:
-    explicit PNetwork ();
+    explicit PNetwork (TEuint nMaxTransUnit);
     ~PNetwork ();
 
     void PrintAddresses ();
@@ -46,38 +46,8 @@ namespace TE {
   /*!
    *
    */
-  PNetwork::PNetwork () : m_pSocket (new Socket()) {
-    // Example
-    /*TEint byteSize;
-
-    m_pByteStream = new ByteStream (512);
-
-    m_pSocket->Bind (4767);
-    m_pByteStream->WriteString(" lol");
-    m_pByteStream->Write<TEuint64> (-10);
-
-    TEbyte *sendBuffer = m_pByteStream->GetCopyOfStream ();
-    m_pSocket->Send (sendBuffer, m_pByteStream->GetSize (), "localhost", "4767");
-    delete [] sendBuffer;
-
-    m_pByteStream->Clear ();
-
-    TEuint maxSize = m_pByteStream->GetMaxSize ();
-    TEbyte *receiveBuffer = new TEbyte[maxSize];
-    byteSize = m_pSocket->Receive (receiveBuffer, maxSize);
-
-    m_pByteStream->WriteStream (receiveBuffer, byteSize);
-    delete [] receiveBuffer;
-    TEchar *HEY = m_pByteStream->ReadString ();
-    MESSAGE_FORMAT("SAY: %s\n", HEY)
-    TEuint64 asdf = m_pByteStream->Read<TEuint64> ();
-    MESSAGE_FORMAT("INT: %ld\n", asdf)
-
-    if (m_pByteStream->HasError ()) {
-      MESSAGE("BYTESTREAM HAS ERROR!\n")
-    }
-    delete [] HEY;
-    delete m_pByteStream;*/
+  PNetwork::PNetwork (TEuint nMaxTransUnit) : m_pSocket (new Socket()) {
+    m_nMaxTransUnit = nMaxTransUnit;
   }
 
   /*!
@@ -110,20 +80,43 @@ namespace TE {
    *
    */
   void PNetwork::Send (IPacket *pPacket) {
-    m_pSocket->Send (pPacket->GetStream (), pPacket->GetSize (), pPacket->GetAddress ().c_str (), pPacket->GetPort ().c_str ());
+    TEbyte *send = pPacket->GetCopyOfStream ();
+    m_pSocket->Send (send, pPacket->GetSize (), pPacket->GetAddress ().c_str (), pPacket->GetPort ().c_str ());
+    delete send;
   }
 
   /*!
    *
    */
   IPacket* PNetwork::Receive () {
-    return 0;
+    Packet *packet;
+    TEuint bytes;
+    TEchar *ip = new TEchar[256];
+    TEchar *port = new TEchar[256];
+    TEbyte *receiveBuffer = new TEbyte[m_nMaxTransUnit];
+
+    bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip, port);
+    packet = new Packet (receiveBuffer, m_nMaxTransUnit, bytes, ip, port);
+    delete [] receiveBuffer;
+    delete [] port;
+    delete [] ip;
+
+    if (packet->HasError ()) {
+      delete packet;
+      return 0;
+    }
+    return packet;
   }
+
+  /****************************************************************************************************************************
+  *****************************************************************************************************************************
+  *****************************************************************************************************************************
+  ****************************************************************************************************************************/
 
   /*!
    *
    */
-  Network::Network () : priv (new PNetwork ()) {
+  Network::Network (TEuint nMaxTransUnit) : priv (new PNetwork (nMaxTransUnit)) {
   }
 
   /*!

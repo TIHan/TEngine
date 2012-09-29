@@ -50,7 +50,7 @@ namespace TE {
     PNetwork *priv;
 
   public:
-    explicit Network ();
+    explicit Network (TEuint nMaxTransUnit);
     ~Network ();
 
     void PrintAddresses ();

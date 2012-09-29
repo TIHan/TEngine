@@ -32,6 +32,8 @@
   #include <TELib.hpp>
 #endif
 
+#define MAX_IP_LEN INET6_ADDRSTRLEN
+
 namespace TE {
   enum SocketFamily {
     IPV4,
@@ -44,7 +46,7 @@ namespace TE {
     virtual void Close () = 0;
     virtual TEint Bind (const TEushort usPort) = 0;
     virtual TEchar* GetAddressText () = 0;
-    virtual TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize) = 0;
+    virtual TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize, TEchar *pszNodeName, TEchar *pszServiceName) = 0;
     virtual TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *pszNodeName, const TEchar *pszServiceName) = 0;
   };
 
@@ -60,7 +62,7 @@ namespace TE {
     void Close ();
     TEint Bind (const TEushort usPort);
     TEchar* GetAddressText ();
-    TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize);
+    TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize, TEchar *pszNodeName, TEchar *pszServiceName);
     TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *pszNodeName, const TEchar *pszServiceName);
   };
 }

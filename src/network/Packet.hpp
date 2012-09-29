@@ -36,7 +36,7 @@ namespace TE {
 
     virtual bool HasError () = 0;
     virtual TEuint GetSize () = 0;
-    virtual TEbyte* GetStream () = 0;
+    virtual TEbyte* GetCopyOfStream () = 0;
     virtual string GetAddress () = 0;
     virtual string GetPort () = 0;
 
@@ -45,16 +45,17 @@ namespace TE {
   };
 
   class PPacket;
-  class Packet {
+  class Packet : public IPacket {
    PPacket *priv;
 
   public:
     explicit Packet (IByteStream *pByteStream, string strAddress, string strPort);
+    explicit Packet (TEbyte *pBuffer, TEuint nMaxSize, TEuint nSize, string strAddress, string strPort);
     ~Packet ();
 
     bool HasError ();
     TEuint GetSize ();
-    TEbyte* GetStream ();
+    TEbyte* GetCopyOfStream ();
     string GetAddress ();
     string GetPort ();
 
