@@ -49,7 +49,6 @@ namespace TE {
    PPacket *priv;
 
   public:
-    explicit Packet (IByteStream *pByteStream, string strAddress, string strPort);
     explicit Packet (TEbyte *pBuffer, TEuint nMaxSize, TEuint nSize, string strAddress, string strPort);
     ~Packet ();
 
