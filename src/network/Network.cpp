@@ -82,7 +82,7 @@ namespace TE {
   void PNetwork::Send (IPacket *pPacket) {
     TEbyte *send = pPacket->GetCopyOfStream ();
     m_pSocket->Send (send, pPacket->GetSize (), pPacket->GetAddress ().c_str (), pPacket->GetPort ().c_str ());
-    delete send;
+    delete [] send;
   }
 
   /*!
