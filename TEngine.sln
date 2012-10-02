@@ -1,11 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Network", "src\network\Network.vcxproj", "{65BDC7BF-837B-4664-BB2A-4FF94155DD66}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testing", "src\testing\Testing.vcxproj", "{C77D94B0-A6C3-491E-A5E2-57C6DAE75BB5}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TELib", "src\lib\te\TELib.vcxproj", "{4A0B2F2D-BB18-4C06-9536-7C175D84C641}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "src\Engine.vcxproj", "{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,18 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{65BDC7BF-837B-4664-BB2A-4FF94155DD66}.Debug|Win32.ActiveCfg = Debug|Win32
-		{65BDC7BF-837B-4664-BB2A-4FF94155DD66}.Debug|Win32.Build.0 = Debug|Win32
-		{65BDC7BF-837B-4664-BB2A-4FF94155DD66}.Release|Win32.ActiveCfg = Release|Win32
-		{65BDC7BF-837B-4664-BB2A-4FF94155DD66}.Release|Win32.Build.0 = Release|Win32
-		{C77D94B0-A6C3-491E-A5E2-57C6DAE75BB5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C77D94B0-A6C3-491E-A5E2-57C6DAE75BB5}.Debug|Win32.Build.0 = Debug|Win32
-		{C77D94B0-A6C3-491E-A5E2-57C6DAE75BB5}.Release|Win32.ActiveCfg = Release|Win32
-		{C77D94B0-A6C3-491E-A5E2-57C6DAE75BB5}.Release|Win32.Build.0 = Release|Win32
-		{4A0B2F2D-BB18-4C06-9536-7C175D84C641}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4A0B2F2D-BB18-4C06-9536-7C175D84C641}.Debug|Win32.Build.0 = Debug|Win32
-		{4A0B2F2D-BB18-4C06-9536-7C175D84C641}.Release|Win32.ActiveCfg = Release|Win32
-		{4A0B2F2D-BB18-4C06-9536-7C175D84C641}.Release|Win32.Build.0 = Release|Win32
+		{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}.Debug|Win32.Build.0 = Debug|Win32
+		{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}.Release|Win32.ActiveCfg = Release|Win32
+		{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

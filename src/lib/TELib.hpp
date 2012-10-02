@@ -25,5 +25,6 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define NO_TELIB
-#include "../Network.hpp"
+#include "ByteStream.hpp"
+#include "Messages.hpp"
+#include "Types.hpp"

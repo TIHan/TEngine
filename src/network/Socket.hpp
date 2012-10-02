@@ -28,9 +28,7 @@
 #ifndef __SOCKET_HPP_
 #define __SOCKET_HPP_
 
-#ifndef NO_TELIB
-  #include <TELib.hpp>
-#endif
+#include <TELib.hpp>
 
 #define MAX_IP_LEN INET6_ADDRSTRLEN
 

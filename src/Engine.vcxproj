@@ -11,17 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4A0B2F2D-BB18-4C06-9536-7C175D84C641}</ProjectGuid>
-    <RootNamespace>Lib</RootNamespace>
+    <ProjectGuid>{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}</ProjectGuid>
+    <RootNamespace>Engine</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
@@ -36,12 +36,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\William\Desktop\TEngine\src\lib;C:\Users\William\Desktop\TEngine\src\network;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -61,13 +61,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ByteStream.hpp" />
-    <ClInclude Include="include\TELib.hpp" />
-    <ClInclude Include="Messages.hpp" />
-    <ClInclude Include="Types.hpp" />
+    <ClInclude Include="lib\ByteStream.hpp" />
+    <ClInclude Include="lib\Messages.hpp" />
+    <ClInclude Include="lib\TELib.hpp" />
+    <ClInclude Include="lib\Types.hpp" />
+    <ClInclude Include="network\Network.hpp" />
+    <ClInclude Include="network\Packet.hpp" />
+    <ClInclude Include="network\Socket.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ByteStream.cpp" />
+    <ClCompile Include="lib\ByteStream.cpp" />
+    <ClCompile Include="network\Network.cpp" />
+    <ClCompile Include="network\Packet.cpp" />
+    <ClCompile Include="network\Socket.cpp" />
+    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
