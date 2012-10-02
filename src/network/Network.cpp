@@ -89,7 +89,7 @@ namespace TE {
    *
    */
   IPacket* PNetwork::Receive () {
-    Packet *packet;
+    /*Packet *packet;
     TEuint bytes;
     TEchar *ip = new TEchar[256];
     TEchar *port = new TEchar[256];
@@ -105,7 +105,8 @@ namespace TE {
       delete packet;
       return 0;
     }
-    return packet;
+    return packet;*/
+    return 0;
   }
 
   /****************************************************************************************************************************

@@ -34,7 +34,7 @@ namespace TE {
     string m_strPort;
 
   public:
-    explicit PPacket (TEbyte *pBuffer, TEuint nMaxSize, TEuint nSize, string strAddress, string strPort);
+    explicit PPacket (TEuint nMaxSize, string strAddress, string strPort);
     ~PPacket ();
 
     bool HasError ();
@@ -45,14 +45,22 @@ namespace TE {
 
     void SetAddress (string strAddress);
     void SetPort (string strPort);
+
+    IByteStream* GetStream ();
   };
 
   /*!
    *
    */
-  PPacket::PPacket (TEbyte *pBuffer, TEuint nMaxSize, TEuint nSize, string strAddress, string strPort) {
+  IByteStream* PPacket::GetStream () {
+    return m_pByteStream;
+  }
+
+  /*!
+   *
+   */
+  PPacket::PPacket (TEuint nMaxSize, string strAddress, string strPort) {
     m_pByteStream = new ByteStream (nMaxSize);
-    m_pByteStream->WriteStream (pBuffer, nSize);
     m_strAddress = strAddress;
     m_strPort = strPort;
   }
@@ -118,8 +126,15 @@ namespace TE {
   *****************************************************************************************************************************
   ****************************************************************************************************************************/
 
-  Packet::Packet (TEbyte *pBuffer, TEuint nMaxSize, TEuint nSize, string strAddress, string strPort) :
-    priv (new PPacket (pBuffer, nMaxSize, nSize, strAddress, strPort)) {
+  /*!
+   *
+   */
+  IByteStream* Packet::GetStream () {
+    return priv->GetStream ();
+  }
+
+  Packet::Packet (TEuint nMaxSize, string strAddress, string strPort) :
+    priv (new PPacket (nMaxSize, strAddress, strPort)) {
   }
 
   /*!

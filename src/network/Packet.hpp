@@ -31,6 +31,10 @@
 
 namespace TE {
   class IPacket {
+
+  protected:
+    virtual IByteStream* GetStream () = 0;
+
   public:
     virtual ~IPacket () {};
 
@@ -42,14 +46,27 @@ namespace TE {
 
     virtual void SetAddress (string strAddress) = 0;
     virtual void SetPort (string strPort) = 0;
+
+    template <class T>
+    void Write (const T val) {
+      GetStream ()->Write<T> (val);
+    }
+
+    template <class T>
+    T Read () {
+      return GetStream ()->Read<T> ();
+    }
   };
 
   class PPacket;
   class Packet : public IPacket {
    PPacket *priv;
 
+  protected:
+   IByteStream* GetStream ();
+
   public:
-    explicit Packet (TEbyte *pBuffer, TEuint nMaxSize, TEuint nSize, string strAddress, string strPort);
+    explicit Packet (TEuint nMaxSize, string strAddress, string strPort);
     ~Packet ();
 
     bool HasError ();

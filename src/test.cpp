@@ -9,9 +9,9 @@ TEint main ()
   network->Host (46767);
 
   for (int i = 0; i < 100; i++) {
-       TEbyte *asdf = new TEbyte[10];
-    IPacket *packet = new Packet (asdf, 512, 1, "1", "46767");
-    delete asdf;
+    IPacket *packet = new Packet (512, "127.0.0.1", "46767");
+    packet->Write<TEint> (50);
+    packet->Read<TEint> ();
     delete packet;
   }
   cout << "HAY\n";
