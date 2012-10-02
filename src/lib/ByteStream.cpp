@@ -123,7 +123,6 @@ namespace TE {
    *
    */
   PByteStream::~PByteStream () {
-    WARNING_IF_FORMAT(m_nSize != 0, "Not all bytes were read. Please clear or read the remaining %d byte(s).", m_nSize)
     delete [] m_pbStream;
   }
 

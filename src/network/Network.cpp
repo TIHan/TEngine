@@ -89,14 +89,15 @@ namespace TE {
    *
    */
   IPacket* PNetwork::Receive () {
-    /*Packet *packet;
+    Packet *packet;
     TEuint bytes;
     TEchar *ip = new TEchar[256];
     TEchar *port = new TEchar[256];
     TEbyte *receiveBuffer = new TEbyte[m_nMaxTransUnit];
 
     bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip, port);
-    packet = new Packet (receiveBuffer, m_nMaxTransUnit, bytes, ip, port);
+    packet = new Packet (m_nMaxTransUnit, ip, port);
+    packet->WriteStream (receiveBuffer, bytes);
     delete [] receiveBuffer;
     delete [] port;
     delete [] ip;
@@ -105,8 +106,7 @@ namespace TE {
       delete packet;
       return 0;
     }
-    return packet;*/
-    return 0;
+    return packet;
   }
 
   /****************************************************************************************************************************

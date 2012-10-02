@@ -11,10 +11,12 @@ TEint main ()
   for (int i = 0; i < 100; i++) {
     IPacket *packet = new Packet (512, "127.0.0.1", "46767");
     packet->Write<TEint> (50);
-    packet->Read<TEint> ();
+    network->Send (packet);
+    delete packet;
+    packet = network->Receive ();
+    cout << packet->Read<TEint> ();
     delete packet;
   }
-  cout << "HAY\n";
   delete network;
 #ifdef _MSC_VER
     system ("pause");

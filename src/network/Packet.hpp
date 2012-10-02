@@ -47,6 +47,18 @@ namespace TE {
     virtual void SetAddress (string strAddress) = 0;
     virtual void SetPort (string strPort) = 0;
 
+    string ReadString () {
+      return GetStream ()->ReadString ();
+    }
+
+    void WriteString (const string str) {
+      GetStream ()->WriteString (str.c_str());
+    }
+
+    void WriteStream (const TEbyte *pbStream, const TEuint nSize) {
+      GetStream ()->WriteStream (pbStream, nSize);
+    }
+
     template <class T>
     void Write (const T val) {
       GetStream ()->Write<T> (val);
