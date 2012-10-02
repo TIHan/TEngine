@@ -25,6 +25,12 @@
     <Filter Include="Source Files\network">
       <UniqueIdentifier>{d79dcd6e-a3ac-4533-ad72-eece3601eb42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\network\include">
+      <UniqueIdentifier>{c9b0c6a1-9e61-4c05-b967-cef566d4ab73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lib\include">
+      <UniqueIdentifier>{ad81bc26-a16f-4c82-ae14-0fec8011abbb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\ByteStream.hpp">
@@ -45,8 +51,11 @@
     <ClInclude Include="network\Socket.hpp">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="lib\TELib.hpp">
-      <Filter>Header Files\lib</Filter>
+    <ClInclude Include="lib\include\TELib.hpp">
+      <Filter>Header Files\lib\include</Filter>
+    </ClInclude>
+    <ClInclude Include="network\include\Network.hpp">
+      <Filter>Header Files\network\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -25,6 +25,4 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "ByteStream.hpp"
-#include "Messages.hpp"
-#include "Types.hpp"
+#include "../Network.hpp"

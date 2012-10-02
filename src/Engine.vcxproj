@@ -41,7 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Users\William\Desktop\TEngine\src\lib;C:\Users\William\Desktop\TEngine\src\network;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src\lib\include;$(SolutionDir)\src\network\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -53,6 +53,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\src\lib\include;$(SolutionDir)\src\network\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -62,9 +63,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="lib\ByteStream.hpp" />
+    <ClInclude Include="lib\include\TELib.hpp" />
     <ClInclude Include="lib\Messages.hpp" />
-    <ClInclude Include="lib\TELib.hpp" />
     <ClInclude Include="lib\Types.hpp" />
+    <ClInclude Include="network\include\Network.hpp" />
     <ClInclude Include="network\Network.hpp" />
     <ClInclude Include="network\Packet.hpp" />
     <ClInclude Include="network\Socket.hpp" />
