@@ -28,7 +28,9 @@
 #ifndef __NETWORK_HPP_
 #define __NETWORK_HPP_
 
-#include <TELib.hpp>
+#ifndef NETWORK_NO_TELIB
+  #include <TELib.hpp>
+#endif
 #include "Packet.hpp"
 
 namespace TE {

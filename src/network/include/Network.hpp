@@ -25,4 +25,5 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#define NETWORK_NO_TELIB
 #include "../Network.hpp"

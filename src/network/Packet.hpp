@@ -25,7 +25,9 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <TELib.hpp>
+#ifndef NETWORK_NO_TELIB
+  #include <TELib.hpp>
+#endif
 
 namespace TE {
   class IPacket {
