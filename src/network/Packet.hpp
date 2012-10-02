@@ -30,7 +30,7 @@
 namespace TE {
   class IPacket {
   public:
-    ~IPacket () {};
+    virtual ~IPacket () {};
 
     virtual bool HasError () = 0;
     virtual TEuint GetSize () = 0;

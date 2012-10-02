@@ -1,27 +1,20 @@
 #include <TELib.hpp>
 #include <Network.hpp>
-//#include <windows.h>
 
 using namespace TE;
 
 TEint main ()
 {
-    //Network *network = new Network ();
-  Network *network = new Network (512);
+  INetwork *network = new Network (512);
   network->Host (46767);
- // TEuint count = (TEuint)GetTickCount ();
-  for (int i = 0; i < 100; i++) {
-    //IByteStream *stream = new ByteStream (512);
-    //stream->WriteString ("CONNECT");
 
-       // IPacket *packet = new Packet (new TEbyte[1], 512, 1, "127.0.0.1", "46767");
-    //network->Send (packet);
-    //delete packet;
-    //packet = network->Receive ();
-       // delete packet;
+  for (int i = 0; i < 100; i++) {
+       TEbyte *asdf = new TEbyte[10];
+    IPacket *packet = new Packet (asdf, 512, 1, "1", "46767");
+    delete asdf;
+    delete packet;
   }
   cout << "HAY\n";
-  //  cout << GetTickCount () - count << endl;
   delete network;
 #ifdef _MSC_VER
     system ("pause");
