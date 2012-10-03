@@ -57,6 +57,9 @@
     <ClInclude Include="network\include\Network.hpp">
       <Filter>Header Files\network\include</Filter>
     </ClInclude>
+    <ClInclude Include="lib\System.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp">
@@ -73,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="test.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\System.cpp">
+      <Filter>Source Files\lib</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
