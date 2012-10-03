@@ -10,7 +10,7 @@ TEint main ()
 
   TEuint64 asdf = System::GetTicks ();
   for (int i = 0; i < 5000; i++) {
-    IPacket *packet = new Packet (512, "127.0.0.1", "46767");
+    IPacket *packet = new Packet (512);
     packet->Write<TEint> (50);
     network->Send (packet);
     delete packet;

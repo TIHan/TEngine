@@ -81,7 +81,7 @@ namespace TE {
    */
   void PNetwork::Send (IPacket *pPacket) {
     TEbyte *send = pPacket->GetCopyOfStream ();
-    m_pSocket->Send (send, pPacket->GetSize (), pPacket->GetAddress ().c_str (), pPacket->GetPort ().c_str ());
+    m_pSocket->Send (send, pPacket->GetSize ());
     delete [] send;
   }
 
@@ -96,7 +96,7 @@ namespace TE {
     TEbyte *receiveBuffer = new TEbyte[m_nMaxTransUnit];
 
     bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip, port);
-    packet = new Packet (m_nMaxTransUnit, ip, port);
+    packet = new Packet (m_nMaxTransUnit);
     packet->WriteStream (receiveBuffer, bytes);
     delete [] receiveBuffer;
     delete [] port;

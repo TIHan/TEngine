@@ -85,7 +85,7 @@ namespace TE {
     TEint Bind (const TEushort usPort);
     TEchar* GetAddressText ();
     TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize, TEchar *pszNodeName, TEchar *pszServiceName);
-    TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *pszNodeName, const TEchar *pszServiceName);
+    TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize);
   };
 
   /*!
@@ -211,24 +211,9 @@ namespace TE {
   /*!
    *
    */
-  TEint PSocket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *pszNodeName, const TEchar *pszServiceName) {
-    TEint sendfd, bytes;
-    struct addrinfo hints, *addrinfo;
-
-    memset (&hints, 0, sizeof hints);
-    hints.ai_family = m_bFamily;
-    hints.ai_socktype = SOCK_DGRAM;
-
-    WARNING_IF_RETURN_VAL(getaddrinfo (pszNodeName, pszServiceName, &hints, &addrinfo) != 0,
-      -1,
-      "Can't get address info.")
-
-    sendfd = CreateSocket (addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
-    bytes = sendto (sendfd, (const TEchar *)pBuffer, nBufferSize, 0, addrinfo->ai_addr, (TEint)addrinfo->ai_addrlen);
-
-    // [WS] Close Socket and free address info.
-    freeaddrinfo (addrinfo);
-    CloseSocket (sendfd);
+  TEint PSocket::Send (const TEbyte *pBuffer, const TEuint nBufferSize) {
+    TEint bytes;
+    bytes = sendto (m_iSocket, (const TEchar *)pBuffer, nBufferSize, 0, m_pAddressInfo->ai_addr, (TEint)m_pAddressInfo->ai_addrlen);
 
     WARNING_IF(bytes == -1, "Failed to send packet.")
     return bytes;
@@ -265,7 +250,7 @@ namespace TE {
     return priv->Receive (pBuffer, nBufferSize, pszNodeName, pszServiceName);
   }
 
-  TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize, const TEchar *pszNodeName, const TEchar *pszServiceName) {
-    return priv->Send (pBuffer, nBufferSize, pszNodeName, pszServiceName);
+  TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize) {
+    return priv->Send (pBuffer, nBufferSize);
   }
  }

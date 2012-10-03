@@ -30,21 +30,14 @@
 namespace TE {
   class PPacket : public IPacket {
     IByteStream *m_pByteStream;
-    string m_strAddress;
-    string m_strPort;
 
   public:
-    explicit PPacket (TEuint nMaxSize, string strAddress, string strPort);
+    explicit PPacket (TEuint nMaxSize);
     ~PPacket ();
 
     bool HasError ();
     TEuint GetSize ();
     TEbyte* GetCopyOfStream ();
-    string GetAddress ();
-    string GetPort ();
-
-    void SetAddress (string strAddress);
-    void SetPort (string strPort);
 
     IByteStream* GetStream ();
   };
@@ -59,10 +52,8 @@ namespace TE {
   /*!
    *
    */
-  PPacket::PPacket (TEuint nMaxSize, string strAddress, string strPort) {
+  PPacket::PPacket (TEuint nMaxSize) {
     m_pByteStream = new ByteStream (nMaxSize);
-    m_strAddress = strAddress;
-    m_strPort = strPort;
   }
 
   /*!
@@ -93,34 +84,6 @@ namespace TE {
     return m_pByteStream->GetCopyOfStream ();
   }
 
-  /*!
-   *
-   */
-  string PPacket::GetAddress () {
-    return m_strAddress;
-  }
-
-  /*!
-   *
-   */
-  string PPacket::GetPort () {
-    return m_strPort;
-  }
-
-  /*!
-   *
-   */
-  void PPacket::SetAddress (string strAddress) {
-    m_strAddress = strAddress;
-  }
-
-  /*!
-   *
-   */
-  void PPacket::SetPort (string strPort) {
-    m_strPort = strPort;
-  }
-
   /****************************************************************************************************************************
   *****************************************************************************************************************************
   *****************************************************************************************************************************
@@ -133,8 +96,8 @@ namespace TE {
     return priv->GetStream ();
   }
 
-  Packet::Packet (TEuint nMaxSize, string strAddress, string strPort) :
-    priv (new PPacket (nMaxSize, strAddress, strPort)) {
+  Packet::Packet (TEuint nMaxSize) :
+    priv (new PPacket (nMaxSize)) {
   }
 
   /*!
@@ -163,33 +126,5 @@ namespace TE {
    */
   TEbyte* Packet::GetCopyOfStream () {
     return priv->GetCopyOfStream ();
-  }
-
-  /*!
-   *
-   */
-  string Packet::GetAddress () {
-    return priv->GetAddress ();
-  }
-
-  /*!
-   *
-   */
-  string Packet::GetPort () {
-    return priv->GetPort ();
-  }
-
-  /*!
-   *
-   */
-  void Packet::SetAddress (string strAddress) {
-    priv->SetAddress (strAddress);
-  }
-
-  /*!
-   *
-   */
-  void Packet::SetPort (string strPort) {
-    priv->SetPort (strPort);
   }
 }

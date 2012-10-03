@@ -41,11 +41,6 @@ namespace TE {
     virtual bool HasError () = 0;
     virtual TEuint GetSize () = 0;
     virtual TEbyte* GetCopyOfStream () = 0;
-    virtual string GetAddress () = 0;
-    virtual string GetPort () = 0;
-
-    virtual void SetAddress (string strAddress) = 0;
-    virtual void SetPort (string strPort) = 0;
 
     string ReadString () {
       return GetStream ()->ReadString ();
@@ -78,16 +73,11 @@ namespace TE {
    IByteStream* GetStream ();
 
   public:
-    explicit Packet (TEuint nMaxSize, string strAddress, string strPort);
+    explicit Packet (TEuint nMaxSize);
     ~Packet ();
 
     bool HasError ();
     TEuint GetSize ();
     TEbyte* GetCopyOfStream ();
-    string GetAddress ();
-    string GetPort ();
-
-    void SetAddress (string strAddress);
-    void SetPort (string strPort);
   };
 }
