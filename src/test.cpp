@@ -8,7 +8,7 @@ TEint main ()
   INetwork *network = new Network (512);
   network->Host (46767);
 
-  TEuint64 asdf = System::GetTickCount ();
+  TEuint64 asdf = System::GetTicks ();
   for (int i = 0; i < 5000; i++) {
     IPacket *packet = new Packet (512, "127.0.0.1", "46767");
     packet->Write<TEint> (50);
@@ -17,7 +17,7 @@ TEint main ()
     packet = network->Receive ();
     delete packet;
   }
-  cout << System::GetTickCount () - asdf << endl;
+  cout << System::GetTicks () - asdf << endl;
   delete network;
 #ifdef _MSC_VER
     system ("pause");

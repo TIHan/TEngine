@@ -28,11 +28,13 @@
 #include "System.hpp"
 #ifdef __GNUC__
   #include <sys/time.h>
+#elif _MSC_VER
+  #include <Windows.h>
 #endif
 
 namespace TE {
   namespace System {
-    TEuint64 GetTickCount () {
+    TEuint64 GetTicks () {
 #ifdef _MSC_VER
       return GetTickCount ();
 #elif __GNUC__
