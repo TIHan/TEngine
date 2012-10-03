@@ -26,13 +26,16 @@
 */
 
 #include "System.hpp"
+#ifdef __GNUC__
+  #include <sys/time.h>
+#endif
 
 namespace TE {
   namespace System {
     TEuint64 GetTickCount () {
 #ifdef _MSC_VER
       return GetTickCount ();
-#elif
+#elif __GNUC__
       struct timeval tv;
       gettimeofday(&tv, 0);
       return TEuint64((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
