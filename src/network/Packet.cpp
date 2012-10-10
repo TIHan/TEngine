@@ -32,28 +32,19 @@ namespace TE {
     IByteStream *m_pByteStream;
 
   public:
-    explicit PPacket (TEuint nMaxSize);
+    explicit PPacket (IByteStream *pByteStream);
     ~PPacket ();
 
     bool HasError ();
     TEuint GetSize ();
-    TEbyte* GetCopyOfStream ();
-
-    IByteStream* GetStream ();
+    TEbyte* GetStream ();
   };
 
   /*!
    *
    */
-  IByteStream* PPacket::GetStream () {
-    return m_pByteStream;
-  }
-
-  /*!
-   *
-   */
-  PPacket::PPacket (TEuint nMaxSize) {
-    m_pByteStream = new ByteStream (nMaxSize);
+  PPacket::PPacket (IByteStream *pByteStream) {
+    m_pByteStream = pByteStream;
   }
 
   /*!
@@ -80,8 +71,8 @@ namespace TE {
   /*!
    *
    */
-  TEbyte* PPacket::GetCopyOfStream () {
-    return m_pByteStream->GetCopyOfStream ();
+  TEbyte* PPacket::GetStream () {
+    return m_pByteStream->GetStream ();
   }
 
   /****************************************************************************************************************************
@@ -89,15 +80,8 @@ namespace TE {
   *****************************************************************************************************************************
   ****************************************************************************************************************************/
 
-  /*!
-   *
-   */
-  IByteStream* Packet::GetStream () {
-    return priv->GetStream ();
-  }
-
-  Packet::Packet (TEuint nMaxSize) :
-    priv (new PPacket (nMaxSize)) {
+  Packet::Packet (IByteStream *pByteStream) :
+    priv (new PPacket (pByteStream)) {
   }
 
   /*!
@@ -124,7 +108,7 @@ namespace TE {
   /*!
    *
    */
-  TEbyte* Packet::GetCopyOfStream () {
-    return priv->GetCopyOfStream ();
+  TEbyte* Packet::GetStream () {
+    return priv->GetStream ();
   }
 }

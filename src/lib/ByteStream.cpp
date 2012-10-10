@@ -40,7 +40,7 @@ namespace TE {
     explicit PByteStream(const TEuint nMaxSize);
     ~PByteStream();
 
-    TEbyte* GetCopyOfStream ();
+    TEbyte* GetStream ();
     TEuint GetSize ();
     TEuint GetMaxSize ();
     void Clear ();
@@ -129,10 +129,8 @@ namespace TE {
   /*!
    *
    */
-  TEbyte* PByteStream::GetCopyOfStream () {
-    TEbyte *stream = new TEbyte[m_nMaxSize];
-    memcpy (stream, m_pbStream, m_nMaxSize);
-    return stream;
+  TEbyte* PByteStream::GetStream () {
+    return m_pbStream;
   }
 
   /*!
@@ -213,8 +211,8 @@ namespace TE {
     delete priv;
   }
 
-  TEbyte* ByteStream::GetCopyOfStream () {
-    return priv->GetCopyOfStream ();
+  TEbyte* ByteStream::GetStream () {
+    return priv->GetStream ();
   }
 
   TEuint ByteStream::GetSize () {

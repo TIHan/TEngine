@@ -32,52 +32,24 @@
 namespace TE {
   class IPacket {
 
-  protected:
-    virtual IByteStream* GetStream () = 0;
-
   public:
     virtual ~IPacket () {};
 
     virtual bool HasError () = 0;
     virtual TEuint GetSize () = 0;
-    virtual TEbyte* GetCopyOfStream () = 0;
-
-    string ReadString () {
-      return GetStream ()->ReadString ();
-    }
-
-    void WriteString (const string str) {
-      GetStream ()->WriteString (str.c_str());
-    }
-
-    void WriteStream (const TEbyte *pbStream, const TEuint nSize) {
-      GetStream ()->WriteStream (pbStream, nSize);
-    }
-
-    template <class T>
-    void Write (const T val) {
-      GetStream ()->Write<T> (val);
-    }
-
-    template <class T>
-    T Read () {
-      return GetStream ()->Read<T> ();
-    }
+    virtual TEbyte* GetStream () = 0;
   };
 
   class PPacket;
   class Packet : public IPacket {
    PPacket *priv;
 
-  protected:
-   IByteStream* GetStream ();
-
   public:
-    explicit Packet (TEuint nMaxSize);
+    explicit Packet (IByteStream *pByteStream);
     ~Packet ();
 
     bool HasError ();
     TEuint GetSize ();
-    TEbyte* GetCopyOfStream ();
+    TEbyte* GetStream ();
   };
 }
