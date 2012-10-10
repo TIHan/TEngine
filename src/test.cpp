@@ -10,12 +10,13 @@ TEint main ()
 
   TEuint64 asdf = System::GetTicks ();
   for (int i = 0; i < 5000; i++) {
-       /*  IPacket *packet = new Packet (512);
-    packet->Write<TEint> (50);
+    ByteStream *byteStream = new ByteStream (sizeof (TEint));
+    byteStream->Write<TEint> (50);
+    IPacket *packet = new Packet (byteStream);
     network->Send (packet);
     delete packet;
     packet = network->Receive ();
-    delete packet;*/
+    delete packet;
   }
   cout << System::GetTicks () - asdf << endl;
   delete network;
