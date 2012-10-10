@@ -40,7 +40,7 @@ namespace TE {
     void PrintAddresses ();
     void Host (TEushort usPort);
     void Send (IPacket *pPacket);
-    IPacket* Receive ();
+    Packet* Receive ();
   };
 
   /*!
@@ -86,7 +86,7 @@ namespace TE {
   /*!
    *
    */
-  IPacket* PNetwork::Receive () {
+  Packet* PNetwork::Receive () {
     ByteStream *byteStream;
     Packet *packet;
     TEuint bytes;
@@ -151,7 +151,7 @@ namespace TE {
   /*!
    *
    */
-  IPacket* Network::Receive () {
+  Packet* Network::Receive () {
     return priv->Receive ();
   }
 }

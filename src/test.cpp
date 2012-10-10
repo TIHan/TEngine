@@ -12,7 +12,7 @@ TEint main ()
   for (int i = 0; i < 5000; i++) {
     ByteStream *byteStream = new ByteStream (sizeof (TEint));
     byteStream->Write<TEint> (50);
-    IPacket *packet = new Packet (byteStream);
+    Packet *packet = new Packet (byteStream);
     network->Send (packet);
     delete packet;
     packet = network->Receive ();

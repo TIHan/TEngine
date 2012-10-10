@@ -41,7 +41,7 @@ namespace TE {
     virtual void PrintAddresses () = 0;
     virtual void Host (TEushort usPort) = 0;
     virtual void Send (IPacket *pPacket) = 0;
-    virtual IPacket* Receive () = 0;
+    virtual Packet* Receive () = 0;
   };
 
   class PNetwork;
@@ -55,7 +55,7 @@ namespace TE {
     void PrintAddresses ();
     void Host (TEushort usPort);
     void Send (IPacket *pPacket);
-    IPacket* Receive ();
+    Packet* Receive ();
   };
 }
 
