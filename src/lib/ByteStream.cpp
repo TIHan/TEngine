@@ -35,6 +35,7 @@ namespace TE {
     TEuint m_nSize;
     TEuint m_nMaxSize;
     bool m_bError;
+    TEuint m_nRefStream;
 
   public:
     explicit PByteStream(const TEuint nMaxSize);
@@ -45,6 +46,7 @@ namespace TE {
     TEuint GetMaxSize ();
     void Clear ();
     bool HasError ();
+    void UnrefStream ();
 
     TEbyte ReadByte ();
     void WriteByte (const TEbyte byte);
@@ -112,6 +114,7 @@ namespace TE {
     m_pbWritePosition = m_pbStream;
     m_nSize = 0;
     m_bError = false;
+    m_nRefStream = 1;
   }
 
   /****************************************************************************************************************************
@@ -123,13 +126,17 @@ namespace TE {
    *
    */
   PByteStream::~PByteStream () {
-    delete [] m_pbStream;
+    m_nRefStream -= 1;
+    if (m_nRefStream == 0) {
+      delete [] m_pbStream;
+    }
   }
 
   /*!
    *
    */
   TEbyte* PByteStream::GetStream () {
+    m_nRefStream += 1;
     return m_pbStream;
   }
 
@@ -162,9 +169,16 @@ namespace TE {
   /*!
    *
    */
-   bool PByteStream::HasError () {
+  bool PByteStream::HasError () {
     return m_bError;
-   }
+  }
+
+  /*!
+   *
+   */
+  void PByteStream::UnrefStream () {
+    m_nRefStream -= 1;
+  }
 
   /*!
    *
@@ -229,6 +243,10 @@ namespace TE {
 
   bool ByteStream::HasError () {
     return priv->HasError ();
+  }
+
+  void ByteStream::UnrefStream () {
+    return priv->UnrefStream ();
   }
 
   TEbyte ByteStream::ReadByte () {

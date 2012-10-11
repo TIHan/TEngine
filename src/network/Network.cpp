@@ -81,6 +81,7 @@ namespace TE {
    */
   void PNetwork::Send (IPacket *pPacket) {
     m_pSocket->Send (pPacket->GetStream (), pPacket->GetSize ());
+    pPacket->UnrefStream ();
   }
 
   /*!
