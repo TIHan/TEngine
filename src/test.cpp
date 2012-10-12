@@ -10,7 +10,7 @@ TEint main ()
 
   TEuint64 asdf = System::GetTicks ();
   for (int i = 0; i < 2; i++) {
-    shared_ptr<ByteStream> byteStream (new ByteStream (512));
+    shared_ptr<ByteStream> byteStream (new ByteStream (sizeof (TEint)));
     byteStream->Write<TEint> (50);
     Packet *packet = new Packet (byteStream);
     network->Send (packet);

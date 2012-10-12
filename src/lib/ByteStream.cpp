@@ -30,12 +30,11 @@
 namespace TE {
   class PByteStream : public IByteStream {
     shared_ptr<TEbyte> m_pbStream;
-    weak_ptr<TEbyte> m_pbReadPosition;
-    weak_ptr<TEbyte> m_pbWritePosition;
     TEuint m_nSize;
     TEuint m_nMaxSize;
+    TEuint m_iRead;
+    TEuint m_iWrite;
     bool m_bError;
-    TEuint m_nRefStream;
 
   public:
     explicit PByteStream(const TEuint nMaxSize);
@@ -46,7 +45,6 @@ namespace TE {
     TEuint GetMaxSize ();
     void Clear ();
     bool HasError ();
-    void UnrefStream ();
 
     TEbyte ReadByte ();
     void WriteByte (const TEbyte byte);
@@ -110,10 +108,10 @@ namespace TE {
   PByteStream::PByteStream (const TEuint nMaxSize) :
     m_pbStream (new TEbyte[nMaxSize], default_delete<TEbyte[]> ()) {
     m_nMaxSize = nMaxSize;
-    m_pbReadPosition = m_pbStream;
-    m_pbWritePosition = m_pbStream;
     m_nSize = 0;
     m_bError = false;
+    m_iRead = 0;
+    m_iWrite = 0;
   }
 
   /****************************************************************************************************************************
@@ -153,10 +151,10 @@ namespace TE {
    */
   void PByteStream::Clear () {
     m_pbStream.reset (new TEbyte[m_nMaxSize], default_delete<TEbyte[]> ());
-    m_pbReadPosition = m_pbStream;
-    m_pbWritePosition = m_pbStream;
     m_nSize = 0;
     m_bError = false;
+    m_iRead = 0;
+    m_iWrite = 0;
   }
 
   /*!
@@ -177,8 +175,8 @@ namespace TE {
       return 0;
     }
 
-    TEbyte val = *(m_pbReadPosition.lock ().get ());
-    (*(m_pbReadPosition.lock ().get ()))++;
+    TEbyte val = m_pbStream.get ()[m_iRead];
+    m_iRead++;
     m_nSize -= size;
     return val;
   }
@@ -194,8 +192,8 @@ namespace TE {
       return;
     }
 
-    *(m_pbWritePosition.lock ().get ()) = byte;
-    (*(m_pbWritePosition.lock ().get ()))++;
+    m_pbStream.get ()[m_iWrite] = byte;
+    m_iWrite++;
     m_nSize += size;
   }
 
