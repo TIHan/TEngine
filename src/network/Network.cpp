@@ -30,7 +30,7 @@
 
 namespace TE {
   class PNetwork : public INetwork {
-    ISocket *m_pSocket;
+    unique_ptr<ISocket> m_pSocket;
     TEuint m_nMaxTransUnit;
 
   public:
