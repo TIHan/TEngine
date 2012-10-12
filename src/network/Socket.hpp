@@ -52,7 +52,7 @@ namespace TE {
 
   class PSocket;
   class Socket : public ISocket {
-    PSocket *priv;
+    unique_ptr<PSocket> priv;
 
   public:
     Socket ();

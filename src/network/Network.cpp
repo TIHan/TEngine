@@ -120,7 +120,6 @@ namespace TE {
    *
    */
   Network::~Network () {
-    delete priv;
   }
 
   /*!

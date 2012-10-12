@@ -87,7 +87,6 @@ namespace TE {
    *
    */
   Packet::~Packet () {
-    delete priv;
   }
 
   /*!

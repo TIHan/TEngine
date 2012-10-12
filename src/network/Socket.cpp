@@ -231,7 +231,6 @@ namespace TE {
   }
 
   Socket::~Socket () {
-    delete priv;
   }
 
   void Socket::Close () {

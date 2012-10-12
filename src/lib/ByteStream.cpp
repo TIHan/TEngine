@@ -209,7 +209,6 @@ namespace TE {
   }
 
   ByteStream::~ByteStream () {
-    delete priv;
   }
 
   TEbyte* ByteStream::GetStream () {

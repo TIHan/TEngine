@@ -93,7 +93,7 @@ namespace TE {
 
   class PByteStream;
   class ByteStream : public IByteStream {
-    PByteStream *priv;
+    unique_ptr<PByteStream> priv;
 
   public:
     explicit ByteStream(const TEuint nMaxSize);

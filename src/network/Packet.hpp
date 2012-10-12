@@ -42,7 +42,7 @@ namespace TE {
 
   class PPacket;
   class Packet : public IPacket {
-   PPacket *priv;
+   unique_ptr<PPacket> priv;
 
   public:
     explicit Packet (unique_ptr<IByteStream> pByteStream);

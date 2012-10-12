@@ -46,7 +46,7 @@ namespace TE {
 
   class PNetwork;
   class Network : public INetwork {
-    PNetwork *priv;
+    unique_ptr<PNetwork> priv;
 
   public:
     explicit Network (TEuint nMaxTransUnit);
