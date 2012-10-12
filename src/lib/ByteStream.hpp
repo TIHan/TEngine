@@ -41,7 +41,6 @@ namespace TE {
     virtual TEuint GetMaxSize () = 0;
     virtual void Clear () = 0;
     virtual bool HasError () = 0;
-    virtual void UnrefStream () = 0;
 
     virtual TEbyte ReadByte () = 0;
     virtual void WriteByte (const TEbyte byte) = 0;
@@ -105,7 +104,6 @@ namespace TE {
     TEuint GetMaxSize ();
     void Clear ();
     bool HasError ();
-    void UnrefStream ();
 
     TEbyte ReadByte ();
     void WriteByte (const TEbyte byte);

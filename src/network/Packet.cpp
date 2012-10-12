@@ -38,7 +38,6 @@ namespace TE {
     bool HasError ();
     TEuint GetSize ();
     TEbyte* GetStream ();
-    void UnrefStream ();
   };
 
   /*!
@@ -51,8 +50,7 @@ namespace TE {
   /*!
    *
    */
-  PPacket::~PPacket () {
-    delete m_pByteStream; 
+  PPacket::~PPacket () { 
   }
 
   /*!
@@ -74,13 +72,6 @@ namespace TE {
    */
   TEbyte* PPacket::GetStream () {
     return m_pByteStream->GetStream ();
-  }
-
-  /*!
-   *
-   */
-  void PPacket::UnrefStream () {
-    m_pByteStream->UnrefStream ();
   }
 
   /****************************************************************************************************************************
@@ -118,12 +109,5 @@ namespace TE {
    */
   TEbyte* Packet::GetStream () {
     return priv->GetStream ();
-  }
-
-  /*!
-   *
-   */
-  void Packet::UnrefStream () {
-    priv->UnrefStream ();
   }
 }

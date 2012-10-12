@@ -54,7 +54,6 @@ namespace TE {
    *
    */
   PNetwork::~PNetwork () {
-    delete m_pSocket;
   }
 
   /*!
@@ -81,7 +80,6 @@ namespace TE {
    */
   void PNetwork::Send (IPacket *pPacket) {
     m_pSocket->Send (pPacket->GetStream (), pPacket->GetSize ());
-    pPacket->UnrefStream ();
   }
 
   /*!
@@ -99,9 +97,6 @@ namespace TE {
     byteStream = new ByteStream (bytes);
     byteStream->WriteStream (receiveBuffer, bytes);
     packet = new Packet (byteStream);
-    delete [] receiveBuffer;
-    delete [] port;
-    delete [] ip;
 
     if (packet->HasError ()) {
       delete packet;

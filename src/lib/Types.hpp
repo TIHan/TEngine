@@ -34,8 +34,11 @@
 
 #include <string>
 #include <iostream>
+#include <memory>
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::string;
 
 namespace TE {
 #ifdef __GNUC__
