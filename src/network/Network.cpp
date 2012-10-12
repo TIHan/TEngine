@@ -39,8 +39,8 @@ namespace TE {
 
     void PrintAddresses ();
     void Host (TEushort usPort);
-    void Send (IPacket *pPacket);
-    Packet* Receive ();
+    void Send (shared_ptr<IPacket> pPacket);
+    shared_ptr<Packet> Receive ();
   };
 
   /*!
@@ -78,16 +78,16 @@ namespace TE {
   /*!
    *
    */
-  void PNetwork::Send (IPacket *pPacket) {
+  void PNetwork::Send (shared_ptr<IPacket> pPacket) {
     m_pSocket->Send (pPacket->GetByteStream ()->GetStream (), pPacket->GetSize ());
   }
 
   /*!
    *
    */
-  Packet* PNetwork::Receive () {
-    unique_ptr<ByteStream> byteStream;
-    Packet *packet;
+  shared_ptr<Packet> PNetwork::Receive () {
+    shared_ptr<ByteStream> byteStream;
+    shared_ptr<Packet> packet;
     TEuint bytes;
     TEchar *ip = new TEchar[256];
     TEchar *port = new TEchar[256];
@@ -96,13 +96,12 @@ namespace TE {
     bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip, port);
     byteStream.reset (new ByteStream (bytes));
     byteStream->WriteStream (receiveBuffer, bytes);
-    packet = new Packet (move (byteStream));
+    packet.reset (new Packet (byteStream));
 
     delete [] ip;
     delete [] port;
     delete [] receiveBuffer;
     if (packet->HasError ()) {
-      delete packet;
       return 0;
     }
     return packet;
@@ -142,14 +141,14 @@ namespace TE {
   /*!
    *
    */
-  void Network::Send (IPacket *pPacket) {
+  void Network::Send (shared_ptr<IPacket> pPacket) {
     priv->Send (pPacket);
   }
 
   /*!
    *
    */
-  Packet* Network::Receive () {
+  shared_ptr<Packet> Network::Receive () {
     return priv->Receive ();
   }
 }

@@ -12,12 +12,10 @@ TEint main ()
   for (int i = 0; i < 5000; i++) {
     shared_ptr<ByteStream> byteStream (new ByteStream (sizeof (TEint)));
     byteStream->Write<TEint> (50);
-    Packet *packet = new Packet (byteStream);
+    shared_ptr<Packet> packet (new Packet (byteStream));
     network->Send (packet);
-    delete packet;
     packet = network->Receive ();
     //cout << packet->GetByteStream ()->Read<TEint> () << endl;
-    delete packet;
   }
   cout << System::GetTicks () - asdf << endl;
 #ifdef _MSC_VER
