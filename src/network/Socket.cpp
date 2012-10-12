@@ -85,7 +85,7 @@ namespace TE {
     TEint Bind (const TEushort usPort);
     TEchar* GetAddressText ();
     TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize, TEchar *pszNodeName, TEchar *pszServiceName);
-    TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize);
+    TEint Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
   };
 
   /*!
@@ -211,9 +211,9 @@ namespace TE {
   /*!
    *
    */
-  TEint PSocket::Send (const TEbyte *pBuffer, const TEuint nBufferSize) {
+  TEint PSocket::Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) {
     TEint bytes;
-    bytes = sendto (m_iSocket, (const TEchar *)pBuffer, nBufferSize, 0, m_pAddressInfo->ai_addr, (TEint)m_pAddressInfo->ai_addrlen);
+    bytes = sendto (m_iSocket, (const TEchar *)pBuffer.get (), nBufferSize, 0, m_pAddressInfo->ai_addr, (TEint)m_pAddressInfo->ai_addrlen);
 
     WARNING_IF(bytes == -1, "Failed to send packet.")
     return bytes;
@@ -249,7 +249,7 @@ namespace TE {
     return priv->Receive (pBuffer, nBufferSize, pszNodeName, pszServiceName);
   }
 
-  TEint Socket::Send (const TEbyte *pBuffer, const TEuint nBufferSize) {
+  TEint Socket::Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) {
     return priv->Send (pBuffer, nBufferSize);
   }
  }

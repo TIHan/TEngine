@@ -41,6 +41,8 @@ using std::endl;
 using std::string;
 using std::shared_ptr;
 using std::unique_ptr;
+using std::weak_ptr;
+using std::default_delete;
 
 namespace TE {
 #ifdef __GNUC__

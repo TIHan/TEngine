@@ -47,7 +47,7 @@ namespace TE {
     virtual TEint Bind (const TEushort usPort) = 0;
     virtual TEchar* GetAddressText () = 0;
     virtual TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize, TEchar *pszNodeName, TEchar *pszServiceName) = 0;
-    virtual TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize) = 0;
+    virtual TEint Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) = 0;
   };
 
   class PSocket;
@@ -63,7 +63,7 @@ namespace TE {
     TEint Bind (const TEushort usPort);
     TEchar* GetAddressText ();
     TEint Receive (TEbyte *pBuffer, const TEuint nBufferSize, TEchar *pszNodeName, TEchar *pszServiceName);
-    TEint Send (const TEbyte *pBuffer, const TEuint nBufferSize);
+    TEint Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
   };
 }
 

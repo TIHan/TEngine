@@ -37,7 +37,7 @@ namespace TE {
 
     bool HasError ();
     TEuint GetSize ();
-    TEbyte* GetStream ();
+    shared_ptr<TEbyte> GetStream ();
   };
 
   /*!
@@ -70,7 +70,7 @@ namespace TE {
   /*!
    *
    */
-  TEbyte* PPacket::GetStream () {
+  shared_ptr<TEbyte> PPacket::GetStream () {
     return m_pByteStream->GetStream ();
   }
 
@@ -106,7 +106,7 @@ namespace TE {
   /*!
    *
    */
-  TEbyte* Packet::GetStream () {
+  shared_ptr<TEbyte> Packet::GetStream () {
     return priv->GetStream ();
   }
 }

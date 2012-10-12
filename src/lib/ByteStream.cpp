@@ -29,9 +29,9 @@
 
 namespace TE {
   class PByteStream : public IByteStream {
-    TEbyte *m_pbStream;
-    TEbyte *m_pbReadPosition;
-    TEbyte *m_pbWritePosition;
+    shared_ptr<TEbyte> m_pbStream;
+    weak_ptr<TEbyte> m_pbReadPosition;
+    weak_ptr<TEbyte> m_pbWritePosition;
     TEuint m_nSize;
     TEuint m_nMaxSize;
     bool m_bError;
@@ -41,7 +41,7 @@ namespace TE {
     explicit PByteStream(const TEuint nMaxSize);
     ~PByteStream();
 
-    TEbyte* GetStream ();
+    shared_ptr<TEbyte> GetStream ();
     TEuint GetSize ();
     TEuint GetMaxSize ();
     void Clear ();
@@ -107,9 +107,9 @@ namespace TE {
    * a maximum size for the ByteStream buffer.
    *
    */
-  PByteStream::PByteStream (const TEuint nMaxSize) {
+  PByteStream::PByteStream (const TEuint nMaxSize) :
+    m_pbStream (new TEbyte[nMaxSize], default_delete<TEbyte[]> ()) {
     m_nMaxSize = nMaxSize;
-    m_pbStream = new TEbyte[m_nMaxSize];
     m_pbReadPosition = m_pbStream;
     m_pbWritePosition = m_pbStream;
     m_nSize = 0;
@@ -130,7 +130,7 @@ namespace TE {
   /*!
    *
    */
-  TEbyte* PByteStream::GetStream () {
+  shared_ptr<TEbyte> PByteStream::GetStream () {
     return m_pbStream;
   }
 
@@ -152,8 +152,7 @@ namespace TE {
    *
    */
   void PByteStream::Clear () {
-    delete [] m_pbStream;
-    m_pbStream = new TEbyte[m_nMaxSize];
+    m_pbStream.reset (new TEbyte[m_nMaxSize], default_delete<TEbyte[]> ());
     m_pbReadPosition = m_pbStream;
     m_pbWritePosition = m_pbStream;
     m_nSize = 0;
@@ -178,8 +177,8 @@ namespace TE {
       return 0;
     }
 
-    TEbyte val = *m_pbReadPosition;
-    m_pbReadPosition++;
+    TEbyte val = *(m_pbReadPosition.lock ().get ());
+    (*(m_pbReadPosition.lock ().get ()))++;
     m_nSize -= size;
     return val;
   }
@@ -195,8 +194,8 @@ namespace TE {
       return;
     }
 
-    *m_pbWritePosition = byte;
-    m_pbWritePosition++;
+    *(m_pbWritePosition.lock ().get ()) = byte;
+    (*(m_pbWritePosition.lock ().get ()))++;
     m_nSize += size;
   }
 
@@ -205,13 +204,14 @@ namespace TE {
   *****************************************************************************************************************************
   ****************************************************************************************************************************/
 
-  ByteStream::ByteStream (const TEuint nMaxSize) : priv (new PByteStream (nMaxSize)) {
+  ByteStream::ByteStream (const TEuint nMaxSize) :
+    priv (new PByteStream (nMaxSize)) {
   }
 
   ByteStream::~ByteStream () {
   }
 
-  TEbyte* ByteStream::GetStream () {
+  shared_ptr<TEbyte> ByteStream::GetStream () {
     return priv->GetStream ();
   }
 
