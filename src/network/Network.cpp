@@ -86,7 +86,7 @@ namespace TE {
    *
    */
   Packet* PNetwork::Receive () {
-    ByteStream *byteStream;
+    unique_ptr<ByteStream> byteStream;
     Packet *packet;
     TEuint bytes;
     TEchar *ip = new TEchar[256];
@@ -94,9 +94,9 @@ namespace TE {
     TEbyte *receiveBuffer = new TEbyte[m_nMaxTransUnit];
 
     bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip, port);
-    byteStream = new ByteStream (bytes);
+    byteStream.reset (new ByteStream (bytes));
     byteStream->WriteStream (receiveBuffer, bytes);
-    packet = new Packet (byteStream);
+    packet = new Packet (move (byteStream));
 
     if (packet->HasError ()) {
       delete packet;

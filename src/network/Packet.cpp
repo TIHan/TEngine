@@ -29,10 +29,10 @@
 
 namespace TE {
   class PPacket : public IPacket {
-    IByteStream *m_pByteStream;
+    unique_ptr<IByteStream> m_pByteStream;
 
   public:
-    explicit PPacket (IByteStream *pByteStream);
+    explicit PPacket (unique_ptr<IByteStream> pByteStream);
     ~PPacket ();
 
     bool HasError ();
@@ -43,8 +43,8 @@ namespace TE {
   /*!
    *
    */
-  PPacket::PPacket (IByteStream *pByteStream) {
-    m_pByteStream = pByteStream;
+  PPacket::PPacket (unique_ptr<IByteStream> pByteStream) {
+    m_pByteStream.swap (pByteStream);
   }
 
   /*!
@@ -79,8 +79,8 @@ namespace TE {
   *****************************************************************************************************************************
   ****************************************************************************************************************************/
 
-  Packet::Packet (IByteStream *pByteStream) :
-    priv (new PPacket (pByteStream)) {
+  Packet::Packet (unique_ptr<IByteStream> pByteStream) :
+    priv (new PPacket (move (pByteStream))) {
   }
 
   /*!

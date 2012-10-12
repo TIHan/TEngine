@@ -45,7 +45,7 @@ namespace TE {
    PPacket *priv;
 
   public:
-    explicit Packet (IByteStream *pByteStream);
+    explicit Packet (unique_ptr<IByteStream> pByteStream);
     ~Packet ();
 
     bool HasError ();

@@ -39,6 +39,8 @@
 using std::cout;
 using std::endl;
 using std::string;
+using std::shared_ptr;
+using std::unique_ptr;
 
 namespace TE {
 #ifdef __GNUC__
