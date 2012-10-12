@@ -98,6 +98,9 @@ namespace TE {
     byteStream->WriteStream (receiveBuffer, bytes);
     packet = new Packet (move (byteStream));
 
+    delete [] ip;
+    delete [] port;
+    delete [] receiveBuffer;
     if (packet->HasError ()) {
       delete packet;
       return 0;
