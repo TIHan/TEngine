@@ -29,21 +29,21 @@
 
 namespace TE {
   class PPacket : public IPacket {
-    unique_ptr<IByteStream> m_pByteStream;
+    shared_ptr<IByteStream> m_pByteStream;
 
   public:
-    explicit PPacket (unique_ptr<IByteStream> pByteStream);
+    explicit PPacket (shared_ptr<IByteStream> pByteStream);
     ~PPacket ();
 
     bool HasError ();
     TEuint GetSize ();
-    shared_ptr<TEbyte> GetStream ();
+    shared_ptr<IByteStream> GetByteStream ();
   };
 
   /*!
    *
    */
-  PPacket::PPacket (unique_ptr<IByteStream> pByteStream) {
+  PPacket::PPacket (shared_ptr<IByteStream> pByteStream) {
     m_pByteStream.swap (pByteStream);
   }
 
@@ -70,8 +70,8 @@ namespace TE {
   /*!
    *
    */
-  shared_ptr<TEbyte> PPacket::GetStream () {
-    return m_pByteStream->GetStream ();
+  shared_ptr<IByteStream> PPacket::GetByteStream () {
+    return m_pByteStream;
   }
 
   /****************************************************************************************************************************
@@ -79,8 +79,8 @@ namespace TE {
   *****************************************************************************************************************************
   ****************************************************************************************************************************/
 
-  Packet::Packet (unique_ptr<IByteStream> pByteStream) :
-    priv (new PPacket (move (pByteStream))) {
+  Packet::Packet (shared_ptr<IByteStream> pByteStream) :
+    priv (new PPacket (pByteStream)) {
   }
 
   /*!
@@ -106,7 +106,7 @@ namespace TE {
   /*!
    *
    */
-  shared_ptr<TEbyte> Packet::GetStream () {
-    return priv->GetStream ();
+  shared_ptr<IByteStream> Packet::GetByteStream () {
+    return priv->GetByteStream ();
   }
 }

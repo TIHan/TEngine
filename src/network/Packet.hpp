@@ -37,7 +37,7 @@ namespace TE {
 
     virtual bool HasError () = 0;
     virtual TEuint GetSize () = 0;
-    virtual shared_ptr<TEbyte> GetStream () = 0;
+    virtual shared_ptr<IByteStream> GetByteStream () = 0;
   };
 
   class PPacket;
@@ -45,11 +45,11 @@ namespace TE {
    unique_ptr<PPacket> priv;
 
   public:
-    explicit Packet (unique_ptr<IByteStream> pByteStream);
+    explicit Packet (shared_ptr<IByteStream> pByteStream);
     ~Packet ();
 
     bool HasError ();
     TEuint GetSize ();
-    shared_ptr<TEbyte> GetStream ();
+    shared_ptr<IByteStream> GetByteStream ();
   };
 }

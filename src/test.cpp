@@ -9,13 +9,14 @@ TEint main ()
   network->Host (46767);
 
   TEuint64 asdf = System::GetTicks ();
-  for (int i = 0; i < 5000; i++) {
-    unique_ptr<ByteStream> byteStream (new ByteStream (512));
+  for (int i = 0; i < 2; i++) {
+    shared_ptr<ByteStream> byteStream (new ByteStream (512));
     byteStream->Write<TEint> (50);
-    Packet *packet = new Packet (move (byteStream));
+    Packet *packet = new Packet (byteStream);
     network->Send (packet);
     delete packet;
     packet = network->Receive ();
+    cout << packet->GetByteStream ()->Read<TEint> () << endl;
     delete packet;
   }
   cout << System::GetTicks () - asdf << endl;
