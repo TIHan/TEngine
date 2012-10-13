@@ -60,11 +60,10 @@ namespace TE {
    *
    */
   void PNetwork::PrintAddresses () {
-    TEchar *ip = m_pSocket->GetAddressText ();
+    shared_ptr<TEchar> ip (m_pSocket->GetAddressText ());
 
-    if (ip[0]) {
+    if (ip) {
       printf ("IP: %s\n", ip);
-      delete [] ip;
     }
   }
 
@@ -89,18 +88,15 @@ namespace TE {
     shared_ptr<ByteStream> byteStream;
     shared_ptr<Packet> packet;
     TEuint bytes;
-    TEchar *ip = new TEchar[256];
-    TEchar *port = new TEchar[256];
-    TEbyte *receiveBuffer = new TEbyte[m_nMaxTransUnit];
+    shared_ptr<TEchar> ip (new TEchar[256], default_delete<TEchar[]> ());
+    shared_ptr<TEchar> port (new TEchar[256], default_delete<TEchar[]> ());
+    shared_ptr<TEbyte> receiveBuffer (new TEbyte[m_nMaxTransUnit], default_delete<TEbyte[]> ());
 
     bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip, port);
     byteStream.reset (new ByteStream (bytes));
     byteStream->WriteStream (receiveBuffer, bytes);
     packet.reset (new Packet (byteStream));
 
-    delete [] ip;
-    delete [] port;
-    delete [] receiveBuffer;
     if (packet->HasError ()) {
       return 0;
     }

@@ -53,35 +53,33 @@ namespace TE {
   /*!
    *
    */
-  TEchar* IByteStream::ReadString () {
+  shared_ptr<TEchar> IByteStream::ReadString () {
     TEuint size = GetSize ();
-    TEchar *val = new TEchar[size];
+    shared_ptr<TEchar> val (new TEchar[size]);
 
     for (TEuint i = 0; i < size; i++) {
       if (HasError ()) {
-        delete [] val;
         return 0;
       }
-      val[i] = ReadByte ();        
-      if (val[i] == '\0') {
+      val.get ()[i] = ReadByte ();        
+      if (val.get ()[i] == '\0') {
         return val;
       }
     }
-    delete [] val;
     return 0;
   }
 
   /*!
    *
    */
-  void IByteStream::WriteString (const TEchar *sz) {
-    TEuint size = (TEint)strlen (sz);
+  void IByteStream::WriteString (const string sz) {
+    TEuint size = (TEint)strlen (sz.c_str ());
 
     for (TEuint i = 0; i < size; i++) {
       if (HasError ()) {
         return;
       }
-      WriteByte (sz[i]);
+      WriteByte (sz.c_str ()[i]);
       if (i + 1 >= size) {
         WriteByte ('\0');
       }
@@ -91,12 +89,12 @@ namespace TE {
   /*!
    *
    */
-  void IByteStream::WriteStream (const TEbyte *pbStream, const TEuint nSize) {
+  void IByteStream::WriteStream (const shared_ptr<TEbyte> pbStream, const TEuint nSize) {
     for (TEuint i = 0; i < nSize; i++) {
       if (HasError ()) {
         return;
       }
-      WriteByte (pbStream[i]);
+      WriteByte (pbStream.get ()[i]);
     }
   }
 

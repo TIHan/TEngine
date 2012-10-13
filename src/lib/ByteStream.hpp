@@ -44,9 +44,9 @@ namespace TE {
 
     virtual TEbyte ReadByte () = 0;
     virtual void WriteByte (const TEbyte byte) = 0;
-    TEchar* ReadString ();
-    void WriteString (const TEchar *sz);
-    void WriteStream (const TEbyte *pbStream, const TEuint nSize);
+    shared_ptr<TEchar> ReadString ();
+    void WriteString (const string sz);
+    void WriteStream (const shared_ptr<TEbyte> pbStream, const TEuint nSize);
 
     /*!
      *
