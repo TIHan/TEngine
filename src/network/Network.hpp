@@ -40,7 +40,7 @@ namespace TE {
 
     virtual void PrintAddresses () = 0;
     virtual void Host (TEushort usPort) = 0;
-    virtual void Send (shared_ptr<IPacket> pPacket) = 0;
+    virtual bool Send (shared_ptr<IPacket> pPacket) = 0;
     virtual shared_ptr<Packet> Receive () = 0;
   };
 
@@ -54,7 +54,7 @@ namespace TE {
 
     void PrintAddresses ();
     void Host (TEushort usPort);
-    void Send (shared_ptr<IPacket> pPacket);
+    bool Send (shared_ptr<IPacket> pPacket);
     shared_ptr<Packet> Receive ();
   };
 }

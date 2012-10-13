@@ -229,31 +229,55 @@ namespace TE {
   *****************************************************************************************************************************
   ****************************************************************************************************************************/
 
+  /*!
+   *
+   */
   Socket::Socket () : priv (new PSocket ()) {
   }
 
+  /*!
+   *
+   */
   Socket::Socket (const TEbyte bFamily) : priv (new PSocket (bFamily)) {
   }
 
+  /*!
+   *
+   */
   Socket::~Socket () {
   }
 
+  /*!
+   *
+   */
   void Socket::Close () {
     priv->Close ();
   }
 
+  /*!
+   *
+   */
   TEint Socket::Bind (const TEushort usPort) {
     return priv->Bind (usPort);
   }
 
+  /*!
+   *
+   */
   shared_ptr<TEchar> Socket::GetAddressText () {
     return priv->GetAddressText ();
   }
 
+  /*!
+   *
+   */
   TEint Socket::Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName) {
     return priv->Receive (pBuffer, nBufferSize, pszNodeName);
   }
 
+  /*!
+   *
+   */
   TEint Socket::Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) {
     return priv->Send (pBuffer, nBufferSize);
   }

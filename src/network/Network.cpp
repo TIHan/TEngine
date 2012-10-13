@@ -39,7 +39,7 @@ namespace TE {
 
     void PrintAddresses ();
     void Host (TEushort usPort);
-    void Send (shared_ptr<IPacket> pPacket);
+    bool Send (shared_ptr<IPacket> pPacket);
     shared_ptr<Packet> Receive ();
   };
 
@@ -73,8 +73,8 @@ namespace TE {
   /*!
    *
    */
-  void PNetwork::Send (shared_ptr<IPacket> pPacket) {
-    m_pSocket->Send (pPacket->GetByteStream ()->GetStream (), pPacket->GetSize ());
+  bool PNetwork::Send (shared_ptr<IPacket> pPacket) {
+    return m_pSocket->Send (pPacket->GetByteStream ()->GetStream (), pPacket->GetSize ()) == -1 ? false : true;
   }
 
   /*!
@@ -88,10 +88,13 @@ namespace TE {
     shared_ptr<TEbyte> receiveBuffer (new TEbyte[m_nMaxTransUnit], default_delete<TEbyte[]> ());
 
     bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip);
+    if (bytes == -1) {
+      return 0;
+    }
+
     byteStream.reset (new ByteStream (bytes));
     byteStream->WriteStream (receiveBuffer, bytes);
     packet.reset (new Packet (byteStream));
-
     if (packet->HasError ()) {
       return 0;
     }
@@ -132,8 +135,8 @@ namespace TE {
   /*!
    *
    */
-  void Network::Send (shared_ptr<IPacket> pPacket) {
-    priv->Send (pPacket);
+  bool Network::Send (shared_ptr<IPacket> pPacket) {
+    return priv->Send (pPacket);
   }
 
   /*!
