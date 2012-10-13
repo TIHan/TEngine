@@ -85,10 +85,9 @@ namespace TE {
     shared_ptr<Packet> packet;
     TEuint bytes;
     shared_ptr<TEchar> ip (new TEchar[256], default_delete<TEchar[]> ());
-    shared_ptr<TEchar> port (new TEchar[256], default_delete<TEchar[]> ());
     shared_ptr<TEbyte> receiveBuffer (new TEbyte[m_nMaxTransUnit], default_delete<TEbyte[]> ());
 
-    bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip, port);
+    bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip);
     byteStream.reset (new ByteStream (bytes));
     byteStream->WriteStream (receiveBuffer, bytes);
     packet.reset (new Packet (byteStream));

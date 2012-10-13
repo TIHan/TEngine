@@ -84,7 +84,7 @@ namespace TE {
     void Close ();
     TEint Bind (const TEushort usPort);
     shared_ptr<TEchar> GetAddressText ();
-    TEint Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName, shared_ptr<TEchar> pszServiceName);
+    TEint Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName);
     TEint Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
   };
 
@@ -199,12 +199,19 @@ namespace TE {
   /*!
    *
    */
-  TEint PSocket::Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName, shared_ptr<TEchar> pszServiceName) {
+  TEint PSocket::Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName) {
     struct sockaddr_storage sock_addr;
     socklen_t addr_len = sizeof sock_addr;
     
     TEint bytes = recvfrom (m_iSocket, (TEchar *)pBuffer.get (), nBufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
-    WARNING_IF_RETURN_VAL(bytes == -1, -1, "Failed to receive packet.")
+    switch (sock_addr.ss_family) {
+    case AF_INET6:
+      inet_ntop (m_bFamily, &(((struct sockaddr_in6 *)&sock_addr)->sin6_addr), pszNodeName.get (), INET6_ADDRSTRLEN);
+      break;
+    default:
+      inet_ntop (m_bFamily, &(((struct sockaddr_in *)&sock_addr)->sin_addr), pszNodeName.get (), INET_ADDRSTRLEN);
+      break;
+    }
     return bytes;
   }
 
@@ -214,8 +221,6 @@ namespace TE {
   TEint PSocket::Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) {
     TEint bytes;
     bytes = sendto (m_iSocket, (const TEchar *)pBuffer.get (), nBufferSize, 0, m_pAddressInfo->ai_addr, (TEint)m_pAddressInfo->ai_addrlen);
-
-    WARNING_IF(bytes == -1, "Failed to send packet.")
     return bytes;
   }
 
@@ -245,8 +250,8 @@ namespace TE {
     return priv->GetAddressText ();
   }
 
-  TEint Socket::Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName, shared_ptr<TEchar> pszServiceName) {
-    return priv->Receive (pBuffer, nBufferSize, pszNodeName, pszServiceName);
+  TEint Socket::Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName) {
+    return priv->Receive (pBuffer, nBufferSize, pszNodeName);
   }
 
   TEint Socket::Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) {

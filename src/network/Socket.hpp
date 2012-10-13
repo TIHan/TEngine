@@ -46,7 +46,7 @@ namespace TE {
     virtual void Close () = 0;
     virtual TEint Bind (const TEushort usPort) = 0;
     virtual shared_ptr<TEchar> GetAddressText () = 0;
-    virtual TEint Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName, shared_ptr<TEchar> pszServiceName) = 0;
+    virtual TEint Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName) = 0;
     virtual TEint Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) = 0;
   };
 
@@ -62,7 +62,7 @@ namespace TE {
     void Close ();
     TEint Bind (const TEushort usPort);
     shared_ptr<TEchar> GetAddressText ();
-    TEint Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName, shared_ptr<TEchar> pszServiceName);
+    TEint Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName);
     TEint Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
   };
 }
