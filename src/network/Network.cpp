@@ -83,7 +83,7 @@ namespace TE {
   shared_ptr<Packet> PNetwork::Receive (string &szIp) {
     shared_ptr<ByteStream> byteStream;
     shared_ptr<Packet> packet;
-    TEuint bytes;
+    TEint bytes;
     shared_ptr<TEchar> ip (new TEchar[256], default_delete<TEchar[]> ());
     shared_ptr<TEbyte> receiveBuffer (new TEbyte[m_nMaxTransUnit], default_delete<TEbyte[]> ());
 
