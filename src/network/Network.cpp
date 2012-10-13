@@ -40,7 +40,7 @@ namespace TE {
     void PrintAddresses ();
     void Host (TEushort usPort);
     bool Send (shared_ptr<IPacket> pPacket);
-    shared_ptr<Packet> Receive ();
+    shared_ptr<Packet> Receive (string &szIp);
   };
 
   /*!
@@ -80,7 +80,7 @@ namespace TE {
   /*!
    *
    */
-  shared_ptr<Packet> PNetwork::Receive () {
+  shared_ptr<Packet> PNetwork::Receive (string &szIp) {
     shared_ptr<ByteStream> byteStream;
     shared_ptr<Packet> packet;
     TEuint bytes;
@@ -89,6 +89,7 @@ namespace TE {
 
     bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip);
     if (bytes == -1) {
+      szIp = "";
       return 0;
     }
 
@@ -96,8 +97,10 @@ namespace TE {
     byteStream->WriteStream (receiveBuffer, bytes);
     packet.reset (new Packet (byteStream));
     if (packet->HasError ()) {
+      szIp = "";
       return 0;
     }
+    szIp.assign (ip.get ());
     return packet;
   }
 
@@ -142,7 +145,7 @@ namespace TE {
   /*!
    *
    */
-  shared_ptr<Packet> Network::Receive () {
-    return priv->Receive ();
+  shared_ptr<Packet> Network::Receive (string &szIp) {
+    return priv->Receive (szIp);
   }
 }
