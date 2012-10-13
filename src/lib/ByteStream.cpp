@@ -55,7 +55,7 @@ namespace TE {
    */
   shared_ptr<TEchar> IByteStream::ReadString () {
     TEuint size = GetSize ();
-    shared_ptr<TEchar> val (new TEchar[size]);
+    shared_ptr<TEchar> val (new TEchar[size], default_delete<TEchar[]> ());
 
     for (TEuint i = 0; i < size; i++) {
       if (HasError ()) {

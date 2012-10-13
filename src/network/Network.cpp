@@ -61,10 +61,6 @@ namespace TE {
    */
   void PNetwork::PrintAddresses () {
     shared_ptr<TEchar> ip (m_pSocket->GetAddressText ());
-
-    if (ip) {
-      printf ("IP: %s\n", ip);
-    }
   }
 
   /*!
