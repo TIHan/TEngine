@@ -25,41 +25,32 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __NETWORK_HPP_
-#define __NETWORK_HPP_
+#ifndef __SERVER_HPP_
+#define __SERVER_HPP_
 
 #ifndef NETWORK_NO_TELIB
   #include <TELib.hpp>
 #endif
-#include "Packet.hpp"
+#include "Network.hpp"
 
 namespace TE {
-  class INetwork {
+  class IServer {
   public:
-    virtual ~INetwork () {};
-
-  protected:
-    virtual void PrintAddresses () = 0;
-    virtual void Host (TEushort usPort) = 0;
-    virtual bool Send (shared_ptr<IPacket> pPacket) = 0;
-    virtual shared_ptr<Packet> Receive (string &szIp) = 0;
+    virtual ~IServer () {};
   };
 
-  class PNetwork;
-  class Network : public INetwork {
-    unique_ptr<PNetwork> priv;
+  class PServer;
+  class Server : public IServer {
+    unique_ptr<PServer> priv;
 
   public:
-    Network ();
-    ~Network ();
+    explicit Server (TEuint nMaxTransUnit, TEushort usPort);
+    explicit Server (TEuint nMaxTransUnit, string szIp, string szPort);
+    ~Server ();
 
-  protected:
-    void PrintAddresses ();
-    void Host (TEushort usPort);
     bool Send (shared_ptr<IPacket> pPacket);
-    shared_ptr<Packet> Receive (string &szIp);
-    void Setup (TEuint nMaxTransUnit, TEbyte bFamily, string szNodeName, string szServiceName);
+    shared_ptr<Packet> Receive ();
   };
 }
 
-#endif /* __NETWORK_HPP_ */
+#endif /* __SERVER_HPP_ */

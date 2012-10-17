@@ -27,3 +27,5 @@
 
 #define NETWORK_NO_TELIB
 #include "../Network.hpp"
+#include "../Server.hpp"
+#include "../Client.hpp"

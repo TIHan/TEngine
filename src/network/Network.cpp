@@ -34,20 +34,20 @@ namespace TE {
     TEuint m_nMaxTransUnit;
 
   public:
-    explicit PNetwork (TEuint nMaxTransUnit);
+    PNetwork ();
     ~PNetwork ();
 
     void PrintAddresses ();
     void Host (TEushort usPort);
     bool Send (shared_ptr<IPacket> pPacket);
     shared_ptr<Packet> Receive (string &szIp);
+    void Setup (TEuint nMaxTransUnit, TEbyte bFamily, string szNodeName, string szServiceName);
   };
 
   /*!
    *
    */
-  PNetwork::PNetwork (TEuint nMaxTransUnit) : m_pSocket (new Socket()) {
-    m_nMaxTransUnit = nMaxTransUnit;
+  PNetwork::PNetwork () {
   }
 
   /*!
@@ -61,6 +61,7 @@ namespace TE {
    */
   void PNetwork::PrintAddresses () {
     shared_ptr<TEchar> ip (m_pSocket->GetAddressText ());
+    cout << ip << endl;
   }
 
   /*!
@@ -89,7 +90,6 @@ namespace TE {
 
     bytes = m_pSocket->Receive (receiveBuffer, m_nMaxTransUnit, ip);
     if (bytes == -1) {
-      szIp = "";
       return 0;
     }
 
@@ -97,11 +97,18 @@ namespace TE {
     byteStream->WriteStream (receiveBuffer, bytes);
     packet.reset (new Packet (byteStream));
     if (packet->HasError ()) {
-      szIp = "";
       return 0;
     }
     szIp.assign (ip.get ());
     return packet;
+  }
+
+  /*!
+   *
+   */
+  void PNetwork::Setup (TEuint nMaxTransUnit, TEbyte bFamily, string szNodeName, string szServiceName) {
+    m_nMaxTransUnit = nMaxTransUnit;
+    m_pSocket.reset (new Socket (bFamily, szNodeName, szServiceName));
   }
 
   /****************************************************************************************************************************
@@ -112,13 +119,15 @@ namespace TE {
   /*!
    *
    */
-  Network::Network (TEuint nMaxTransUnit) : priv (new PNetwork (nMaxTransUnit)) {
+  Network::Network () :
+    priv (new PNetwork ()) {
   }
 
   /*!
    *
    */
   Network::~Network () {
+    priv->~PNetwork ();
   }
 
   /*!
@@ -147,5 +156,12 @@ namespace TE {
    */
   shared_ptr<Packet> Network::Receive (string &szIp) {
     return priv->Receive (szIp);
+  }
+
+  /*!
+   *
+   */
+  void Network::Setup (TEuint nMaxTransUnit, TEbyte bFamily, string szNodeName, string szServiceName) {
+    priv->Setup (nMaxTransUnit, bFamily, szNodeName, szServiceName);
   }
 }

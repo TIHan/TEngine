@@ -57,6 +57,7 @@ namespace TE {
   public:
     Socket ();
     explicit Socket (const TEbyte bFamily);
+    Socket (const TEbyte bFamily, const string szNodeName, const string szServiceName);
     ~Socket ();
 
     void Close ();

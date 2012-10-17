@@ -75,10 +75,12 @@ namespace TE {
     TEbyte m_bFamily;
 
     void Initialize (const TEbyte bFamily);
+    void Create (const string szNodeName, const string szServiceName);
 
   public:
     PSocket ();
     explicit PSocket (const TEbyte bFamily);
+    PSocket (const TEbyte bFamily, const string szNodeName, const string szServiceName);
     ~PSocket ();
 
     void Close ();
@@ -92,7 +94,6 @@ namespace TE {
    *
    */
   void PSocket::Initialize (const TEbyte bFamily) {
-    struct addrinfo hints, *p;
     m_iSocket = -1;
     m_pAddress = 0;
 
@@ -112,12 +113,19 @@ namespace TE {
     wsaResult = WSAStartup (MAKEWORD(2,2), &wsaData);
     ERROR_IF_FORMAT(wsaResult != 0, "WSAStartup failed with result %i", wsaResult)
 #endif
-  
+  }
+
+  /*!
+   *
+   */
+  void PSocket::Create (const string szNodeName, const string szServiceName) {
+    struct addrinfo hints, *p;
+
     memset (&hints, 0, sizeof hints);
     hints.ai_family = m_bFamily;
     hints.ai_socktype = SOCK_DGRAM;
 
-    ERROR_IF(getaddrinfo (0, "", &hints, &m_pAddressInfo) != 0, "Unable to get address info.")
+    ERROR_IF(getaddrinfo (szNodeName.c_str (), szServiceName.c_str (), &hints, &m_pAddressInfo) != 0, "Unable to get address info.")
     for (p = m_pAddressInfo; p != 0; p = p->ai_next) {
       if (p->ai_family == m_bFamily) {
         m_iSocket = CreateSocket (p->ai_family, p->ai_socktype, p->ai_protocol);
@@ -132,6 +140,7 @@ namespace TE {
    */
   PSocket::PSocket () {
     Initialize (IPV4);
+    Create ("", "");
   }
 
   /*!
@@ -139,6 +148,15 @@ namespace TE {
    */
   PSocket::PSocket (const TEbyte bFamily) {
     Initialize (bFamily);
+    Create ("", "");
+  }
+
+  /*!
+   *
+   */
+  PSocket::PSocket (const TEbyte bFamily, const string szNodeName, const string szServiceName) {
+    Initialize (bFamily);
+    Create (szNodeName, szServiceName);
   }
 
   /*!
@@ -232,13 +250,22 @@ namespace TE {
   /*!
    *
    */
-  Socket::Socket () : priv (new PSocket ()) {
+  Socket::Socket () :
+    priv (new PSocket ()) {
   }
 
   /*!
    *
    */
-  Socket::Socket (const TEbyte bFamily) : priv (new PSocket (bFamily)) {
+  Socket::Socket (const TEbyte bFamily) :
+    priv (new PSocket (bFamily)) {
+  }
+
+  /*!
+   *
+   */
+  Socket::Socket (const TEbyte bFamily, const string szNodeName, const string szServiceName) :
+    priv (new PSocket (bFamily, szNodeName, szServiceName)) {
   }
 
   /*!
