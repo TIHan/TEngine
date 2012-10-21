@@ -66,10 +66,6 @@ namespace TE {
   typedef signed __int64 TEint64;
   typedef unsigned __int64 TEuint64;
 #endif
-
-  typedef struct _TEuint128 {
-    TEushort value[8];
-  } TEuint128;
   
   typedef float TEfloat;
   typedef double TEdouble;
