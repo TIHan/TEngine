@@ -67,19 +67,12 @@
     <ClInclude Include="lib\Messages.hpp" />
     <ClInclude Include="lib\System.hpp" />
     <ClInclude Include="lib\Types.hpp" />
-    <ClInclude Include="network\Client.hpp" />
     <ClInclude Include="network\include\Network.hpp" />
-    <ClInclude Include="network\Network.hpp" />
-    <ClInclude Include="network\Packet.hpp" />
-    <ClInclude Include="network\Server.hpp" />
     <ClInclude Include="network\Socket.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp" />
     <ClCompile Include="lib\System.cpp" />
-    <ClCompile Include="network\Network.cpp" />
-    <ClCompile Include="network\Packet.cpp" />
-    <ClCompile Include="network\Server.cpp" />
     <ClCompile Include="network\Socket.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>

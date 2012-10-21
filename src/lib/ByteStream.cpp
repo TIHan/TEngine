@@ -28,41 +28,29 @@
 #include "ByteStream.hpp"
 
 namespace TE {
-  class PByteStream : public IByteStream {
+  class PByteStream {
+		public:
     shared_ptr<TEbyte> m_pbStream;
     TEuint m_nSize;
     TEuint m_nMaxSize;
     TEuint m_iRead;
     TEuint m_iWrite;
     bool m_bError;
-
-  public:
-    explicit PByteStream(const TEuint nMaxSize);
-    ~PByteStream();
-
-    shared_ptr<TEbyte> GetStream ();
-    TEuint GetSize ();
-    TEuint GetMaxSize ();
-    void Clear ();
-    bool HasError ();
-
-    TEbyte ReadByte ();
-    void WriteByte (const TEbyte byte);
   };
 
   /*!
    *
    */
-  shared_ptr<TEchar> IByteStream::ReadString () {
-    TEuint size = GetSize ();
-    shared_ptr<TEchar> val (new TEchar[size], default_delete<TEchar[]> ());
+  shared_ptr<TEchar> AByteStream::ReadString() {
+    TEuint size = GetSize();
+    shared_ptr<TEchar> val(new TEchar[size], default_delete<TEchar[]>());
 
     for (TEuint i = 0; i < size; i++) {
-      if (HasError ()) {
+      if (HasError()) {
         return 0;
       }
-      val.get ()[i] = ReadByte ();        
-      if (val.get ()[i] == '\0') {
+      val.get()[i] = ReadByte();
+      if (val.get()[i] == '\0') {
         return val;
       }
     }
@@ -72,16 +60,16 @@ namespace TE {
   /*!
    *
    */
-  void IByteStream::WriteString (const string sz) {
-    TEuint size = (TEint)strlen (sz.c_str ());
+  void AByteStream::WriteString(const string sz) {
+    TEuint size = (TEint)strlen(sz.c_str());
 
     for (TEuint i = 0; i < size; i++) {
-      if (HasError ()) {
+      if (HasError()) {
         return;
       }
-      WriteByte (sz.c_str ()[i]);
+      WriteByte(sz.c_str()[i]);
       if (i + 1 >= size) {
-        WriteByte ('\0');
+        WriteByte('\0');
       }
     }
   }
@@ -89,12 +77,12 @@ namespace TE {
   /*!
    *
    */
-  void IByteStream::WriteStream (const shared_ptr<TEbyte> pbStream, const TEuint nSize) {
+  void AByteStream::WriteStream(const shared_ptr<TEbyte> pbStream, const TEuint nSize) {
     for (TEuint i = 0; i < nSize; i++) {
-      if (HasError ()) {
+      if (HasError()) {
         return;
       }
-      WriteByte (pbStream.get ()[i]);
+      WriteByte (pbStream.get()[i]);
     }
   }
 
@@ -103,135 +91,90 @@ namespace TE {
    * a maximum size for the ByteStream buffer.
    *
    */
-  PByteStream::PByteStream (const TEuint nMaxSize) :
-    m_pbStream (new TEbyte[nMaxSize], default_delete<TEbyte[]> ()) {
-    m_nMaxSize = nMaxSize;
-    m_nSize = 0;
-    m_bError = false;
-    m_iRead = 0;
-    m_iWrite = 0;
-  }
-
-  /****************************************************************************************************************************
-  *****************************************************************************************************************************
-  *****************************************************************************************************************************
-  ****************************************************************************************************************************/
-
-  /*!
-   *
-   */
-  PByteStream::~PByteStream () {
+  ByteStream::ByteStream(const TEuint nMaxSize) : priv(new PByteStream()) {
+    priv->m_pbStream.reset(new TEbyte[nMaxSize], default_delete<TEbyte[]>());
+    priv->m_nMaxSize = nMaxSize;
+    priv->m_nSize = 0;
+    priv->m_bError = false;
+    priv->m_iRead = 0;
+    priv->m_iWrite = 0;
   }
 
   /*!
    *
    */
-  shared_ptr<TEbyte> PByteStream::GetStream () {
-    return m_pbStream;
+  ByteStream::~ByteStream() {
   }
 
   /*!
    *
    */
-  TEuint PByteStream::GetSize () {
-    return m_nSize;
+  shared_ptr<TEbyte> ByteStream::GetStream() {
+    return priv->m_pbStream;
   }
 
   /*!
    *
    */
-  TEuint PByteStream::GetMaxSize () {
-    return m_nMaxSize;
+  TEuint ByteStream::GetSize() {
+    return priv->m_nSize;
   }
 
   /*!
    *
    */
-  void PByteStream::Clear () {
-    m_pbStream.reset (new TEbyte[m_nMaxSize], default_delete<TEbyte[]> ());
-    m_nSize = 0;
-    m_bError = false;
-    m_iRead = 0;
-    m_iWrite = 0;
+  TEuint ByteStream::GetMaxSize() {
+    return priv->m_nMaxSize;
   }
 
   /*!
    *
    */
-  bool PByteStream::HasError () {
-    return m_bError;
+  void ByteStream::Clear() {
+    priv->m_pbStream.reset(new TEbyte[priv->m_nMaxSize], default_delete<TEbyte[]>());
+    priv->m_nSize = 0;
+    priv->m_bError = false;
+    priv->m_iRead = 0;
+    priv->m_iWrite = 0;
   }
 
   /*!
    *
    */
-  TEbyte PByteStream::ReadByte () {
-    TEuint size = sizeof (TEbyte);
+  bool ByteStream::HasError() {
+    return priv->m_bError;
+  }
 
-    if (m_nSize - size > m_nMaxSize) {
-      m_bError = true;
+  /*!
+   *
+   */
+  TEbyte ByteStream::ReadByte() {
+    TEuint size = sizeof(TEbyte);
+
+    if (priv->m_nSize - size > priv->m_nMaxSize) {
+      priv->m_bError = true;
       return 0;
     }
 
-    TEbyte val = m_pbStream.get ()[m_iRead];
-    m_iRead++;
-    m_nSize -= size;
+    TEbyte val = priv->m_pbStream.get()[priv->m_iRead];
+    priv->m_iRead++;
+    priv->m_nSize -= size;
     return val;
   }
 
   /*!
    *
    */
-  void PByteStream::WriteByte (const TEbyte byte) {
-    TEuint size = sizeof (TEbyte);
+  void ByteStream::WriteByte(const TEbyte byte) {
+    TEuint size = sizeof(TEbyte);
 
-    if (m_nSize + size > m_nMaxSize) {
-      m_bError = true;
+    if (priv->m_nSize + size > priv->m_nMaxSize) {
+      priv->m_bError = true;
       return;
     }
 
-    m_pbStream.get ()[m_iWrite] = byte;
-    m_iWrite++;
-    m_nSize += size;
-  }
-
-  /****************************************************************************************************************************
-  *****************************************************************************************************************************
-  *****************************************************************************************************************************
-  ****************************************************************************************************************************/
-
-  ByteStream::ByteStream (const TEuint nMaxSize) :
-    priv (new PByteStream (nMaxSize)) {
-  }
-
-  ByteStream::~ByteStream () {
-  }
-
-  shared_ptr<TEbyte> ByteStream::GetStream () {
-    return priv->GetStream ();
-  }
-
-  TEuint ByteStream::GetSize () {
-    return priv->GetSize ();
-  }
-
-  TEuint ByteStream::GetMaxSize () {
-    return priv->GetMaxSize ();
-  }
-
-  void ByteStream::Clear () {
-    priv->Clear ();
-  }
-
-  bool ByteStream::HasError () {
-    return priv->HasError ();
-  }
-
-  TEbyte ByteStream::ReadByte () {
-    return priv->ReadByte ();
-  }
-
-  void ByteStream::WriteByte (const TEbyte byte) {
-    priv->WriteByte (byte);
+    priv->m_pbStream.get()[priv->m_iWrite] = byte;
+    priv->m_iWrite++;
+    priv->m_nSize += size;
   }
 }

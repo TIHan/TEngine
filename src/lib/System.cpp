@@ -34,9 +34,9 @@
 
 namespace TE {
   namespace System {
-    TEuint64 GetTicks () {
+    TEuint64 GetTicks() {
 #ifdef _MSC_VER
-      return GetTickCount ();
+      return GetTickCount();
 #elif __GNUC__
       struct timeval tv;
       gettimeofday(&tv, 0);

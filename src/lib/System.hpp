@@ -32,7 +32,7 @@
 
 namespace TE {
   namespace System {
-    TEuint64 GetTicks ();
+    TEuint64 GetTicks();
   }
 }
 

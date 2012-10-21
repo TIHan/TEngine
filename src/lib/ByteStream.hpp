@@ -32,39 +32,39 @@
 #include "Messages.hpp"
 
 namespace TE {
-  class IByteStream {
+  class AByteStream {
   public:
-    virtual ~IByteStream () {}
+    virtual ~AByteStream() {}
 
     virtual shared_ptr<TEbyte> GetStream () = 0;
-    virtual TEuint GetSize () = 0;
-    virtual TEuint GetMaxSize () = 0;
-    virtual void Clear () = 0;
-    virtual bool HasError () = 0;
+    virtual TEuint GetSize() = 0;
+    virtual TEuint GetMaxSize() = 0;
+    virtual void Clear() = 0;
+    virtual bool HasError() = 0;
 
-    virtual TEbyte ReadByte () = 0;
-    virtual void WriteByte (const TEbyte byte) = 0;
-    shared_ptr<TEchar> ReadString ();
-    void WriteString (const string sz);
-    void WriteStream (const shared_ptr<TEbyte> pbStream, const TEuint nSize);
+    virtual TEbyte ReadByte() = 0;
+    virtual void WriteByte(const TEbyte byte) = 0;
+    shared_ptr<TEchar> ReadString();
+    void WriteString(const string sz);
+    void WriteStream(const shared_ptr<TEbyte> pbStream, const TEuint nSize);
 
     /*!
      *
      */
     template <class T>
-    T Read () {
-      TEuint size = sizeof (T);
+    T Read() {
+      TEuint size = sizeof(T);
 
       union unpack_t {
-        TEbyte byte[sizeof (T)];
+        TEbyte byte[sizeof(T)];
         T val;
       } unpack;
 
       for (TEuint i = 0; i < size; i++) {
-        if (HasError ()) {
+        if (HasError()) {
           return 0;
         }
-        unpack.byte[i] = ReadByte ();
+        unpack.byte[i] = ReadByte();
       }
       return unpack.val;
     }
@@ -74,16 +74,16 @@ namespace TE {
      */
     template <class T>
     void Write (const T val) {
-      TEuint size = sizeof (T);
+      TEuint size = sizeof(T);
 
       union pack_t {
-        TEbyte byte[sizeof (T)];
+        TEbyte byte[sizeof(T)];
         T val;
       } pack;
       pack.val = val;
 
       for (TEuint i = 0; i < size; i++) {
-        if (HasError ()) {
+        if (HasError()) {
           return;
         }
         WriteByte (pack.byte[i]);
@@ -92,21 +92,21 @@ namespace TE {
   };
 
   class PByteStream;
-  class ByteStream : public IByteStream {
+  class ByteStream : public AByteStream {
     unique_ptr<PByteStream> priv;
 
   public:
     explicit ByteStream(const TEuint nMaxSize);
     ~ByteStream();
 
-    shared_ptr<TEbyte> GetStream ();
-    TEuint GetSize ();
-    TEuint GetMaxSize ();
-    void Clear ();
-    bool HasError ();
+    shared_ptr<TEbyte> GetStream();
+    TEuint GetSize();
+    TEuint GetMaxSize();
+    void Clear();
+    bool HasError();
 
-    TEbyte ReadByte ();
-    void WriteByte (const TEbyte byte);
+    TEbyte ReadByte();
+    void WriteByte(const TEbyte byte);
   };
 }
 

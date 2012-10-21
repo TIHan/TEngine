@@ -36,35 +36,25 @@
 
 namespace TE {
   enum SocketFamily {
-    IPV4,
-    IPV6
-  };
-
-  class ISocket {
-  public:
-    virtual ~ISocket () {};
-    virtual void Close () = 0;
-    virtual TEint Bind (const TEushort usPort) = 0;
-    virtual shared_ptr<TEchar> GetAddressText () = 0;
-    virtual TEint Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName) = 0;
-    virtual TEint Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) = 0;
+    SOCKET_IPV4,
+    SOCKET_IPV6
   };
 
   class PSocket;
-  class Socket : public ISocket {
+  class Socket {
     unique_ptr<PSocket> priv;
 
   public:
     Socket ();
-    explicit Socket (const TEbyte bFamily);
-    Socket (const TEbyte bFamily, const string szNodeName, const string szServiceName);
-    ~Socket ();
+    explicit Socket(const TEbyte bFamily);
+    Socket(const TEbyte bFamily, const string szNodeName, const string szServiceName);
+    ~Socket();
 
-    void Close ();
-    TEint Bind (const TEushort usPort);
+    void Close();
+    TEint Bind(const TEushort usPort);
     shared_ptr<TEchar> GetAddressText ();
-    TEint Receive (shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName);
-    TEint Send (const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
+    TEint Receive(shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName);
+    TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
   };
 }
 
