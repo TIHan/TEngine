@@ -30,7 +30,7 @@
 namespace TE {
   class PByteStream {
 		public:
-    shared_ptr<TEbyte> m_pbStream;
+    shared_ptr<TEbyte> m_pBuffer;
     TEuint m_nSize;
     TEuint m_nMaxSize;
     TEuint m_iRead;
@@ -136,7 +136,7 @@ namespace TE {
    */
   ByteStream::ByteStream(const TEuint nMaxSize) :
                     priv(new PByteStream()) {
-    priv->m_pbStream.reset(new TEbyte[nMaxSize], default_delete<TEbyte[]>());
+    priv->m_pBuffer.reset(new TEbyte[nMaxSize], default_delete<TEbyte[]>());
     priv->m_nMaxSize = nMaxSize;
     priv->m_nSize = 0;
     priv->m_bError = false;
@@ -153,8 +153,8 @@ namespace TE {
   /*!
    *
    */
-  shared_ptr<TEbyte> ByteStream::GetStream() {
-    return priv->m_pbStream;
+  shared_ptr<TEbyte> ByteStream::GetBuffer() {
+    return priv->m_pBuffer;
   }
 
   /*!
@@ -175,7 +175,7 @@ namespace TE {
    *
    */
   void ByteStream::Clear() {
-    priv->m_pbStream.reset(new TEbyte[priv->m_nMaxSize], default_delete<TEbyte[]>());
+    priv->m_pBuffer.reset(new TEbyte[priv->m_nMaxSize], default_delete<TEbyte[]>());
     priv->m_nSize = 0;
     priv->m_bError = false;
     priv->m_iRead = 0;
@@ -200,7 +200,7 @@ namespace TE {
       return 0;
     }
 
-    TEbyte val = priv->m_pbStream.get()[priv->m_iRead];
+    TEbyte val = priv->m_pBuffer.get()[priv->m_iRead];
     priv->m_iRead++;
     priv->m_nSize -= size;
     return val;
@@ -217,7 +217,7 @@ namespace TE {
       return;
     }
 
-    priv->m_pbStream.get()[priv->m_iWrite] = byte;
+    priv->m_pBuffer.get()[priv->m_iWrite] = byte;
     priv->m_iWrite++;
     priv->m_nSize += size;
   }

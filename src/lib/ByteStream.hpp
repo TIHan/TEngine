@@ -36,7 +36,7 @@ namespace TE {
   public:
     virtual ~AByteStream() {}
 
-    virtual shared_ptr<TEbyte> GetStream () = 0;
+    virtual shared_ptr<TEbyte> GetBuffer () = 0;
     virtual TEuint GetSize() = 0;
     virtual TEuint GetMaxSize() = 0;
     virtual void Clear() = 0;
@@ -63,7 +63,7 @@ namespace TE {
     explicit ByteStream(const TEuint nMaxSize);
     ~ByteStream();
 
-    shared_ptr<TEbyte> GetStream();
+    shared_ptr<TEbyte> GetBuffer();
     TEuint GetSize();
     TEuint GetMaxSize();
     void Clear();
