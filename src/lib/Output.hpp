@@ -25,8 +25,8 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __MESSAGES_HPP_
-#define __MESSAGES_HPP_
+#ifndef __OUTPUT_HPP_
+#define __OUTPUT_HPP_
 
 #include <cstdio>
 #include <cstdlib>
@@ -34,128 +34,128 @@
 
 #define MAX_LEN 256
 
-/* MESSAGE */
+/* PRINT */
 
-#define MESSAGE(str) \
+#define PRINT(str) \
   printf(str);
 
-#define MESSAGE_FORMAT(str, ...) \
+#define PRINT_FORMAT(str, ...) \
   printf(str, __VA_ARGS__);
 
 /* ASSERT */
 
-#define ASSERT_MESSAGE(str) \
-  MESSAGE_FORMAT("(%s) Line %i Assertion: %s\n", __FUNCTION__, __LINE__, str);
+#define ASSERT_PRINT(str) \
+  PRINT_FORMAT("(%s) Line %i Assertion: %s\n", __FUNCTION__, __LINE__, str);
 
-#define ASSERT_MESSAGE_FORMAT(str, ...) \
+#define ASSERT_PRINT_FORMAT(str, ...) \
   char newstr[MAX_LEN]; \
   sprintf(newstr, str, __VA_ARGS__); \
-  ASSERT_MESSAGE(newstr)
+  ASSERT_PRINT(newstr)
 
 #define ASSERT(expr, str) \
   if (!(expr)) { \
-    ASSERT_MESSAGE(str) \
+    ASSERT_PRINT(str) \
   }
 
 #define ASSERT_FORMAT(expr, str, ...) \
   if (!(expr)) { \
-    ASSERT_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    ASSERT_PRINT_FORMAT(str, __VA_ARGS__) \
   }
 
 #define ASSERT_RETURN(expr, str) \
   if (!(expr)) { \
-    ASSERT_MESSAGE(str) \
+    ASSERT_PRINT(str) \
     return; \
   }
 
 #define ASSERT_RETURN_FORMAT(expr, str, ...) \
   if (!(expr)) { \
-    ASSERT_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    ASSERT_PRINT_FORMAT(str, __VA_ARGS__) \
     return; \
   }
 
 #define ASSERT_RETURN_VAL(expr, val, str) \
   if (!(expr)) { \
-    ASSERT_MESSAGE(str) \
+    ASSERT_PRINT(str) \
     return val; \
   }
 
 #define ASSERT_RETURN_VAL_FORMAT(expr, val, str, ...) \
   if (!(expr)) { \
-    ASSERT_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    ASSERT_PRINT_FORMAT(str, __VA_ARGS__) \
     return val; \
   }
 
 /* WARNING */
 
-#define WARNING_MESSAGE(str) \
-  MESSAGE_FORMAT ("(%s) Line %i Warning: %s\n", __FUNCTION__, __LINE__, str)
+#define WARNING_PRINT(str) \
+  PRINT_FORMAT ("(%s) Line %i Warning: %s\n", __FUNCTION__, __LINE__, str)
 
-#define WARNING_MESSAGE_FORMAT(str, ...) \
+#define WARNING_PRINT_FORMAT(str, ...) \
   char newstr[MAX_LEN]; \
   sprintf(newstr, str, __VA_ARGS__); \
-  WARNING_MESSAGE(newstr)
+  WARNING_PRINT(newstr)
 
 #define WARNING_IF(expr, str) \
   if ((expr)) { \
-    WARNING_MESSAGE(str) \
+    WARNING_PRINT(str) \
   }
 
 #define WARNING_IF_FORMAT(expr, str, ...) \
   if ((expr)) { \
-    WARNING_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    WARNING_PRINT_FORMAT(str, __VA_ARGS__) \
   }
 
 #define WARNING_IF_RETURN(expr, str) \
   if ((expr)) { \
-    WARNING_MESSAGE(str) \
+    WARNING_PRINT(str) \
     return; \
   }
 
 #define WARNING_IF_RETURN_FORMAT(expr, str, ...) \
   if ((expr)) { \
-    WARNING_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    WARNING_PRINT_FORMAT(str, __VA_ARGS__) \
     return; \
   }
 
 #define WARNING_IF_RETURN_VAL(expr, val, str) \
   if ((expr)) { \
-    WARNING_MESSAGE(str) \
+    WARNING_PRINT(str) \
     return val; \
   }
 
 #define WARNING_IF_RETURN_VAL_FORMAT(expr, val, str, ...) \
   if ((expr)) { \
-    WARNING_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    WARNING_PRINT_FORMAT(str, __VA_ARGS__) \
     return val; \
   }
 
 /* ERROR */
 
 #ifdef __GNUC__
-  #define ERROR_MESSAGE(str) \
+  #define ERROR_PRINT(str) \
     fprintf(stderr, "(%s) Line %i Error: %s\n", __FUNCTION__, __LINE__, str); \
     exit(1);
 #elif _MSC_VER
-  #define ERROR_MESSAGE(str) \
+  #define ERROR_PRINT(str) \
     fprintf(stderr, "(%s) Line %i Error: %s\n", __FUNCTION__, __LINE__, str); \
     system("pause"); \
     exit(1);
 #endif
 
-#define ERROR_MESSAGE_FORMAT(str, ...) \
+#define ERROR_PRINT_FORMAT(str, ...) \
   char newstr[MAX_LEN]; \
   sprintf(newstr, str, __VA_ARGS__); \
-  ERROR_MESSAGE(newstr)
+  ERROR_PRINT(newstr)
 
 #define ERROR_IF(expr, str) \
   if ((expr)) { \
-    ERROR_MESSAGE(str) \
+    ERROR_PRINT(str) \
   }
 
 #define ERROR_IF_FORMAT(expr, str, ...) \
   if ((expr)) { \
-    ERROR_MESSAGE_FORMAT(str, __VA_ARGS__) \
+    ERROR_PRINT_FORMAT(str, __VA_ARGS__) \
   }
 
-#endif /* __MESSAGES_HPP_ */
+#endif /* __OUTPUT_HPP_ */

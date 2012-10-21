@@ -36,9 +36,6 @@
     <ClInclude Include="lib\ByteStream.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="lib\Messages.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
     <ClInclude Include="lib\Types.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
@@ -52,6 +49,9 @@
       <Filter>Header Files\network\include</Filter>
     </ClInclude>
     <ClInclude Include="lib\System.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\Output.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
   </ItemGroup>

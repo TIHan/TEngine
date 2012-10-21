@@ -45,7 +45,7 @@ namespace TE {
     unique_ptr<PSocket> priv;
 
   public:
-    Socket ();
+    Socket();
     explicit Socket(const TEbyte bFamily);
     Socket(const TEbyte bFamily, const string szNodeName, const string szServiceName);
     ~Socket();
@@ -55,6 +55,7 @@ namespace TE {
     shared_ptr<TEchar> GetAddressText ();
     TEint Receive(shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName);
     TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
+    bool HasError();
   };
 }
 

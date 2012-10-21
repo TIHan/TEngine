@@ -29,7 +29,7 @@
 #define __BYTESTREAM_HPP_
 
 #include "Types.hpp"
-#include "Messages.hpp"
+#include "Output.hpp"
 
 namespace TE {
   class AByteStream {

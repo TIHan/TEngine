@@ -26,6 +26,6 @@
 */
 
 #include "../ByteStream.hpp"
-#include "../Messages.hpp"
+#include "../Output.hpp"
 #include "../Types.hpp"
 #include "../System.hpp"

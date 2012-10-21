@@ -74,6 +74,7 @@ namespace TE {
     struct addrinfo *m_pAddressInfo;
     struct addrinfo *m_pAddress;
     TEbyte m_bFamily;
+    bool m_bError;
 
     void Initialize(const TEbyte bFamily);
     void Create(const string szNodeName, const string szServiceName);
@@ -114,14 +115,21 @@ namespace TE {
     hints.ai_family = m_bFamily;
     hints.ai_socktype = SOCK_DGRAM;
 
-    WARNING_IF(getaddrinfo(szNodeName.c_str(), szServiceName.c_str(), &hints, &m_pAddressInfo) != 0, "Unable to get address info.")
+    if (getaddrinfo(szNodeName.c_str(), szServiceName.c_str(), &hints, &m_pAddressInfo) != 0) {
+      m_bError = true;
+      return;
+    }
+
     for (p = m_pAddressInfo; p != 0; p = p->ai_next) {
       if (p->ai_family == m_bFamily) {
         m_iSocket = CreateSocket(p->ai_family, p->ai_socktype, p->ai_protocol);
         m_pAddress = p;
       }
     }
-    WARNING_IF(m_iSocket == -1, "Unable to create socket.")
+
+    if (m_iSocket == -1) {
+      m_bError = true;
+    }
   }
 
   /*!
@@ -171,13 +179,11 @@ namespace TE {
    */
   TEint Socket::Bind(const TEushort usPort) {
     if (priv->m_iSocket != -1 && priv->m_pAddress) {
-          struct sockaddr_in *sockaddr = (struct sockaddr_in *)priv->m_pAddress->ai_addr;
-          sockaddr->sin_port = ntohs(usPort);
-      
-      WARNING_IF_RETURN_VAL_FORMAT(
-        BindSocket(priv->m_iSocket, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen) != 0, 
-        -1, 
-        "Unable to associate socket with port %i.", usPort)
+      struct sockaddr_in *sockaddr = (struct sockaddr_in *)priv->m_pAddress->ai_addr;
+      sockaddr->sin_port = ntohs(usPort);
+      if (BindSocket(priv->m_iSocket, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen) != 0) {
+        return -1;
+      }
     }
     return 0;
   }
@@ -229,5 +235,12 @@ namespace TE {
     TEint bytes;
     bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer.get(), nBufferSize, 0, priv->m_pAddressInfo->ai_addr, (TEint)priv->m_pAddressInfo->ai_addrlen);
     return bytes;
+  }
+
+  /*!
+   *
+   */
+  bool Socket::HasError() {
+    return priv->m_bError;
   }
  }

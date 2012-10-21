@@ -64,7 +64,7 @@
   <ItemGroup>
     <ClInclude Include="lib\ByteStream.hpp" />
     <ClInclude Include="lib\include\TELib.hpp" />
-    <ClInclude Include="lib\Messages.hpp" />
+    <ClInclude Include="lib\Output.hpp" />
     <ClInclude Include="lib\System.hpp" />
     <ClInclude Include="lib\Types.hpp" />
     <ClInclude Include="network\include\Network.hpp" />
