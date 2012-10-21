@@ -52,8 +52,8 @@ namespace TE {
 
     void Close();
     TEint Bind(const TEushort usPort);
-    shared_ptr<TEchar> GetAddressText ();
-    TEint Receive(shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName);
+    string GetAddress ();
+    TEint Receive(shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, string &szNodeName);
     TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
     bool HasError();
   };

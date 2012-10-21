@@ -77,7 +77,8 @@ namespace TE {
   /*!
    *
    */
-  void AByteStream::WriteStream(const shared_ptr<TEbyte> pbStream, const TEuint nSize) {
+  void AByteStream::WriteStream(const shared_ptr<TEbyte> pbStream,
+                                const TEuint nSize) {
     for (TEuint i = 0; i < nSize; i++) {
       if (HasError()) {
         return;
@@ -87,11 +88,54 @@ namespace TE {
   }
 
   /*!
+    *
+    */
+  template <class T>
+  T AByteStream::Read() {
+    TEuint size = sizeof(T);
+
+    union unpack_t {
+      TEbyte byte[sizeof(T)];
+      T val;
+    } unpack;
+
+    for (TEuint i = 0; i < size; i++) {
+      if (HasError()) {
+        return 0;
+      }
+      unpack.byte[i] = ReadByte();
+    }
+    return unpack.val;
+  }
+
+  /*!
+    *
+    */
+  template <class T>
+  void AByteStream::Write (const T val) {
+    TEuint size = sizeof(T);
+
+    union pack_t {
+      TEbyte byte[sizeof(T)];
+      T val;
+    } pack;
+    pack.val = val;
+
+    for (TEuint i = 0; i < size; i++) {
+      if (HasError()) {
+        return;
+      }
+      WriteByte (pack.byte[i]);
+    }
+  }
+
+  /*!
    * \brief The constructor for the ByteStream that requires
    * a maximum size for the ByteStream buffer.
    *
    */
-  ByteStream::ByteStream(const TEuint nMaxSize) : priv(new PByteStream()) {
+  ByteStream::ByteStream(const TEuint nMaxSize) :
+                    priv(new PByteStream()) {
     priv->m_pbStream.reset(new TEbyte[nMaxSize], default_delete<TEbyte[]>());
     priv->m_nMaxSize = nMaxSize;
     priv->m_nSize = 0;

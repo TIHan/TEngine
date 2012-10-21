@@ -45,14 +45,18 @@
 /*!
  *
  */
-static TE::TEint CreateSocket(TE::TEint domain, TE::TEint type, TE::TEint protocol) {
+static TE::TEint CreateSocket(TE::TEint domain,
+                              TE::TEint type,
+                              TE::TEint protocol) {
   return (TE::TEint)socket(domain, type, protocol);
 }
 
 /*!
  *
  */
-static TE::TEint BindSocket(TE::TEint sockfd, struct sockaddr *my_addr, TE::TEint addrlen) {
+static TE::TEint BindSocket(TE::TEint sockfd,
+                            struct sockaddr *my_addr,
+                            TE::TEint addrlen) {
   return bind(sockfd, my_addr, addrlen);
 }
 
@@ -108,7 +112,8 @@ namespace TE {
   /*!
    *
    */
-  void PSocket::Create(const string szNodeName, const string szServiceName) {
+  void PSocket::Create(const string szNodeName,
+                       const string szServiceName) {
     struct addrinfo hints, *p;
 
     memset(&hints, 0, sizeof hints);
@@ -135,7 +140,8 @@ namespace TE {
   /*!
    *
    */
-  Socket::Socket() : priv(new PSocket()) {
+  Socket::Socket() :
+            priv(new PSocket()) {
     priv->Initialize(SOCKET_IPV4);
     priv->Create("", "");
   }
@@ -143,7 +149,8 @@ namespace TE {
   /*!
    *
    */
-  Socket::Socket(const TEbyte bFamily) : priv(new PSocket()) {
+  Socket::Socket(const TEbyte bFamily) :
+            priv(new PSocket()) {
     priv->Initialize(bFamily);
     priv->Create("", "");
   }
@@ -151,7 +158,10 @@ namespace TE {
   /*!
    *
    */
-  Socket::Socket(const TEbyte bFamily, const string szNodeName, const string szServiceName) : priv(new PSocket()) {
+  Socket::Socket(const TEbyte bFamily,
+                 const string szNodeName,
+                 const string szServiceName) :
+            priv(new PSocket()) {
     priv->Initialize(bFamily);
     priv->Create(szNodeName, szServiceName);
   }
@@ -191,9 +201,10 @@ namespace TE {
   /*!
    *
    */
-  shared_ptr<TEchar> Socket::GetAddressText() {
+  string Socket::GetAddress() {
     if (priv->m_pAddress) {
       TEchar *address = new TEchar[INET6_ADDRSTRLEN];
+      string s;
 
       switch (priv->m_bFamily) {
       case AF_INET6:
@@ -203,35 +214,40 @@ namespace TE {
         inet_ntop(priv->m_bFamily, &(((struct sockaddr_in *)priv->m_pAddress->ai_addr)->sin_addr), address, INET_ADDRSTRLEN);
         break;
       }
-      return shared_ptr<TEchar> (address, default_delete<TEchar[]>());
+      return s.assign (address);
     } else {
-      return 0;
+      return "";
     }
   }
 
   /*!
    *
    */
-  TEint Socket::Receive(shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, shared_ptr<TEchar> pszNodeName) {
+  TEint Socket::Receive(shared_ptr<TEbyte> pBuffer,
+                        const TEuint nBufferSize,
+                        string &szNodeName) {
     struct sockaddr_storage sock_addr;
+    TEchar *address = new TEchar[INET6_ADDRSTRLEN];
     socklen_t addr_len = sizeof sock_addr;
     
     TEint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer.get(), nBufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
     switch (sock_addr.ss_family) {
     case AF_INET6:
-      inet_ntop(priv->m_bFamily, &(((struct sockaddr_in6 *)&sock_addr)->sin6_addr), pszNodeName.get(), INET6_ADDRSTRLEN);
+      inet_ntop(priv->m_bFamily, &(((struct sockaddr_in6 *)&sock_addr)->sin6_addr), address, INET6_ADDRSTRLEN);
       break;
     default:
-      inet_ntop(priv->m_bFamily, &(((struct sockaddr_in *)&sock_addr)->sin_addr), pszNodeName.get(), INET_ADDRSTRLEN);
+      inet_ntop(priv->m_bFamily, &(((struct sockaddr_in *)&sock_addr)->sin_addr), address, INET_ADDRSTRLEN);
       break;
     }
+    szNodeName.assign(address);
     return bytes;
   }
 
   /*!
    *
    */
-  TEint Socket::Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) {
+  TEint Socket::Send(const shared_ptr<TEbyte> pBuffer,
+                     const TEuint nBufferSize) {
     TEint bytes;
     bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer.get(), nBufferSize, 0, priv->m_pAddressInfo->ai_addr, (TEint)priv->m_pAddressInfo->ai_addrlen);
     return bytes;
@@ -243,4 +259,4 @@ namespace TE {
   bool Socket::HasError() {
     return priv->m_bError;
   }
- }
+}

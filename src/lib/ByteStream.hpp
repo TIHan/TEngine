@@ -48,47 +48,11 @@ namespace TE {
     void WriteString(const string sz);
     void WriteStream(const shared_ptr<TEbyte> pbStream, const TEuint nSize);
 
-    /*!
-     *
-     */
     template <class T>
-    T Read() {
-      TEuint size = sizeof(T);
+    T Read();
 
-      union unpack_t {
-        TEbyte byte[sizeof(T)];
-        T val;
-      } unpack;
-
-      for (TEuint i = 0; i < size; i++) {
-        if (HasError()) {
-          return 0;
-        }
-        unpack.byte[i] = ReadByte();
-      }
-      return unpack.val;
-    }
-
-    /*!
-     *
-     */
     template <class T>
-    void Write (const T val) {
-      TEuint size = sizeof(T);
-
-      union pack_t {
-        TEbyte byte[sizeof(T)];
-        T val;
-      } pack;
-      pack.val = val;
-
-      for (TEuint i = 0; i < size; i++) {
-        if (HasError()) {
-          return;
-        }
-        WriteByte (pack.byte[i]);
-      }
-    }
+    void Write (const T val);
   };
 
   class PByteStream;
