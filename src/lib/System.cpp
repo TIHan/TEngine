@@ -44,8 +44,8 @@ namespace TE {
 #endif
     }
 
-    void Sleep(TEuint ms) {
-      Delay(ms);
+    void Delay(TEuint ms) {
+      Sleep(ms);
     }
   }
 }
