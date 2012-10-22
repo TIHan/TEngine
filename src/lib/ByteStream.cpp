@@ -35,99 +35,8 @@ namespace TE {
     TEuint m_nMaxSize;
     TEuint m_iRead;
     TEuint m_iWrite;
-    bool m_bError;
+    TEboolean m_bError;
   };
-
-  /*!
-   *
-   */
-  shared_ptr<TEchar> AByteStream::ReadString() {
-    TEuint size = GetSize();
-    shared_ptr<TEchar> val(new TEchar[size], default_delete<TEchar[]>());
-
-    for (TEuint i = 0; i < size; i++) {
-      if (HasError()) {
-        return 0;
-      }
-      val.get()[i] = ReadByte();
-      if (val.get()[i] == '\0') {
-        return val;
-      }
-    }
-    return 0;
-  }
-
-  /*!
-   *
-   */
-  void AByteStream::WriteString(const string sz) {
-    TEuint size = (TEint)strlen(sz.c_str());
-
-    for (TEuint i = 0; i < size; i++) {
-      if (HasError()) {
-        return;
-      }
-      WriteByte(sz.c_str()[i]);
-      if (i + 1 >= size) {
-        WriteByte('\0');
-      }
-    }
-  }
-
-  /*!
-   *
-   */
-  void AByteStream::WriteStream(const shared_ptr<TEbyte> pbStream,
-                                const TEuint nSize) {
-    for (TEuint i = 0; i < nSize; i++) {
-      if (HasError()) {
-        return;
-      }
-      WriteByte (pbStream.get()[i]);
-    }
-  }
-
-  /*!
-    *
-    */
-  template <class T>
-  T AByteStream::Read() {
-    TEuint size = sizeof(T);
-
-    union unpack_t {
-      TEbyte byte[sizeof(T)];
-      T val;
-    } unpack;
-
-    for (TEuint i = 0; i < size; i++) {
-      if (HasError()) {
-        return 0;
-      }
-      unpack.byte[i] = ReadByte();
-    }
-    return unpack.val;
-  }
-
-  /*!
-    *
-    */
-  template <class T>
-  void AByteStream::Write (const T val) {
-    TEuint size = sizeof(T);
-
-    union pack_t {
-      TEbyte byte[sizeof(T)];
-      T val;
-    } pack;
-    pack.val = val;
-
-    for (TEuint i = 0; i < size; i++) {
-      if (HasError()) {
-        return;
-      }
-      WriteByte (pack.byte[i]);
-    }
-  }
 
   /*!
    * \brief The constructor for the ByteStream that requires
@@ -185,7 +94,7 @@ namespace TE {
   /*!
    *
    */
-  bool ByteStream::HasError() {
+  TEboolean ByteStream::HasError() {
     return priv->m_bError;
   }
 
@@ -220,5 +129,96 @@ namespace TE {
     priv->m_pBuffer.get()[priv->m_iWrite] = byte;
     priv->m_iWrite++;
     priv->m_nSize += size;
+  }
+
+  /*!
+   *
+   */
+  shared_ptr<TEchar> ByteStream::ReadString() {
+    TEuint size = GetSize();
+    shared_ptr<TEchar> val(new TEchar[size], default_delete<TEchar[]>());
+
+    for (TEuint i = 0; i < size; i++) {
+      if (HasError()) {
+        return 0;
+      }
+      val.get()[i] = ReadByte();
+      if (val.get()[i] == '\0') {
+        return val;
+      }
+    }
+    return 0;
+  }
+
+  /*!
+   *
+   */
+  void ByteStream::WriteString(const string sz) {
+    TEuint size = (TEint)strlen(sz.c_str());
+
+    for (TEuint i = 0; i < size; i++) {
+      if (HasError()) {
+        return;
+      }
+      WriteByte(sz.c_str()[i]);
+      if (i + 1 >= size) {
+        WriteByte('\0');
+      }
+    }
+  }
+
+  /*!
+   *
+   */
+  void ByteStream::WriteStream(const shared_ptr<TEbyte> pbStream,
+                               const TEuint nSize) {
+    for (TEuint i = 0; i < nSize; i++) {
+      if (HasError()) {
+        return;
+      }
+      WriteByte (pbStream.get()[i]);
+    }
+  }
+
+  /*!
+    *
+    */
+  template <class T>
+  T ByteStream::Read() {
+    TEuint size = sizeof(T);
+
+    union unpack_t {
+      TEbyte byte[sizeof(T)];
+      T val;
+    } unpack;
+
+    for (TEuint i = 0; i < size; i++) {
+      if (HasError()) {
+        return 0;
+      }
+      unpack.byte[i] = ReadByte();
+    }
+    return unpack.val;
+  }
+
+  /*!
+    *
+    */
+  template <class T>
+  void ByteStream::Write (const T val) {
+    TEuint size = sizeof(T);
+
+    union pack_t {
+      TEbyte byte[sizeof(T)];
+      T val;
+    } pack;
+    pack.val = val;
+
+    for (TEuint i = 0; i < size; i++) {
+      if (HasError()) {
+        return;
+      }
+      WriteByte (pack.byte[i]);
+    }
   }
 }

@@ -37,6 +37,7 @@
 #include <memory>
 
 using std::cout;
+using std::cin;
 using std::endl;
 using std::string;
 using std::shared_ptr;
@@ -69,6 +70,7 @@ namespace TE {
   
   typedef float TEfloat;
   typedef double TEdouble;
+  typedef bool TEboolean;
 }
 
 #endif /* __TYPES_HPP_ */

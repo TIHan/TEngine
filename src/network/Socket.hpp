@@ -47,15 +47,15 @@ namespace TE {
   public:
     Socket();
     explicit Socket(const TEbyte bFamily);
-    Socket(const TEbyte bFamily, const string szNodeName, const string szServiceName);
+    explicit Socket(const TEbyte bFamily, const string szNodeName, const string szServiceName);
     ~Socket();
 
     void Close();
     TEint Bind(const TEushort usPort);
-    string GetAddress ();
-    TEint Receive(shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, string &szNodeName);
+    string GetAddress();
+    TEint Receive(shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, string &szAddress);
     TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
-    bool HasError();
+    TEboolean HasError();
   };
 }
 

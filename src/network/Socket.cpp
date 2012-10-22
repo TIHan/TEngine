@@ -78,7 +78,7 @@ namespace TE {
     struct addrinfo *m_pAddressInfo;
     struct addrinfo *m_pAddress;
     TEbyte m_bFamily;
-    bool m_bError;
+    TEboolean m_bError;
 
     void Initialize(const TEbyte bFamily);
     void Create(const string szNodeName, const string szServiceName);
@@ -225,7 +225,7 @@ namespace TE {
    */
   TEint Socket::Receive(shared_ptr<TEbyte> pBuffer,
                         const TEuint nBufferSize,
-                        string &szNodeName) {
+                        string &szAddress) {
     struct sockaddr_storage sock_addr;
     TEchar *address = new TEchar[INET6_ADDRSTRLEN];
     socklen_t addr_len = sizeof sock_addr;
@@ -239,7 +239,7 @@ namespace TE {
       inet_ntop(priv->m_bFamily, &(((struct sockaddr_in *)&sock_addr)->sin_addr), address, INET_ADDRSTRLEN);
       break;
     }
-    szNodeName.assign(address);
+    szAddress.assign(address);
     return bytes;
   }
 
@@ -256,7 +256,7 @@ namespace TE {
   /*!
    *
    */
-  bool Socket::HasError() {
+  TEboolean Socket::HasError() {
     return priv->m_bError;
   }
 }

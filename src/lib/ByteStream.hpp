@@ -32,31 +32,8 @@
 #include "Output.hpp"
 
 namespace TE {
-  class AByteStream {
-  public:
-    virtual ~AByteStream() {}
-
-    virtual shared_ptr<TEbyte> GetBuffer () = 0;
-    virtual TEuint GetSize() = 0;
-    virtual TEuint GetMaxSize() = 0;
-    virtual void Clear() = 0;
-    virtual bool HasError() = 0;
-
-    virtual TEbyte ReadByte() = 0;
-    virtual void WriteByte(const TEbyte byte) = 0;
-    shared_ptr<TEchar> ReadString();
-    void WriteString(const string sz);
-    void WriteStream(const shared_ptr<TEbyte> pbStream, const TEuint nSize);
-
-    template <class T>
-    T Read();
-
-    template <class T>
-    void Write (const T val);
-  };
-
   class PByteStream;
-  class ByteStream : public AByteStream {
+  class ByteStream {
     unique_ptr<PByteStream> priv;
 
   public:
@@ -67,10 +44,20 @@ namespace TE {
     TEuint GetSize();
     TEuint GetMaxSize();
     void Clear();
-    bool HasError();
+    TEboolean HasError();
 
     TEbyte ReadByte();
     void WriteByte(const TEbyte byte);
+
+    shared_ptr<TEchar> ReadString();
+    void WriteString(const string sz);
+    void WriteStream(const shared_ptr<TEbyte> pBuffer, const TEuint nSize);
+
+    template <class T>
+    T Read();
+
+    template <class T>
+    void Write (const T val);
   };
 }
 
