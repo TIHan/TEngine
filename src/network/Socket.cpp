@@ -100,12 +100,12 @@ namespace TE {
     }
 
 #ifdef _MSC_VER
-    WSADATA wsaData;
-    TEint wsaResult;
+      WSADATA wsaData;
+      TEint wsaResult;
 
-    // Initialize Winsock
-    wsaResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-    ERROR_IF_FORMAT(wsaResult != 0, "WSAStartup failed with result %i", wsaResult)
+      // Initialize Winsock
+      wsaResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+      ERROR_IF_FORMAT(wsaResult != 0, "WSAStartup failed with result %i", wsaResult)
 #endif
   }
 
@@ -171,9 +171,6 @@ namespace TE {
    */
   Socket::~Socket() {
     Close();
-#ifdef _MSC_VER
-    WSACleanup();
-#endif
   }
 
   /*!

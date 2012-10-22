@@ -66,6 +66,7 @@
     <ClInclude Include="lib\include\TELib.hpp" />
     <ClInclude Include="lib\Output.hpp" />
     <ClInclude Include="lib\System.hpp" />
+    <ClInclude Include="lib\Thread.hpp" />
     <ClInclude Include="lib\Types.hpp" />
     <ClInclude Include="network\include\Network.hpp" />
     <ClInclude Include="network\Socket.hpp" />
