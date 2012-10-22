@@ -30,18 +30,18 @@
 
 #include "Types.hpp"
 #include "Output.hpp"
-#include "TinyThread++-1.1\source\tinythread.h"
 
 namespace TE {
   class PThread;
   class Thread {
+    unique_ptr<PThread> priv;
+
   public:
-    explicit Thread();
+    explicit Thread(function<void()> func);
     ~Thread();
 
     void Join();
-    TEboolean Joinable();
-    void Detatch();
+    TEuint GetId();
   };
 }
 

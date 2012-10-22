@@ -35,6 +35,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <functional>
 
 using std::cout;
 using std::cin;
@@ -44,6 +45,7 @@ using std::shared_ptr;
 using std::unique_ptr;
 using std::weak_ptr;
 using std::default_delete;
+using std::function;
 
 namespace TE {
 #ifdef __GNUC__

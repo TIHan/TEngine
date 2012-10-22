@@ -74,6 +74,7 @@
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp" />
     <ClCompile Include="lib\System.cpp" />
+    <ClCompile Include="lib\Thread.cpp" />
     <ClCompile Include="network\Socket.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>

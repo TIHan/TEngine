@@ -71,5 +71,8 @@
     <ClCompile Include="lib\System.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
+    <ClCompile Include="lib\Thread.cpp">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

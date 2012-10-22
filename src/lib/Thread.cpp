@@ -25,27 +25,19 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "System.hpp"
-#ifdef __GNUC__
-  #include <sys/time.h>
-#elif _MSC_VER
-  #include <Windows.h>
-#endif
+#include "Thread.hpp"
 
 namespace TE {
-  namespace System {
-    TEuint GetTicks() {
-#ifdef _MSC_VER
-      return GetTickCount();
-#elif __GNUC__
-      struct timeval tv;
-      gettimeofday(&tv, 0);
-      return TEuint64((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-#endif
-    }
+  class PThread {
+  };
 
-    void Sleep(TEuint ms) {
-      Sleep(ms);
-    }
+  Thread::Thread(function<void()> func) {
+    func();
+  }
+
+  Thread::~Thread() {
+  }
+
+  void Thread::Join() {
   }
 }

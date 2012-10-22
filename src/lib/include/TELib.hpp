@@ -25,7 +25,8 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../ByteStream.hpp"
 #include "../Output.hpp"
 #include "../Types.hpp"
+#include "../ByteStream.hpp"
 #include "../System.hpp"
+#include "../Thread.hpp"
