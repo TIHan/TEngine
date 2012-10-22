@@ -33,7 +33,7 @@
 namespace TE {
   namespace System {
     TEuint GetTicks();
-    void Sleep(TEuint ms);
+    void Delay(TEuint ms);
   }
 }
 
