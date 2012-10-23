@@ -46,7 +46,7 @@ namespace TE {
 
     void Delay(TEuint ms) {
 #ifdef __GNUC__
-      sleep(ms);
+      sleep(ms/1000);
 #elif _MSC_VER
       Sleep(ms);
 #endif
