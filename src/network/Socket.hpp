@@ -53,7 +53,7 @@ namespace TE {
     void Close();
     TEint Bind(const TEushort usPort);
     string GetAddress();
-    TEint Receive(shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, string &szAddress);
+    tuple<TEint, string> Receive(shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
     TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
     TEboolean HasError();
   };

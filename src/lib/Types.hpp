@@ -37,6 +37,7 @@
 #include <memory>
 #include <functional>
 #include <vector>
+#include <tuple>
 
 using std::cout;
 using std::cin;
@@ -48,6 +49,8 @@ using std::weak_ptr;
 using std::default_delete;
 using std::function;
 using std::vector;
+using std::tuple;
+using std::get;
 
 namespace TE {
 #ifdef __GNUC__

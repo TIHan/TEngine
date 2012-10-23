@@ -220,12 +220,12 @@ namespace TE {
   /*!
    *
    */
-  TEint Socket::Receive(shared_ptr<TEbyte> pBuffer,
-                        const TEuint nBufferSize,
-                        string &szAddress) {
+  tuple<TEint, string> Socket::Receive(shared_ptr<TEbyte> pBuffer,
+                        const TEuint nBufferSize) {
     struct sockaddr_storage sock_addr;
     TEchar *address = new TEchar[INET6_ADDRSTRLEN];
     socklen_t addr_len = sizeof sock_addr;
+    string szAddress;
     
     TEint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer.get(), nBufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
     switch (sock_addr.ss_family) {
@@ -237,7 +237,7 @@ namespace TE {
       break;
     }
     szAddress.assign(address);
-    return bytes;
+    return tuple<TEint, string>(bytes, szAddress);
   }
 
   /*!
