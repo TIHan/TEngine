@@ -13,18 +13,21 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}</ProjectGuid>
     <RootNamespace>Engine</RootNamespace>
+    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and $(VisualStudioVersion) == ''">$(VCTargetsPath11)</VCTargetsPath>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -67,7 +70,6 @@
     <ClInclude Include="lib\Output.hpp" />
     <ClInclude Include="lib\System.hpp" />
     <ClInclude Include="lib\Thread.hpp" />
-    <ClInclude Include="lib\thread\tinythread.h" />
     <ClInclude Include="lib\Types.hpp" />
     <ClInclude Include="network\include\Network.hpp" />
     <ClInclude Include="network\Socket.hpp" />
@@ -76,7 +78,6 @@
     <ClCompile Include="lib\ByteStream.cpp" />
     <ClCompile Include="lib\System.cpp" />
     <ClCompile Include="lib\Thread.cpp" />
-    <ClCompile Include="lib\thread\tinythread.cpp" />
     <ClCompile Include="network\Socket.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>

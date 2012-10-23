@@ -31,12 +31,6 @@
     <Filter Include="Header Files\lib\include">
       <UniqueIdentifier>{ad81bc26-a16f-4c82-ae14-0fec8011abbb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\lib\thread">
-      <UniqueIdentifier>{c2544b3c-ae4d-4edd-9358-93ae2c8b2e34}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\lib\thread">
-      <UniqueIdentifier>{25e6e4c8-50a9-4f26-9f58-207573535d47}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\ByteStream.hpp">
@@ -63,9 +57,6 @@
     <ClInclude Include="lib\Thread.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="lib\thread\tinythread.h">
-      <Filter>Header Files\lib\thread</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp">
@@ -82,9 +73,6 @@
     </ClCompile>
     <ClCompile Include="lib\Thread.cpp">
       <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\thread\tinythread.cpp">
-      <Filter>Source Files\lib\thread</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
