@@ -46,8 +46,8 @@
  *
  */
 static TE::TEint CreateSocket(TE::TEint domain,
-                              TE::TEint type,
-                              TE::TEint protocol) {
+    TE::TEint type,
+    TE::TEint protocol) {
   return (TE::TEint)socket(domain, type, protocol);
 }
 
@@ -55,8 +55,8 @@ static TE::TEint CreateSocket(TE::TEint domain,
  *
  */
 static TE::TEint BindSocket(TE::TEint sockfd,
-                            struct sockaddr *my_addr,
-                            TE::TEint addrlen) {
+    struct sockaddr *my_addr,
+    TE::TEint addrlen) {
   return bind(sockfd, my_addr, addrlen);
 }
 
@@ -113,7 +113,7 @@ namespace TE {
    *
    */
   void PSocket::Create(const string szNodeName,
-                       const string szServiceName) {
+      const string szServiceName) {
     struct addrinfo hints, *p;
 
     memset(&hints, 0, sizeof hints);
@@ -141,7 +141,7 @@ namespace TE {
    *
    */
   Socket::Socket() :
-            priv(new PSocket()) {
+      priv(new PSocket()) {
     priv->Initialize(SOCKET_IPV4);
     priv->Create("", "");
   }
@@ -150,7 +150,7 @@ namespace TE {
    *
    */
   Socket::Socket(const TEbyte bFamily) :
-            priv(new PSocket()) {
+      priv(new PSocket()) {
     priv->Initialize(bFamily);
     priv->Create("", "");
   }
@@ -159,9 +159,9 @@ namespace TE {
    *
    */
   Socket::Socket(const TEbyte bFamily,
-                 const string szNodeName,
-                 const string szServiceName) :
-            priv(new PSocket()) {
+      const string szNodeName,
+      const string szServiceName) :
+      priv(new PSocket()) {
     priv->Initialize(bFamily);
     priv->Create(szNodeName, szServiceName);
   }
@@ -220,12 +220,12 @@ namespace TE {
   /*!
    *
    */
-  tuple<TEint, string> Socket::Receive(shared_ptr<TEbyte> pBuffer,
-                        const TEuint nBufferSize) {
+  tuple<shared_ptr<TEbyte>, TEint, string> Socket::Receive(const TEuint nBufferSize) {
     struct sockaddr_storage sock_addr;
+    string szAddress;
     TEchar *address = new TEchar[INET6_ADDRSTRLEN];
     socklen_t addr_len = sizeof sock_addr;
-    string szAddress;
+    shared_ptr<TEbyte> pBuffer;
     
     TEint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer.get(), nBufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
     switch (sock_addr.ss_family) {
@@ -237,14 +237,14 @@ namespace TE {
       break;
     }
     szAddress.assign(address);
-    return tuple<TEint, string>(bytes, szAddress);
+    return tuple<shared_ptr<TEbyte>, TEint, string>(pBuffer, bytes, szAddress);
   }
 
   /*!
    *
    */
   TEint Socket::Send(const shared_ptr<TEbyte> pBuffer,
-                     const TEuint nBufferSize) {
+    const TEuint nBufferSize) {
     TEint bytes;
     bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer.get(), nBufferSize, 0, priv->m_pAddressInfo->ai_addr, (TEint)priv->m_pAddressInfo->ai_addrlen);
     return bytes;
