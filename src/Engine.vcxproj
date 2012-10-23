@@ -67,6 +67,7 @@
     <ClInclude Include="lib\Output.hpp" />
     <ClInclude Include="lib\System.hpp" />
     <ClInclude Include="lib\Thread.hpp" />
+    <ClInclude Include="lib\thread\tinythread.h" />
     <ClInclude Include="lib\Types.hpp" />
     <ClInclude Include="network\include\Network.hpp" />
     <ClInclude Include="network\Socket.hpp" />
@@ -75,6 +76,7 @@
     <ClCompile Include="lib\ByteStream.cpp" />
     <ClCompile Include="lib\System.cpp" />
     <ClCompile Include="lib\Thread.cpp" />
+    <ClCompile Include="lib\thread\tinythread.cpp" />
     <ClCompile Include="network\Socket.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>

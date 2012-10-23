@@ -26,13 +26,27 @@
 */
 
 #include "Thread.hpp"
+#include "thread\tinythread.h"
+
+typedef struct {
+  function<void()> func;
+} function_t;
+
+void ThreadFunc(void *data) {
+  function_t *f = (function_t*)data;
+  f->func();
+}
 
 namespace TE {
   class PThread {
+  public:
+    shared_ptr<tthread::thread> *m_pThread;
   };
 
   Thread::Thread(function<void()> func) {
-    func();
+    function_t *f = new function_t();
+    f->func = func;
+    auto hello = new tthread::thread(ThreadFunc, f);
   }
 
   Thread::~Thread() {
