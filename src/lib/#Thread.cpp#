@@ -26,34 +26,52 @@
 */
 
 #include "Thread.hpp"
-#include <thread>
+#include "thread/tinythread.h"
+
+typedef struct {
+  function<void()> func;
+} function_t;
+
+void ThreadFunc(void *data) {
+  auto *f = (function_t*)data;
+  f->func();
+  delete f;
+}
+
+tthread::thread* GetThreadFromPointer(void *p) {
+  return ((tthread::thread *)p);
+}
 
 namespace TE {
   class PThread {
   public:
-    unique_ptr<std::thread> m_pThread;
   };
 
-  Thread::Thread(function<void()> func) :
-            priv(new PThread()) {
-    priv->m_pThread.reset(new std::thread(func));
+  Thread::Thread(function<void()> func) {
+    auto *f = new function_t();
+
+    f->func = func;
+    m_pThread = new tthread::thread(ThreadFunc, f);
   }
 
   Thread::~Thread() {
-      Join();
+    Join();
+    auto thread = GetThreadFromPointer(m_pThread);
+    delete thread;
   }
 
   void Thread::Join() {
-    if (IsJoinable()) {
-      priv->m_pThread->join();
-    }
+    auto thread = GetThreadFromPointer(m_pThread);
+    thread->join();
   }
 
   TEboolean Thread::IsJoinable() {
-    return priv->m_pThread->joinable();
+    auto thread = GetThreadFromPointer(m_pThread);
+    return thread->joinable();
   }
 
-  void Thread::Detach() {
-    priv->m_pThread->detach();
+  void Thread::Detatch() {
+    auto thread = GetThreadFromPointer(m_pThread);
+    thread->detach();
   }
 }

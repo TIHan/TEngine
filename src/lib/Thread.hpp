@@ -35,7 +35,6 @@ namespace TE {
   class PThread;
   class Thread {
     unique_ptr<PThread> priv;
-    void *m_pThread;
 
   public:
     explicit Thread(function<void()> func);
@@ -43,7 +42,7 @@ namespace TE {
 
     void Join();
     TEboolean IsJoinable();
-    void Detatch();
+    void Detach();
   };
 }
 
