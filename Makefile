@@ -1,6 +1,6 @@
 CXX		= g++
-CXXFLAGS	= -Wall -pedantic-errors -g -Wno-variadic-macros -std=c++0x -O2
-SOURCES		= src/test.cpp src/network/Network.cpp src/network/Socket.cpp src/lib/ByteStream.cpp src/lib/System.cpp src/network/Packet.cpp
+CXXFLAGS	= -Wall -pedantic-errors -g -Wno-variadic-macros -std=c++0x -O2 -pthread
+SOURCES		= src/test.cpp src/network/Socket.cpp src/lib/ByteStream.cpp src/lib/System.cpp src/lib/Thread.cpp src/lib/thread/tinythread.cpp
 OBJECTS		= $(SOURCES:%.cpp=%.o)
 INCLUDES	= -Isrc/lib/include -Isrc/network/include
 EXECUTABLE	= te-test

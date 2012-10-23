@@ -26,7 +26,7 @@
 */
 
 #include "Thread.hpp"
-#include "thread\tinythread.h"
+#include "thread/tinythread.h"
 
 typedef struct {
   function<void()> func;
