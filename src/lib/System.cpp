@@ -45,7 +45,11 @@ namespace TE {
     }
 
     void Delay(TEuint ms) {
+#ifdef __GNUC__
       sleep(ms);
+#elif _MSC_VER
+      Sleep(ms);
+#endif
     }
   }
 }
