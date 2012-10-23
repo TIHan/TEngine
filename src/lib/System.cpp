@@ -46,11 +46,7 @@ namespace TE {
 
     void Delay(TEuint ms) {
 #ifdef __GNUC__
-      struct timeval tv;
-      tv.tv_sec = micros / 1000000;
-      tv.tv_usec = micros % 1000000;
-      select(0, 0, 0, 0, &tv);
-      usleep(micros/1000);
+      usleep(ms * 1000);
 #elif _MSC_VER
       Sleep(ms);
 #endif
