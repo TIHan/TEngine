@@ -38,6 +38,10 @@ void ThreadFunc(void *data) {
   delete f;
 }
 
+tthread::thread* GetThreadFromPointer(void *p) {
+  return ((tthread::thread *)p);
+}
+
 namespace TE {
   class PThread {
   public:
@@ -51,11 +55,23 @@ namespace TE {
 
   Thread::~Thread() {
     Join();
-    ((tthread::thread *)m_pThread)->detach();
-    delete ((tthread::thread *)m_pThread);
+    auto thread = GetThreadFromPointer(m_pThread);
+    thread->detach();
+    delete thread;
   }
 
   void Thread::Join() {
-    ((tthread::thread *)m_pThread)->join();
+    auto thread = GetThreadFromPointer(m_pThread);
+    thread->join();
+  }
+
+  TEboolean Thread::IsJoinable() {
+    auto thread = GetThreadFromPointer(m_pThread);
+    return thread->joinable();
+  }
+
+  void Thread::Detatch() {
+    auto thread = GetThreadFromPointer(m_pThread);
+    thread->detach();
   }
 }

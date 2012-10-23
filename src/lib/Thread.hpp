@@ -42,7 +42,8 @@ namespace TE {
     ~Thread();
 
     void Join();
-    TEuint GetId();
+    TEboolean IsJoinable();
+    void Detatch();
   };
 }
 
