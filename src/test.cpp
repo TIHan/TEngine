@@ -7,7 +7,8 @@ TEint main()
 {
   TEuint asdf = System::GetTicks();
   for (int i = 0; i < 5; i++) {
-    unique_ptr<Thread> thread(new Thread([=] { cout << "Thread " << i << "\n"; }));
+    shared_ptr<Thread> thread(new Thread([=] { cout << "Thread " << i << "\n"; }));
+    //thread->Join();
   }
   //cout << System::GetTicks() - asdf << endl;
 #ifdef _MSC_VER

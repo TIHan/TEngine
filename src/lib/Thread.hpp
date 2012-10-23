@@ -35,6 +35,7 @@ namespace TE {
   class PThread;
   class Thread {
     unique_ptr<PThread> priv;
+    void *m_pThread;
 
   public:
     explicit Thread(function<void()> func);

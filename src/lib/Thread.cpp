@@ -33,25 +33,29 @@ typedef struct {
 } function_t;
 
 void ThreadFunc(void *data) {
-  function_t *f = (function_t*)data;
+  auto *f = (function_t*)data;
   f->func();
+  delete f;
 }
 
 namespace TE {
   class PThread {
   public:
-    shared_ptr<tthread::thread> *m_pThread;
   };
 
   Thread::Thread(function<void()> func) {
-    function_t *f = new function_t();
+    auto *f = new function_t();
     f->func = func;
-    auto hello = new tthread::thread(ThreadFunc, f);
+    m_pThread = new tthread::thread(ThreadFunc, f);
   }
 
   Thread::~Thread() {
+    Join();
+    ((tthread::thread *)m_pThread)->detach();
+    delete ((tthread::thread *)m_pThread);
   }
 
   void Thread::Join() {
+    ((tthread::thread *)m_pThread)->join();
   }
 }
