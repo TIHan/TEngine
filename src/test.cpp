@@ -9,7 +9,7 @@ TEint main()
   TEuint asdf = System::GetTicks();
   auto byteStream = new ByteStream(512);
   byteStream->WriteString("Hello");
-  auto socket = new Socket(SOCKET_IPV4, "127.0.0.1", "5775");
+  auto socket = new Socket(SOCKET_IPV4, "");
   socket->Bind(5775);
   socket->Send(byteStream->GetBuffer(), byteStream->GetSize());
   socket->Receive();

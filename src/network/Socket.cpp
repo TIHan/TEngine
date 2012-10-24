@@ -83,7 +83,7 @@ namespace TE {
     TEboolean m_bError;
 
     void Initialize(const TEbyte bFamily);
-    void Create(const string szNodeName, const string szServiceName);
+    void Create(const string szNodeName);
   };
 
   /*!
@@ -114,15 +114,19 @@ namespace TE {
   /*!
    *
    */
-  void PSocket::Create(const string szNodeName,
-      const string szServiceName) {
+  void PSocket::Create(const string szNodeName) {
     struct addrinfo hints, *p;
+    TEchar *nodeName = 0;
 
     memset(&hints, 0, sizeof hints);
     hints.ai_family = m_bFamily;
     hints.ai_socktype = SOCK_DGRAM;
 
-    if (getaddrinfo(szNodeName.c_str(), szServiceName.c_str(), &hints, &m_pAddressInfo) != 0) {
+    if (szNodeName.compare("") != 0) {
+      strcpy(nodeName, szNodeName.c_str());
+    }
+
+    if (getaddrinfo(nodeName, "", &hints, &m_pAddressInfo) != 0) {
       m_bError = true;
       return;
     }
@@ -145,7 +149,7 @@ namespace TE {
   Socket::Socket() :
       priv(new PSocket()) {
     priv->Initialize(SOCKET_IPV4);
-    priv->Create("", "");
+    priv->Create("");
   }
 
   /*!
@@ -154,18 +158,17 @@ namespace TE {
   Socket::Socket(const TEbyte bFamily) :
       priv(new PSocket()) {
     priv->Initialize(bFamily);
-    priv->Create("", "");
+    priv->Create("");
   }
 
   /*!
    *
    */
   Socket::Socket(const TEbyte bFamily,
-      const string szNodeName,
-      const string szServiceName) :
+      const string szNodeName) :
       priv(new PSocket()) {
     priv->Initialize(bFamily);
-    priv->Create(szNodeName, szServiceName);
+    priv->Create(szNodeName);
   }
 
   /*!
