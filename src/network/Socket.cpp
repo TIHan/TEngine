@@ -42,6 +42,8 @@
   #pragma comment(lib, "ws2_32.lib")
 #endif
 
+#define MAX_BUFFER 1400
+
 /*!
  *
  */
@@ -220,14 +222,14 @@ namespace TE {
   /*!
    *
    */
-  tuple<shared_ptr<TEbyte>, TEint, string> Socket::Receive(const TEuint nBufferSize) {
+  tuple<shared_ptr<TEbyte>, TEint, string> Socket::Receive() {
     struct sockaddr_storage sock_addr;
     string szAddress;
     TEchar *address = new TEchar[INET6_ADDRSTRLEN];
     socklen_t addr_len = sizeof sock_addr;
-    shared_ptr<TEbyte> pBuffer;
-    
-    TEint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer.get(), nBufferSize, 0, (sockaddr *)&sock_addr, &addr_len);
+    shared_ptr<TEbyte> pBuffer (new TEbyte[MAX_BUFFER]);
+
+    TEint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer.get(), MAX_BUFFER, 0, (sockaddr *)&sock_addr, &addr_len);
     switch (sock_addr.ss_family) {
     case AF_INET6:
       inet_ntop(priv->m_bFamily, &(((struct sockaddr_in6 *)&sock_addr)->sin6_addr), address, INET6_ADDRSTRLEN);
