@@ -1,6 +1,6 @@
 #include <TELib.hpp>
 #include <Network.hpp>
-#include "network\Socket.hpp"
+#include "network/Socket.hpp"
 
 using namespace TE;
 
@@ -13,6 +13,7 @@ TEint main()
   socket->Bind(5775);
   socket->Send(byteStream->GetBuffer(), byteStream->GetSize());
   socket->Receive();
+  cout << socket->GetAddress() << endl;
   cout << System::GetTicks() - asdf << endl;
 #ifdef _MSC_VER
     system("pause");
