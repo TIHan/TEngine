@@ -18,6 +18,7 @@ TEint main()
       TEushort port;
       cout << "Use port: ";
       cin >> port;
+      TEint count = 0;
 
       shared_ptr<ByteStream> byteStream(new ByteStream(512));
       shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, ""));
@@ -28,6 +29,8 @@ TEint main()
         auto tupleReceive = socket->Receive();
         auto buffer = get<0>(tupleReceive);
         cout << buffer << endl;
+        count++;
+        cout << "Packet Number: " << count << endl;
       }
     }
     break;
