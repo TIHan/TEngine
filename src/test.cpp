@@ -16,7 +16,7 @@ TEint main()
   case 1:
     while (1) {
       shared_ptr<ByteStream> byteStream(new ByteStream(512));
-      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, ""));
+      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, "", "1337"));
       socket->Bind(1337);
       auto tupleReceive = socket->Receive();
       auto buffer = get<0>(tupleReceive);
