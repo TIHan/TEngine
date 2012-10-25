@@ -20,7 +20,7 @@ TEint main()
       cin >> port;
 
       shared_ptr<ByteStream> byteStream(new ByteStream(512));
-      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, "", "9987"));
+      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, ""));
       if (socket->HasErrors() || socket->Bind(port) == -1) {
         cout << "Unable to bind.\n";
       }
