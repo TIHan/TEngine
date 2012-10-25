@@ -28,7 +28,6 @@ TEint main()
         auto tupleReceive = socket->Receive();
         auto buffer = get<0>(tupleReceive);
         cout << buffer << endl;
-        System::Delay(2000);
       }
     }
     break;
@@ -47,9 +46,11 @@ TEint main()
 
     shared_ptr<ByteStream> byteStream(new ByteStream(512));
     byteStream->WriteString(text);
-    shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_UNSPEC, address, port));
+    shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, address, port));
     if (!socket->HasErrors()) {
+      for(int i = 0; i < 100; i++) {
       cout << "Bytes sent: " << socket->Send(byteStream->GetBuffer(), byteStream->GetSize()) << endl;
+      }
     } else {
       cout << "Unable to send.\n";
     }
