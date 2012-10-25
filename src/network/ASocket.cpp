@@ -97,7 +97,7 @@ namespace TE {
     if (szNodeName.compare("") != 0) {
       nodeName = (TEchar *)szNodeName.c_str();
     } else {
-      //hints.ai_flags = AI_PASSIVE;
+      hints.ai_flags = AI_PASSIVE;
     }
 
     if (getaddrinfo(nodeName, szServiceName.c_str(), &hints, &m_pAddressInfo) != 0) {
