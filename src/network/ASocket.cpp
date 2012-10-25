@@ -25,24 +25,8 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "Socket.hpp"
-
-#ifdef __GNUC__
-  #include <sys/socket.h>
-  #include <netdb.h>
-  #include <arpa/inet.h>
-  #include <netinet/in.h>
-  #include <cstring>
-  #include <stdlib.h>
-  #include <unistd.h>
-#elif _MSC_VER
-  #include <winsock2.h>
-  #include <ws2tcpip.h>
-
-  #pragma comment(lib, "ws2_32.lib")
-#endif
-
-#define MAX_BUFFER 1400
+#include "ASocket.hpp"
+#include "PASocket.hpp"
 
 /*!
  *
@@ -74,26 +58,14 @@ static TE::TEint CloseSocket(TE::TEint sockfd) {
 }
 
 namespace TE {
-  class PSocket {
-		public:
-    TEint m_iSocket;
-    struct addrinfo *m_pAddressInfo;
-    struct addrinfo *m_pAddress;
-    TEbyte m_bFamily;
-    TEboolean m_bError;
-
-    void Initialize(const TEbyte bFamily);
-    void Create(const string szNodeName);
-  };
-
   /*!
    *
    */
-  void PSocket::Initialize(const TEbyte bFamily) {
+  void PASocket::Initialize(const SocketFamily family) {
     m_iSocket = -1;
     m_pAddress = 0;
 
-    switch (bFamily) {
+    switch (family) {
     case SOCKET_IPV6:
       m_bFamily = AF_INET6;
       break;
@@ -114,13 +86,13 @@ namespace TE {
   /*!
    *
    */
-  void PSocket::Create(const string szNodeName) {
+  void PASocket::Create(const string szNodeName, const TEint iSocketType) {
     struct addrinfo hints, *p;
     TEchar *nodeName = 0;
 
     memset(&hints, 0, sizeof hints);
     hints.ai_family = m_bFamily;
-    hints.ai_socktype = SOCK_DGRAM;
+    hints.ai_socktype = iSocketType;
 
     if (szNodeName.compare("") != 0) {
       strcpy(nodeName, szNodeName.c_str());
@@ -146,42 +118,14 @@ namespace TE {
   /*!
    *
    */
-  Socket::Socket() :
-      priv(new PSocket()) {
-    priv->Initialize(SOCKET_IPV4);
-    priv->Create("");
+  ASocket::ASocket() :
+      priv(new PASocket()) {
   }
 
   /*!
    *
    */
-  Socket::Socket(const TEbyte bFamily) :
-      priv(new PSocket()) {
-    priv->Initialize(bFamily);
-    priv->Create("");
-  }
-
-  /*!
-   *
-   */
-  Socket::Socket(const TEbyte bFamily,
-      const string szNodeName) :
-      priv(new PSocket()) {
-    priv->Initialize(bFamily);
-    priv->Create(szNodeName);
-  }
-
-  /*!
-   *
-   */
-  Socket::~Socket() {
-    Close();
-  }
-
-  /*!
-   *
-   */
-  void Socket::Close() {
+  ASocket::~ASocket() {
     freeaddrinfo(priv->m_pAddressInfo);
     WARNING_IF(CloseSocket(priv->m_iSocket) != 0, "Unable to close socket.")
   }
@@ -189,7 +133,7 @@ namespace TE {
   /*!
    *
    */
-  TEint Socket::Bind(const TEushort usPort) {
+  TEint ASocket::Bind(const TEushort usPort) {
     if (priv->m_iSocket != -1 && priv->m_pAddress) {
       struct sockaddr_in *sockaddr = (struct sockaddr_in *)priv->m_pAddress->ai_addr;
       sockaddr->sin_port = ntohs(usPort);
@@ -203,7 +147,7 @@ namespace TE {
   /*!
    *
    */
-  string Socket::GetAddress() {
+  string ASocket::GetAddress() {
     if (priv->m_pAddress) {
       TEchar *address = new TEchar[INET6_ADDRSTRLEN];
       string s;
@@ -225,40 +169,7 @@ namespace TE {
   /*!
    *
    */
-  tuple<shared_ptr<TEbyte>, TEint, string> Socket::Receive() {
-    struct sockaddr_storage sock_addr;
-    string szAddress;
-    TEchar *address = new TEchar[INET6_ADDRSTRLEN];
-    socklen_t addr_len = sizeof sock_addr;
-    shared_ptr<TEbyte> pBuffer (new TEbyte[MAX_BUFFER]);
-
-    TEint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer.get(), MAX_BUFFER, 0, (sockaddr *)&sock_addr, &addr_len);
-    switch (sock_addr.ss_family) {
-    case AF_INET6:
-      inet_ntop(priv->m_bFamily, &(((struct sockaddr_in6 *)&sock_addr)->sin6_addr), address, INET6_ADDRSTRLEN);
-      break;
-    default:
-      inet_ntop(priv->m_bFamily, &(((struct sockaddr_in *)&sock_addr)->sin_addr), address, INET_ADDRSTRLEN);
-      break;
-    }
-    szAddress.assign(address);
-    return tuple<shared_ptr<TEbyte>, TEint, string>(pBuffer, bytes, szAddress);
-  }
-
-  /*!
-   *
-   */
-  TEint Socket::Send(const shared_ptr<TEbyte> pBuffer,
-    const TEuint nBufferSize) {
-    TEint bytes;
-    bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer.get(), nBufferSize, 0, priv->m_pAddressInfo->ai_addr, (TEint)priv->m_pAddressInfo->ai_addrlen);
-    return bytes;
-  }
-
-  /*!
-   *
-   */
-  TEboolean Socket::HasError() {
+  TEboolean ASocket::HasError() {
     return priv->m_bError;
   }
 }

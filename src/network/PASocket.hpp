@@ -25,38 +25,40 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __SOCKET_HPP_
-#define __SOCKET_HPP_
+#ifndef __PASOCKET_HPP_
+#define __PASOCKET_HPP_
+
+#ifdef __GNUC__
+  #include <sys/socket.h>
+  #include <netdb.h>
+  #include <arpa/inet.h>
+  #include <netinet/in.h>
+  #include <cstring>
+  #include <stdlib.h>
+  #include <unistd.h>
+#elif _MSC_VER
+  #include <winsock2.h>
+  #include <ws2tcpip.h>
+
+  #pragma comment(lib, "ws2_32.lib")
+#endif
 
 #ifndef NETWORK_NO_TELIB
   #include <TELib.hpp>
 #endif
 
-#define MAX_IP_LEN INET6_ADDRSTRLEN
-
 namespace TE {
-  enum SocketFamily {
-    SOCKET_IPV4,
-    SOCKET_IPV6
-  };
+  class PASocket {
+		public:
+    TEint m_iSocket;
+    struct addrinfo *m_pAddressInfo;
+    struct addrinfo *m_pAddress;
+    TEbyte m_bFamily;
+    TEboolean m_bError;
 
-  class PSocket;
-  class Socket {
-    unique_ptr<PSocket> priv;
-
-  public:
-    Socket();
-    explicit Socket(const TEbyte bFamily);
-    explicit Socket(const TEbyte bFamily, const string szNodeName);
-    ~Socket();
-
-    void Close();
-    TEint Bind(const TEushort usPort);
-    string GetAddress();
-    tuple<shared_ptr<TEbyte>, TEint, string> Receive();
-    TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
-    TEboolean HasError();
+    void Initialize(const SocketFamily family);
+    void Create(const string szNodeName, const TEint iSocketType);
   };
 }
 
-#endif /* __SOCKET_HPP_ */
+#endif /* __PASOCKET_HPP_ */

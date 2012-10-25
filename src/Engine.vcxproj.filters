@@ -39,9 +39,6 @@
     <ClInclude Include="lib\Types.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="network\Socket.hpp">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
     <ClInclude Include="lib\include\TELib.hpp">
       <Filter>Header Files\lib\include</Filter>
     </ClInclude>
@@ -57,13 +54,19 @@
     <ClInclude Include="lib\Thread.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
+    <ClInclude Include="network\UdpSocket.hpp">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include=".\network\ASocket.hpp">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\PASocket.hpp">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp">
       <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="network\Socket.cpp">
-      <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="test.cpp">
       <Filter>Source Files</Filter>
@@ -73,6 +76,12 @@
     </ClCompile>
     <ClCompile Include="lib\Thread.cpp">
       <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include=".\network\ASocket.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\UdpSocket.cpp">
+      <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

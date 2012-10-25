@@ -72,13 +72,16 @@
     <ClInclude Include="lib\Thread.hpp" />
     <ClInclude Include="lib\Types.hpp" />
     <ClInclude Include="network\include\Network.hpp" />
-    <ClInclude Include="network\Socket.hpp" />
+    <ClInclude Include=".\network\ASocket.hpp" />
+    <ClInclude Include="network\PASocket.hpp" />
+    <ClInclude Include="network\UdpSocket.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp" />
     <ClCompile Include="lib\System.cpp" />
     <ClCompile Include="lib\Thread.cpp" />
-    <ClCompile Include="network\Socket.cpp" />
+    <ClCompile Include=".\network\ASocket.cpp" />
+    <ClCompile Include="network\UdpSocket.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
