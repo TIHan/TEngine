@@ -66,11 +66,14 @@ namespace TE {
     m_pAddress = 0;
 
     switch (family) {
+    case SOCKET_IPV4:
+      m_bFamily = AF_INET;
+      break;
     case SOCKET_IPV6:
       m_bFamily = AF_INET6;
       break;
     default:
-      m_bFamily = AF_INET;
+      m_bFamily = AF_UNSPEC;
     }
 
 #ifdef _MSC_VER
@@ -140,12 +143,15 @@ namespace TE {
   TEint ASocket::Bind(const TEushort usPort) {
     if (priv->m_iSocket != -1 && priv->m_pAddress) {
       struct sockaddr_in *sockaddr = (struct sockaddr_in *)priv->m_pAddress->ai_addr;
+
       sockaddr->sin_port = ntohs(usPort);
       if (BindSocket(priv->m_iSocket, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen) != 0) {
+        priv->m_bError = true;
         return -1;
       }
+      return 0;
     }
-    return 0;
+    return -1;
   }
 
   /*!

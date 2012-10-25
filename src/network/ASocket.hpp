@@ -36,6 +36,7 @@
 
 namespace TE {
   enum SocketFamily {
+    SOCKET_UNSPEC,
     SOCKET_IPV4,
     SOCKET_IPV6
   };

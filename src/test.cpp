@@ -21,10 +21,10 @@ TEint main()
 
       shared_ptr<ByteStream> byteStream(new ByteStream(512));
       shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, ""));
-      if (socket->HasErrors() || socket->Bind(port) == -1) {
+      if (socket->Bind(port) == -1) {
         cout << "Unable to bind.\n";
       }
-      while (1 || !socket->HasErrors()) {
+      while (1 && !socket->HasErrors()) {
         auto tupleReceive = socket->Receive();
         auto buffer = get<0>(tupleReceive);
         cout << buffer << endl;
@@ -47,7 +47,7 @@ TEint main()
 
     shared_ptr<ByteStream> byteStream(new ByteStream(512));
     byteStream->WriteString(text);
-    shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, address, port));
+    shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_UNSPEC, address, port));
     if (!socket->HasErrors()) {
       cout << "Bytes sent: " << socket->Send(byteStream->GetBuffer(), byteStream->GetSize()) << endl;
     } else {
