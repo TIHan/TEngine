@@ -20,11 +20,11 @@ TEint main()
       cin >> port;
 
       shared_ptr<ByteStream> byteStream(new ByteStream(512));
-      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, ""));
-      if (socket->Bind(port) == -1) {
+      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, "", "9987"));
+      if (socket->HasErrors() || socket->Bind(port) == -1) {
         cout << "Unable to bind.\n";
       }
-      while (1) {
+      while (1 || !socket->HasErrors()) {
         auto tupleReceive = socket->Receive();
         auto buffer = get<0>(tupleReceive);
         cout << buffer << endl;
