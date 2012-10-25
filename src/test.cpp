@@ -14,14 +14,16 @@ TEint main()
 
   switch (answer) {
   case 1:
-    while (1) {
+    {
       shared_ptr<ByteStream> byteStream(new ByteStream(512));
-      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, "", "1337"));
+      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, "10.28.215.63", "1337"));
       socket->Bind(1337);
-      auto tupleReceive = socket->Receive();
-      auto buffer = get<0>(tupleReceive);
-      cout << buffer << endl;
-      System::Delay(2000);
+      while (1) {
+        auto tupleReceive = socket->Receive();
+        auto buffer = get<0>(tupleReceive);
+        cout << buffer << endl;
+        System::Delay(2000);
+      }
     }
     break;
   case 2:
