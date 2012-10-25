@@ -15,9 +15,13 @@ TEint main()
   switch (answer) {
   case 1:
     {
+      TEushort port;
+      cout << "Use port: ";
+      cin >> port;
+
       shared_ptr<ByteStream> byteStream(new ByteStream(512));
       shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, ""));
-      if (socket->Bind(1337) == -1) {
+      if (socket->Bind(port) == -1) {
         cout << "Unable to bind.\n";
       }
       while (1) {
