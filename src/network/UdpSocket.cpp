@@ -32,9 +32,17 @@ namespace TE {
   /*!
    *
    */
-  UdpSocket::UdpSocket(const SocketFamily family, const string szNodeName) {
+  UdpSocket::UdpSocket(const SocketFamily family, const string szAddress) {
     priv->Initialize(family);
-    priv->Create(szNodeName, SOCK_DGRAM);
+    priv->Create(SOCK_DGRAM, szAddress, "");
+  }
+
+  /*!
+   *
+   */
+  UdpSocket::UdpSocket(const SocketFamily family, const string szAddress, const string szPort) {
+    priv->Initialize(family);
+    priv->Create(SOCK_DGRAM, szAddress, szPort);
   }
 
   /*!

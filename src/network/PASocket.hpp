@@ -57,7 +57,7 @@ namespace TE {
     TEboolean m_bError;
 
     void Initialize(const SocketFamily family);
-    void Create(const string szNodeName, const TEint iSocketType);
+    void Create(const TEint iSocketType, const string szNodeName, const string szServiceName);
   };
 }
 

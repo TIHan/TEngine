@@ -32,7 +32,6 @@
   #include <TELib.hpp>
 #endif
 
-#define SOCKET_MAX_IP_LEN INET6_ADDRSTRLEN
 #define SOCKET_MAX_BUFFER 1400
 
 namespace TE {
@@ -53,7 +52,7 @@ namespace TE {
 
     virtual TEint Bind(const TEushort usPort);
     virtual string GetAddress();
-    virtual TEboolean HasError();
+    virtual TEboolean HasErrors();
 
     virtual tuple<shared_ptr<TEbyte>, TEint, string> Receive() = 0;
     virtual TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) = 0;

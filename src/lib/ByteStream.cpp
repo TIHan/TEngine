@@ -94,7 +94,7 @@ namespace TE {
   /*!
    *
    */
-  TEboolean ByteStream::HasError() {
+  TEboolean ByteStream::HasErrors() {
     return priv->m_bError;
   }
 
@@ -139,7 +139,7 @@ namespace TE {
     shared_ptr<TEchar> val(new TEchar[size], default_delete<TEchar[]>());
 
     for (TEuint i = 0; i < size; i++) {
-      if (HasError()) {
+      if (HasErrors()) {
         return 0;
       }
       val.get()[i] = ReadByte();
@@ -157,7 +157,7 @@ namespace TE {
     TEuint size = (TEint)strlen(sz.c_str());
 
     for (TEuint i = 0; i < size; i++) {
-      if (HasError()) {
+      if (HasErrors()) {
         return;
       }
       WriteByte(sz.c_str()[i]);
@@ -173,7 +173,7 @@ namespace TE {
   void ByteStream::WriteStream(const shared_ptr<TEbyte> pbStream,
                                const TEuint nSize) {
     for (TEuint i = 0; i < nSize; i++) {
-      if (HasError()) {
+      if (HasErrors()) {
         return;
       }
       WriteByte(pbStream.get()[i]);
@@ -193,7 +193,7 @@ namespace TE {
     } unpack;
 
     for (TEuint i = 0; i < size; i++) {
-      if (HasError()) {
+      if (HasErrors()) {
         return 0;
       }
       unpack.byte[i] = ReadByte();
@@ -215,7 +215,7 @@ namespace TE {
     pack.val = val;
 
     for (TEuint i = 0; i < size; i++) {
-      if (HasError()) {
+      if (HasErrors()) {
         return;
       }
       WriteByte(pack.byte[i]);

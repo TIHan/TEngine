@@ -6,15 +6,47 @@ using namespace TE;
 
 TEint main()
 {
-  TEuint asdf = System::GetTicks();
-  shared_ptr<ByteStream> byteStream(new ByteStream(512));
-  byteStream->WriteString("Hello");
-  shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, ""));
-  socket->Bind(5776);
-  socket->Send(byteStream->GetBuffer(), byteStream->GetSize());
-  socket->Receive();
-  cout << socket->GetAddress() << endl;
-  cout << System::GetTicks() - asdf << endl;
+  TEint answer = 0;
+  do {
+    cout << "(1) to host. (2) to connect.\n";
+    cin >> answer;
+  } while (answer != 1 && answer != 2);
+
+  switch (answer) {
+  case 1:
+    while (1) {
+      shared_ptr<ByteStream> byteStream(new ByteStream(512));
+      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, ""));
+      socket->Bind(1337);
+      auto tupleReceive = socket->Receive();
+      auto buffer = get<0>(tupleReceive);
+      cout << buffer << endl;
+      System::Delay(2000);
+    }
+    break;
+  case 2:
+    string address;
+    cout << "Enter address: ";
+    cin >> address;
+
+    string port;
+    cout << "Enter port: ";
+    cin >> port;
+
+    string text;
+    cout << "Send a message: ";
+    cin >> text;
+
+    shared_ptr<ByteStream> byteStream(new ByteStream(512));
+    byteStream->WriteString(text);
+    shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, address, port));
+    if (!socket->HasErrors()) {
+      cout << "Bytes sent: " << socket->Send(byteStream->GetBuffer(), byteStream->GetSize()) << endl;
+    } else {
+      cout << "Unable to send.\n";
+    }
+    break;
+  }
 #ifdef _MSC_VER
     system("pause");
 #endif

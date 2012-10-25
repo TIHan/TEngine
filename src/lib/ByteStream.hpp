@@ -44,7 +44,7 @@ namespace TE {
     TEuint GetSize();
     TEuint GetMaxSize();
     void Clear();
-    TEboolean HasError();
+    TEboolean HasErrors();
 
     TEbyte ReadByte();
     void WriteByte(const TEbyte byte);

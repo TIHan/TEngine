@@ -37,7 +37,8 @@
 namespace TE {
   class UdpSocket : public ASocket {
   public:
-    UdpSocket(const SocketFamily family, const string szNodeName);
+    UdpSocket(const SocketFamily family, const string szAddress);
+    UdpSocket(const SocketFamily family, const string szAddress, const string szPort);
     ~UdpSocket();
 
     tuple<shared_ptr<TEbyte>, TEint, string> Receive();

@@ -86,7 +86,7 @@ namespace TE {
   /*!
    *
    */
-  void PASocket::Create(const string szNodeName, const TEint iSocketType) {
+  void PASocket::Create(const TEint iSocketType, const string szNodeName, const string szServiceName) {
     struct addrinfo hints, *p;
     TEchar *nodeName = 0;
 
@@ -95,10 +95,10 @@ namespace TE {
     hints.ai_socktype = iSocketType;
 
     if (szNodeName.compare("") != 0) {
-      strcpy(nodeName, szNodeName.c_str());
+      nodeName = (TEchar *)szNodeName.c_str();
     }
 
-    if (getaddrinfo(nodeName, "", &hints, &m_pAddressInfo) != 0) {
+    if (getaddrinfo(nodeName, szServiceName.c_str(), &hints, &m_pAddressInfo) != 0) {
       m_bError = true;
       return;
     }
@@ -129,7 +129,7 @@ namespace TE {
     if (priv->m_pAddressInfo) {
       freeaddrinfo(priv->m_pAddressInfo);
     }
-    WARNING_IF(CloseSocket(priv->m_iSocket) != 0, "Unable to close socket.")
+    CloseSocket(priv->m_iSocket);
   }
 
   /*!
@@ -171,7 +171,7 @@ namespace TE {
   /*!
    *
    */
-  TEboolean ASocket::HasError() {
+  TEboolean ASocket::HasErrors() {
     return priv->m_bError;
   }
 }
