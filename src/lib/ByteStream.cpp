@@ -176,7 +176,7 @@ namespace TE {
       if (HasError()) {
         return;
       }
-      WriteByte (pbStream.get()[i]);
+      WriteByte(pbStream.get()[i]);
     }
   }
 
@@ -205,7 +205,7 @@ namespace TE {
     *
     */
   template <class T>
-  void ByteStream::Write (const T val) {
+  void ByteStream::Write(const T val) {
     TEuint size = sizeof(T);
 
     union pack_t {
@@ -218,7 +218,7 @@ namespace TE {
       if (HasError()) {
         return;
       }
-      WriteByte (pack.byte[i]);
+      WriteByte(pack.byte[i]);
     }
   }
 }
