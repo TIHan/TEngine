@@ -49,7 +49,7 @@
 
 namespace TE {
   class PASocket {
-		public:
+  public:
     TEint m_iSocket;
     struct addrinfo *m_pAddressInfo;
     struct addrinfo *m_pAddress;

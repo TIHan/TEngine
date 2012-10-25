@@ -126,7 +126,9 @@ namespace TE {
    *
    */
   ASocket::~ASocket() {
-    freeaddrinfo(priv->m_pAddressInfo);
+    if (priv->m_pAddressInfo) {
+      freeaddrinfo(priv->m_pAddressInfo);
+    }
     WARNING_IF(CloseSocket(priv->m_iSocket) != 0, "Unable to close socket.")
   }
 
