@@ -16,8 +16,10 @@ TEint main()
   case 1:
     {
       shared_ptr<ByteStream> byteStream(new ByteStream(512));
-      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, "10.28.215.63", "1337"));
-      socket->Bind(1337);
+      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, ""));
+      if (socket->Bind(1337) == -1) {
+        cout << "Unable to bind.\n";
+      }
       while (1) {
         auto tupleReceive = socket->Receive();
         auto buffer = get<0>(tupleReceive);
