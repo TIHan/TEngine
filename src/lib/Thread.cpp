@@ -40,7 +40,6 @@ namespace TE {
   }
 
   Thread::~Thread() {
-      Join();
   }
 
   void Thread::Join() {

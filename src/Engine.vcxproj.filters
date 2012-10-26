@@ -63,6 +63,9 @@
     <ClInclude Include="network\PASocket.hpp">
       <Filter>Header Files\network</Filter>
     </ClInclude>
+    <ClInclude Include="lib\List.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp">
@@ -82,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="network\UdpSocket.cpp">
       <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\List.cpp">
+      <Filter>Source Files\lib</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -25,41 +25,19 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __BYTESTREAM_HPP_
-#define __BYTESTREAM_HPP_
+#include "List.hpp"
+#include <list>
 
-#include "Types.hpp"
-#include "Output.hpp"
+using std::list;
 
 namespace TE {
-  class PByteStream;
-  class ByteStream {
-    unique_ptr<PByteStream> priv;
-
-  protected:
-    TEbyte ReadByte();
-    void WriteByte(const TEbyte byte);
-
-  public:
-    explicit ByteStream(const TEuint nMaxSize);
-    virtual ~ByteStream();
-
-    shared_ptr<TEbyte> GetBuffer();
-    TEuint GetSize();
-    TEuint GetMaxSize();
-    void Clear();
-    TEboolean HasErrors();
-
-    shared_ptr<TEchar> ReadString();
-    void WriteString(const string sz);
-    void WriteStream(const shared_ptr<TEbyte> pBuffer, const TEuint nSize);
-
-    template <class T>
-    T Read();
-
-    template <class T>
-    void Write (const T val);
+  TList::TList() {
   };
-}
 
-#endif /* __BYTESTREAM_HPP_ */
+  TList::~TList() {
+  };
+
+  template <class T>
+  void TList::Allocate() {
+  }
+}

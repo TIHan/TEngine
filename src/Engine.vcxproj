@@ -67,6 +67,7 @@
   <ItemGroup>
     <ClInclude Include="lib\ByteStream.hpp" />
     <ClInclude Include="lib\include\TELib.hpp" />
+    <ClInclude Include="lib\List.hpp" />
     <ClInclude Include="lib\Output.hpp" />
     <ClInclude Include="lib\System.hpp" />
     <ClInclude Include="lib\Thread.hpp" />
@@ -78,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp" />
+    <ClCompile Include="lib\List.cpp" />
     <ClCompile Include="lib\System.cpp" />
     <ClCompile Include="lib\Thread.cpp" />
     <ClCompile Include=".\network\ASocket.cpp" />

@@ -7,6 +7,7 @@ using namespace TE;
 TEint main()
 {
   TEint answer = 0;
+  List<TEint> *asdf = new List<TEint>();
   do {
     cout << "(1) to host. (2) to connect.\n";
     cin >> answer;
