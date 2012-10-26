@@ -20,8 +20,8 @@ TEint main()
       cin >> port;
       TEint count = 0;
 
-      shared_ptr<ByteStream> byteStream(new ByteStream(512));
       shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, String::Empty()));
+      cout << "Address: " << socket->GetAddress() << endl;
       if (socket->Bind(port) == -1) {
         cout << "Unable to bind.\n";
       }
@@ -30,6 +30,13 @@ TEint main()
         auto buffer = get<0>(tupleReceive);
         cout << buffer << endl;
         count++;
+
+        shared_ptr<address_t> asdf = get<2>(tupleReceive);
+        shared_ptr<ByteStream> byteStream(new ByteStream(512));
+        byteStream->WriteString("PONG");
+
+        cout << "Sending: " << socket->Send(byteStream->GetBuffer(), byteStream->GetSize(), asdf) << endl;
+
         cout << "Packet Number: " << count << endl;
       }
     }
@@ -43,15 +50,18 @@ TEint main()
     cout << "Enter port: ";
     cin >> port;
 
-    string text;
-    cout << "Send a message: ";
-    cin >> text;
-
     shared_ptr<ByteStream> byteStream(new ByteStream(512));
-    byteStream->WriteString(text);
-    shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_UNSPEC, address, port));
+    byteStream->WriteString("PING");
+
+    shared_ptr<UdpSocket> socket(new UdpSocket(address, port));
+    cout << "Address: " << socket->GetAddress() << endl;
+
     if (!socket->HasErrors()) {
         socket->Send(byteStream->GetBuffer(), byteStream->GetSize());
+
+        auto tupleReceive = socket->Receive();
+        auto buffer = get<0>(tupleReceive);
+        cout << buffer << endl;
     } else {
       cout << "Unable to send.\n";
     }

@@ -32,17 +32,33 @@ namespace TE {
   /*!
    *
    */
-  UdpSocket::UdpSocket(const SocketFamily family, const string szAddress) {
-    priv->Initialize(family);
-    priv->Create(SOCK_DGRAM, szAddress, String::Empty());
+  UdpSocket::UdpSocket(const SocketFamily family) {
+    priv->Initialize(SOCK_DGRAM, family, String::Empty(), String::Empty());
   }
 
   /*!
    *
    */
-  UdpSocket::UdpSocket(const SocketFamily family, const string szAddress, const string szPort) {
-    priv->Initialize(family);
-    priv->Create(SOCK_DGRAM, szAddress, szPort);
+  UdpSocket::UdpSocket(const SocketFamily family,
+      const string szAddress) {
+    priv->Initialize(SOCK_DGRAM, family, szAddress, String::Empty());
+  }
+
+  /*!
+   *
+   */
+  UdpSocket::UdpSocket(const SocketFamily family,
+      const string szAddress,
+      const string szPort) {
+    priv->Initialize(SOCK_DGRAM, family, szAddress, szPort);
+  }
+
+  /*!
+   *
+   */
+  UdpSocket::UdpSocket(const string szAddress,
+      const string szPort) {
+    priv->Initialize(SOCK_DGRAM, SOCKET_UNSPEC, szAddress, szPort);
   }
 
   /*!
@@ -54,33 +70,36 @@ namespace TE {
   /*!
    *
    */
-  tuple<shared_ptr<TEbyte>, TEint, string> UdpSocket::Receive() {
+  tuple<shared_ptr<TEbyte>, TEint, shared_ptr<address_t>> UdpSocket::Receive() {
     struct sockaddr_storage sock_addr;
-    string szAddress;
-    TEchar *address = new TEchar[INET6_ADDRSTRLEN];
     socklen_t addr_len = sizeof sock_addr;
-    shared_ptr<TEbyte> pBuffer (new TEbyte[SOCKET_MAX_BUFFER]);
+    shared_ptr<address_t> address(new address_t());
+    shared_ptr<TEbyte> pBuffer(new TEbyte[SOCKET_MAX_BUFFER]);
 
     TEint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer.get(), SOCKET_MAX_BUFFER, 0, (sockaddr *)&sock_addr, &addr_len);
-    switch (sock_addr.ss_family) {
-    case AF_INET6:
-      inet_ntop(priv->m_bFamily, &(((struct sockaddr_in6 *)&sock_addr)->sin6_addr), address, INET6_ADDRSTRLEN);
-      break;
-    default:
-      inet_ntop(priv->m_bFamily, &(((struct sockaddr_in *)&sock_addr)->sin_addr), address, INET_ADDRSTRLEN);
-      break;
-    }
-    szAddress.assign(address);
-    return tuple<shared_ptr<TEbyte>, TEint, string>(pBuffer, bytes, szAddress);
+    address->ssAddress = sock_addr;
+    address->nLength = (TEint)addr_len;
+    return tuple<shared_ptr<TEbyte>, TEint, shared_ptr<address_t>>(pBuffer, bytes, address);
   }
 
   /*!
    *
    */
   TEint UdpSocket::Send(const shared_ptr<TEbyte> pBuffer,
-    const TEuint nBufferSize) {
+      const TEuint nBufferSize) {
     TEint bytes;
-    bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer.get(), nBufferSize, 0, priv->m_pAddressInfo->ai_addr, (TEint)priv->m_pAddressInfo->ai_addrlen);
+    bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer.get(), nBufferSize, 0, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen);
+    return bytes;
+  }
+
+  /*!
+   *
+   */
+  TEint UdpSocket::Send(const shared_ptr<TEbyte> pBuffer,
+      const TEuint nBufferSize,
+      const shared_ptr<address_t> address) {
+    TEint bytes;
+    bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer.get(), nBufferSize, 0, (sockaddr *)&address->ssAddress, address->nLength);
     return bytes;
   }
 }

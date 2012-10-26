@@ -41,6 +41,7 @@ namespace TE {
     SOCKET_IPV6
   };
 
+  typedef struct address_s address_t;
   class PASocket;
   class ASocket {
   protected:
@@ -55,8 +56,9 @@ namespace TE {
     virtual string GetAddress();
     virtual TEboolean HasErrors();
 
-    virtual tuple<shared_ptr<TEbyte>, TEint, string> Receive() = 0;
+    virtual tuple<shared_ptr<TEbyte>, TEint, shared_ptr<address_t>> Receive() = 0;
     virtual TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) = 0;
+    virtual TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, const shared_ptr<address_t> address) = 0;
   };
 }
 

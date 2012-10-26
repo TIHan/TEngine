@@ -38,7 +38,7 @@ namespace TE {
 
   public:
     explicit Thread(function<void()> func);
-    ~Thread();
+    virtual ~Thread();
 
     void Join();
     TEboolean IsJoinable();

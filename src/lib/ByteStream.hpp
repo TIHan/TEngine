@@ -38,7 +38,7 @@ namespace TE {
 
   public:
     explicit ByteStream(const TEuint nMaxSize);
-    ~ByteStream();
+    virtual ~ByteStream();
 
     shared_ptr<TEbyte> GetBuffer();
     TEuint GetSize();

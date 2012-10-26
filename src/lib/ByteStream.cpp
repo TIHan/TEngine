@@ -44,7 +44,7 @@ namespace TE {
    *
    */
   ByteStream::ByteStream(const TEuint nMaxSize) :
-                    priv(new PByteStream()) {
+      priv(new PByteStream()) {
     priv->m_pBuffer.reset(new TEbyte[nMaxSize], default_delete<TEbyte[]>());
     priv->m_nMaxSize = nMaxSize;
     priv->m_nSize = 0;
@@ -171,7 +171,7 @@ namespace TE {
    *
    */
   void ByteStream::WriteStream(const shared_ptr<TEbyte> pbStream,
-                               const TEuint nSize) {
+      const TEuint nSize) {
     for (TEuint i = 0; i < nSize; i++) {
       if (HasErrors()) {
         return;

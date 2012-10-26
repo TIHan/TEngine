@@ -61,49 +61,35 @@ namespace TE {
   /*!
    *
    */
-  void PASocket::Initialize(const SocketFamily family) {
+  void PASocket::Create(const TEbyte bSocketType,
+      const TEbyte bFamily,
+      const TEbyte bFlags,
+      const string szNodeName,
+      const string szServiceName) {
     m_iSocket = -1;
     m_pAddress = 0;
 
-    switch (family) {
-    case SOCKET_IPV4:
-      m_bFamily = AF_INET;
-      break;
-    case SOCKET_IPV6:
-      m_bFamily = AF_INET6;
-      break;
-    default:
-      m_bFamily = AF_UNSPEC;
-    }
-
 #ifdef _MSC_VER
-      WSADATA wsaData;
-      TEint wsaResult;
+    WSADATA wsaData;
+    TEint wsaResult;
 
-      // Initialize Winsock
-      wsaResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-      ERROR_IF_FORMAT(wsaResult != 0, "WSAStartup failed with result %i", wsaResult)
+    // Initialize Winsock
+    wsaResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+    ERROR_IF_FORMAT(wsaResult != 0, "WSAStartup failed with result %i", wsaResult)
 #endif
-  }
 
-  /*!
-   *
-   */
-  void PASocket::Create(const TEint iSocketType, const string szNodeName, const string szServiceName) {
     struct addrinfo hints, *p;
     TEchar *nodeName = 0;
 
     memset(&hints, 0, sizeof hints);
-    hints.ai_family = m_bFamily;
-    hints.ai_socktype = iSocketType;
+    hints.ai_family = bFamily;
+    hints.ai_socktype = bSocketType;
+    hints.ai_flags = bFlags;
 
+    // [WS] If the node name is empty, only pass 0 to getaddrinfo.
     if (!szNodeName.empty()) {
       nodeName = (TEchar *)szNodeName.c_str();
-    } else {
-      hints.ai_flags = AI_PASSIVE;
     }
-
-    ERROR_IF(m_bFamily == AF_UNSPEC && !nodeName, "Hosts must specify the socket family");
 
     if (getaddrinfo(nodeName, szServiceName.c_str(), &hints, &m_pAddressInfo) != 0) {
       m_bError = true;
@@ -111,15 +97,52 @@ namespace TE {
     }
 
     for (p = m_pAddressInfo; p != 0; p = p->ai_next) {
-      if (p->ai_family == m_bFamily || m_bFamily == AF_UNSPEC) {
+      // [WS] If the family is unspecified, get the first one in the linked list.
+      if (p->ai_family == bFamily || bFamily == AF_UNSPEC) {
         m_iSocket = CreateSocket(p->ai_family, p->ai_socktype, p->ai_protocol);
-        m_pAddress = p;
+        if (m_iSocket != -1) {
+          m_bFamily = p->ai_family;
+          m_pAddress = p;
+          break;
+        }
       }
     }
 
     if (m_iSocket == -1) {
       m_bError = true;
     }
+  }
+
+  /*!
+   *
+   */
+  void PASocket::SetFamily(const SocketFamily family) {
+    // [WS] TODO: Clean this up.
+    switch (family) {
+    case SOCKET_UNSPEC:
+      m_bFamily = AF_UNSPEC;
+      break;
+    case SOCKET_IPV4:
+      m_bFamily = AF_INET;
+      break;
+    case SOCKET_IPV6:
+      m_bFamily = AF_INET6;
+      break;
+    default:
+      ERROR_PRINT("Invalid socket family");
+      break;
+    }
+  }
+
+  /*!
+   *
+   */
+  void PASocket::Initialize(const TEbyte bSocketType,
+      const SocketFamily family,
+      const string szNodeName,
+      const string szServiceName) {
+    SetFamily(family);
+    Create(bSocketType, m_bFamily, AI_PASSIVE, szNodeName, szServiceName);
   }
 
   /*!

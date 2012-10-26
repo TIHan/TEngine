@@ -37,12 +37,15 @@
 namespace TE {
   class UdpSocket : public ASocket {
   public:
-    UdpSocket(const SocketFamily family, const string szAddress);
-    UdpSocket(const SocketFamily family, const string szAddress, const string szPort);
-    ~UdpSocket();
+    explicit UdpSocket(const SocketFamily family);
+    explicit UdpSocket(const SocketFamily family, const string szAddress);
+    explicit UdpSocket(const SocketFamily family, const string szAddress, const string szPort);
+    explicit UdpSocket(const string szAddress, const string szPort);
+    virtual ~UdpSocket();
 
-    tuple<shared_ptr<TEbyte>, TEint, string> Receive();
+    tuple<shared_ptr<TEbyte>, TEint, shared_ptr<address_t>> Receive();
     TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
+    TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, const shared_ptr<address_t> address);
   };
 }
 

@@ -48,7 +48,15 @@
 #endif
 
 namespace TE {
+  struct address_s {
+    struct sockaddr_storage ssAddress;
+    TEint nLength;
+  };
+
   class PASocket {
+    void Create(const TEbyte bFamily, const TEbyte bSocketType, const TEbyte bFlags, const string szNodeName, const string szServiceName);
+    void SetFamily(const SocketFamily family);
+
   public:
     TEint m_iSocket;
     struct addrinfo *m_pAddressInfo;
@@ -56,8 +64,7 @@ namespace TE {
     TEbyte m_bFamily;
     TEboolean m_bError;
 
-    void Initialize(const SocketFamily family);
-    void Create(const TEint iSocketType, const string szNodeName, const string szServiceName);
+    void Initialize(const TEbyte bSocketType, const SocketFamily family, const string szNodeName, const string szServiceName);
   };
 }
 
