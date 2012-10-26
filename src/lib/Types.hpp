@@ -78,6 +78,11 @@ namespace TE {
   typedef float TEfloat;
   typedef double TEdouble;
   typedef bool TEboolean;
+
+  // [WS] TODO: Need to put this somewhere else.
+  namespace String {
+    inline string Empty() { return ""; }
+  }
 }
 
 #endif /* __TYPES_HPP_ */

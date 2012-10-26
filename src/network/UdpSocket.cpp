@@ -34,7 +34,7 @@ namespace TE {
    */
   UdpSocket::UdpSocket(const SocketFamily family, const string szAddress) {
     priv->Initialize(family);
-    priv->Create(SOCK_DGRAM, szAddress, "");
+    priv->Create(SOCK_DGRAM, szAddress, String::Empty());
   }
 
   /*!

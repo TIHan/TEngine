@@ -32,7 +32,7 @@
 #include <cstdlib>
 #include <string.h>
 
-#define MAX_LEN 256
+#define MAX_PRINT_LEN 256
 
 /* PRINT */
 
@@ -48,7 +48,7 @@
   PRINT_FORMAT("(%s) Line %i Assertion: %s\n", __FUNCTION__, __LINE__, str);
 
 #define ASSERT_PRINT_FORMAT(str, ...) \
-  char newstr[MAX_LEN]; \
+  char newstr[MAX_PRINT_LEN]; \
   sprintf(newstr, str, __VA_ARGS__); \
   ASSERT_PRINT(newstr)
 
@@ -92,7 +92,7 @@
   PRINT_FORMAT ("(%s) Line %i Warning: %s\n", __FUNCTION__, __LINE__, str)
 
 #define WARNING_PRINT_FORMAT(str, ...) \
-  char newstr[MAX_LEN]; \
+  char newstr[MAX_PRINT_LEN]; \
   sprintf(newstr, str, __VA_ARGS__); \
   WARNING_PRINT(newstr)
 
@@ -144,7 +144,7 @@
 #endif
 
 #define ERROR_PRINT_FORMAT(str, ...) \
-  char newstr[MAX_LEN]; \
+  char newstr[MAX_PRINT_LEN]; \
   sprintf(newstr, str, __VA_ARGS__); \
   ERROR_PRINT(newstr)
 

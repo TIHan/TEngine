@@ -97,11 +97,13 @@ namespace TE {
     hints.ai_family = m_bFamily;
     hints.ai_socktype = iSocketType;
 
-    if (szNodeName.compare("") != 0) {
+    if (!szNodeName.empty()) {
       nodeName = (TEchar *)szNodeName.c_str();
     } else {
       hints.ai_flags = AI_PASSIVE;
     }
+
+    ERROR_IF(m_bFamily == AF_UNSPEC && !nodeName, "Hosts must specify the socket family");
 
     if (getaddrinfo(nodeName, szServiceName.c_str(), &hints, &m_pAddressInfo) != 0) {
       m_bError = true;
@@ -109,7 +111,7 @@ namespace TE {
     }
 
     for (p = m_pAddressInfo; p != 0; p = p->ai_next) {
-      if (p->ai_family == m_bFamily) {
+      if (p->ai_family == m_bFamily || m_bFamily == AF_UNSPEC) {
         m_iSocket = CreateSocket(p->ai_family, p->ai_socktype, p->ai_protocol);
         m_pAddress = p;
       }
@@ -146,7 +148,6 @@ namespace TE {
 
       sockaddr->sin_port = ntohs(usPort);
       if (BindSocket(priv->m_iSocket, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen) != 0) {
-        priv->m_bError = true;
         return -1;
       }
       return 0;
@@ -172,7 +173,7 @@ namespace TE {
       }
       return s.assign (address);
     } else {
-      return "";
+      return String::Empty();
     }
   }
 
