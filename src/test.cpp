@@ -20,7 +20,7 @@ TEint main()
       cin >> port;
       TEint count = 0;
 
-      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4, String::Empty()));
+      shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4));
       cout << "Address: " << socket->GetAddress() << endl;
       if (socket->Bind(port) == -1) {
         cout << "Unable to bind.\n";

@@ -38,7 +38,6 @@ namespace TE {
   class UdpSocket : public ASocket {
   public:
     explicit UdpSocket(const SocketFamily family);
-    explicit UdpSocket(const SocketFamily family, const string szAddress);
     explicit UdpSocket(const SocketFamily family, const string szAddress, const string szPort);
     explicit UdpSocket(const string szAddress, const string szPort);
     virtual ~UdpSocket();

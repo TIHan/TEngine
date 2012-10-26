@@ -40,14 +40,6 @@ namespace TE {
    *
    */
   UdpSocket::UdpSocket(const SocketFamily family,
-      const string szAddress) {
-    priv->Initialize(SOCK_DGRAM, family, szAddress, String::Empty());
-  }
-
-  /*!
-   *
-   */
-  UdpSocket::UdpSocket(const SocketFamily family,
       const string szAddress,
       const string szPort) {
     priv->Initialize(SOCK_DGRAM, family, szAddress, szPort);
@@ -58,7 +50,7 @@ namespace TE {
    */
   UdpSocket::UdpSocket(const string szAddress,
       const string szPort) {
-    priv->Initialize(SOCK_DGRAM, SOCKET_UNSPEC, szAddress, szPort);
+    priv->Initialize(SOCK_DGRAM, SOCKET_UNSPECIFIED, szAddress, szPort);
   }
 
   /*!

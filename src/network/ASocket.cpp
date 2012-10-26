@@ -119,7 +119,7 @@ namespace TE {
   void PASocket::SetFamily(const SocketFamily family) {
     // [WS] TODO: Clean this up.
     switch (family) {
-    case SOCKET_UNSPEC:
+    case SOCKET_UNSPECIFIED:
       m_bFamily = AF_UNSPEC;
       break;
     case SOCKET_IPV4:
