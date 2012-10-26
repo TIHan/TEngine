@@ -32,10 +32,10 @@ using std::list;
 
 namespace TE {
   TList::TList() {
-  };
+  }
 
   TList::~TList() {
-  };
+  }
 
   template <class T>
   void TList::Allocate() {
