@@ -42,9 +42,9 @@ namespace TE {
     explicit UdpSocket(const string szAddress, const string szPort);
     virtual ~UdpSocket();
 
-    tuple<shared_ptr<TEbyte>, TEint, shared_ptr<address_t>> Receive();
-    TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
-    TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, const shared_ptr<address_t> address);
+    virtual tuple<shared_ptr<TEbyte>, TEint, shared_ptr<address_t>> Receive();
+    virtual TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize);
+    virtual TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, const shared_ptr<address_t> address);
   };
 }
 
