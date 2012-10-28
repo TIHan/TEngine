@@ -6,11 +6,11 @@ using namespace TE;
 
 TEint main()
 {
-  TEint answer = 0;
-  TEuint64 hey = 18446744073709551615;
-  List<TEuint64> *asdf = new List<TEuint64>();
-  asdf->Add(hey);
-  TEuint64 dick = asdf->Find(hey);
+  unique_ptr<List<UdpSocket*>> list(new List<UdpSocket*>());
+  shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4));
+  list->Add(socket.get());
+  auto foundSocket = list->Find(socket.get());
+  /*TEint answer = 0;
   cout << dick << endl;
   do {
     cout << "(1) to host. (2) to connect.\n";
@@ -71,7 +71,7 @@ TEint main()
       cout << "Unable to send.\n";
     }
     break;
-  }
+  }*/
 #ifdef _MSC_VER
     system("pause");
 #endif
