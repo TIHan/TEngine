@@ -10,6 +10,7 @@ TEint main()
   shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4));
   list->Add(socket.get());
   auto foundSocket = list->Find(socket.get());
+  shared_ptr<ByteStream> test = make_shared<ByteStream>(512);
   /*TEint answer = 0;
   cout << dick << endl;
   do {

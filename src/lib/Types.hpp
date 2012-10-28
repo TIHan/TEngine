@@ -49,7 +49,17 @@ using std::default_delete;
 using std::function;
 using std::tuple;
 using std::nullptr_t;
+using std::make_shared;
+using std::allocate_shared;
 using std::get;
+
+// http://en.cppreference.com/w/cpp/utility/forward
+// Note: This should be in the C++11 standard eventually.
+template<class T, class U>
+std::unique_ptr<T> make_unique(U&& u)
+{
+    return std::unique_ptr<T>(new T(std::forward<U>(u)));
+}
 
 namespace TE {
 #ifdef __GNUC__
