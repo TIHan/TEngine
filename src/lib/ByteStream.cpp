@@ -179,46 +179,4 @@ namespace TE {
       WriteByte(pbStream.get()[i]);
     }
   }
-
-  /*!
-    *
-    */
-  template <class T>
-  T ByteStream::Read() {
-    TEuint size = sizeof(T);
-
-    union unpack_t {
-      TEbyte byte[sizeof(T)];
-      T val;
-    } unpack;
-
-    for (TEuint i = 0; i < size; i++) {
-      if (HasErrors()) {
-        return 0;
-      }
-      unpack.byte[i] = ReadByte();
-    }
-    return unpack.val;
-  }
-
-  /*!
-    *
-    */
-  template <class T>
-  void ByteStream::Write(const T val) {
-    TEuint size = sizeof(T);
-
-    union pack_t {
-      TEbyte byte[sizeof(T)];
-      T val;
-    } pack;
-    pack.val = val;
-
-    for (TEuint i = 0; i < size; i++) {
-      if (HasErrors()) {
-        return;
-      }
-      WriteByte(pack.byte[i]);
-    }
-  }
 }

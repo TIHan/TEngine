@@ -77,6 +77,7 @@ namespace TE {
   typedef float TEfloat;
   typedef double TEdouble;
   typedef bool TEboolean;
+  typedef void* TEpointer;
 
   // [WS] TODO: Need to put this somewhere else.
   namespace String {

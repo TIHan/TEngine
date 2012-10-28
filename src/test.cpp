@@ -7,7 +7,11 @@ using namespace TE;
 TEint main()
 {
   TEint answer = 0;
-  List<TEint> *asdf = new List<TEint>();
+  TEuint64 hey = 18446744073709551615;
+  List<TEuint64> *asdf = new List<TEuint64>();
+  asdf->Add(hey);
+  TEuint64 dick = asdf->Find(hey);
+  cout << dick << endl;
   do {
     cout << "(1) to host. (2) to connect.\n";
     cin >> answer;

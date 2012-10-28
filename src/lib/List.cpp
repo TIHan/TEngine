@@ -27,17 +27,36 @@
 
 #include "List.hpp"
 #include <list>
+#include <algorithm>
 
 using std::list;
+using std::for_each;
 
 namespace TE {
-  TList::TList() {
+  class PList {
+  public:
+    list<TEpointer> m_list;
+  };
+
+  TList::TList() :
+      priv(new PList()) {
   }
 
   TList::~TList() {
   }
 
-  template <class T>
-  void TList::Allocate() {
+  void TList::Add(TEpointer type) {
+    priv->m_list.push_back(type);
   }
+
+  TEpointer TList::Find(TEpointer type) {
+    TEpointer found = nullptr;
+    for_each(priv->m_list.begin(), priv->m_list.end(), [&type, &found] (TEpointer t) {
+      if (type == t) {
+        found = t;
+      }
+    });
+    return found;
+  }
+
 }

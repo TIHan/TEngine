@@ -32,28 +32,56 @@
 #include "Output.hpp"
 
 namespace TE {
+  class PList;
   class TList {
+    unique_ptr<PList> priv;
+
   public:
     TList();
     ~TList();
 
-    template <class T>
-    void Allocate();
+    void Add(TEpointer type);
+    TEpointer Find(TEpointer type);
   };
 
-  template <class T>
-  class List : TList {
+  template<class T>
+  class IList {
+  public:
+    virtual ~IList() {};
+
+    virtual void Add(T type) = 0;
+    virtual T Find(T type) = 0;
+  };
+
+  template<class T>
+  class List : IList<T> {
+    unique_ptr<TList> priv;
+
   public:
     List();
     virtual ~List();
+
+    virtual void Add(T type);
+    virtual T Find(T type);
   };
 
   template <class T>
-  List<T>::List() {
+  List<T>::List() :
+      priv(new TList()) {
   }
 
   template <class T>
   List<T>::~List() {
+  }
+
+  template <class T>
+  void List<T>::Add(T type) {
+    priv->Add((TEpointer)type);
+  }
+
+  template <class T>
+  T List<T>::Find(T type) {
+    return (T)priv->Find((TEpointer)type);
   }
 }
 
