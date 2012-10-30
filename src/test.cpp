@@ -11,6 +11,9 @@ TEint main()
   list->Add(socket.get());
   auto foundSocket = list->Find(socket.get());
   shared_ptr<ByteStream> test = make_shared<ByteStream>(512);
+  test->WriteString("Test");
+  cout << test->ReadString() << endl;
+  auto ddd = test->GetBuffer();
   /*TEint answer = 0;
   cout << dick << endl;
   do {

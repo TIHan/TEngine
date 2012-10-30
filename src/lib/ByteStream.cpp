@@ -26,13 +26,14 @@
 */
 
 #include "ByteStream.hpp"
+#include <vector>
+
+using std::vector;
 
 namespace TE {
   class PByteStream {
 		public:
-    shared_ptr<TEbyte> m_pBuffer;
-    TEuint m_nSize;
-    TEuint m_nMaxSize;
+    shared_ptr<vector<TEbyte>> m_pBuffer;
     TEuint m_iRead;
     TEuint m_iWrite;
     TEboolean m_bError;
@@ -45,9 +46,8 @@ namespace TE {
    */
   ByteStream::ByteStream(const TEuint nMaxSize) :
       priv(new PByteStream()) {
-    priv->m_pBuffer = make_shared<TEbyte>();
-    priv->m_nMaxSize = nMaxSize;
-    priv->m_nSize = 0;
+    priv->m_pBuffer = make_shared<vector<TEbyte>>();
+    priv->m_pBuffer->reserve(nMaxSize);
     priv->m_bError = false;
     priv->m_iRead = 0;
     priv->m_iWrite = 0;
@@ -63,16 +63,18 @@ namespace TE {
    *
    */
   TEbyte ByteStream::ReadByte() {
-    TEuint size = sizeof(TEbyte);
-
-    if (priv->m_nSize - size > priv->m_nMaxSize) {
-      priv->m_bError = true;
-      return 0;
+    if (HasErrors()) {
+      return (TEbyte)nullptr;
     }
 
-    TEbyte val = priv->m_pBuffer.get()[priv->m_iRead];
+    TEuint size = sizeof(TEbyte);
+    if (GetSize() - size > GetMaxSize()) {
+      priv->m_bError = true;
+      return (TEbyte)nullptr;
+    }
+
+    TEbyte val = priv->m_pBuffer->data()[priv->m_iRead];
     priv->m_iRead++;
-    priv->m_nSize -= size;
     return val;
   }
 
@@ -80,45 +82,52 @@ namespace TE {
    *
    */
   void ByteStream::WriteByte(const TEbyte byte) {
-    TEuint size = sizeof(TEbyte);
+    if (HasErrors()) {
+      return;
+    }
 
-    if (priv->m_nSize + size > priv->m_nMaxSize) {
+    TEuint size = sizeof(TEbyte);
+    if (GetSize() + size > GetMaxSize()) {
       priv->m_bError = true;
       return;
     }
 
-    priv->m_pBuffer.get()[priv->m_iWrite] = byte;
+    priv->m_pBuffer->insert(priv->m_pBuffer->end(), byte);
     priv->m_iWrite++;
-    priv->m_nSize += size;
   }
 
   /*!
    *
    */
   shared_ptr<TEbyte> ByteStream::GetBuffer() {
-    return priv->m_pBuffer;
+    if (GetSize() != 0) {
+      // [WS] TODO: Uh, need to fix this.
+      shared_ptr<TEbyte> buffer(priv->m_pBuffer->data());
+      return buffer;
+    } else {
+      return nullptr;
+    }
   }
 
   /*!
    *
    */
   TEuint ByteStream::GetSize() {
-    return priv->m_nSize;
+    return priv->m_pBuffer->size();
   }
 
   /*!
    *
    */
   TEuint ByteStream::GetMaxSize() {
-    return priv->m_nMaxSize;
+    return priv->m_pBuffer->max_size();
   }
 
   /*!
    *
    */
   void ByteStream::Clear() {
-    priv->m_pBuffer.reset(new TEbyte[priv->m_nMaxSize], default_delete<TEbyte[]>());
-    priv->m_nSize = 0;
+    priv->m_pBuffer.get()->clear();
     priv->m_bError = false;
     priv->m_iRead = 0;
     priv->m_iWrite = 0;

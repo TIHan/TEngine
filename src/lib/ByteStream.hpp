@@ -66,8 +66,11 @@ namespace TE {
    */
   template <class T>
   T ByteStream::Read() {
-    TEuint size = sizeof(T);
+    if (HasErrors()) {
+      return (T)nullptr;
+    }
 
+    TEuint size = sizeof(T);
     union unpack_t {
       TEbyte byte[sizeof(T)];
       T val;
@@ -75,7 +78,7 @@ namespace TE {
 
     for (TEuint i = 0; i < size; i++) {
       if (HasErrors()) {
-        return 0;
+        return (T)nullptr;
       }
       unpack.byte[i] = ReadByte();
     }
@@ -87,8 +90,11 @@ namespace TE {
    */
   template <class T>
   void ByteStream::Write(const T val) {
-    TEuint size = sizeof(T);
+    if (HasErrors()) {
+      return;
+    }
 
+    TEuint size = sizeof(T);
     union pack_t {
       TEbyte byte[sizeof(T)];
       T val;
