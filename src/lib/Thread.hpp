@@ -32,9 +32,8 @@
 #include "Output.hpp"
 
 namespace TE {
-  class PThread;
   class Thread {
-    unique_ptr<PThread> priv;
+    shared_ptr<thread> m_pThread;;
 
   public:
     explicit Thread(function<void()> func);

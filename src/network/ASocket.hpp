@@ -56,9 +56,9 @@ namespace TE {
     virtual string GetAddress();
     virtual TEboolean HasErrors();
 
-    virtual tuple<shared_ptr<TEbyte>, TEint, shared_ptr<address_t>> Receive() = 0;
-    virtual TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize) = 0;
-    virtual TEint Send(const shared_ptr<TEbyte> pBuffer, const TEuint nBufferSize, const shared_ptr<address_t> address) = 0;
+    virtual tuple<shared_ptr<vector<TEbyte>>, shared_ptr<address_t>> Receive() = 0;
+    virtual TEint Send(const shared_ptr<vector<TEbyte>> pBuffer) = 0;
+    virtual TEint Send(const shared_ptr<vector<TEbyte>> pBuffer, const shared_ptr<address_t> address) = 0;
   };
 }
 

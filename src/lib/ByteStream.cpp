@@ -26,9 +26,6 @@
 */
 
 #include "ByteStream.hpp"
-#include <vector>
-
-using std::vector;
 
 namespace TE {
   class PByteStream {
@@ -99,11 +96,9 @@ namespace TE {
   /*!
    *
    */
-  shared_ptr<TEbyte> ByteStream::GetBuffer() {
+  shared_ptr<vector<TEbyte>> ByteStream::GetBuffer() {
     if (GetSize() != 0) {
-      // [WS] TODO: Uh, need to fix this.
-      shared_ptr<TEbyte> buffer(priv->m_pBuffer->data());
-      return buffer;
+      return priv->m_pBuffer;
     } else {
       return nullptr;
     }
@@ -120,7 +115,7 @@ namespace TE {
    *
    */
   TEuint ByteStream::GetMaxSize() {
-    return priv->m_pBuffer->max_size();
+    return priv->m_pBuffer->capacity();
   }
 
   /*!
@@ -143,20 +138,19 @@ namespace TE {
   /*!
    *
    */
-  shared_ptr<TEchar> ByteStream::ReadString() {
+  string ByteStream::ReadString() {
     TEuint size = GetSize();
     shared_ptr<TEchar> val(new TEchar[size], default_delete<TEchar[]>());
+    string sz;
 
     for (TEuint i = 0; i < size; i++) {
-      if (HasErrors()) {
-        return 0;
-      }
       val.get()[i] = ReadByte();
       if (val.get()[i] == '\0') {
-        return val;
+        sz.assign(val.get());
+        return sz;
       }
     }
-    return 0;
+    return String::Empty();
   }
 
   /*!
@@ -166,9 +160,6 @@ namespace TE {
     TEuint size = (TEint)strlen(sz.c_str());
 
     for (TEuint i = 0; i < size; i++) {
-      if (HasErrors()) {
-        return;
-      }
       WriteByte(sz.c_str()[i]);
       if (i + 1 >= size) {
         WriteByte('\0');
@@ -179,13 +170,9 @@ namespace TE {
   /*!
    *
    */
-  void ByteStream::WriteStream(const shared_ptr<TEbyte> pbStream,
-      const TEuint nSize) {
-    for (TEuint i = 0; i < nSize; i++) {
-      if (HasErrors()) {
-        return;
-      }
-      WriteByte(pbStream.get()[i]);
+  void ByteStream::WriteStream(const shared_ptr<vector<TEbyte>> pBuffer) {
+    for (TEuint i = 0; i < pBuffer.get()->size(); i++) {
+      WriteByte(pBuffer.get()->data()[i]);
     }
   }
 }

@@ -37,6 +37,10 @@
 #include <memory>
 #include <functional>
 #include <tuple>
+#include <vector>
+#include <list>
+#include <algorithm>
+#include <thread>
 
 using std::cout;
 using std::cin;
@@ -49,10 +53,14 @@ using std::default_delete;
 using std::function;
 using std::tuple;
 using std::nullptr_t;
+using std::vector;
 using std::make_shared;
 using std::allocate_shared;
 using std::get;
 using std::copy;
+using std::list;
+using std::for_each;
+using std::thread;
 
 // http://en.cppreference.com/w/cpp/utility/forward
 // Note: This should be in the C++11 standard eventually.

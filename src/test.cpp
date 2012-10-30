@@ -6,16 +6,7 @@ using namespace TE;
 
 TEint main()
 {
-  unique_ptr<List<UdpSocket*>> list(new List<UdpSocket*>());
-  shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4));
-  list->Add(socket.get());
-  auto foundSocket = list->Find(socket.get());
-  shared_ptr<ByteStream> test = make_shared<ByteStream>(512);
-  test->WriteString("Test");
-  cout << test->ReadString() << endl;
-  auto ddd = test->GetBuffer();
-  /*TEint answer = 0;
-  cout << dick << endl;
+  TEint answer = 0;
   do {
     cout << "(1) to host. (2) to connect.\n";
     cin >> answer;
@@ -37,14 +28,14 @@ TEint main()
       while (1 && !socket->HasErrors()) {
         auto tupleReceive = socket->Receive();
         auto buffer = get<0>(tupleReceive);
-        cout << buffer << endl;
+        cout << buffer->data() << endl;
         count++;
 
-        shared_ptr<address_t> asdf = get<2>(tupleReceive);
+        shared_ptr<address_t> asdf = get<1>(tupleReceive);
         shared_ptr<ByteStream> byteStream(new ByteStream(512));
         byteStream->WriteString("PONG");
 
-        cout << "Sending: " << socket->Send(byteStream->GetBuffer(), byteStream->GetSize(), asdf) << endl;
+        cout << "Sending: " << socket->Send(byteStream->GetBuffer(), asdf) << endl;
 
         cout << "Packet Number: " << count << endl;
       }
@@ -66,16 +57,16 @@ TEint main()
     cout << "Address: " << socket->GetAddress() << endl;
 
     if (!socket->HasErrors()) {
-        socket->Send(byteStream->GetBuffer(), byteStream->GetSize());
+        socket->Send(byteStream->GetBuffer());
 
         auto tupleReceive = socket->Receive();
         auto buffer = get<0>(tupleReceive);
-        cout << buffer << endl;
+        cout << buffer->data() << endl;
     } else {
       cout << "Unable to send.\n";
     }
     break;
-  }*/
+  }
 #ifdef _MSC_VER
     system("pause");
 #endif

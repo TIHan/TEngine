@@ -26,17 +26,10 @@
 */
 
 #include "Thread.hpp"
-#include <thread>
 
 namespace TE {
-  class PThread {
-  public:
-    unique_ptr<std::thread> m_pThread;
-  };
-
-  Thread::Thread(function<void()> func) :
-            priv(new PThread()) {
-    priv->m_pThread.reset(new std::thread(func));
+  Thread::Thread(function<void()> func) {
+    m_pThread.reset(new thread(func));
   }
 
   Thread::~Thread() {
@@ -44,15 +37,15 @@ namespace TE {
 
   void Thread::Join() {
     if (IsJoinable()) {
-      priv->m_pThread->join();
+      m_pThread->join();
     }
   }
 
   TEboolean Thread::IsJoinable() {
-    return priv->m_pThread->joinable();
+    return m_pThread->joinable();
   }
 
   void Thread::Detach() {
-    priv->m_pThread->detach();
+    m_pThread->detach();
   }
 }

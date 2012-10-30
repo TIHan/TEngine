@@ -44,15 +44,15 @@ namespace TE {
     explicit ByteStream(const TEuint nMaxSize);
     virtual ~ByteStream();
 
-    shared_ptr<TEbyte> GetBuffer();
+    shared_ptr<vector<TEbyte>> GetBuffer();
     TEuint GetSize();
     TEuint GetMaxSize();
     void Clear();
     TEboolean HasErrors();
 
-    shared_ptr<TEchar> ReadString();
+    string ReadString();
     void WriteString(const string sz);
-    void WriteStream(const shared_ptr<TEbyte> pBuffer, const TEuint nSize);
+    void WriteStream(const shared_ptr<vector<TEbyte>> pBuffer);
 
     template <class T>
     T Read();
@@ -66,20 +66,14 @@ namespace TE {
    */
   template <class T>
   T ByteStream::Read() {
-    if (HasErrors()) {
-      return (T)nullptr;
-    }
-
     TEuint size = sizeof(T);
+
     union unpack_t {
       TEbyte byte[sizeof(T)];
       T val;
     } unpack;
 
     for (TEuint i = 0; i < size; i++) {
-      if (HasErrors()) {
-        return (T)nullptr;
-      }
       unpack.byte[i] = ReadByte();
     }
     return unpack.val;
@@ -90,11 +84,8 @@ namespace TE {
    */
   template <class T>
   void ByteStream::Write(const T val) {
-    if (HasErrors()) {
-      return;
-    }
-
     TEuint size = sizeof(T);
+
     union pack_t {
       TEbyte byte[sizeof(T)];
       T val;
@@ -102,9 +93,6 @@ namespace TE {
     pack.val = val;
 
     for (TEuint i = 0; i < size; i++) {
-      if (HasErrors()) {
-        return;
-      }
       WriteByte(pack.byte[i]);
     }
   }

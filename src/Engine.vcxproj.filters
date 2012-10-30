@@ -77,16 +77,13 @@
     <ClCompile Include="lib\System.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
-    <ClCompile Include="lib\Thread.cpp">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
     <ClCompile Include=".\network\ASocket.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="network\UdpSocket.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="lib\List.cpp">
+    <ClCompile Include="lib\Thread.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
   </ItemGroup>

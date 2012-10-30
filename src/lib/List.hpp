@@ -32,18 +32,6 @@
 #include "Output.hpp"
 
 namespace TE {
-  class PList;
-  class TList {
-    unique_ptr<PList> priv;
-
-  public:
-    TList();
-    ~TList();
-
-    void Add(TEpointer type);
-    TEpointer Find(TEpointer type);
-  };
-
   template<class T>
   class IList {
   public:
@@ -55,7 +43,7 @@ namespace TE {
 
   template<class T>
   class List : IList<T> {
-    unique_ptr<TList> priv;
+    shared_ptr<list<T>> m_list;
 
   public:
     List();
@@ -63,11 +51,12 @@ namespace TE {
 
     virtual void Add(T type);
     virtual T Find(T type);
+    shared_ptr<list<T>> Get();
   };
 
   template <class T>
-  List<T>::List() :
-      priv(new TList()) {
+  List<T>::List() {
+    m_list = make_shared<list<T>>();
   }
 
   template <class T>
@@ -76,12 +65,23 @@ namespace TE {
 
   template <class T>
   void List<T>::Add(T type) {
-    priv->Add((TEpointer)type);
+    m_list->push_back(type);
   }
 
   template <class T>
   T List<T>::Find(T type) {
-    return (T)priv->Find((TEpointer)type);
+    T found = (T)nullptr;
+    for_each(m_list->begin(), m_list->end(), [&type, &found] (T t) {
+      if (type == t) {
+        found = t;
+      }
+    });
+    return found;
+  }
+
+  template <class T>
+  shared_ptr<list<T>> List<T>::Get() {
+    return m_list;
   }
 }
 
