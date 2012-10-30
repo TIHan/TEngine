@@ -41,6 +41,7 @@
 #include <list>
 #include <algorithm>
 #include <thread>
+#include <array>
 
 using std::cout;
 using std::cin;
@@ -61,6 +62,7 @@ using std::copy;
 using std::list;
 using std::for_each;
 using std::thread;
+using std::array;
 
 // http://en.cppreference.com/w/cpp/utility/forward
 // Note: This should be in the C++11 standard eventually.

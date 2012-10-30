@@ -65,12 +65,14 @@ namespace TE {
   tuple<shared_ptr<vector<TEbyte>>, shared_ptr<address_t>> UdpSocket::Receive() {
     struct sockaddr_storage sock_addr;
     socklen_t addr_len = sizeof(sock_addr);
-    auto pBuffer = make_shared<vector<TEbyte>>();
+    auto pBuffer = make_shared<vector<TEbyte>>(SOCKET_MAX_BUFFER);
 
-    pBuffer->resize(SOCKET_MAX_BUFFER);
-    auto bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer->data(), SOCKET_MAX_BUFFER, 0, (sockaddr *)&sock_addr, &addr_len);
-    pBuffer->resize(bytes);
-    pBuffer->shrink_to_fit();
+    auto bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer->data(), pBuffer->size(), 0, (sockaddr *)&sock_addr, &addr_len);
+
+    if (bytes != -1) {
+      pBuffer->resize(bytes);
+      pBuffer->shrink_to_fit();
+    }
 
     auto address = make_shared<address_t>(sock_addr, (TEint)addr_len);
     return tuple<shared_ptr<vector<TEbyte>>, shared_ptr<address_t>>(pBuffer, address);
