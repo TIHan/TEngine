@@ -33,7 +33,7 @@
 
 namespace TE {
   class Thread {
-    shared_ptr<thread> m_pThread;;
+    shared_ptr<thread> m_pThread;
 
   public:
     explicit Thread(function<void()> func);

@@ -61,13 +61,13 @@ namespace TE {
    */
   TEbyte ByteStream::ReadByte() {
     if (HasErrors()) {
-      return (TEbyte)nullptr;
+      return 0;
     }
 
     TEuint size = sizeof(TEbyte);
     if (GetSize() - size > GetMaxSize()) {
       priv->m_bError = true;
-      return (TEbyte)nullptr;
+      return 0;
     }
 
     TEbyte val = priv->m_pBuffer->data()[priv->m_iRead];
