@@ -42,7 +42,7 @@ namespace TE {
    *
    */
   ByteStream::ByteStream(const TEuint nMaxSize) :
-      priv(new PByteStream()) {
+      priv(make_unique<PByteStream>()) {
     priv->m_pBuffer = make_shared<vector<TEbyte>>(nMaxSize);
     priv->m_bError = false;
     priv->m_iRead = 0;

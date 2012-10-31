@@ -43,36 +43,22 @@
 #include <thread>
 #include <array>
 
-using std::cout;
-using std::cin;
-using std::endl;
-using std::string;
-using std::shared_ptr;
-using std::unique_ptr;
-using std::weak_ptr;
-using std::default_delete;
-using std::function;
-using std::tuple;
-using std::nullptr_t;
-using std::vector;
-using std::make_shared;
-using std::allocate_shared;
-using std::get;
-using std::copy;
-using std::list;
-using std::for_each;
-using std::thread;
-using std::array;
-
 // http://en.cppreference.com/w/cpp/utility/forward
 // Note: This should be in the C++11 standard eventually.
-template<class T, class U>
+template <class T>
+std::unique_ptr<T> make_unique()
+{
+    return std::unique_ptr<T>(new T());
+}
+
+template <class T, class U>
 std::unique_ptr<T> make_unique(U&& u)
 {
     return std::unique_ptr<T>(new T(std::forward<U>(u)));
 }
 
 namespace TE {
+  using namespace std;
 #ifdef __GNUC__
   typedef char TEchar;
   typedef int8_t TEint8;

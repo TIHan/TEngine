@@ -149,7 +149,7 @@ namespace TE {
    *
    */
   ASocket::ASocket() :
-      priv(new PASocket()) {
+      priv(make_unique<PASocket>()) {
   }
 
   /*!
