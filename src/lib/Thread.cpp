@@ -28,24 +28,46 @@
 #include "Thread.hpp"
 
 namespace TE {
+  /*!
+   *
+   */
   Thread::Thread(function<void()> func) {
     m_pThread.reset(new thread(func));
   }
 
+  /*!
+   *
+   */
   Thread::~Thread() {
   }
 
+  /*!
+   *
+   */
   void Thread::Join() {
     if (IsJoinable()) {
       m_pThread->join();
     }
   }
 
+  /*!
+   *
+   */
   TEboolean Thread::IsJoinable() {
     return m_pThread->joinable();
   }
 
+  /*!
+   *
+   */
   void Thread::Detach() {
     m_pThread->detach();
+  }
+
+  /*!
+   *
+   */
+  shared_ptr<thread> Thread::Get() {
+    return m_pThread;
   }
 }

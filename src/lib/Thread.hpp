@@ -42,6 +42,7 @@ namespace TE {
     void Join();
     TEboolean IsJoinable();
     void Detach();
+    shared_ptr<thread> Get();
   };
 }
 
