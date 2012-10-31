@@ -43,7 +43,8 @@ namespace TE {
    */
   ByteStream::ByteStream(const TEuint nMaxSize) :
       priv(make_unique<PByteStream>()) {
-    priv->m_pBuffer = make_shared<vector<TEbyte>>(nMaxSize);
+    priv->m_pBuffer = make_shared<vector<TEbyte>>();
+    priv->m_pBuffer->reserve(nMaxSize);
     priv->m_bError = false;
     priv->m_iRead = 0;
     priv->m_iWrite = 0;
@@ -139,13 +140,11 @@ namespace TE {
    */
   string ByteStream::ReadString() {
     TEuint size = GetSize();
-    shared_ptr<TEchar> val(new TEchar[size], default_delete<TEchar[]>());
     string sz;
 
     for (TEuint i = 0; i < size; i++) {
-      val.get()[i] = ReadByte();
-      if (val.get()[i] == '\0') {
-        sz.assign(val.get());
+      sz.insert(sz.end(), ReadByte());
+      if (sz.data()[i] == '\0') {
         return sz;
       }
     }
@@ -156,10 +155,10 @@ namespace TE {
    *
    */
   void ByteStream::WriteString(const string sz) {
-    TEuint size = (TEint)strlen(sz.c_str());
+    TEuint size = sz.length();
 
     for (TEuint i = 0; i < size; i++) {
-      WriteByte(sz.c_str()[i]);
+      WriteByte(sz.data()[i]);
       if (i + 1 >= size) {
         WriteByte('\0');
       }
