@@ -32,7 +32,7 @@
   #include <TELib.hpp>
 #endif
 
-#define SOCKET_MAX_BUFFER 32
+#define SOCKET_MAX_BUFFER 1400
 
 namespace TE {
   enum SocketFamily {
