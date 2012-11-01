@@ -6,6 +6,10 @@ using namespace TE;
 
 TEint main()
 {
+  auto l = new List<TEbyte>();
+  l->Add(5);
+  l->Add(6);
+  auto l2 = l->Where([] (TEbyte i) {return i == 5;});
   TEint answer = 0;
   do {
     cout << "(1) to host. (2) to connect.\n";

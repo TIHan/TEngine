@@ -38,11 +38,11 @@ namespace TE {
     virtual ~IList() {};
 
     virtual void Add(T type) = 0;
-    virtual T Find(T type) = 0;
+    virtual shared_ptr<IList<T>> Where(function<bool(T)> type) = 0;
   };
 
   template<class T>
-  class List : IList<T> {
+  class List : public IList<T> {
     shared_ptr<list<T>> m_list;
 
   public:
@@ -50,7 +50,7 @@ namespace TE {
     virtual ~List();
 
     virtual void Add(T type);
-    virtual T Find(T type);
+    virtual shared_ptr<IList<T>> Where(function<bool(T)> type);
     shared_ptr<list<T>> Get();
   };
 
@@ -69,14 +69,14 @@ namespace TE {
   }
 
   template <class T>
-  T List<T>::Find(T type) {
-    T found = (T)nullptr;
-    for_each(m_list->begin(), m_list->end(), [&type, &found] (T t) {
-      if (type == t) {
-        found = t;
+  shared_ptr<IList<T>> List<T>::Where(function<bool(T)> type) {
+    auto l = make_shared<List<T>>();
+    for_each(m_list->begin(), m_list->end(), [&type, &l] (T t) {
+      if (type(t)) {
+        l->Add(t);
       }
     });
-    return found;
+    return l;
   }
 
   template <class T>
