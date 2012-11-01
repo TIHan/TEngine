@@ -67,7 +67,7 @@ namespace TE {
     socklen_t addr_len = sizeof(sock_addr);
     auto pBuffer = make_shared<vector<TEbyte>>(SOCKET_MAX_BUFFER);
 
-    TEuint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer->data(), pBuffer->size(), 0, (sockaddr *)&sock_addr, &addr_len);
+    TEint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer->data(), pBuffer->size(), 0, (sockaddr *)&sock_addr, &addr_len);
 
     if (bytes != -1) {
       pBuffer->resize(bytes);
@@ -84,7 +84,7 @@ namespace TE {
    *
    */
   TEint UdpSocket::Send(const shared_ptr<vector<TEbyte>> pBuffer) {
-    TEuint bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer->data(), pBuffer->size(), 0, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen);
+    TEint bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer->data(), pBuffer->size(), 0, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen);
     return bytes;
   }
 
@@ -93,7 +93,7 @@ namespace TE {
    */
   TEint UdpSocket::Send(const shared_ptr<vector<TEbyte>> pBuffer,
       const shared_ptr<address_t> address) {
-    TEuint bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer->data(), pBuffer->size(), 0, (sockaddr *)&address->ssAddress, address->nLength);
+    TEint bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer->data(), pBuffer->size(), 0, (sockaddr *)&address->ssAddress, address->nLength);
     return bytes;
   }
 }
