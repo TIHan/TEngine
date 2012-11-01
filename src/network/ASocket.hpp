@@ -54,6 +54,7 @@ namespace TE {
 
     virtual TEint Bind(const TEushort usPort);
     virtual string GetAddress();
+    virtual SocketFamily GetFamily();
     virtual TEboolean HasErrors();
 
     virtual tuple<shared_ptr<vector<TEbyte>>, shared_ptr<address_t>> Receive() = 0;

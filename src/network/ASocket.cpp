@@ -117,7 +117,6 @@ namespace TE {
    *
    */
   void PASocket::SetFamily(const SocketFamily family) {
-    // [WS] TODO: Clean this up.
     switch (family) {
     case SOCKET_UNSPECIFIED:
       m_bFamily = AF_UNSPEC;
@@ -130,7 +129,6 @@ namespace TE {
       break;
     default:
       ERROR_PRINT("Invalid socket family");
-      break;
     }
   }
 
@@ -197,6 +195,23 @@ namespace TE {
       return s.assign (address);
     } else {
       return String::Empty();
+    }
+  }
+
+  /*!
+   *
+   */
+  SocketFamily ASocket::GetFamily() {
+    switch (priv->m_bFamily) {
+    case AF_UNSPEC:
+      return SOCKET_UNSPECIFIED;
+    case AF_INET:
+      return SOCKET_IPV4;
+      break;
+    case AF_INET6:
+      return SOCKET_IPV6;
+    default:
+      ERROR_PRINT("Invalid socket family");
     }
   }
 

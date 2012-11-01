@@ -6,11 +6,13 @@ using namespace TE;
 
 TEint main()
 {
-  auto l = new List<TEbyte>();
-  l->Add(5);
-  l->Add(6);
-  auto l2 = l->Where([] (TEbyte i) {return i == 5;});
-  TEint answer = 0;
+  auto l = make_shared<List<shared_ptr<UdpSocket>>>();
+  l->Add(make_shared<UdpSocket>(SOCKET_IPV4));
+  l->Add(make_shared<UdpSocket>(SOCKET_IPV4));
+  l->Add(make_shared<UdpSocket>(SOCKET_IPV6));
+  l->Add(make_shared<UdpSocket>(SOCKET_IPV4));
+  auto l2 = l->Where([] (shared_ptr<UdpSocket> i) {return i->GetFamily() == SOCKET_IPV4;});
+ /* TEint answer = 0;
   do {
     cout << "(1) to host. (2) to connect.\n";
     cin >> answer;
@@ -70,7 +72,7 @@ TEint main()
       cout << "Unable to send.\n";
     }
     break;
-  }
+  }*/
 #ifdef _MSC_VER
     system("pause");
 #endif
