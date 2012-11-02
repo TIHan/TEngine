@@ -31,3 +31,4 @@
 #include "../System.hpp"
 #include "../Thread.hpp"
 #include "../List.hpp"
+#include "../Sequence.hpp"

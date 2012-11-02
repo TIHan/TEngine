@@ -36,7 +36,7 @@ namespace TE {
   template <class T>
   class ISequence : public IQueryable<T, ISequence<T>> {
   public:
-    virtual ~IList() {};
+    virtual ~ISequence() {};
 
     virtual void Add(T type) = 0;
   };
@@ -49,12 +49,39 @@ namespace TE {
     Sequence();
     virtual ~Sequence(); 
 
-    virtual void Add(T type) = 0;
+    virtual void Add(T type);
 
     virtual shared_ptr<ISequence<T>> Where(function<bool(T)> func);
 
-    virtual shared_ptr<TEbyte> GetBuffer();
+    virtual const T* GetRawData();
   };
+
+  template <class T>
+  Sequence<T>::Sequence() {
+    m_pVector = make_unique<vector<T>>();
+  }
+
+  template <class T>
+  Sequence<T>::~Sequence() {
+  }
+
+  template <class T>
+  void Sequence<T>::Add(T type) {
+  }
+
+  template <class T>
+  shared_ptr<ISequence<T>> Sequence<T>::Where(function<bool(T)> func) {
+    return nullptr; // do this for now TODO: need impl
+  }
+
+  template <class T>
+  const T* Sequence<T>::GetRawData() {
+    if (m_pVector->size() != 0) {
+      return m_pVector->data();
+    } else {
+      return nullptr;
+    }
+  }
 
 }
 
