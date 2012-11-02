@@ -66,6 +66,15 @@
     <ClInclude Include="lib\List.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
+    <ClInclude Include="lib\Sequence.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\Array.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\IQueryable.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp">

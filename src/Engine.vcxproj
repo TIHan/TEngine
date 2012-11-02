@@ -65,10 +65,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="lib\Array.hpp" />
     <ClInclude Include="lib\ByteStream.hpp" />
     <ClInclude Include="lib\include\TELib.hpp" />
+    <ClInclude Include="lib\IQueryable.hpp" />
     <ClInclude Include="lib\List.hpp" />
     <ClInclude Include="lib\Output.hpp" />
+    <ClInclude Include="lib\Sequence.hpp" />
     <ClInclude Include="lib\System.hpp" />
     <ClInclude Include="lib\Thread.hpp" />
     <ClInclude Include="lib\Types.hpp" />

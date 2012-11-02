@@ -63,11 +63,4 @@ namespace TE {
   void Thread::Detach() {
     m_pThread->detach();
   }
-
-  /*!
-   *
-   */
-  shared_ptr<thread> Thread::Get() {
-    return m_pThread;
-  }
 }

@@ -30,58 +30,65 @@
 
 #include "Types.hpp"
 #include "Output.hpp"
+#include "IQueryable.hpp"
 
 namespace TE {
-  template<class T>
-  class IList {
+  template <class T>
+  class IList : public IQueryable<T, IList<T>> {
   public:
     virtual ~IList() {};
 
     virtual void Add(T type) = 0;
-    virtual shared_ptr<IList<T>> Where(function<bool(T)> type) = 0;
   };
 
   template<class T>
   class List : public IList<T> {
-    shared_ptr<list<T>> m_list;
+    shared_ptr<list<T>> m_pList;
 
   public:
     List();
     virtual ~List();
 
     virtual void Add(T type);
-    virtual shared_ptr<IList<T>> Where(function<bool(T)> type);
-    shared_ptr<list<T>> Get();
+
+    virtual shared_ptr<IList<T>> Where(function<bool(T)> func);
   };
 
+  /*!
+   *
+   */
   template <class T>
   List<T>::List() {
-    m_list = make_shared<list<T>>();
+    m_pList = make_shared<list<T>>();
   }
 
+  /*!
+   *
+   */
   template <class T>
   List<T>::~List() {
   }
 
+  /*!
+   *
+   */
   template <class T>
   void List<T>::Add(T type) {
-    m_list->push_back(type);
+    m_pList->push_back(type);
   }
 
+  /*!
+   *
+   */
   template <class T>
-  shared_ptr<IList<T>> List<T>::Where(function<bool(T)> type) {
+  shared_ptr<IList<T>> List<T>::Where(function<bool(T)> func) {
     auto l = make_shared<List<T>>();
-    for_each(m_list->begin(), m_list->end(), [&type, &l] (T t) {
-      if (type(t)) {
+    for_each(m_pList->begin(), m_pList->end(), [&func, &l] (T t) {
+      if (func(t)) {
         l->Add(t);
       }
     });
     return l;
-  }
-
-  template <class T>
-  shared_ptr<list<T>> List<T>::Get() {
-    return m_list;
   }
 }
 

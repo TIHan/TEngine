@@ -25,24 +25,37 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __THREAD_HPP_
-#define __THREAD_HPP_
+#ifndef __SEQUENCE_HPP_
+#define __SEQUENCE_HPP_
 
 #include "Types.hpp"
 #include "Output.hpp"
+#include "IQueryable.hpp"
 
 namespace TE {
-  class Thread {
-    shared_ptr<thread> m_pThread;
+  template <class T>
+  class ISequence : public IQueryable<T, ISequence<T>> {
+  public:
+    virtual ~IList() {};
+
+    virtual void Add(T type) = 0;
+  };
+
+  template <class T>
+  class Sequence : public ISequence<T> {
+    unique_ptr<vector<T>> m_pVector;
 
   public:
-    explicit Thread(function<void()> func);
-    virtual ~Thread();
+    Sequence();
+    virtual ~Sequence(); 
 
-    void Join();
-    TEboolean IsJoinable();
-    void Detach();
+    virtual void Add(T type) = 0;
+
+    virtual shared_ptr<ISequence<T>> Where(function<bool(T)> func);
+
+    virtual shared_ptr<TEbyte> GetBuffer();
   };
+
 }
 
-#endif /* __THREAD_HPP_ */
+#endif /* __SEQUENCE_HPP_ */

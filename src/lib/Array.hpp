@@ -25,24 +25,13 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __THREAD_HPP_
-#define __THREAD_HPP_
+#ifndef __ARRAY_HPP_
+#define __ARRAY_HPP_
 
 #include "Types.hpp"
 #include "Output.hpp"
 
 namespace TE {
-  class Thread {
-    shared_ptr<thread> m_pThread;
-
-  public:
-    explicit Thread(function<void()> func);
-    virtual ~Thread();
-
-    void Join();
-    TEboolean IsJoinable();
-    void Detach();
-  };
 }
 
-#endif /* __THREAD_HPP_ */
+#endif /* __ARRAY_HPP_ */

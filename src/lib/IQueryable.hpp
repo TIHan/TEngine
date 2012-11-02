@@ -25,24 +25,20 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __THREAD_HPP_
-#define __THREAD_HPP_
+#ifndef __IQUERYABLE_HPP_
+#define __IQUERYABLE_HPP_
 
 #include "Types.hpp"
 #include "Output.hpp"
 
 namespace TE {
-  class Thread {
-    shared_ptr<thread> m_pThread;
-
+  template <class T, class Source>
+  class IQueryable {
   public:
-    explicit Thread(function<void()> func);
-    virtual ~Thread();
+    virtual ~IQueryable() {};
 
-    void Join();
-    TEboolean IsJoinable();
-    void Detach();
+    virtual shared_ptr<Source> Where(function<bool(T)> func) = 0;
   };
 }
 
-#endif /* __THREAD_HPP_ */
+#endif /* __IQUERYABLE_HPP_ */
