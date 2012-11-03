@@ -45,13 +45,13 @@
 
 // http://en.cppreference.com/w/cpp/utility/forward
 // Note: This should be in the C++11 standard eventually.
-template <class T>
+template <typename T>
 std::unique_ptr<T> make_unique()
 {
     return std::unique_ptr<T>(new T());
 }
 
-template <class T, class U>
+template <typename T, typename U>
 std::unique_ptr<T> make_unique(U&& u)
 {
     return std::unique_ptr<T>(new T(std::forward<U>(u)));

@@ -32,7 +32,7 @@
 #include "Output.hpp"
 
 namespace TE {
-  template <class T, class Source>
+  template <typename T, typename Source>
   class IQueryable {
   public:
     virtual ~IQueryable() {};

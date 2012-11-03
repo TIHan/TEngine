@@ -32,7 +32,7 @@
 #include "Output.hpp"
 
 namespace TE {
-  template <class T>
+  template <typename T>
   class IRawData {
   public:
     virtual ~IRawData() {};

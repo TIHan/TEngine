@@ -32,7 +32,7 @@
 #include "IIterator.hpp"
 
 namespace TE {
-  template <class T, class Source>
+  template <typename T, typename Source>
   class ICollection : public IQueryable<T, Source>, public IIterator<T> {
   public:
     virtual ~ICollection() {};

@@ -54,17 +54,17 @@ namespace TE {
     void WriteString(const string sz);
     void WriteStream(const shared_ptr<vector<TEbyte>> pBuffer);
 
-    template <class T>
+    template <typename T>
     T Read();
 
-    template <class T>
-    void Write (const T val);
+    template <typename T>
+    void Write(const T val);
   };
 
   /*!
    *
    */
-  template <class T>
+  template <typename T>
   T ByteStream::Read() {
     TEuint size = sizeof(T);
 
@@ -82,7 +82,7 @@ namespace TE {
   /*!
    *
    */
-  template <class T>
+  template <typename T>
   void ByteStream::Write(const T val) {
     TEuint size = sizeof(T);
 

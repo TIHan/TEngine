@@ -31,13 +31,13 @@
 #include "ICollection.hpp"
 
 namespace TE {
-  template <class T>
+  template <typename T>
   class IList : public ICollection<T, IList<T>> {
   public:
     virtual ~IList() {};
   };
 
-  template<class T>
+  template <typename T>
   class List : public IList<T> {
   protected:
     unique_ptr<list<T>> m_pList;
@@ -55,7 +55,7 @@ namespace TE {
   /*!
    *
    */
-  template <class T>
+  template <typename T>
   List<T>::List() :
       m_pList(make_unique<list<T>>()) {
   }
@@ -63,14 +63,14 @@ namespace TE {
   /*!
    *
    */
-  template <class T>
+  template <typename T>
   List<T>::~List() {
   }
 
   /*!
    *
    */
-  template <class T>
+  template <typename T>
   void List<T>::Add(const T& item) {
     m_pList->push_back(item);
   }
@@ -78,9 +78,10 @@ namespace TE {
   /*!
    *
    */
-  template <class T>
+  template <typename T>
   void List<T>::Remove(const T& item) {
-    for (auto i = m_pList->cbegin(); i != m_pList->cend(); i++) {
+    typename list<T>::const_iterator i;
+    for (i = m_pList->cbegin(); i != m_pList->cend(); i++) {
       if (*i == item) {
         i = m_pList->erase(i);
         return;
@@ -91,7 +92,7 @@ namespace TE {
   /*!
    *
    */
-  template <class T>
+  template <typename T>
   shared_ptr<IList<T>> List<T>::Where(function<bool(T)> func) {
     auto l = make_shared<List<T>>();
     for_each(m_pList->cbegin(), m_pList->cend(), [&func, &l] (T t) {
