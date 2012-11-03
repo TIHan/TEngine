@@ -32,13 +32,13 @@
 #include "IRawData.hpp"
 
 namespace TE {
-  template <typename T>
+  template <class T>
   class ISequence : public ICollection<T, ISequence<T>>, public IRawData<T> {
   public:
     virtual ~ISequence() {};
   };
 
-  template <typename T>
+  template <class T>
   class Sequence : public ISequence<T> {
   protected:
     unique_ptr<vector<T>> m_pVector;
@@ -58,7 +58,7 @@ namespace TE {
   /*!
    *
    */
-  template <typename T>
+  template <class T>
   Sequence<T>::Sequence() :
       m_pVector(make_unique<vector<T>>()) {
   }
@@ -66,14 +66,14 @@ namespace TE {
   /*!
    *
    */
-  template <typename T>
+  template <class T>
   Sequence<T>::~Sequence() {
   }
 
   /*!
    *
    */
-  template <typename T>
+  template <class T>
   void Sequence<T>::Add(const T& item) {
     m_pVector->push_back(item);
   }
@@ -81,10 +81,9 @@ namespace TE {
   /*!
    *
    */
-  template <typename T>
+  template <class T>
   void Sequence<T>::Remove(const T& item) {
-    typename vector<T>::const_iterator i;
-    for (i = m_pVector->cbegin(); i != m_pVector->cend(); i++) {
+    for (auto i = m_pVector->begin(); i != m_pVector->end(); i++) {
       if (*i == item) {
         i = m_pVector->erase(i);
         return;
@@ -95,7 +94,7 @@ namespace TE {
   /*!
    *
    */
-  template <typename T>
+  template <class T>
   shared_ptr<ISequence<T>> Sequence<T>::Where(function<bool(T)> func) {
     auto seq = make_shared<Sequence<T>>();
     for_each(m_pVector->begin(), m_pVector->end(), [&seq, &func] (T item) {
@@ -109,7 +108,7 @@ namespace TE {
   /*!
    *
    */
-  template <typename T>
+  template <class T>
   T* Sequence<T>::GetRawData() {
     if (m_pVector->size() != 0) {
       return m_pVector->data();

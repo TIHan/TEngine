@@ -80,8 +80,7 @@ namespace TE {
    */
   template <typename T>
   void List<T>::Remove(const T& item) {
-    typename list<T>::const_iterator i;
-    for (i = m_pList->cbegin(); i != m_pList->cend(); i++) {
+    for (auto i = m_pList->begin(); i != m_pList->end(); i++) {
       if (*i == item) {
         i = m_pList->erase(i);
         return;
