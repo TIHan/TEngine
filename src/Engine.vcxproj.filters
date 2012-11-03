@@ -75,6 +75,15 @@
     <ClInclude Include="lib\IQueryable.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
+    <ClInclude Include="lib\IIterator.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\ICollection.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include=".\lib\IRawData.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp">

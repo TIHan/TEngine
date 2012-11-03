@@ -25,82 +25,20 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __LIST_HPP_
-#define __LIST_HPP_
+#ifndef __IRAWDATA_HPP_
+#define __IRAWDATA_HPP_
 
-#include "ICollection.hpp"
+#include "Types.hpp"
+#include "Output.hpp"
 
 namespace TE {
   template <class T>
-  class IList : public ICollection<T, IList<T>> {
+  class IRawData {
   public:
-    virtual ~IList() {};
+    virtual ~IRawData() {};
+
+    virtual T* GetRawData() = 0;
   };
-
-  template<class T>
-  class List : public IList<T> {
-  protected:
-    unique_ptr<list<T>> m_pList;
-
-  public:
-    List();
-    virtual ~List();
-
-    virtual void Add(const T& item);
-    virtual void Remove(const T& item);
-
-    virtual shared_ptr<IList<T>> Where(function<bool(T)> func);
-  };
-
-  /*!
-   *
-   */
-  template <class T>
-  List<T>::List() :
-      m_pList(make_unique<list<T>>()) {
-  }
-
-  /*!
-   *
-   */
-  template <class T>
-  List<T>::~List() {
-  }
-
-  /*!
-   *
-   */
-  template <class T>
-  void List<T>::Add(const T& item) {
-    m_pList->push_back(item);
-  }
-
-  /*!
-   *
-   */
-  template <class T>
-  void List<T>::Remove(const T& item) {
-    for (auto i = m_pList->cbegin(); i != m_pList->cend(); i++) {
-      if (*i == item) {
-        i = m_pList->erase(i);
-        return;
-      }
-    }
-  }
-
-  /*!
-   *
-   */
-  template <class T>
-  shared_ptr<IList<T>> List<T>::Where(function<bool(T)> func) {
-    auto l = make_shared<List<T>>();
-    for_each(m_pList->cbegin(), m_pList->cend(), [&func, &l] (T t) {
-      if (func(t)) {
-        l->Add(t);
-      }
-    });
-    return l;
-  }
 }
 
-#endif /* __LIST_HPP_ */
+#endif /* __IRAWDATA_HPP_ */

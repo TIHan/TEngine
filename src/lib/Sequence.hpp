@@ -28,61 +28,94 @@
 #ifndef __SEQUENCE_HPP_
 #define __SEQUENCE_HPP_
 
-#include "Types.hpp"
-#include "Output.hpp"
-#include "IQueryable.hpp"
+#include "ICollection.hpp"
+#include "IRawData.hpp"
 
 namespace TE {
   template <class T>
-  class ISequence : public IQueryable<T, ISequence<T>> {
+  class ISequence : public ICollection<T, ISequence<T>>, public IRawData<T> {
   public:
     virtual ~ISequence() {};
-
-    virtual void Add(T type) = 0;
   };
 
   template <class T>
   class Sequence : public ISequence<T> {
+  protected:
     unique_ptr<vector<T>> m_pVector;
 
   public:
     Sequence();
     virtual ~Sequence(); 
 
-    virtual void Add(T type);
+    virtual void Add(const T& item);
+    virtual void Remove(const T& item);
 
     virtual shared_ptr<ISequence<T>> Where(function<bool(T)> func);
 
-    virtual const T* GetRawData();
+    virtual T* GetRawData();
   };
 
+  /*!
+   *
+   */
   template <class T>
-  Sequence<T>::Sequence() {
-    m_pVector = make_unique<vector<T>>();
+  Sequence<T>::Sequence() :
+      m_pVector(make_unique<vector<T>>()) {
   }
 
+  /*!
+   *
+   */
   template <class T>
   Sequence<T>::~Sequence() {
   }
 
+  /*!
+   *
+   */
   template <class T>
-  void Sequence<T>::Add(T type) {
+  void Sequence<T>::Add(const T& item) {
+    m_pVector->push_back(item);
   }
 
+  /*!
+   *
+   */
+  template <class T>
+  void Sequence<T>::Remove(const T& item) {
+    for (auto i = m_pVector->cbegin(); i != m_pVector->cend(); i++) {
+      if (*i == item) {
+        i = m_pVector->erase(i);
+        return;
+      }
+    }
+  }
+
+  /*!
+   *
+   */
   template <class T>
   shared_ptr<ISequence<T>> Sequence<T>::Where(function<bool(T)> func) {
-    return nullptr; // do this for now TODO: need impl
+    auto seq = make_shared<Sequence<T>>();
+    for_each(m_pVector->begin(), m_pVector->end(), [&seq, &func] (T item) {
+      if (func(item)) {
+        seq->Add(item);
+      }
+    });
+    return seq;
   }
 
+  /*!
+   *
+   */
   template <class T>
-  const T* Sequence<T>::GetRawData() {
+  T* Sequence<T>::GetRawData() {
     if (m_pVector->size() != 0) {
       return m_pVector->data();
     } else {
       return nullptr;
     }
   }
-
 }
 
 #endif /* __SEQUENCE_HPP_ */

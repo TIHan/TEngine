@@ -7,11 +7,20 @@ using namespace TE;
 TEint main()
 {
   auto l = make_shared<List<shared_ptr<UdpSocket>>>();
-  l->Add(make_shared<UdpSocket>(SOCKET_IPV4));
-  l->Add(make_shared<UdpSocket>(SOCKET_IPV4));
+  auto hey = make_shared<UdpSocket>(SOCKET_IPV4);
+  l->Add(hey);
+  l->Add(hey);
+  l->Remove(hey);
   l->Add(make_shared<UdpSocket>(SOCKET_IPV6));
   l->Add(make_shared<UdpSocket>(SOCKET_IPV4));
   auto l2 = l->Where([] (shared_ptr<UdpSocket> i) {return i->GetFamily() == SOCKET_IPV4;});
+  auto testSeq = make_shared<Sequence<TEbyte>>();
+  TEbyte x = 5;
+  testSeq->Add(x);
+  testSeq->Add(6);
+  testSeq->Add(x);
+  testSeq->Add(6);
+  testSeq->Remove(5);
  /* TEint answer = 0;
   do {
     cout << "(1) to host. (2) to connect.\n";
