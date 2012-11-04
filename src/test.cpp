@@ -14,6 +14,7 @@ TEint main()
   l->Add(make_shared<UdpSocket>(SOCKET_IPV6));
   l->Add(make_shared<UdpSocket>(SOCKET_IPV4));
   auto l2 = l->Where([] (shared_ptr<UdpSocket> i) {return i->GetFamily() == SOCKET_IPV4;});
+  l->Clear();
   auto testSeq = make_shared<Sequence<TEbyte>>();
   TEbyte x = 5;
   testSeq->Add(x);
@@ -21,6 +22,7 @@ TEint main()
   testSeq->Add(x);
   testSeq->Add(6);
   testSeq->Remove(5);
+  testSeq->Clear();
  /* TEint answer = 0;
   do {
     cout << "(1) to host. (2) to connect.\n";

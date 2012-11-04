@@ -30,6 +30,7 @@
 
 #include "Types.hpp"
 #include "Output.hpp"
+#include "Sequence.hpp"
 
 namespace TE {
   class PByteStream;
@@ -44,7 +45,7 @@ namespace TE {
     explicit ByteStream(const TEuint nMaxSize);
     virtual ~ByteStream();
 
-    shared_ptr<vector<TEbyte>> GetBuffer();
+    shared_ptr<Sequence<TEbyte>> GetBuffer();
     TEuint GetSize();
     TEuint GetMaxSize();
     void Clear();
@@ -52,7 +53,7 @@ namespace TE {
 
     string ReadString();
     void WriteString(const string sz);
-    void WriteStream(const shared_ptr<vector<TEbyte>> pBuffer);
+    void WriteStream(const shared_ptr<Sequence<TEbyte>> pBuffer);
 
     template <typename T>
     T Read();

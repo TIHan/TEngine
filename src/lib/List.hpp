@@ -48,8 +48,12 @@ namespace TE {
 
     virtual void Add(const T& item);
     virtual void Remove(const T& item);
+    virtual TEuint GetSize();
+    virtual void Clear();
 
     virtual shared_ptr<IList<T>> Where(function<bool(T)> func);
+
+    virtual void Resize(TEuint nSize);
   };
 
   /*!
@@ -92,6 +96,22 @@ namespace TE {
    *
    */
   template <typename T>
+  TEuint List<T>::GetSize() {
+    return m_pList->size();
+  }
+
+  /*!
+   *
+   */
+  template <typename T>
+  void List<T>::Clear() {
+    return m_pList->clear();
+  }
+
+  /*!
+   *
+   */
+  template <typename T>
   shared_ptr<IList<T>> List<T>::Where(function<bool(T)> func) {
     auto l = make_shared<List<T>>();
     for_each(m_pList->cbegin(), m_pList->cend(), [&func, &l] (T t) {
@@ -100,6 +120,14 @@ namespace TE {
       }
     });
     return l;
+  }
+
+  /*!
+   *
+   */
+  template <typename T>
+  void List<T>::Resize(TEuint nSize) {
+    m_pList->resize(nSize);
   }
 }
 

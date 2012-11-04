@@ -32,3 +32,5 @@
 #include "../Thread.hpp"
 #include "../List.hpp"
 #include "../Sequence.hpp"
+#include "../IByteData.hpp"
+#include "../ByteSequence.hpp"

@@ -25,23 +25,20 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __ICOLLECTION_HPP_
-#define __ICOLLECTION_HPP_
+#ifndef __IBYTEDATA_HPP_
+#define __IBYTEDATA_HPP_
 
-#include "IQueryable.hpp"
-#include "IIterator.hpp"
+#include "Types.hpp"
+#include "Output.hpp"
 
 namespace TE {
-  template <typename T, typename Source>
-  class ICollection : public IQueryable<T, Source>, public IIterator<T> {
+  class IByteData {
   public:
-    virtual ~ICollection() {};
+    virtual ~IByteData() {};
 
-    virtual void Add(const T& item) = 0;
-    virtual void Remove(const T& item) = 0;
-    virtual TEuint GetSize() = 0;
-    virtual void Clear() = 0;
+    virtual TEbyte* GetRawByteData() = 0;
+    virtual TEuint GetByteDataSize() = 0;
   };
 }
 
-#endif /* __ICOLLECTION_HPP_ */
+#endif /* __IBYTEDATA_HPP_ */

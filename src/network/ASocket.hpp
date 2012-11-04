@@ -57,9 +57,9 @@ namespace TE {
     virtual SocketFamily GetFamily();
     virtual TEboolean HasErrors();
 
-    virtual tuple<shared_ptr<vector<TEbyte>>, shared_ptr<address_t>> Receive() = 0;
-    virtual TEint Send(const shared_ptr<vector<TEbyte>> pBuffer) = 0;
-    virtual TEint Send(const shared_ptr<vector<TEbyte>> pBuffer, const shared_ptr<address_t> address) = 0;
+    virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> Receive() = 0;
+    virtual TEint Send(const shared_ptr<IByteData> pByteData) = 0;
+    virtual TEint Send(const shared_ptr<IByteData> pByteData, const shared_ptr<address_t> address) = 0;
   };
 }
 

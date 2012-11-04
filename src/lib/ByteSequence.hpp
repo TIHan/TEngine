@@ -25,23 +25,22 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __ICOLLECTION_HPP_
-#define __ICOLLECTION_HPP_
+#ifndef __BYTESEQUENCE_HPP_
+#define __BYTESEQUENCE_HPP_
 
-#include "IQueryable.hpp"
-#include "IIterator.hpp"
+#include "Sequence.hpp"
+#include "IByteData.hpp"
 
 namespace TE {
-  template <typename T, typename Source>
-  class ICollection : public IQueryable<T, Source>, public IIterator<T> {
+  class ByteSequence : public Sequence<TEbyte>, public IByteData {
   public:
-    virtual ~ICollection() {};
+    ByteSequence();
+    explicit ByteSequence(TEuint nAllocateSize);
+    virtual ~ByteSequence();
 
-    virtual void Add(const T& item) = 0;
-    virtual void Remove(const T& item) = 0;
-    virtual TEuint GetSize() = 0;
-    virtual void Clear() = 0;
+    virtual TEbyte* GetRawByteData();
+    virtual TEuint GetByteDataSize();
   };
 }
 
-#endif /* __ICOLLECTION_HPP_ */
+#endif /* __BYTESEQUENCE_HPP_ */

@@ -81,7 +81,10 @@
     <ClInclude Include="lib\ICollection.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include=".\lib\IRawData.hpp">
+    <ClInclude Include=".\lib\ByteSequence.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\IByteData.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
   </ItemGroup>
@@ -102,6 +105,9 @@
       <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="lib\Thread.cpp">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\ByteSequence.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
   </ItemGroup>

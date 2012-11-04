@@ -30,7 +30,7 @@
 namespace TE {
   class PByteStream {
 		public:
-    shared_ptr<vector<TEbyte>> m_pBuffer;
+    shared_ptr<Sequence<TEbyte>> m_pBuffer;
     TEuint m_iRead;
     TEuint m_iWrite;
     TEboolean m_bError;
@@ -43,8 +43,8 @@ namespace TE {
    */
   ByteStream::ByteStream(const TEuint nMaxSize) :
       priv(make_unique<PByteStream>()) {
-    priv->m_pBuffer = make_shared<vector<TEbyte>>();
-    priv->m_pBuffer->reserve(nMaxSize);
+    priv->m_pBuffer = make_shared<Sequence<TEbyte>>();
+    priv->m_pBuffer->SetCapacity(nMaxSize);
     priv->m_bError = false;
     priv->m_iRead = 0;
     priv->m_iWrite = 0;
@@ -70,7 +70,7 @@ namespace TE {
       return 0;
     }
 
-    TEbyte val = priv->m_pBuffer->data()[priv->m_iRead];
+    TEbyte val = priv->m_pBuffer->GetRawData()[priv->m_iRead];
     priv->m_iRead++;
     return val;
   }
@@ -89,14 +89,14 @@ namespace TE {
       return;
     }
 
-    priv->m_pBuffer->insert(priv->m_pBuffer->end(), byte);
+    priv->m_pBuffer->Add(byte);
     priv->m_iWrite++;
   }
 
   /*!
    *
    */
-  shared_ptr<vector<TEbyte>> ByteStream::GetBuffer() {
+  shared_ptr<Sequence<TEbyte>> ByteStream::GetBuffer() {
     if (GetSize() != 0) {
       return priv->m_pBuffer;
     } else {
@@ -108,21 +108,21 @@ namespace TE {
    *
    */
   TEuint ByteStream::GetSize() {
-    return priv->m_pBuffer->size();
+    return priv->m_pBuffer->GetSize();
   }
 
   /*!
    *
    */
   TEuint ByteStream::GetMaxSize() {
-    return priv->m_pBuffer->capacity();
+    return priv->m_pBuffer->GetCapacity();
   }
 
   /*!
    *
    */
   void ByteStream::Clear() {
-    priv->m_pBuffer.get()->clear();
+    priv->m_pBuffer->Clear();
     priv->m_bError = false;
     priv->m_iRead = 0;
     priv->m_iWrite = 0;
@@ -168,9 +168,9 @@ namespace TE {
   /*!
    *
    */
-  void ByteStream::WriteStream(const shared_ptr<vector<TEbyte>> pBuffer) {
-    for (TEuint i = 0; i < pBuffer.get()->size(); i++) {
-      WriteByte(pBuffer.get()->data()[i]);
+  void ByteStream::WriteStream(const shared_ptr<Sequence<TEbyte>> pBuffer) {
+    for (TEuint i = 0; i < pBuffer->GetSize(); i++) {
+      WriteByte(pBuffer.get()->GetRawData()[i]);
     }
   }
 }

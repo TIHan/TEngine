@@ -62,38 +62,37 @@ namespace TE {
   /*!
    *
    */
-  tuple<shared_ptr<vector<TEbyte>>, shared_ptr<address_t>> UdpSocket::Receive() {
+  tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> UdpSocket::Receive() {
     struct sockaddr_storage sock_addr;
     socklen_t addr_len = sizeof(sock_addr);
-    auto pBuffer = make_shared<vector<TEbyte>>(SOCKET_MAX_BUFFER);
+    auto pBuffer = make_shared<ByteSequence>(SOCKET_MAX_BUFFER);
 
-    TEint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer->data(), pBuffer->size(), 0, (sockaddr *)&sock_addr, &addr_len);
+    TEint bytes = recvfrom(priv->m_iSocket, (TEchar *)pBuffer->GetRawData(), pBuffer->GetSize(), 0, (sockaddr *)&sock_addr, &addr_len);
 
     if (bytes != -1) {
-      pBuffer->resize(bytes);
-      pBuffer->shrink_to_fit();
+      pBuffer->ShrinkToSize(bytes);
     } else {
-      pBuffer->clear();
+      pBuffer->Clear();
     }
 
     auto address = make_shared<address_t>(sock_addr, (TEint)addr_len);
-    return tuple<shared_ptr<vector<TEbyte>>, shared_ptr<address_t>>(pBuffer, address);
+    return tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>>(pBuffer, address);
   }
 
   /*!
    *
    */
-  TEint UdpSocket::Send(const shared_ptr<vector<TEbyte>> pBuffer) {
-    TEint bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer->data(), pBuffer->size(), 0, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen);
+  TEint UdpSocket::Send(const shared_ptr<IByteData> pByteData) {
+    TEint bytes = sendto(priv->m_iSocket, (const TEchar *)pByteData->GetRawByteData(), pByteData->GetByteDataSize(), 0, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen);
     return bytes;
   }
 
   /*!
    *
    */
-  TEint UdpSocket::Send(const shared_ptr<vector<TEbyte>> pBuffer,
+  TEint UdpSocket::Send(const shared_ptr<IByteData> pByteData,
       const shared_ptr<address_t> address) {
-    TEint bytes = sendto(priv->m_iSocket, (const TEchar *)pBuffer->data(), pBuffer->size(), 0, (sockaddr *)&address->ssAddress, address->nLength);
+    TEint bytes = sendto(priv->m_iSocket, (const TEchar *)pByteData->GetRawByteData(), pByteData->GetByteDataSize(), 0, (sockaddr *)&address->ssAddress, address->nLength);
     return bytes;
   }
 }

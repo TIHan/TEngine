@@ -25,20 +25,38 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __IRAWDATA_HPP_
-#define __IRAWDATA_HPP_
-
-#include "Types.hpp"
-#include "Output.hpp"
+#include "ByteSequence.hpp"
 
 namespace TE {
-  template <typename T>
-  class IRawData {
-  public:
-    virtual ~IRawData() {};
+  /*!
+   *
+   */
+  ByteSequence::ByteSequence() : Sequence() {
+  }
 
-    virtual T* GetRawData() = 0;
-  };
+  /*!
+   *
+   */
+  ByteSequence::ByteSequence(TEuint nAllocateSize) : Sequence(nAllocateSize) {
+  }
+
+  /*!
+   *
+   */
+  ByteSequence::~ByteSequence() {
+  }
+
+  /*!
+   *
+   */
+  TEbyte* ByteSequence::GetRawByteData() {
+    return GetRawData();
+  }
+
+  /*!
+   *
+   */
+  TEuint ByteSequence::GetByteDataSize() {
+    return GetSize();
+  }
 }
-
-#endif /* __IRAWDATA_HPP_ */

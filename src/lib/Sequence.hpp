@@ -29,36 +29,42 @@
 #define __SEQUENCE_HPP_
 
 #include "ICollection.hpp"
-#include "IRawData.hpp"
 
 namespace TE {
-  template <class T>
-  class ISequence : public ICollection<T, ISequence<T>>, public IRawData<T> {
+  template <typename T>
+  class ISequence : public ICollection<T, ISequence<T>> {
   public:
     virtual ~ISequence() {};
   };
 
-  template <class T>
+  template <typename T>
   class Sequence : public ISequence<T> {
   protected:
     unique_ptr<vector<T>> m_pVector;
 
   public:
     Sequence();
+    explicit Sequence(TEuint nAllocateSize);
     virtual ~Sequence(); 
 
     virtual void Add(const T& item);
     virtual void Remove(const T& item);
+    virtual TEuint GetSize();
+    virtual void Clear();
 
     virtual shared_ptr<ISequence<T>> Where(function<bool(T)> func);
 
+    virtual void SetCapacity(TEuint nAmount);
+    virtual TEuint GetCapacity();
+    virtual void Resize(TEuint nSize);
+    virtual void ShrinkToSize(TEuint nSize);
     virtual T* GetRawData();
   };
 
   /*!
    *
    */
-  template <class T>
+  template <typename T>
   Sequence<T>::Sequence() :
       m_pVector(make_unique<vector<T>>()) {
   }
@@ -66,14 +72,22 @@ namespace TE {
   /*!
    *
    */
-  template <class T>
+  template <typename T>
+  Sequence<T>::Sequence(TEuint nAllocateSize) :
+      m_pVector(make_unique<vector<T>>(nAllocateSize)) {
+  }
+
+  /*!
+   *
+   */
+  template <typename T>
   Sequence<T>::~Sequence() {
   }
 
   /*!
    *
    */
-  template <class T>
+  template <typename T>
   void Sequence<T>::Add(const T& item) {
     m_pVector->push_back(item);
   }
@@ -81,7 +95,7 @@ namespace TE {
   /*!
    *
    */
-  template <class T>
+  template <typename T>
   void Sequence<T>::Remove(const T& item) {
     for (auto i = m_pVector->begin(); i != m_pVector->end(); i++) {
       if (*i == item) {
@@ -94,7 +108,23 @@ namespace TE {
   /*!
    *
    */
-  template <class T>
+  template <typename T>
+  TEuint Sequence<T>::GetSize() {
+    return m_pVector->size();
+  }
+
+  /*!
+   *
+   */
+  template <typename T>
+  void Sequence<T>::Clear() {
+    return m_pVector->clear();
+  }
+
+  /*!
+   *
+   */
+  template <typename T>
   shared_ptr<ISequence<T>> Sequence<T>::Where(function<bool(T)> func) {
     auto seq = make_shared<Sequence<T>>();
     for_each(m_pVector->begin(), m_pVector->end(), [&seq, &func] (T item) {
@@ -108,13 +138,42 @@ namespace TE {
   /*!
    *
    */
-  template <class T>
+  template <typename T>
+  void Sequence<T>::SetCapacity(TEuint nAmount) {
+    m_pVector->reserve(nAmount);
+  }
+
+  /*!
+   *
+   */
+  template <typename T>
+  TEuint Sequence<T>::GetCapacity() {
+    return m_pVector->capacity();
+  }
+
+  /*!
+   *
+   */
+  template <typename T>
+  void Sequence<T>::Resize(TEuint nSize) {
+    m_pVector->resize(nSize);
+  }
+
+  /*!
+   *
+   */
+  template <typename T>
+  void Sequence<T>::ShrinkToSize(TEuint nSize) {
+    m_pVector->resize(nSize);
+    m_pVector->shrink_to_fit();
+  }
+
+  /*!
+   *
+   */
+  template <typename T>
   T* Sequence<T>::GetRawData() {
-    if (m_pVector->size() != 0) {
-      return m_pVector->data();
-    } else {
-      return nullptr;
-    }
+    return m_pVector->data();
   }
 }
 
