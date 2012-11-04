@@ -30,11 +30,11 @@
 
 #include "Types.hpp"
 #include "Output.hpp"
-#include "Sequence.hpp"
+#include "ByteSequence.hpp"
 
 namespace TE {
   class PByteStream;
-  class ByteStream {
+  class ByteStream : public IByteData {
     unique_ptr<PByteStream> priv;
 
   protected:
@@ -45,15 +45,17 @@ namespace TE {
     explicit ByteStream(const TEuint nMaxSize);
     virtual ~ByteStream();
 
-    shared_ptr<Sequence<TEbyte>> GetBuffer();
     TEuint GetSize();
     TEuint GetMaxSize();
     void Clear();
     TEboolean HasErrors();
 
+    virtual TEbyte* GetRawByteData();
+    virtual TEuint GetByteDataSize();
+
     string ReadString();
     void WriteString(const string sz);
-    void WriteStream(const shared_ptr<Sequence<TEbyte>> pBuffer);
+    void WriteStream(const shared_ptr<ByteSequence> pBuffer);
 
     template <typename T>
     T Read();

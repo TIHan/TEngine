@@ -30,7 +30,7 @@
 namespace TE {
   class PByteStream {
 		public:
-    shared_ptr<Sequence<TEbyte>> m_pBuffer;
+    shared_ptr<ByteSequence> m_pBuffer;
     TEuint m_iRead;
     TEuint m_iWrite;
     TEboolean m_bError;
@@ -43,7 +43,7 @@ namespace TE {
    */
   ByteStream::ByteStream(const TEuint nMaxSize) :
       priv(make_unique<PByteStream>()) {
-    priv->m_pBuffer = make_shared<Sequence<TEbyte>>();
+    priv->m_pBuffer = make_shared<ByteSequence>();
     priv->m_pBuffer->SetCapacity(nMaxSize);
     priv->m_bError = false;
     priv->m_iRead = 0;
@@ -96,17 +96,6 @@ namespace TE {
   /*!
    *
    */
-  shared_ptr<Sequence<TEbyte>> ByteStream::GetBuffer() {
-    if (GetSize() != 0) {
-      return priv->m_pBuffer;
-    } else {
-      return nullptr;
-    }
-  }
-
-  /*!
-   *
-   */
   TEuint ByteStream::GetSize() {
     return priv->m_pBuffer->GetSize();
   }
@@ -133,6 +122,20 @@ namespace TE {
    */
   TEboolean ByteStream::HasErrors() {
     return priv->m_bError;
+  }
+
+  /*!
+   *
+   */
+  TEbyte* ByteStream::GetRawByteData() {
+    return priv->m_pBuffer->GetRawByteData();
+  }
+
+  /*!
+   *
+   */
+  TEuint ByteStream::GetByteDataSize() {
+    return priv->m_pBuffer->GetByteDataSize();
   }
 
   /*!
@@ -168,7 +171,7 @@ namespace TE {
   /*!
    *
    */
-  void ByteStream::WriteStream(const shared_ptr<Sequence<TEbyte>> pBuffer) {
+  void ByteStream::WriteStream(const shared_ptr<ByteSequence> pBuffer) {
     for (TEuint i = 0; i < pBuffer->GetSize(); i++) {
       WriteByte(pBuffer.get()->GetRawData()[i]);
     }
