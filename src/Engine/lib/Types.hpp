@@ -28,10 +28,7 @@
 #ifndef __TYPES_HPP_
 #define __TYPES_HPP_
 
-#ifdef __GNUC__
-  #include <stdint.h>
-#endif
-
+#include <cstdint>
 #include <string>
 #include <iostream>
 #include <memory>
@@ -59,7 +56,6 @@ std::unique_ptr<T> make_unique(U&& u)
 
 namespace TE {
   using namespace std;
-#ifdef __GNUC__
   typedef char TEchar;
   typedef int8_t TEint8;
   typedef uint8_t TEbyte;
@@ -69,17 +65,6 @@ namespace TE {
   typedef uint32_t TEuint;
   typedef int64_t TEint64;
   typedef uint64_t TEuint64;
-#elif _MSC_VER
-  typedef char TEchar;
-  typedef signed __int8 TEint8;
-  typedef unsigned __int8 TEbyte;
-  typedef signed __int16 TEshort;
-  typedef unsigned __int16 TEushort;
-  typedef signed __int32 TEint;
-  typedef unsigned __int32 TEuint;
-  typedef signed __int64 TEint64;
-  typedef unsigned __int64 TEuint64;
-#endif
   
   typedef float TEfloat;
   typedef double TEdouble;
