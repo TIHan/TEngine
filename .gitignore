@@ -29,3 +29,8 @@ te-test
 
 # Resharper
 _ReSharper*
+
+# Upgrade Reports
+_UpgradeReport_Files/
+UpgradeLog.XML
+UpgradeLog.htm
