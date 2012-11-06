@@ -1,11 +1,15 @@
-CXX		= g++
-CXXFLAGS	= -Wall -pedantic-errors -g -Wno-variadic-macros -std=c++0x -O2 -pthread
-SOURCES		= src/test.cpp src/network/ASocket.cpp src/network/UdpSocket.cpp src/lib/ByteStream.cpp src/lib/System.cpp src/lib/Thread.cpp src/lib/ByteSequence.cpp
+CXX			= g++
+CXXFLAGS	= -Wall -pedantic-errors -Wno-variadic-macros -std=c++0x -pthread
+SOURCES		= $(wildcard src/*.cpp) $(wildcard src/lib/*.cpp) $(wildcard src/network/*.cpp)
 OBJECTS		= $(SOURCES:%.cpp=%.o)
 INCLUDES	= -Isrc/lib/include -Isrc/network/include
 EXECUTABLE	= te-test
 
-all: $(SOURCES) $(EXECUTABLE)
+release: CXXFLAGS += -O2
+release: $(SOURCES) $(EXECUTABLE)
+
+debug: CXXFLAGS += -DDEBUG -g3
+debug: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CXX) -o $@ $(OBJECTS) $(CXXFLAGS)

@@ -34,3 +34,6 @@ _ReSharper*
 _UpgradeReport_Files/
 UpgradeLog.XML
 UpgradeLog.htm
+
+# Text Editor
+\#*#
