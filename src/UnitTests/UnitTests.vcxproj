@@ -11,23 +11,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}</ProjectGuid>
-    <RootNamespace>Engine</RootNamespace>
-    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and $(VisualStudioVersion) == ''">$(VCTargetsPath11)</VCTargetsPath>
+    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and '$(VisualStudioVersion)' == ''">$(VCTargetsPath11)</VCTargetsPath>
+  </PropertyGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{57B73558-3E3C-46C9-8C9C-7553AEAC07B7}</ProjectGuid>
+    <RootNamespace>UnitTests</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -44,11 +46,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src\lib\include;$(SolutionDir)\src\network\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gtest-1.6.0;$(SolutionDir)\lib\gtest-1.6.0\include;$(SolutionDir)\src\lib\include;$(SolutionDir)\src\network\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GoogleTest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -57,42 +62,29 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\src\lib\include;$(SolutionDir)\src\network\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gtest-1.6.0;$(SolutionDir)\lib\gtest-1.6.0\include;$(SolutionDir)\src\lib\include;$(SolutionDir)\src\network\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GoogleTest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="lib\Array.hpp" />
-    <ClInclude Include=".\lib\ByteSequence.hpp" />
-    <ClInclude Include="lib\ByteStream.hpp" />
-    <ClInclude Include="lib\IByteData.hpp" />
-    <ClInclude Include="lib\ICollection.hpp" />
-    <ClInclude Include="lib\IIterator.hpp" />
-    <ClInclude Include="lib\include\TELib.hpp" />
-    <ClInclude Include="lib\IQueryable.hpp" />
-    <ClInclude Include="lib\List.hpp" />
-    <ClInclude Include="lib\Output.hpp" />
-    <ClInclude Include="lib\Sequence.hpp" />
-    <ClInclude Include="lib\System.hpp" />
-    <ClInclude Include="lib\Thread.hpp" />
-    <ClInclude Include="lib\Types.hpp" />
-    <ClInclude Include="network\include\Network.hpp" />
-    <ClInclude Include=".\network\ASocket.hpp" />
-    <ClInclude Include="network\PASocket.hpp" />
-    <ClInclude Include="network\UdpSocket.hpp" />
+    <ClCompile Include="ListTest.cpp" />
+    <ClCompile Include="MainTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lib\ByteSequence.cpp" />
-    <ClCompile Include="lib\ByteStream.cpp" />
-    <ClCompile Include="lib\System.cpp" />
-    <ClCompile Include=".\network\ASocket.cpp" />
-    <ClCompile Include="lib\Thread.cpp" />
-    <ClCompile Include="network\UdpSocket.cpp" />
+    <ProjectReference Include="..\Engine.vcxproj">
+      <Project>{f797aaa5-5886-49d9-affe-a23c77ebaa43}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\GoogleTest\GoogleTest.vcxproj">
+      <Project>{a9248db5-0186-40a9-8b55-fc2b42b13d0f}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

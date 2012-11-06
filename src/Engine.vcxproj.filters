@@ -92,9 +92,6 @@
     <ClCompile Include="lib\ByteStream.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="lib\System.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>

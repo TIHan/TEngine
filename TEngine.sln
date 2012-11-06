@@ -3,12 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "src\Engine.vcxproj", "{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GoogleTest", "src\GoogleTest\GoogleTest.vcxproj", "{A9248DB5-0186-40A9-8B55-FC2B42B13D0F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTests", "src\UnitTests\UnitTests.vcxproj", "{57B73558-3E3C-46C9-8C9C-7553AEAC07B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57B73558-3E3C-46C9-8C9C-7553AEAC07B7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{57B73558-3E3C-46C9-8C9C-7553AEAC07B7}.Debug|Win32.Build.0 = Debug|Win32
+		{57B73558-3E3C-46C9-8C9C-7553AEAC07B7}.Release|Win32.ActiveCfg = Release|Win32
+		{57B73558-3E3C-46C9-8C9C-7553AEAC07B7}.Release|Win32.Build.0 = Release|Win32
+		{A9248DB5-0186-40A9-8B55-FC2B42B13D0F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A9248DB5-0186-40A9-8B55-FC2B42B13D0F}.Debug|Win32.Build.0 = Debug|Win32
+		{A9248DB5-0186-40A9-8B55-FC2B42B13D0F}.Release|Win32.ActiveCfg = Release|Win32
+		{A9248DB5-0186-40A9-8B55-FC2B42B13D0F}.Release|Win32.Build.0 = Release|Win32
 		{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}.Debug|Win32.ActiveCfg = Debug|Win32
 		{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}.Debug|Win32.Build.0 = Debug|Win32
 		{F797AAA5-5886-49D9-AFFE-A23C77EBAA43}.Release|Win32.ActiveCfg = Release|Win32
