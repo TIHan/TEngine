@@ -31,25 +31,25 @@
 /*!
  *
  */
-static TE::TEint CreateSocket(TE::TEint domain,
-    TE::TEint type,
-    TE::TEint protocol) {
+static TE::TEint CreateSocket(const TE::TEint domain,
+    const TE::TEint type,
+    const TE::TEint protocol) {
   return (TE::TEint)socket(domain, type, protocol);
 }
 
 /*!
  *
  */
-static TE::TEint BindSocket(TE::TEint sockfd,
+static TE::TEint BindSocket(const TE::TEint sockfd,
     struct sockaddr *my_addr,
-    TE::TEint addrlen) {
+    const TE::TEint addrlen) {
   return bind(sockfd, my_addr, addrlen);
 }
 
 /*!
  *
  */
-static TE::TEint CloseSocket(TE::TEint sockfd) {
+static TE::TEint CloseSocket(const TE::TEint sockfd) {
 #ifdef __GNUC__
     return close(sockfd);
 #elif _MSC_VER
@@ -60,16 +60,16 @@ static TE::TEint CloseSocket(TE::TEint sockfd) {
 /*!
  *
  */
-static std::string GetSocketAddress(const struct sockaddr_storage& pAddr) {
-    if (&pAddr) {
+static std::string GetSocketAddress(const struct sockaddr_storage* pAddr) {
+    if (pAddr) {
       std::string address(INET6_ADDRSTRLEN, '\0');
 
-      switch (pAddr.ss_family) {
+      switch (pAddr->ss_family) {
       case AF_INET6:
-        inet_ntop(pAddr.ss_family, &(((struct sockaddr_in6 *)&pAddr)->sin6_addr), (TE::TEchar *)address.data(), INET6_ADDRSTRLEN);
+        inet_ntop(pAddr->ss_family, &(((struct sockaddr_in6*)pAddr)->sin6_addr), (TE::TEchar*)address.data(), INET6_ADDRSTRLEN);
         break;
       default:
-        inet_ntop(pAddr.ss_family, &(((struct sockaddr_in *)&pAddr)->sin_addr), (TE::TEchar *)address.data(), INET_ADDRSTRLEN);
+        inet_ntop(pAddr->ss_family, &(((struct sockaddr_in*)pAddr)->sin_addr), (TE::TEchar*)address.data(), INET_ADDRSTRLEN);
         break;
       }
       return address;
@@ -80,8 +80,8 @@ static std::string GetSocketAddress(const struct sockaddr_storage& pAddr) {
 
 namespace TE {
   namespace Socket {
-    string GetAddress(const address_t& address) {
-      return GetSocketAddress(address.ssAddress);
+    string GetAddress(address_t* address) {
+      return GetSocketAddress(&address->ssAddress);
     }
   }
   /*!
@@ -114,7 +114,7 @@ namespace TE {
 
     // [WS] If the node name is empty, only pass 0 to getaddrinfo.
     if (!szNodeName.empty()) {
-      nodeName = (TEchar *)szNodeName.c_str();
+      nodeName = (TEchar*)szNodeName.c_str();
     }
 
     if (getaddrinfo(nodeName, szServiceName.c_str(), &hints, &m_pAddressInfo) != 0) {
@@ -206,7 +206,7 @@ namespace TE {
    *
    */
   string ASocket::GetAddress() {
-    return GetSocketAddress(*(struct sockaddr_storage *)priv->m_pAddressInfo->ai_addr);
+    return GetSocketAddress((struct sockaddr_storage*)priv->m_pAddressInfo->ai_addr);
   }
 
   /*!

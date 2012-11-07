@@ -63,8 +63,8 @@ namespace TE {
 
   public:
     TEint m_iSocket;
-    struct addrinfo *m_pAddressInfo;
-    struct addrinfo *m_pAddress;
+    struct addrinfo* m_pAddressInfo;
+    struct addrinfo* m_pAddress;
     TEbyte m_bFamily;
     TEboolean m_bError;
 

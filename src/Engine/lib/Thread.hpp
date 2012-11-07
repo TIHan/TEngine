@@ -36,7 +36,7 @@ namespace TE {
     shared_ptr<thread> m_pThread;
 
   public:
-    explicit Thread(function<void()> func);
+    explicit Thread(const function<void()> func);
     virtual ~Thread();
 
     void Join();

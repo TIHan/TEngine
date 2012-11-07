@@ -127,7 +127,7 @@ namespace TE {
   /*!
    *
    */
-  TEbyte* ByteStream::GetRawByteData() {
+  const TEbyte* ByteStream::GetRawByteData() {
     return priv->m_pBuffer->GetRawByteData();
   }
 

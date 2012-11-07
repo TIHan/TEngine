@@ -1,5 +1,6 @@
 #include <TELib.hpp>
 #include <Network.hpp>
+#include "../Engine/network/UdpSocket.hpp"
 #include <gtest/gtest.h>
 
 using namespace TE;
@@ -8,6 +9,7 @@ using namespace TE;
 class ListTest : public ::testing::Test {
 protected:
   List<TEint> l1_;
+  List<shared_ptr<UdpSocket>> l2_;
 };
 
 TEST_F(ListTest, IsEmptyInitially) {
@@ -31,6 +33,10 @@ TEST_F(ListTest, ModifyingWorks) {
   l1_.Remove(6);
   l1_.Remove(7);
   EXPECT_EQ(0, l1_.GetSize());
+
+  l2_.Add(make_shared<UdpSocket>(SOCKET_IPV4));
+  l2_.Add(make_shared<UdpSocket>(SOCKET_IPV6));
+  EXPECT_EQ(2, l2_.GetSize());
 }
 
 TEST_F(ListTest, QueryingWorks) {

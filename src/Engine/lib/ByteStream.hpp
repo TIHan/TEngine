@@ -50,7 +50,7 @@ namespace TE {
     void Clear();
     TEboolean HasErrors();
 
-    virtual TEbyte* GetRawByteData();
+    virtual const TEbyte* GetRawByteData();
     virtual TEint GetByteDataSize();
 
     string ReadString();
