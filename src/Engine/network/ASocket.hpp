@@ -42,8 +42,23 @@ namespace TE {
   };
 
   typedef struct address_s address_t;
+
+  class ISocket {
+  public:
+    virtual ~ISocket() {};
+
+    virtual TEint Bind(const TEushort usPort) = 0;
+    virtual string GetAddres() = 0;
+    virtual SocketFamily GetFamily() = 0;
+    virtual TEboolean HasErrors() = 0;
+
+    virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> Receive() = 0;
+    virtual TEint Send(const shared_ptr<IByteData> pByteData) = 0;
+    virtual TEint Send(const shared_ptr<IByteData> pByteData, const shared_ptr<address_t> address) = 0;
+  };
+
   class PASocket;
-  class ASocket {
+  class ASocket : public ISocket {
   protected:
     unique_ptr<PASocket> priv;
 
@@ -56,10 +71,6 @@ namespace TE {
     virtual string GetAddress();
     virtual SocketFamily GetFamily();
     virtual TEboolean HasErrors();
-
-    virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> Receive() = 0;
-    virtual TEint Send(const shared_ptr<IByteData> pByteData) = 0;
-    virtual TEint Send(const shared_ptr<IByteData> pByteData, const shared_ptr<address_t> address) = 0;
   };
 }
 
