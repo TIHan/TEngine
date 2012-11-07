@@ -43,6 +43,10 @@ namespace TE {
 
   typedef struct address_s address_t;
 
+  namespace Socket {
+    string GetAddress(shared_ptr<address_t> address);
+  }
+
   class ISocket {
   public:
     virtual ~ISocket() {};

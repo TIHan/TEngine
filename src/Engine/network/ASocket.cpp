@@ -72,7 +72,7 @@ static std::string GetSocketAddress(const struct sockaddr_storage* pAddr) {
         inet_ntop(pAddr->ss_family, &(((struct sockaddr_in*)pAddr)->sin_addr), (TE::TEchar*)address.data(), INET_ADDRSTRLEN);
         break;
       }
-      return address;
+      return address.data();
     } else {
       return TE::String::Empty();
     }
@@ -80,7 +80,7 @@ static std::string GetSocketAddress(const struct sockaddr_storage* pAddr) {
 
 namespace TE {
   namespace Socket {
-    string GetAddress(address_t* address) {
+    string GetAddress(shared_ptr<address_t> address) {
       return GetSocketAddress(&address->ssAddress);
     }
   }

@@ -10,18 +10,33 @@ class SocketTest : public ::testing::Test {
 };
 
 TEST_F(SocketTest, SendAndReceive) {
-  auto s2 = make_shared<UdpSocket>(SOCKET_IPV4);
-  s2->Bind(1337);
+  auto server = make_shared<UdpSocket>(SOCKET_IPV4);
+  EXPECT_EQ(false, server->HasErrors());
+  server->Bind(1337);
 
-  auto s1 = make_shared<UdpSocket>(SOCKET_IPV4, "127.0.0.1", "1337");
-  auto byteS = make_shared<ByteStream>(512);
-  byteS->WriteString("Hello");
-  TEint results = s1->Send(byteS);
+  auto client = make_shared<UdpSocket>(SOCKET_IPV4, "127.0.0.1", "1337");
+  EXPECT_EQ(false, client->HasErrors());
+  auto clientStream = make_shared<ByteStream>(512);
+  clientStream->WriteString("Hello");
+  client->Send(clientStream);
 
-  auto tupleReceive = s2->ReceiveFrom();
-  auto sequence = get<0>(tupleReceive);
-  auto byteS2 = make_shared<ByteStream>(512, sequence);
+  auto tupleReceive = server->ReceiveFrom();
+  auto receiveSequence = get<0>(tupleReceive);
+  auto address = get<1>(tupleReceive);
+  auto serverStream = make_shared<ByteStream>(512, receiveSequence);
 
-  EXPECT_EQ("Hello", byteS2->ReadString());
+  EXPECT_EQ("127.0.0.1", Socket::GetAddress(address));
+  EXPECT_EQ("Hello", serverStream->ReadString());
+
+  server->SendTo(serverStream, address);
+
+  auto clientTupleReceive = client->ReceiveFrom();
+  auto clientReceive = get<0>(clientTupleReceive);
+  auto serverAddress = get<1>(clientTupleReceive);
+  auto clientReceiveStream = make_shared<ByteStream>(512, clientReceive);
+
+  EXPECT_EQ("127.0.0.1", Socket::GetAddress(serverAddress));
+  EXPECT_EQ("Hello", clientReceiveStream->ReadString());
+
 }
 
