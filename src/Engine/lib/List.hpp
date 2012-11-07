@@ -48,12 +48,12 @@ namespace TE {
 
     virtual void Add(const T& item);
     virtual void Remove(const T& item);
-    virtual TEuint GetSize();
+    virtual TEint GetSize();
     virtual void Clear();
 
     virtual shared_ptr<IList<T>> Where(function<bool(T)> func);
 
-    virtual void Resize(TEuint nSize);
+    virtual void Resize(TEint nSize);
   };
 
   /*!
@@ -96,7 +96,7 @@ namespace TE {
    *
    */
   template <typename T>
-  TEuint List<T>::GetSize() {
+  TEint List<T>::GetSize() {
     return m_pList->size();
   }
 
@@ -126,7 +126,7 @@ namespace TE {
    *
    */
   template <typename T>
-  void List<T>::Resize(TEuint nSize) {
+  void List<T>::Resize(TEint nSize) {
     m_pList->resize(nSize);
   }
 }

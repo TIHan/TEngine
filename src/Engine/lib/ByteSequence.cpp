@@ -37,7 +37,7 @@ namespace TE {
   /*!
    *
    */
-  ByteSequence::ByteSequence(TEuint nAllocateSize) : Sequence(nAllocateSize) {
+  ByteSequence::ByteSequence(TEint nAllocateSize) : Sequence(nAllocateSize) {
   }
 
   /*!
@@ -56,7 +56,7 @@ namespace TE {
   /*!
    *
    */
-  TEuint ByteSequence::GetByteDataSize() {
+  TEint ByteSequence::GetByteDataSize() {
     return GetSize();
   }
 }

@@ -44,20 +44,20 @@ namespace TE {
 
   public:
     Sequence();
-    explicit Sequence(TEuint nAllocateSize);
+    explicit Sequence(TEint nAllocateSize);
     virtual ~Sequence(); 
 
     virtual void Add(const T& item);
     virtual void Remove(const T& item);
-    virtual TEuint GetSize();
+    virtual TEint GetSize();
     virtual void Clear();
 
     virtual shared_ptr<ISequence<T>> Where(function<bool(T)> func);
 
-    virtual void SetCapacity(TEuint nAmount);
-    virtual TEuint GetCapacity();
-    virtual void Resize(TEuint nSize);
-    virtual void ShrinkToSize(TEuint nSize);
+    virtual void SetCapacity(TEint nAmount);
+    virtual TEint GetCapacity();
+    virtual void Resize(TEint nSize);
+    virtual void ShrinkToSize(TEint nSize);
     virtual T* GetRawData();
   };
 
@@ -73,7 +73,7 @@ namespace TE {
    *
    */
   template <typename T>
-  Sequence<T>::Sequence(TEuint nAllocateSize) :
+  Sequence<T>::Sequence(TEint nAllocateSize) :
       m_pVector(make_unique<vector<T>>(nAllocateSize)) {
   }
 
@@ -109,7 +109,7 @@ namespace TE {
    *
    */
   template <typename T>
-  TEuint Sequence<T>::GetSize() {
+  TEint Sequence<T>::GetSize() {
     return m_pVector->size();
   }
 
@@ -139,7 +139,7 @@ namespace TE {
    *
    */
   template <typename T>
-  void Sequence<T>::SetCapacity(TEuint nAmount) {
+  void Sequence<T>::SetCapacity(TEint nAmount) {
     m_pVector->reserve(nAmount);
   }
 
@@ -147,7 +147,7 @@ namespace TE {
    *
    */
   template <typename T>
-  TEuint Sequence<T>::GetCapacity() {
+  TEint Sequence<T>::GetCapacity() {
     return m_pVector->capacity();
   }
 
@@ -155,7 +155,7 @@ namespace TE {
    *
    */
   template <typename T>
-  void Sequence<T>::Resize(TEuint nSize) {
+  void Sequence<T>::Resize(TEint nSize) {
     m_pVector->resize(nSize);
   }
 
@@ -163,7 +163,7 @@ namespace TE {
    *
    */
   template <typename T>
-  void Sequence<T>::ShrinkToSize(TEuint nSize) {
+  void Sequence<T>::ShrinkToSize(TEint nSize) {
     m_pVector->resize(nSize);
     m_pVector->shrink_to_fit();
   }

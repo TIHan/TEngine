@@ -35,11 +35,11 @@ namespace TE {
   class ByteSequence : public Sequence<TEbyte>, public IByteData {
   public:
     ByteSequence();
-    explicit ByteSequence(TEuint nAllocateSize);
+    explicit ByteSequence(TEint nAllocateSize);
     virtual ~ByteSequence();
 
     virtual TEbyte* GetRawByteData();
-    virtual TEuint GetByteDataSize();
+    virtual TEint GetByteDataSize();
   };
 }
 

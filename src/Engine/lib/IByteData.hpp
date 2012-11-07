@@ -37,7 +37,7 @@ namespace TE {
     virtual ~IByteData() {};
 
     virtual TEbyte* GetRawByteData() = 0;
-    virtual TEuint GetByteDataSize() = 0;
+    virtual TEint GetByteDataSize() = 0;
   };
 }
 
