@@ -49,7 +49,7 @@
 
 namespace TE {
   struct address_s {
-    address_s(sockaddr_storage ss, TEint n) {
+    address_s(struct sockaddr_storage ss, TEint n) {
       ssAddress = ss;
       nLength = n;
     }

@@ -77,8 +77,12 @@
   <ItemGroup>
     <ClCompile Include="ListTest.cpp" />
     <ClCompile Include="MainTest.cpp" />
+    <ClCompile Include="SocketTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.vcxproj">
+      <Project>{f797aaa5-5886-49d9-affe-a23c77ebaa43}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\GoogleTest\GoogleTest.vcxproj">
       <Project>{a9248db5-0186-40a9-8b55-fc2b42b13d0f}</Project>
     </ProjectReference>

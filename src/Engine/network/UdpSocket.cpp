@@ -62,7 +62,7 @@ namespace TE {
   /*!
    *
    */
-  tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> UdpSocket::Receive() {
+  tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> UdpSocket::ReceiveFrom() {
     struct sockaddr_storage sock_addr;
     socklen_t addr_len = sizeof(sock_addr);
     auto pBuffer = make_shared<ByteSequence>(SOCKET_MAX_BUFFER);
@@ -90,7 +90,7 @@ namespace TE {
   /*!
    *
    */
-  TEint UdpSocket::Send(const shared_ptr<IByteData> pByteData,
+  TEint UdpSocket::SendTo(const shared_ptr<IByteData> pByteData,
       const shared_ptr<address_t> address) {
     TEint bytes = sendto(priv->m_iSocket, (const TEchar *)pByteData->GetRawByteData(), pByteData->GetByteDataSize(), 0, (sockaddr *)&address->ssAddress, address->nLength);
     return bytes;

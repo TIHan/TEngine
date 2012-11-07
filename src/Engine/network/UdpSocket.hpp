@@ -34,17 +34,31 @@
   #include <TELib.hpp>
 #endif
 
+// Microsoft gives a warning about virtual inheritance. Turn it off.
+#ifdef _MSC_VER
+  #pragma warning( disable : 4250 ) // C4250 - 'class1' : inherits 'class2::member' via dominance
+#endif
+
 namespace TE {
-  class UdpSocket : public ASocket {
+  class IUdpSocket : public virtual ISocket {
+  public:
+    virtual ~IUdpSocket() {};
+
+    virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> ReceiveFrom() = 0;
+    virtual TEint Send(const shared_ptr<IByteData> pByteData) = 0;
+    virtual TEint SendTo(const shared_ptr<IByteData> pByteData, const shared_ptr<address_t> address) = 0;
+  };
+
+  class UdpSocket : public ASocket, public IUdpSocket {
   public:
     explicit UdpSocket(const SocketFamily family);
     explicit UdpSocket(const SocketFamily family, const string szAddress, const string szPort);
     explicit UdpSocket(const string szAddress, const string szPort);
     virtual ~UdpSocket();
 
-    virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> Receive();
+    virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> ReceiveFrom();
     virtual TEint Send(const shared_ptr<IByteData> pByteData);
-    virtual TEint Send(const shared_ptr<IByteData> pByteData, const shared_ptr<address_t> address);
+    virtual TEint SendTo(const shared_ptr<IByteData> pByteData, const shared_ptr<address_t> address);
   };
 }
 

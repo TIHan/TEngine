@@ -48,21 +48,17 @@ namespace TE {
     virtual ~ISocket() {};
 
     virtual TEint Bind(const TEushort usPort) = 0;
-    virtual string GetAddres() = 0;
+    virtual string GetAddress() = 0;
     virtual SocketFamily GetFamily() = 0;
     virtual TEboolean HasErrors() = 0;
-
-    virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> Receive() = 0;
-    virtual TEint Send(const shared_ptr<IByteData> pByteData) = 0;
-    virtual TEint Send(const shared_ptr<IByteData> pByteData, const shared_ptr<address_t> address) = 0;
   };
 
   class PASocket;
-  class ASocket : public ISocket {
+  class ASocket : public virtual ISocket {
   protected:
     unique_ptr<PASocket> priv;
 
-    ASocket();
+    ASocket(); // Abstract class
 
   public:
     virtual ~ASocket();

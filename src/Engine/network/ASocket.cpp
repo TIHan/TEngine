@@ -57,7 +57,33 @@ static TE::TEint CloseSocket(TE::TEint sockfd) {
 #endif
 }
 
+/*!
+ *
+ */
+static std::string GetSocketAddress(const struct sockaddr_storage& pAddr) {
+    if (&pAddr) {
+      std::string address(INET6_ADDRSTRLEN, '\0');
+
+      switch (pAddr.ss_family) {
+      case AF_INET6:
+        inet_ntop(pAddr.ss_family, &(((struct sockaddr_in6 *)&pAddr)->sin6_addr), (TE::TEchar *)address.data(), INET6_ADDRSTRLEN);
+        break;
+      default:
+        inet_ntop(pAddr.ss_family, &(((struct sockaddr_in *)&pAddr)->sin_addr), (TE::TEchar *)address.data(), INET_ADDRSTRLEN);
+        break;
+      }
+      return address;
+    } else {
+      return TE::String::Empty();
+    }
+}
+
 namespace TE {
+  namespace Socket {
+    string GetAddress(const address_t& address) {
+      return GetSocketAddress(address.ssAddress);
+    }
+  }
   /*!
    *
    */
@@ -180,22 +206,7 @@ namespace TE {
    *
    */
   string ASocket::GetAddress() {
-    if (priv->m_pAddress) {
-      TEchar *address = new TEchar[INET6_ADDRSTRLEN];
-      string s;
-
-      switch (priv->m_bFamily) {
-      case AF_INET6:
-        inet_ntop(priv->m_bFamily, &(((struct sockaddr_in6 *)priv->m_pAddress->ai_addr)->sin6_addr), address, INET6_ADDRSTRLEN);
-        break;
-      default:
-        inet_ntop(priv->m_bFamily, &(((struct sockaddr_in *)priv->m_pAddress->ai_addr)->sin_addr), address, INET_ADDRSTRLEN);
-        break;
-      }
-      return s.assign (address);
-    } else {
-      return String::Empty();
-    }
+    return GetSocketAddress(*(struct sockaddr_storage *)priv->m_pAddressInfo->ai_addr);
   }
 
   /*!
