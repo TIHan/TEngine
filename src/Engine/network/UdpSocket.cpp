@@ -82,7 +82,7 @@ namespace TE {
   /*!
    *
    */
-  TEint UdpSocket::Send(const shared_ptr<IByteData> pByteData) {
+  TEint UdpSocket::Send(const shared_ptr<const IByteData>& pByteData) {
     TEint bytes = sendto(priv->m_iSocket, (const TEchar *)pByteData->GetRawByteData(), pByteData->GetByteDataSize(), 0, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen);
     return bytes;
   }
@@ -90,7 +90,7 @@ namespace TE {
   /*!
    *
    */
-  TEint UdpSocket::SendTo(const shared_ptr<IByteData> pByteData,
+  TEint UdpSocket::SendTo(const shared_ptr<const IByteData>& pByteData,
       const shared_ptr<address_t> address) {
     TEint bytes = sendto(priv->m_iSocket, (const TEchar *)pByteData->GetRawByteData(), pByteData->GetByteDataSize(), 0, (sockaddr *)&address->ssAddress, address->nLength);
     return bytes;

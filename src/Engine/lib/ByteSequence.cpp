@@ -49,14 +49,14 @@ namespace TE {
   /*!
    *
    */
-  const TEbyte* ByteSequence::GetRawByteData() {
+  const TEbyte* ByteSequence::GetRawByteData() const {
     return GetRawData();
   }
 
   /*!
    *
    */
-  TEint ByteSequence::GetByteDataSize() {
+  TEint ByteSequence::GetByteDataSize() const {
     return GetSize();
   }
 }

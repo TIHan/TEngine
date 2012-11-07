@@ -53,6 +53,17 @@ namespace TE {
   /*!
    *
    */
+  ByteStream::ByteStream(const TEint nMaxSize, shared_ptr<ByteSequence> pByteSequence) :
+      priv(make_unique<PByteStream>()) {
+    priv->m_pBuffer.swap(pByteSequence);
+    priv->m_bError = false;
+    priv->m_iRead = 0;
+    priv->m_iWrite = 0;
+  }
+
+  /*!
+   *
+   */
   ByteStream::~ByteStream() {
   }
 
@@ -127,14 +138,14 @@ namespace TE {
   /*!
    *
    */
-  const TEbyte* ByteStream::GetRawByteData() {
+  const TEbyte* ByteStream::GetRawByteData() const {
     return priv->m_pBuffer->GetRawByteData();
   }
 
   /*!
    *
    */
-  TEint ByteStream::GetByteDataSize() {
+  TEint ByteStream::GetByteDataSize() const {
     return priv->m_pBuffer->GetByteDataSize();
   }
 
@@ -148,7 +159,7 @@ namespace TE {
     for (TEint i = 0; i < size; i++) {
       sz.insert(sz.end(), ReadByte());
       if (sz.data()[i] == '\0') {
-        return sz;
+        return sz.data();
       }
     }
     return String::Empty();

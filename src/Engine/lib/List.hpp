@@ -48,7 +48,7 @@ namespace TE {
 
     virtual void Add(const T& item);
     virtual void Remove(const T& item);
-    virtual TEint GetSize();
+    virtual TEint GetSize() const;
     virtual void Clear();
 
     virtual shared_ptr<IList<T>> Where(const function<bool(T)> func);
@@ -96,7 +96,7 @@ namespace TE {
    *
    */
   template <typename T>
-  TEint List<T>::GetSize() {
+  TEint List<T>::GetSize() const {
     return m_pList->size();
   }
 

@@ -36,8 +36,8 @@ namespace TE {
   public:
     virtual ~IByteData() {};
 
-    virtual const TEbyte* GetRawByteData() = 0;
-    virtual TEint GetByteDataSize() = 0;
+    virtual const TEbyte* GetRawByteData() const = 0;
+    virtual TEint GetByteDataSize() const = 0;
   };
 }
 

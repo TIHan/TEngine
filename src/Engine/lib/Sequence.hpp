@@ -49,7 +49,7 @@ namespace TE {
 
     virtual void Add(const T& item);
     virtual void Remove(const T& item);
-    virtual TEint GetSize();
+    virtual TEint GetSize() const;
     virtual void Clear();
 
     virtual shared_ptr<ISequence<T>> Where(const function<bool(T)> func);
@@ -58,7 +58,7 @@ namespace TE {
     virtual TEint GetCapacity();
     virtual void Resize(const TEint nSize);
     virtual void ShrinkToSize(const TEint nSize);
-    virtual const T* GetRawData();
+    virtual const T* GetRawData() const;
   };
 
   /*!
@@ -109,7 +109,7 @@ namespace TE {
    *
    */
   template <typename T>
-  TEint Sequence<T>::GetSize() {
+  TEint Sequence<T>::GetSize() const {
     return m_pVector->size();
   }
 
@@ -172,7 +172,7 @@ namespace TE {
    *
    */
   template <typename T>
-  const T* Sequence<T>::GetRawData() {
+  const T* Sequence<T>::GetRawData() const {
     return m_pVector->data();
   }
 }

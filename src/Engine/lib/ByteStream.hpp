@@ -43,6 +43,7 @@ namespace TE {
 
   public:
     explicit ByteStream(const TEint nMaxSize);
+    explicit ByteStream(const TEint nMaxSize, shared_ptr<ByteSequence> pByteSequence);
     virtual ~ByteStream();
 
     TEint GetSize();
@@ -50,8 +51,8 @@ namespace TE {
     void Clear();
     TEboolean HasErrors();
 
-    virtual const TEbyte* GetRawByteData();
-    virtual TEint GetByteDataSize();
+    virtual const TEbyte* GetRawByteData() const;
+    virtual TEint GetByteDataSize() const;
 
     string ReadString();
     void WriteString(const string sz);

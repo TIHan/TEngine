@@ -38,8 +38,8 @@ namespace TE {
     explicit ByteSequence(const TEint nAllocateSize);
     virtual ~ByteSequence();
 
-    virtual const TEbyte* GetRawByteData();
-    virtual TEint GetByteDataSize();
+    virtual const TEbyte* GetRawByteData() const;
+    virtual TEint GetByteDataSize() const;
   };
 }
 
