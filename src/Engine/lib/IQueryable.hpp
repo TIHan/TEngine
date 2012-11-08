@@ -37,7 +37,7 @@ namespace TE {
   public:
     virtual ~IQueryable() {};
 
-    virtual shared_ptr<Source> Where(const function<bool(T)> func) = 0;
+    virtual shared_ptr<Source> Where(const function<bool(T)>& func) = 0;
   };
 }
 

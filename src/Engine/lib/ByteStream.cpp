@@ -41,7 +41,7 @@ namespace TE {
    * a maximum size for the ByteStream buffer.
    *
    */
-  ByteStream::ByteStream(const TEint nMaxSize) :
+  ByteStream::ByteStream(const TEint& nMaxSize) :
       priv(make_unique<PByteStream>()) {
     priv->m_pBuffer = make_shared<ByteSequence>();
     priv->m_pBuffer->SetCapacity(nMaxSize);
@@ -53,7 +53,7 @@ namespace TE {
   /*!
    *
    */
-  ByteStream::ByteStream(const TEint nMaxSize, shared_ptr<ByteSequence> pByteSequence) :
+  ByteStream::ByteStream(const TEint& nMaxSize, shared_ptr<ByteSequence> pByteSequence) :
       priv(make_unique<PByteStream>()) {
     priv->m_pBuffer.swap(pByteSequence);
     priv->m_bError = false;
@@ -89,7 +89,7 @@ namespace TE {
   /*!
    *
    */
-  void ByteStream::WriteByte(const TEbyte byte) {
+  void ByteStream::WriteByte(const TEbyte& byte) {
     if (HasErrors()) {
       return;
     }
@@ -168,7 +168,7 @@ namespace TE {
   /*!
    *
    */
-  void ByteStream::WriteString(const string sz) {
+  void ByteStream::WriteString(const string& sz) {
     TEint size = sz.length();
 
     for (TEint i = 0; i < size; i++) {
@@ -182,7 +182,7 @@ namespace TE {
   /*!
    *
    */
-  void ByteStream::WriteStream(const shared_ptr<ByteSequence> pBuffer) {
+  void ByteStream::WriteStream(const shared_ptr<const ByteSequence>& pBuffer) {
     for (TEint i = 0; i < pBuffer->GetSize(); i++) {
       WriteByte(pBuffer.get()->GetRawData()[i]);
     }

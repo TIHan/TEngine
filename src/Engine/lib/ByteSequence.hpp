@@ -35,7 +35,7 @@ namespace TE {
   class ByteSequence : public Sequence<TEbyte>, public IByteData {
   public:
     ByteSequence();
-    explicit ByteSequence(const TEint nAllocateSize);
+    explicit ByteSequence(const TEint& nAllocateSize);
     virtual ~ByteSequence();
 
     virtual const TEbyte* GetRawByteData() const;

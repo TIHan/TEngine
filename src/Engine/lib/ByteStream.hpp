@@ -39,11 +39,11 @@ namespace TE {
 
   protected:
     TEbyte ReadByte();
-    void WriteByte(const TEbyte byte);
+    void WriteByte(const TEbyte& byte);
 
   public:
-    explicit ByteStream(const TEint nMaxSize);
-    explicit ByteStream(const TEint nMaxSize, shared_ptr<ByteSequence> pByteSequence);
+    explicit ByteStream(const TEint& nMaxSize);
+    explicit ByteStream(const TEint& nMaxSize, shared_ptr<ByteSequence> pByteSequence);
     virtual ~ByteStream();
 
     TEint GetSize();
@@ -55,14 +55,14 @@ namespace TE {
     virtual TEint GetByteDataSize() const;
 
     string ReadString();
-    void WriteString(const string sz);
-    void WriteStream(const shared_ptr<ByteSequence> pBuffer);
+    void WriteString(const string& sz);
+    void WriteStream(const shared_ptr<const ByteSequence>& pBuffer);
 
     template <typename T>
     T Read();
 
     template <typename T>
-    void Write(const T val);
+    void Write(const T& val);
   };
 
   /*!
@@ -87,7 +87,7 @@ namespace TE {
    *
    */
   template <typename T>
-  void ByteStream::Write(const T val) {
+  void ByteStream::Write(const T& val) {
     TEint size = sizeof(T);
 
     union pack_t {

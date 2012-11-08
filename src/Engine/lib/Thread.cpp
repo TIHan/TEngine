@@ -31,7 +31,7 @@ namespace TE {
   /*!
    *
    */
-  Thread::Thread(const function<void()> func) {
+  Thread::Thread(const function<void()>& func) {
     m_pThread.reset(new thread(func));
   }
 

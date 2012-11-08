@@ -37,7 +37,7 @@ namespace TE {
   /*!
    *
    */
-  ByteSequence::ByteSequence(const TEint nAllocateSize) : Sequence(nAllocateSize) {
+  ByteSequence::ByteSequence(const TEint& nAllocateSize) : Sequence(nAllocateSize) {
   }
 
   /*!

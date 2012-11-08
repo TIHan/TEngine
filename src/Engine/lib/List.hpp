@@ -51,9 +51,9 @@ namespace TE {
     virtual TEint GetSize() const;
     virtual void Clear();
 
-    virtual shared_ptr<IList<T>> Where(const function<bool(T)> func);
+    virtual shared_ptr<IList<T>> Where(const function<bool(T)>& func);
 
-    virtual void Resize(const TEint nSize);
+    virtual void Resize(const TEint& nSize);
   };
 
   /*!
@@ -112,7 +112,7 @@ namespace TE {
    *
    */
   template <typename T>
-  shared_ptr<IList<T>> List<T>::Where(const function<bool(T)> func) {
+  shared_ptr<IList<T>> List<T>::Where(const function<bool(T)>& func) {
     auto l = make_shared<List<T>>();
     for_each(m_pList->cbegin(), m_pList->cend(), [&func, &l] (T t) {
       if (func(t)) {
@@ -126,7 +126,7 @@ namespace TE {
    *
    */
   template <typename T>
-  void List<T>::Resize(const TEint nSize) {
+  void List<T>::Resize(const TEint& nSize) {
     m_pList->resize(nSize);
   }
 }
