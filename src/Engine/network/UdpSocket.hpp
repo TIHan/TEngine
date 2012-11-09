@@ -46,19 +46,19 @@ namespace TE {
 
     virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> ReceiveFrom() = 0;
     virtual TEint Send(const shared_ptr<const IByteData>& pByteData) = 0;
-    virtual TEint SendTo(const shared_ptr<const IByteData>& pByteData, const shared_ptr<address_t> address) = 0;
+    virtual TEint SendTo(const shared_ptr<const IByteData>& pByteData, const shared_ptr<const address_t>& address) = 0;
   };
 
   class UdpSocket : public ASocket, public IUdpSocket {
   public:
-    explicit UdpSocket(const SocketFamily family);
-    explicit UdpSocket(const SocketFamily family, const string szAddress, const string szPort);
-    explicit UdpSocket(const string szAddress, const string szPort);
+    explicit UdpSocket(const SocketFamily& family);
+    explicit UdpSocket(const SocketFamily& family, const string& szAddress, const string& szPort);
+    explicit UdpSocket(const string& szAddress, const string& szPort);
     virtual ~UdpSocket();
 
     virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> ReceiveFrom();
     virtual TEint Send(const shared_ptr<const IByteData>& pByteData);
-    virtual TEint SendTo(const shared_ptr<const IByteData>& pByteData, const shared_ptr<address_t> address);
+    virtual TEint SendTo(const shared_ptr<const IByteData>& pByteData, const shared_ptr<const address_t>& address);
   };
 }
 

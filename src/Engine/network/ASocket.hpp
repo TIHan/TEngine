@@ -44,14 +44,14 @@ namespace TE {
   typedef struct address_s address_t;
 
   namespace Socket {
-    string GetAddress(shared_ptr<address_t> address);
+    string GetAddress(const shared_ptr<const address_t>& address);
   }
 
   class ISocket {
   public:
     virtual ~ISocket() {};
 
-    virtual TEint Bind(const TEushort usPort) = 0;
+    virtual TEint Bind(const TEushort& usPort) = 0;
     virtual string GetAddress() = 0;
     virtual SocketFamily GetFamily() = 0;
     virtual TEboolean HasErrors() = 0;
@@ -67,7 +67,7 @@ namespace TE {
   public:
     virtual ~ASocket();
 
-    virtual TEint Bind(const TEushort usPort);
+    virtual TEint Bind(const TEushort& usPort);
     virtual string GetAddress();
     virtual SocketFamily GetFamily();
     virtual TEboolean HasErrors();

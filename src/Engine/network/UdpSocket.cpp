@@ -32,24 +32,24 @@ namespace TE {
   /*!
    *
    */
-  UdpSocket::UdpSocket(const SocketFamily family) {
+  UdpSocket::UdpSocket(const SocketFamily& family) {
     priv->Initialize(SOCK_DGRAM, family, String::Empty(), String::Empty());
   }
 
   /*!
    *
    */
-  UdpSocket::UdpSocket(const SocketFamily family,
-      const string szAddress,
-      const string szPort) {
+  UdpSocket::UdpSocket(const SocketFamily& family,
+      const string& szAddress,
+      const string& szPort) {
     priv->Initialize(SOCK_DGRAM, family, szAddress, szPort);
   }
 
   /*!
    *
    */
-  UdpSocket::UdpSocket(const string szAddress,
-      const string szPort) {
+  UdpSocket::UdpSocket(const string& szAddress,
+      const string& szPort) {
     priv->Initialize(SOCK_DGRAM, SOCKET_UNSPECIFIED, szAddress, szPort);
   }
 
@@ -91,7 +91,7 @@ namespace TE {
    *
    */
   TEint UdpSocket::SendTo(const shared_ptr<const IByteData>& pByteData,
-      const shared_ptr<address_t> address) {
+      const shared_ptr<const address_t>& address) {
     TEint bytes = sendto(priv->m_iSocket, (const TEchar *)pByteData->GetRawByteData(), pByteData->GetByteDataSize(), 0, (sockaddr *)&address->ssAddress, address->nLength);
     return bytes;
   }

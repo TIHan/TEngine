@@ -49,7 +49,7 @@
 
 namespace TE {
   struct address_s {
-    address_s(struct sockaddr_storage ss, TEint n) {
+    address_s(const struct sockaddr_storage& ss, const TEint& n) {
       ssAddress = ss;
       nLength = n;
     }
@@ -58,8 +58,8 @@ namespace TE {
   };
 
   class PASocket {
-    void Create(const TEbyte bFamily, const TEbyte bSocketType, const TEbyte bFlags, const string szNodeName, const string szServiceName);
-    void SetFamily(const SocketFamily family);
+    void Create(const TEbyte& bFamily, const TEbyte& bSocketType, const TEbyte& bFlags, const string& szNodeName, const string& szServiceName);
+    void SetFamily(const SocketFamily& family);
 
   public:
     TEint m_iSocket;
@@ -68,7 +68,7 @@ namespace TE {
     TEbyte m_bFamily;
     TEboolean m_bError;
 
-    void Initialize(const TEbyte bSocketType, const SocketFamily family, const string szNodeName, const string szServiceName);
+    void Initialize(const TEbyte& bSocketType, const SocketFamily& family, const string& szNodeName, const string& szServiceName);
   };
 }
 

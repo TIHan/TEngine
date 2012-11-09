@@ -31,25 +31,25 @@
 /*!
  *
  */
-static TE::TEint CreateSocket(const TE::TEint domain,
-    const TE::TEint type,
-    const TE::TEint protocol) {
+static TE::TEint CreateSocket(const TE::TEint& domain,
+    const TE::TEint& type,
+    const TE::TEint& protocol) {
   return (TE::TEint)socket(domain, type, protocol);
 }
 
 /*!
  *
  */
-static TE::TEint BindSocket(const TE::TEint sockfd,
-    struct sockaddr *my_addr,
-    const TE::TEint addrlen) {
+static TE::TEint BindSocket(const TE::TEint& sockfd,
+    const struct sockaddr* const& my_addr,
+    const TE::TEint& addrlen) {
   return bind(sockfd, my_addr, addrlen);
 }
 
 /*!
  *
  */
-static TE::TEint CloseSocket(const TE::TEint sockfd) {
+static TE::TEint CloseSocket(const TE::TEint& sockfd) {
 #ifdef __GNUC__
     return close(sockfd);
 #elif _MSC_VER
@@ -60,7 +60,7 @@ static TE::TEint CloseSocket(const TE::TEint sockfd) {
 /*!
  *
  */
-static std::string GetSocketAddress(const struct sockaddr_storage* pAddr) {
+static std::string GetSocketAddress(const struct sockaddr_storage* const& pAddr) {
     if (pAddr) {
       std::string address(INET6_ADDRSTRLEN, '\0');
 
@@ -80,18 +80,18 @@ static std::string GetSocketAddress(const struct sockaddr_storage* pAddr) {
 
 namespace TE {
   namespace Socket {
-    string GetAddress(shared_ptr<address_t> address) {
+    string GetAddress(const shared_ptr<const address_t>& address) {
       return GetSocketAddress(&address->ssAddress);
     }
   }
   /*!
    *
    */
-  void PASocket::Create(const TEbyte bSocketType,
-      const TEbyte bFamily,
-      const TEbyte bFlags,
-      const string szNodeName,
-      const string szServiceName) {
+  void PASocket::Create(const TEbyte& bSocketType,
+      const TEbyte& bFamily,
+      const TEbyte& bFlags,
+      const string& szNodeName,
+      const string& szServiceName) {
     m_iSocket = -1;
     m_pAddress = 0;
 
@@ -142,7 +142,7 @@ namespace TE {
   /*!
    *
    */
-  void PASocket::SetFamily(const SocketFamily family) {
+  void PASocket::SetFamily(const SocketFamily& family) {
     switch (family) {
     case SOCKET_UNSPECIFIED:
       m_bFamily = AF_UNSPEC;
@@ -161,10 +161,10 @@ namespace TE {
   /*!
    *
    */
-  void PASocket::Initialize(const TEbyte bSocketType,
-      const SocketFamily family,
-      const string szNodeName,
-      const string szServiceName) {
+  void PASocket::Initialize(const TEbyte& bSocketType,
+      const SocketFamily& family,
+      const string& szNodeName,
+      const string& szServiceName) {
     SetFamily(family);
     Create(bSocketType, m_bFamily, AI_PASSIVE, szNodeName, szServiceName);
   }
@@ -189,7 +189,7 @@ namespace TE {
   /*!
    *
    */
-  TEint ASocket::Bind(const TEushort usPort) {
+  TEint ASocket::Bind(const TEushort& usPort) {
     if (priv->m_iSocket != -1 && priv->m_pAddress) {
       struct sockaddr_in *sockaddr = (struct sockaddr_in *)priv->m_pAddress->ai_addr;
 
