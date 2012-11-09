@@ -34,11 +34,11 @@ GTEST_API_ int main(int argc, char **argv) {
   std::cout << "Running Tests\n";
 
   testing::InitGoogleTest(&argc, argv);
-  RUN_ALL_TESTS();
+  int results = RUN_ALL_TESTS();
 #ifdef _MSC_VER
   system("pause");
 #endif
-  return 0;
+  return results;
 }
 
 // [WS] Keep this here for now. :)

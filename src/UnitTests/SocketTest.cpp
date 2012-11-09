@@ -10,12 +10,12 @@ class SocketTest : public ::testing::Test {
 };
 
 TEST_F(SocketTest, SendAndReceive) {
-  auto server = make_shared<UdpSocket>(SOCKET_IPV4);
-  EXPECT_EQ(false, server->HasErrors());
+  auto server = make_shared<UdpSocket>(SOCKET_IPV4); 
+  ASSERT_FALSE(server->HasErrors());
   server->Bind(1337);
 
   auto client = make_shared<UdpSocket>(SOCKET_IPV4, "127.0.0.1", "1337");
-  EXPECT_EQ(false, client->HasErrors());
+  ASSERT_FALSE(client->HasErrors());
   auto clientStream = make_shared<ByteStream>(512);
   clientStream->WriteString("Hello");
   client->Send(clientStream);
