@@ -180,10 +180,7 @@ namespace TE {
    *
    */
   ASocket::~ASocket() {
-    if (priv->m_pAddressInfo) {
-      freeaddrinfo(priv->m_pAddressInfo);
-    }
-    CloseSocket(priv->m_iSocket);
+    Close();
   }
 
   /*!
@@ -231,5 +228,15 @@ namespace TE {
    */
   TEboolean ASocket::HasErrors() {
     return priv->m_bError;
+  }
+
+  /*!
+   *
+   */
+  void ASocket::Close() {
+    if (priv->m_pAddressInfo) {
+      freeaddrinfo(priv->m_pAddressInfo);
+    }
+    CloseSocket(priv->m_iSocket);
   }
 }
