@@ -29,10 +29,9 @@
 
 namespace TE {
   class PByteStream {
-		public:
+	public:
     shared_ptr<ByteSequence> m_pBuffer;
     TEint m_iRead;
-    TEint m_iWrite;
     TEboolean m_bError;
   };
 
@@ -47,18 +46,16 @@ namespace TE {
     priv->m_pBuffer->SetCapacity(nMaxSize);
     priv->m_bError = false;
     priv->m_iRead = 0;
-    priv->m_iWrite = 0;
   }
 
   /*!
    *
    */
-  ByteStream::ByteStream(const TEint& nMaxSize, shared_ptr<ByteSequence> pByteSequence) :
+  ByteStream::ByteStream(shared_ptr<ByteSequence> pByteSequence) :
       priv(make_unique<PByteStream>()) {
     priv->m_pBuffer.swap(pByteSequence);
     priv->m_bError = false;
     priv->m_iRead = 0;
-    priv->m_iWrite = 0;
   }
 
   /*!
@@ -101,7 +98,6 @@ namespace TE {
     }
 
     priv->m_pBuffer->Add(byte);
-    priv->m_iWrite++;
   }
 
   /*!
@@ -125,7 +121,6 @@ namespace TE {
     priv->m_pBuffer->Clear();
     priv->m_bError = false;
     priv->m_iRead = 0;
-    priv->m_iWrite = 0;
   }
 
   /*!

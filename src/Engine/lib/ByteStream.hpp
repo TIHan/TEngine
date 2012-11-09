@@ -43,7 +43,7 @@ namespace TE {
 
   public:
     explicit ByteStream(const TEint& nMaxSize);
-    explicit ByteStream(const TEint& nMaxSize, shared_ptr<ByteSequence> pByteSequence);
+    explicit ByteStream(shared_ptr<ByteSequence> pByteSequence);
     virtual ~ByteStream();
 
     TEint GetSize();
