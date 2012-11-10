@@ -69,6 +69,7 @@ namespace TE {
     TEboolean m_bError;
 
     void Initialize(const TEbyte& bSocketType, const SocketFamily& family, const string& szNodeName, const string& szServiceName);
+    void Close();
   };
 }
 

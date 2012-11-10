@@ -172,6 +172,16 @@ namespace TE {
   /*!
    *
    */
+  void PASocket::Close() {
+    if (m_pAddressInfo) {
+      freeaddrinfo(m_pAddressInfo);
+    }
+    CloseSocket(m_iSocket);
+  }
+
+  /*!
+   *
+   */
   ASocket::ASocket() :
       priv(make_unique<PASocket>()) {
   }
@@ -180,7 +190,7 @@ namespace TE {
    *
    */
   ASocket::~ASocket() {
-    Close();
+    priv->Close();
   }
 
   /*!
@@ -228,15 +238,5 @@ namespace TE {
    */
   TEboolean ASocket::HasErrors() {
     return priv->m_bError;
-  }
-
-  /*!
-   *
-   */
-  void ASocket::Close() {
-    if (priv->m_pAddressInfo) {
-      freeaddrinfo(priv->m_pAddressInfo);
-    }
-    CloseSocket(priv->m_iSocket);
   }
 }
