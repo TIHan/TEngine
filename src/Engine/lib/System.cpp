@@ -39,19 +39,20 @@ namespace TE {
 #ifdef _MSC_VER
       __timeb64 tb;
       _ftime64_s(&tb);
-      return TEuint64((tb.time * 1000) + (tb.millitm));
+      return ((TEuint64)tb.time * 1000) + tb.millitm;
 #elif __GNUC__
       struct timeval tv;
-      gettimeofday(&tv, 0);
-      return TEuint64((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+      gettimeofday(&tv, nullptr);
+      return ((TEuint64)tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 #endif
     }
 
     void Delay(TEuint ms) {
 #ifdef __GNUC__
       struct timespec ts;
-      ts.tv_nsec = 1000000 * ms; 
-      nanosleep(ts, nullptr);
+      ts.tv_sec = ms / 1000;
+      ts.tv_nsec = (ms % 1000) * (1000 * 1000);
+      nanosleep(&ts, nullptr);
 #elif _MSC_VER
       Sleep(ms);
 #endif
