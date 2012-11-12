@@ -39,6 +39,7 @@
 #include <algorithm>
 #include <thread>
 #include <array>
+#include <stdexcept>
 
 // http://en.cppreference.com/w/cpp/utility/forward
 // Note: This should be in the C++11 standard eventually.

@@ -54,7 +54,7 @@ namespace TE {
     virtual TEint Bind(const TEushort& usPort) = 0;
     virtual string GetAddress() = 0;
     virtual SocketFamily GetFamily() = 0;
-    virtual TEboolean HasErrors() = 0;
+    virtual void Close() = 0;
   };
 
   class PASocket;
@@ -70,7 +70,7 @@ namespace TE {
     virtual TEint Bind(const TEushort& usPort);
     virtual string GetAddress();
     virtual SocketFamily GetFamily();
-    virtual TEboolean HasErrors();
+    virtual void Close();
   };
 }
 

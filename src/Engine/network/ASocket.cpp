@@ -87,7 +87,7 @@ namespace TE {
   /*!
    *
    */
-  void PASocket::Create(const TEbyte& bSocketType,
+  void PASocket::Open(const TEbyte& bSocketType,
       const TEbyte& bFamily,
       const TEbyte& bFlags,
       const string& szNodeName,
@@ -118,8 +118,7 @@ namespace TE {
     }
 
     if (getaddrinfo(nodeName, szServiceName.c_str(), &hints, &m_pAddressInfo) != 0) {
-      m_bError = true;
-      return;
+      throw runtime_error("Unable to get address information");
     }
 
     for (p = m_pAddressInfo; p != 0; p = p->ai_next) {
@@ -135,7 +134,7 @@ namespace TE {
     }
 
     if (m_iSocket == -1) {
-      m_bError = true;
+      throw runtime_error("Unable to create socket");
     }
   }
 
@@ -154,29 +153,8 @@ namespace TE {
       m_bFamily = AF_INET6;
       break;
     default:
-      ERROR_PRINT("Invalid socket family");
+      throw invalid_argument("Invalid socket family");
     }
-  }
-
-  /*!
-   *
-   */
-  void PASocket::Initialize(const TEbyte& bSocketType,
-      const SocketFamily& family,
-      const string& szNodeName,
-      const string& szServiceName) {
-    SetFamily(family);
-    Create(bSocketType, m_bFamily, AI_PASSIVE, szNodeName, szServiceName);
-  }
-
-  /*!
-   *
-   */
-  void PASocket::Close() {
-    if (m_pAddressInfo) {
-      freeaddrinfo(m_pAddressInfo);
-    }
-    CloseSocket(m_iSocket);
   }
 
   /*!
@@ -190,7 +168,7 @@ namespace TE {
    *
    */
   ASocket::~ASocket() {
-    priv->Close();
+    Close();
   }
 
   /*!
@@ -229,14 +207,20 @@ namespace TE {
     case AF_INET6:
       return SOCKET_IPV6;
     default:
-      ERROR_PRINT("Invalid socket family");
+      throw logic_error("Invalid socket family");
     }
   }
 
   /*!
    *
    */
-  TEboolean ASocket::HasErrors() {
-    return priv->m_bError;
+  void ASocket::Close() {
+    if (priv->m_pAddressInfo) {
+      freeaddrinfo(priv->m_pAddressInfo);
+    }
+
+    if (priv->m_iSocket != -1) {
+      CloseSocket(priv->m_iSocket);
+    }
   }
 }

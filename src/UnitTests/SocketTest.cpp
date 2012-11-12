@@ -11,11 +11,16 @@ class SocketTest : public ::testing::Test {
 
 TEST_F(SocketTest, SendAndReceive) {
   auto server = make_shared<UdpSocket>(SOCKET_IPV4); 
-  ASSERT_FALSE(server->HasErrors());
+  server->Open();
   server->Bind(1337);
 
-  auto client = make_shared<UdpSocket>(SOCKET_IPV4, "127.0.0.1", "1337");
-  ASSERT_FALSE(client->HasErrors());
+  // Test close and re-open.
+  server->Close();
+  server->Open();
+  server->Bind(1337);
+
+  auto client = make_shared<UdpSocket>();
+  client->Open("127.0.0.1", "1337");
   auto clientStream = make_shared<ByteStream>(512);
   clientStream->WriteString("Hello");
   client->Send(clientStream);

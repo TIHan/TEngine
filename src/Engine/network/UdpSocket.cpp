@@ -33,30 +33,34 @@ namespace TE {
    *
    */
   UdpSocket::UdpSocket(const SocketFamily& family) {
-    priv->Initialize(SOCK_DGRAM, family, String::Empty(), String::Empty());
+    priv->SetFamily(family);
   }
 
   /*!
    *
    */
-  UdpSocket::UdpSocket(const SocketFamily& family,
-      const string& szAddress,
-      const string& szPort) {
-    priv->Initialize(SOCK_DGRAM, family, szAddress, szPort);
-  }
-
-  /*!
-   *
-   */
-  UdpSocket::UdpSocket(const string& szAddress,
-      const string& szPort) {
-    priv->Initialize(SOCK_DGRAM, SOCKET_UNSPECIFIED, szAddress, szPort);
+  UdpSocket::UdpSocket() {
+    priv->SetFamily(SOCKET_UNSPECIFIED);
   }
 
   /*!
    *
    */
   UdpSocket::~UdpSocket() {
+  }
+
+  /*!
+   *
+   */
+  void UdpSocket::Open() {
+    priv->Open(SOCK_DGRAM, priv->m_bFamily, AI_PASSIVE, String::Empty(), String::Empty());
+  }
+
+  /*!
+   *
+   */
+  void UdpSocket::Open(const string& szAddress, const string& szPort) {
+    priv->Open(SOCK_DGRAM, priv->m_bFamily, AI_PASSIVE, szAddress, szPort);
   }
 
   /*!

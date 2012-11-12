@@ -58,18 +58,14 @@ namespace TE {
   };
 
   class PASocket {
-    void Create(const TEbyte& bFamily, const TEbyte& bSocketType, const TEbyte& bFlags, const string& szNodeName, const string& szServiceName);
-    void SetFamily(const SocketFamily& family);
-
   public:
     TEint m_iSocket;
     struct addrinfo* m_pAddressInfo;
     struct addrinfo* m_pAddress;
     TEbyte m_bFamily;
-    TEboolean m_bError;
 
-    void Initialize(const TEbyte& bSocketType, const SocketFamily& family, const string& szNodeName, const string& szServiceName);
-    void Close();
+    void Open(const TEbyte& bSocketType, const TEbyte& bFamily, const TEbyte& bFlags, const string& szNodeName, const string& szServiceName);
+    void SetFamily(const SocketFamily& family);
   };
 }
 
