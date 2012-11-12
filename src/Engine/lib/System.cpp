@@ -30,13 +30,16 @@
   #include <sys/time.h>
 #elif _MSC_VER
   #include <Windows.h>
+  #include <sys/timeb.h>
 #endif
 
 namespace TE {
   namespace System {
     TEuint64 GetTicks() {
 #ifdef _MSC_VER
-      return GetTickCount64();
+      __timeb64 tb;
+      _ftime64_s(&tb);
+      return TEuint64((tb.time * 1000) + (tb.millitm));
 #elif __GNUC__
       struct timeval tv;
       gettimeofday(&tv, 0);
@@ -46,7 +49,9 @@ namespace TE {
 
     void Delay(TEuint ms) {
 #ifdef __GNUC__
-      usleep(ms * 1000);
+      struct timespec ts;
+      ts.tv_nsec = 1000000 * ms; 
+      nanosleep(ts, nullptr);
 #elif _MSC_VER
       Sleep(ms);
 #endif
