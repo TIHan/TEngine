@@ -75,6 +75,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CollectionTest.cpp" />
     <ClCompile Include="ListTest.cpp" />
     <ClCompile Include="MainTest.cpp" />
     <ClCompile Include="SocketTest.cpp" />
