@@ -17,24 +17,16 @@ TEST_F(CollectionTest, IsEmptyInitially) {
   EXPECT_EQ(0, s1_->GetSize());
 }
 
-TEST_F(CollectionTest, TestSpeed) {
+TEST_F(CollectionTest, TestListSpeed) {
   l1_ = make_shared<List<TEint>>();
-  s1_ = make_shared<Sequence<TEint>>();
-
-  TEuint ticks = System::GetTicks();
   for (TEint i = 0; i < 50000; i++) {
     l1_->Add(i);
   }
-  cout << "=============================\n";
-  cout << "List 1 Test\n";
-  cout << "Time: " << System::GetTicks() - ticks << endl;
-  cout << "=============================\n";
-  ticks = System::GetTicks();
+}
+
+TEST_F(CollectionTest, TestSequenceSpeed) {
+  s1_ = make_shared<Sequence<TEint>>();
   for (TEint i = 0; i < 50000; i++) {
     s1_->Add(i);
   }
-  cout << "=============================\n";
-  cout << "Sequence 1 Test\n";
-  cout << "Time: " << System::GetTicks() - ticks << endl;
-  cout << "=============================\n";
 }
