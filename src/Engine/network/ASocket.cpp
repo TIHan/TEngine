@@ -34,7 +34,7 @@
 static TE::TEint CreateSocket(const TE::TEint& domain,
     const TE::TEint& type,
     const TE::TEint& protocol) {
-  return (TE::TEint)socket(domain, type, protocol);
+  return static_cast<TE::TEint>(socket(domain, type, protocol));
 }
 
 /*!
@@ -105,16 +105,16 @@ namespace TE {
 #endif
 
     struct addrinfo hints, *p;
-    TEchar *nodeName = 0;
+    const TEchar* nodeName = nullptr;
 
     memset(&hints, 0, sizeof hints);
     hints.ai_family = bFamily;
     hints.ai_socktype = bSocketType;
     hints.ai_flags = bFlags;
 
-    // [WS] If the node name is empty, only pass 0 to getaddrinfo.
+    // If the node name is empty, only pass 0 to getaddrinfo.
     if (!szNodeName.empty()) {
-      nodeName = (TEchar*)szNodeName.c_str();
+      nodeName = static_cast<const TEchar*>(szNodeName.c_str());
     }
 
     if (getaddrinfo(nodeName, szServiceName.c_str(), &hints, &m_pAddressInfo) != 0) {
@@ -122,7 +122,7 @@ namespace TE {
     }
 
     for (p = m_pAddressInfo; p != 0; p = p->ai_next) {
-      // [WS] If the family is unspecified, get the first one in the linked list.
+      // If the family is unspecified, get the first one in the linked list.
       if (p->ai_family == bFamily || bFamily == AF_UNSPEC) {
         m_iSocket = CreateSocket(p->ai_family, p->ai_socktype, p->ai_protocol);
         if (m_iSocket != -1) {
