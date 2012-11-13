@@ -33,7 +33,7 @@
 namespace TE {
   template <typename T>
   class SharedPointer {
-    shared_ptr<T> pointer;
+    shared_ptr<T>* pointer;
 
   public:
     SharedPointer();
@@ -47,11 +47,12 @@ namespace TE {
 
   template <typename T>
   SharedPointer<T>::SharedPointer(T* pType) {
-    pointer(pType);
+    pointer = new shared_ptr<T>(pType);
   }
 
   template <typename T>
   SharedPointer<T>::~SharedPointer() {
+    delete pointer;
   }
 }
 

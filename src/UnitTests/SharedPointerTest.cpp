@@ -8,5 +8,5 @@ class SharedPointerTest : public ::testing::Test {
 };
 
 TEST_F(SharedPointerTest, Testy) {
-  SharedPointer<ByteStream> byteStream;
+  SharedPointer<ByteStream> byteStream(new ByteStream(512));
 }
