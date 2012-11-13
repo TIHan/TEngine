@@ -8,7 +8,11 @@ class SystemTest : public ::testing::Test {
 };
 
 TEST_F(SystemTest, TicksAndDelay) {
-  TEuint64 ticks = System::GetTicks();
-  System::Delay(1000);
-  cout << System::GetTicks() - ticks << endl;
+  for (int i = 0; i < 100; i++) {
+    TEuint64 ticks = System::GetTicks();
+    System::Delay(10);
+    TEuint64 time = System::GetTicks() - ticks;
+    cout << "TICKS: " << time << endl;
+    ASSERT_TRUE(time <= 11);
+  }
 }

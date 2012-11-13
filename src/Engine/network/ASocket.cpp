@@ -66,10 +66,12 @@ static std::string GetSocketAddress(const struct sockaddr_storage* const& pAddr)
 
       switch (pAddr->ss_family) {
       case AF_INET6:
-        inet_ntop(pAddr->ss_family, &(((struct sockaddr_in6*)pAddr)->sin6_addr), (TE::TEchar*)address.data(), INET6_ADDRSTRLEN);
+        inet_ntop(pAddr->ss_family, &reinterpret_cast<struct sockaddr_in6*>(const_cast<struct sockaddr_storage*>(pAddr))->sin6_addr,
+          reinterpret_cast<TE::TEchar*>(const_cast<TE::TEchar*>(address.data())), INET6_ADDRSTRLEN);
         break;
       default:
-        inet_ntop(pAddr->ss_family, &(((struct sockaddr_in*)pAddr)->sin_addr), (TE::TEchar*)address.data(), INET_ADDRSTRLEN);
+        inet_ntop(pAddr->ss_family, &reinterpret_cast<struct sockaddr_in*>(const_cast<struct sockaddr_storage*>(pAddr))->sin_addr,
+          reinterpret_cast<TE::TEchar*>(const_cast<TE::TEchar*>(address.data())), INET_ADDRSTRLEN);
         break;
       }
       return address.data();
@@ -107,7 +109,7 @@ namespace TE {
     struct addrinfo hints, *p;
     const TEchar* nodeName = nullptr;
 
-    memset(&hints, 0, sizeof hints);
+    memset(&hints, 0, sizeof(hints));
     hints.ai_family = bFamily;
     hints.ai_socktype = bSocketType;
     hints.ai_flags = bFlags;
@@ -176,10 +178,10 @@ namespace TE {
    */
   TEint ASocket::Bind(const TEushort& usPort) {
     if (priv->m_iSocket != -1 && priv->m_pAddress) {
-      struct sockaddr_in *sockaddr = (struct sockaddr_in *)priv->m_pAddress->ai_addr;
+      struct sockaddr_in* sockaddr = reinterpret_cast<struct sockaddr_in*>(priv->m_pAddress->ai_addr);
 
       sockaddr->sin_port = ntohs(usPort);
-      if (BindSocket(priv->m_iSocket, priv->m_pAddress->ai_addr, (TEint)priv->m_pAddress->ai_addrlen) != 0) {
+      if (BindSocket(priv->m_iSocket, priv->m_pAddress->ai_addr, static_cast<TEint>(priv->m_pAddress->ai_addrlen)) != 0) {
         return -1;
       }
       return 0;
@@ -191,7 +193,7 @@ namespace TE {
    *
    */
   string ASocket::GetAddress() {
-    return GetSocketAddress((struct sockaddr_storage*)priv->m_pAddressInfo->ai_addr);
+    return GetSocketAddress(reinterpret_cast<struct sockaddr_storage*>(priv->m_pAddressInfo->ai_addr));
   }
 
   /*!
