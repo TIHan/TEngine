@@ -79,6 +79,7 @@
     <ClCompile Include="CollectionTest.cpp" />
     <ClCompile Include="ListTest.cpp" />
     <ClCompile Include="MainTest.cpp" />
+    <ClCompile Include="SharedPointerTest.cpp" />
     <ClCompile Include="SocketTest.cpp" />
     <ClCompile Include=".\SystemTest.cpp" />
   </ItemGroup>

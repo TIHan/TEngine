@@ -25,13 +25,34 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../Output.hpp"
-#include "../Types.hpp"
-#include "../ByteStream.hpp"
-#include "../System.hpp"
-#include "../Thread.hpp"
-#include "../List.hpp"
-#include "../Sequence.hpp"
-#include "../IByteData.hpp"
-#include "../ByteSequence.hpp"
-#include "../SharedPointer.hpp"
+#ifndef __SHAREDPOINTER_HPP_
+#define __SHAREDPOINTER_HPP_
+
+#include "Types.hpp"
+
+namespace TE {
+  template <typename T>
+  class SharedPointer {
+    shared_ptr<T> pointer;
+
+  public:
+    SharedPointer();
+    explicit SharedPointer(T* pType);
+    virtual ~SharedPointer();
+  };
+
+  template <typename T>
+  SharedPointer<T>::SharedPointer() {
+  }
+
+  template <typename T>
+  SharedPointer<T>::SharedPointer(T* pType) {
+    pointer(pType);
+  }
+
+  template <typename T>
+  SharedPointer<T>::~SharedPointer() {
+  }
+}
+
+#endif /* __SHAREDPOINTER_HPP_ */

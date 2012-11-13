@@ -87,6 +87,9 @@
     <ClInclude Include="lib\IByteData.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
+    <ClInclude Include="lib\SharedPointer.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\ByteStream.cpp">
@@ -105,6 +108,9 @@
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="lib\ByteSequence.cpp">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\SharedPointer.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
   </ItemGroup>

@@ -78,6 +78,7 @@
     <ClInclude Include="lib\List.hpp" />
     <ClInclude Include="lib\Output.hpp" />
     <ClInclude Include="lib\Sequence.hpp" />
+    <ClInclude Include="lib\SharedPointer.hpp" />
     <ClInclude Include="lib\System.hpp" />
     <ClInclude Include="lib\Thread.hpp" />
     <ClInclude Include="lib\Types.hpp" />
@@ -89,6 +90,7 @@
   <ItemGroup>
     <ClCompile Include="lib\ByteSequence.cpp" />
     <ClCompile Include="lib\ByteStream.cpp" />
+    <ClCompile Include="lib\SharedPointer.cpp" />
     <ClCompile Include="lib\System.cpp" />
     <ClCompile Include=".\network\ASocket.cpp" />
     <ClCompile Include="lib\Thread.cpp" />

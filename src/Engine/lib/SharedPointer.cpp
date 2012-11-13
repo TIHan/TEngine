@@ -25,13 +25,7 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../Output.hpp"
-#include "../Types.hpp"
-#include "../ByteStream.hpp"
-#include "../System.hpp"
-#include "../Thread.hpp"
-#include "../List.hpp"
-#include "../Sequence.hpp"
-#include "../IByteData.hpp"
-#include "../ByteSequence.hpp"
-#include "../SharedPointer.hpp"
+#include "SharedPointer.hpp"
+
+namespace TE {
+}
