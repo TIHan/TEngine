@@ -115,9 +115,9 @@ namespace TE {
   template <typename T>
   shared_ptr<IIterator<T>> List<T>::Where(const function<bool(T)>& func) {
     auto l = make_shared<List<T>>();
-    for_each(m_pList->cbegin(), m_pList->cend(), [&func, &l] (T t) {
-      if (func(t)) {
-        l->Add(t);
+    for_each(m_pList->cbegin(), m_pList->cend(), [&func, &l] (T item) {
+      if (func(item)) {
+        l->Add(item);
       }
     });
     return l;

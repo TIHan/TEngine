@@ -47,10 +47,10 @@ TEST_F(ListTest, QueryingWorks) {
   l1_.Add(10);
   l1_.Add(10);
 
-  EXPECT_EQ(1, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) { return i == 2; }))->GetSize());
-  EXPECT_EQ(1, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) { return i == 3; }))->GetSize());
-  EXPECT_EQ(2, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) { return i == 8; }))->GetSize());
-  EXPECT_EQ(4, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) { return i == 10; }))->GetSize());
-  EXPECT_EQ(3, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) { return i == 6; }))->GetSize());
-  EXPECT_EQ(0, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) { return i == 7; }))->GetSize());
+  EXPECT_EQ(1, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) -> bool { return i == 2; }))->GetSize());
+  EXPECT_EQ(1, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) -> bool { return i == 3; }))->GetSize());
+  EXPECT_EQ(2, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) -> bool { return i == 8; }))->GetSize());
+  EXPECT_EQ(4, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) -> bool { return i == 10; }))->GetSize());
+  EXPECT_EQ(3, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) -> bool { return i == 6; }))->GetSize());
+  EXPECT_EQ(0, static_pointer_cast<List<TEint>>(l1_.Where([] (TEint i) -> bool { return i == 7; }))->GetSize());
 }
