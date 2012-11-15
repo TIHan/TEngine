@@ -29,10 +29,11 @@
 #define __LIST_HPP_
 
 #include "ICollection.hpp"
+#include <list>
 
 namespace TE {
   template <typename T>
-  class IList : public ICollection<T, IList<T>> {
+  class IList : public ICollection<T> {
   public:
     virtual ~IList() {};
   };
@@ -51,7 +52,7 @@ namespace TE {
     virtual TEint GetSize() const;
     virtual void Clear();
 
-    virtual shared_ptr<IList<T>> Where(const function<bool(T)>& func);
+    virtual shared_ptr<IIterator<T>> Where(const function<bool(T)>& func);
 
     virtual void Resize(const TEint& nSize);
   };
@@ -112,7 +113,7 @@ namespace TE {
    *
    */
   template <typename T>
-  shared_ptr<IList<T>> List<T>::Where(const function<bool(T)>& func) {
+  shared_ptr<IIterator<T>> List<T>::Where(const function<bool(T)>& func) {
     auto l = make_shared<List<T>>();
     for_each(m_pList->cbegin(), m_pList->cend(), [&func, &l] (T t) {
       if (func(t)) {

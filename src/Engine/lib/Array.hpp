@@ -29,7 +29,7 @@
 #define __ARRAY_HPP_
 
 #include "Types.hpp"
-#include "Output.hpp"
+#include <array>
 
 namespace TE {
 }

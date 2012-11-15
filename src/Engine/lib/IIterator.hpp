@@ -36,6 +36,8 @@ namespace TE {
   class IIterator {
   public:
     virtual ~IIterator() {};
+
+    virtual shared_ptr<IIterator<T>> Where(const function<bool(T)>& func) = 0;
   };
 }
 

@@ -29,10 +29,11 @@
 #define __SEQUENCE_HPP_
 
 #include "ICollection.hpp"
+#include <vector>
 
 namespace TE {
   template <typename T>
-  class ISequence : public ICollection<T, ISequence<T>> {
+  class ISequence : public ICollection<T> {
   public:
     virtual ~ISequence() {};
   };
@@ -40,7 +41,7 @@ namespace TE {
   template <typename T>
   class Sequence : public ISequence<T> {
   protected:
-    unique_ptr<vector<T>> m_pVector;
+    shared_ptr<vector<T>> m_pVector;
 
   public:
     Sequence();
@@ -52,7 +53,7 @@ namespace TE {
     virtual TEint GetSize() const;
     virtual void Clear();
 
-    virtual shared_ptr<ISequence<T>> Where(const function<bool(T)>& func);
+    virtual shared_ptr<IIterator<T>> Where(const function<bool(T)>& func);
 
     virtual void SetCapacity(const TEint& nAmount);
     virtual TEint GetCapacity();
@@ -66,7 +67,7 @@ namespace TE {
    */
   template <typename T>
   Sequence<T>::Sequence() :
-      m_pVector(make_unique<vector<T>>()) {
+      m_pVector(make_shared<vector<T>>()) {
   }
 
   /*!
@@ -125,7 +126,7 @@ namespace TE {
    *
    */
   template <typename T>
-  shared_ptr<ISequence<T>> Sequence<T>::Where(const function<bool(T)>& func) {
+  shared_ptr<IIterator<T>> Sequence<T>::Where(const function<bool(T)>& func) {
     auto seq = make_shared<Sequence<T>>();
     for_each(m_pVector->begin(), m_pVector->end(), [&seq, &func] (T item) {
       if (func(item)) {

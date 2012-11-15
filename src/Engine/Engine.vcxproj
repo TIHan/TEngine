@@ -74,7 +74,6 @@
     <ClInclude Include="lib\ICollection.hpp" />
     <ClInclude Include="lib\IIterator.hpp" />
     <ClInclude Include="lib\include\TELib.hpp" />
-    <ClInclude Include="lib\IQueryable.hpp" />
     <ClInclude Include="lib\List.hpp" />
     <ClInclude Include="lib\Output.hpp" />
     <ClInclude Include="lib\Sequence.hpp" />

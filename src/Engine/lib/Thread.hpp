@@ -29,7 +29,7 @@
 #define __THREAD_HPP_
 
 #include "Types.hpp"
-#include "Output.hpp"
+#include <thread>
 
 namespace TE {
   class Thread {

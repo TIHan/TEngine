@@ -30,15 +30,10 @@
 
 #include <cstdint>
 #include <string>
-#include <iostream>
 #include <memory>
 #include <functional>
 #include <tuple>
-#include <vector>
-#include <list>
 #include <algorithm>
-#include <thread>
-#include <array>
 #include <stdexcept>
 
 // http://en.cppreference.com/w/cpp/utility/forward

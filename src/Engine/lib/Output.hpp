@@ -31,6 +31,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string.h>
+#include <iostream>
 
 #define MAX_PRINT_LEN 256
 

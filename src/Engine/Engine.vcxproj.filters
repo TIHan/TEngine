@@ -72,9 +72,6 @@
     <ClInclude Include="lib\Array.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="lib\IQueryable.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
     <ClInclude Include="lib\IIterator.hpp">
       <Filter>Header Files\lib</Filter>
     </ClInclude>

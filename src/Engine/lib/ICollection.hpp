@@ -28,12 +28,11 @@
 #ifndef __ICOLLECTION_HPP_
 #define __ICOLLECTION_HPP_
 
-#include "IQueryable.hpp"
 #include "IIterator.hpp"
 
 namespace TE {
-  template <typename T, typename Source>
-  class ICollection : public IQueryable<T, Source>, public IIterator<T> {
+  template <typename T>
+  class ICollection : public IIterator<T> {
   public:
     virtual ~ICollection() {};
 
