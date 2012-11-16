@@ -12,19 +12,19 @@ TEST_F(SystemTest, TicksAndDelay) {
 }
 
 TEST_F(SystemTest, Types) {
-  EXPECT_EQ(1, sizeof(char));
-  EXPECT_EQ(1, sizeof(signed char));
-  EXPECT_EQ(1, sizeof(unsigned char));
-  EXPECT_EQ(2, sizeof(short));
-  EXPECT_EQ(2, sizeof(unsigned short));
-  EXPECT_EQ(4, sizeof(int));
-  EXPECT_EQ(4, sizeof(unsigned int));
-  EXPECT_EQ(4, sizeof(long));
-  EXPECT_EQ(4, sizeof(unsigned long));
-  EXPECT_EQ(8, sizeof(long long));
-  EXPECT_EQ(8, sizeof(unsigned long long));
+  EXPECT_EQ(1, static_cast<int>(sizeof(char)));
+  EXPECT_EQ(1, static_cast<int>(sizeof(signed char)));
+  EXPECT_EQ(1, static_cast<int>(sizeof(unsigned char)));
+  EXPECT_EQ(2, static_cast<int>(sizeof(short)));
+  EXPECT_EQ(2, static_cast<int>(sizeof(unsigned short)));
+  EXPECT_EQ(4, static_cast<int>(sizeof(int)));
+  EXPECT_EQ(4, static_cast<int>(sizeof(unsigned int)));
+  EXPECT_EQ(4, static_cast<int>(sizeof(long)));
+  EXPECT_EQ(4, static_cast<int>(sizeof(unsigned long)));
+  EXPECT_EQ(8, static_cast<int>(sizeof(long long)));
+  EXPECT_EQ(8, static_cast<int>(sizeof(unsigned long long)));
 
-  EXPECT_EQ(4, sizeof(float));
-  EXPECT_EQ(8, sizeof(double));
-  EXPECT_EQ(1, sizeof(bool));
+  EXPECT_EQ(4, static_cast<int>(sizeof(float)));
+  EXPECT_EQ(8, static_cast<int>(sizeof(double)));
+  EXPECT_EQ(1, static_cast<int>(sizeof(bool)));
 }
