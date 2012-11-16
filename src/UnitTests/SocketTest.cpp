@@ -44,3 +44,17 @@ TEST_F(SocketTest, SendAndReceive) {
   EXPECT_EQ("Hello", clientReceiveStream->ReadString());
 }
 
+TEST_F(SocketTest, SendAndReceive2) {
+  auto server = make_shared<UdpSocket>(SOCKET_IPV4); 
+  server->Open();
+  server->Bind(1337);
+
+  auto client = make_shared<UdpSocket>();
+  client->Open("127.0.0.1", "1337");
+
+  auto clientStream = make_shared<ByteStream>(512);
+  clientStream->Write<int>(2147483647);
+  int bytes = client->Send(clientStream);
+  EXPECT_EQ(4, bytes);
+}
+

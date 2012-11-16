@@ -28,8 +28,7 @@
 #ifndef __IBYTEDATA_HPP_
 #define __IBYTEDATA_HPP_
 
-#include "Types.hpp"
-#include "Output.hpp"
+#include "Common.hpp"
 
 namespace TE {
   class IByteData {

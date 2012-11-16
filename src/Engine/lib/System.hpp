@@ -28,7 +28,7 @@
 #ifndef __SYSTEM_HPP_
 #define __SYSTEM_HPP_
 
-#include "Types.hpp"
+#include "Common.hpp"
 
 namespace TE {
   namespace System {

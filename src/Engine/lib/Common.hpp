@@ -25,8 +25,8 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __TYPES_HPP_
-#define __TYPES_HPP_
+#ifndef __PRECOMPILED_HPP_
+#define __PRECOMPILED_HPP_
 
 #include <cstdint>
 #include <string>
@@ -59,4 +59,4 @@ namespace TE {
   }
 }
 
-#endif /* __TYPES_HPP_ */
+#endif /* __PRECOMPILED_HPP_ */

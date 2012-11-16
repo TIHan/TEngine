@@ -28,8 +28,7 @@
 #ifndef __BYTESTREAM_HPP_
 #define __BYTESTREAM_HPP_
 
-#include "Types.hpp"
-#include "Output.hpp"
+#include "Common.hpp"
 #include "ByteSequence.hpp"
 
 namespace TE {

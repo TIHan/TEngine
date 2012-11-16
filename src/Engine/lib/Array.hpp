@@ -28,7 +28,7 @@
 #ifndef __ARRAY_HPP_
 #define __ARRAY_HPP_
 
-#include "Types.hpp"
+#include "Common.hpp"
 #include <array>
 
 namespace TE {

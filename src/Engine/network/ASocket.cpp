@@ -103,7 +103,9 @@ namespace TE {
 
     // Initialize Winsock
     wsaResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-    ERROR_IF_FORMAT(wsaResult != 0, "WSAStartup failed with result %i", wsaResult)
+    if (wsaResult != 0) {
+      exit(1); // "WSAStartup failed with result %i"
+    }
 #endif
 
     struct addrinfo hints, *p;
@@ -223,6 +225,7 @@ namespace TE {
 
     if (priv->m_iSocket != -1) {
       CloseSocket(priv->m_iSocket);
+      priv->m_iSocket = -1;
     }
   }
 }

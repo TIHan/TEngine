@@ -28,7 +28,7 @@
 #ifndef __THREAD_HPP_
 #define __THREAD_HPP_
 
-#include "Types.hpp"
+#include "Common.hpp"
 #include <thread>
 
 namespace TE {

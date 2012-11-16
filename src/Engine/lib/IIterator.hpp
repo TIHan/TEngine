@@ -28,8 +28,7 @@
 #ifndef __IITERATOR_HPP_
 #define __IITERATOR_HPP_
 
-#include "Types.hpp"
-#include "Output.hpp"
+#include "Common.hpp"
 
 namespace TE {
   template <typename T>
