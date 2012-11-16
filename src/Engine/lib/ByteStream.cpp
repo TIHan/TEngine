@@ -72,7 +72,7 @@ namespace TE {
       return 0;
     }
 
-    int size = sizeof(unsigned char);
+    int size = static_cast<int>(sizeof(unsigned char));
     if (GetSize() - size > GetMaxSize()) {
       priv->m_bError = true;
       return 0;
@@ -91,7 +91,7 @@ namespace TE {
       return;
     }
 
-    int size = sizeof(unsigned char);
+    int size = static_cast<int>(sizeof(unsigned char));
     if (GetSize() + size > GetMaxSize()) {
       priv->m_bError = true;
       return;
@@ -164,9 +164,9 @@ namespace TE {
    *
    */
   void ByteStream::WriteString(const string& sz) {
-    auto size = sz.length();
+    int size = static_cast<int>(sz.length());
 
-    for (auto i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
       WriteByte(sz.data()[i]);
       if (i + 1 >= size) {
         WriteByte('\0');
