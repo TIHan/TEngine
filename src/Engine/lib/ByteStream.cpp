@@ -32,7 +32,7 @@ namespace TE {
 	public:
     shared_ptr<ByteSequence> m_pBuffer;
     int m_iRead;
-    TEboolean m_bError;
+    bool m_bError;
   };
 
   /*!
@@ -126,7 +126,7 @@ namespace TE {
   /*!
    *
    */
-  TEboolean ByteStream::HasErrors() {
+  bool ByteStream::HasErrors() {
     return priv->m_bError;
   }
 

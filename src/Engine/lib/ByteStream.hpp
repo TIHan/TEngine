@@ -49,7 +49,7 @@ namespace TE {
     int GetSize();
     int GetMaxSize();
     void Clear();
-    TEboolean HasErrors();
+    bool HasErrors();
 
     virtual const unsigned char* GetRawByteData() const;
     virtual int GetByteDataSize() const;

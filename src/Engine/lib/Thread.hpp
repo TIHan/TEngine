@@ -40,7 +40,7 @@ namespace TE {
     virtual ~Thread();
 
     void Join();
-    TEboolean IsJoinable();
+    bool IsJoinable();
     void Detach();
   };
 }

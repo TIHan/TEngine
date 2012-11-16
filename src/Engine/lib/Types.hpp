@@ -52,11 +52,6 @@ std::unique_ptr<T> make_unique(U&& u)
 
 namespace TE {
   using namespace std;
-  
-  typedef float TEfloat;
-  typedef double TEdouble;
-  typedef bool TEboolean;
-  typedef void* TEpointer;
 
   // [WS] TODO: Need to put this somewhere else.
   namespace String {

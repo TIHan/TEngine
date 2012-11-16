@@ -53,7 +53,7 @@ namespace TE {
   /*!
    *
    */
-  TEboolean Thread::IsJoinable() {
+  bool Thread::IsJoinable() {
     return m_pThread->joinable();
   }
 
