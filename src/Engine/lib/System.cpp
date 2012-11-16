@@ -35,19 +35,19 @@
 
 namespace TE {
   namespace System {
-    TEuint64 GetTicks() {
+    unsigned long GetTicks() {
 #ifdef _MSC_VER
       __timeb64 tb;
       _ftime64_s(&tb);
-      return ((TEuint64)tb.time * 1000) + tb.millitm;
+      return ((unsigned long)tb.time * 1000) + tb.millitm;
 #elif __GNUC__
       struct timeval tv;
       gettimeofday(&tv, nullptr);
-      return ((TEuint64)tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+      return ((unsigned long)tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 #endif
     }
 
-    void Delay(TEuint ms) {
+    void Delay(unsigned int ms) {
 #ifdef __GNUC__
       struct timespec ts;
       ts.tv_sec = ms / 1000;

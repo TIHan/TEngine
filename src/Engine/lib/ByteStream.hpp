@@ -38,21 +38,21 @@ namespace TE {
     unique_ptr<PByteStream> priv;
 
   protected:
-    TEbyte ReadByte();
-    void WriteByte(const TEbyte& byte);
+    unsigned char ReadByte();
+    void WriteByte(const unsigned char& byte);
 
   public:
-    explicit ByteStream(const TEint& nMaxSize);
+    explicit ByteStream(const int& nMaxSize);
     explicit ByteStream(shared_ptr<ByteSequence> pByteSequence);
     virtual ~ByteStream();
 
-    TEint GetSize();
-    TEint GetMaxSize();
+    int GetSize();
+    int GetMaxSize();
     void Clear();
     TEboolean HasErrors();
 
-    virtual const TEbyte* GetRawByteData() const;
-    virtual TEint GetByteDataSize() const;
+    virtual const unsigned char* GetRawByteData() const;
+    virtual int GetByteDataSize() const;
 
     string ReadString();
     void WriteString(const string& sz);
@@ -70,14 +70,14 @@ namespace TE {
    */
   template <typename T>
   T ByteStream::Read() {
-    TEint size = sizeof(T);
+    int size = sizeof(T);
 
     union unpack_t {
-      TEbyte byte[sizeof(T)];
+      unsigned char byte[sizeof(T)];
       T val;
     } unpack;
 
-    for (TEint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
       unpack.byte[i] = ReadByte();
     }
     return unpack.val;
@@ -88,15 +88,15 @@ namespace TE {
    */
   template <typename T>
   void ByteStream::Write(const T& val) {
-    TEint size = sizeof(T);
+    int size = sizeof(T);
 
     union pack_t {
-      TEbyte byte[sizeof(T)];
+      unsigned char byte[sizeof(T)];
       T val;
     } pack;
     pack.val = val;
 
-    for (TEint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
       WriteByte(pack.byte[i]);
     }
   }

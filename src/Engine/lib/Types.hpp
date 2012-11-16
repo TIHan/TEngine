@@ -52,15 +52,6 @@ std::unique_ptr<T> make_unique(U&& u)
 
 namespace TE {
   using namespace std;
-  typedef char TEchar;
-  typedef int8_t TEint8;
-  typedef uint8_t TEbyte;
-  typedef int16_t TEshort;
-  typedef uint16_t TEushort;
-  typedef int32_t TEint;
-  typedef uint32_t TEuint;
-  typedef int64_t TEint64;
-  typedef uint64_t TEuint64;
   
   typedef float TEfloat;
   typedef double TEdouble;

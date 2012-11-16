@@ -49,22 +49,22 @@
 
 namespace TE {
   struct address_s {
-    address_s(const struct sockaddr_storage& ss, const TEint& n) {
+    address_s(const struct sockaddr_storage& ss, const int& n) {
       ssAddress = ss;
       nLength = n;
     }
     struct sockaddr_storage ssAddress;
-    TEint nLength;
+    int nLength;
   };
 
   class PASocket {
   public:
-    TEint m_iSocket;
+    int m_iSocket;
     struct addrinfo* m_pAddressInfo;
     struct addrinfo* m_pAddress;
-    TEbyte m_bFamily;
+    unsigned char m_bFamily;
 
-    void Open(const TEbyte& bSocketType, const TEbyte& bFamily, const TEbyte& bFlags, const string& szNodeName, const string& szServiceName);
+    void Open(const unsigned char& bSocketType, const unsigned char& bFamily, const unsigned char& bFlags, const string& szNodeName, const string& szServiceName);
     void SetFamily(const SocketFamily& family);
   };
 }

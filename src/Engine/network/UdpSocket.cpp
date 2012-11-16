@@ -71,7 +71,7 @@ namespace TE {
     socklen_t addr_len = sizeof(sock_addr);
     auto pBuffer = make_shared<ByteSequence>(SOCKET_MAX_BUFFER);
 
-    TEint bytes = recvfrom(priv->m_iSocket, reinterpret_cast<TEchar*>(const_cast<TEbyte*>(pBuffer->GetRawData())),
+    int bytes = recvfrom(priv->m_iSocket, reinterpret_cast<char*>(const_cast<unsigned char*>(pBuffer->GetRawData())),
       pBuffer->GetSize(), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&sock_addr)), &addr_len);
 
     if (bytes != -1) {
@@ -80,25 +80,25 @@ namespace TE {
       pBuffer->Clear();
     }
 
-    auto address = make_shared<address_t>(sock_addr, static_cast<TEint>(addr_len));
+    auto address = make_shared<address_t>(sock_addr, static_cast<int>(addr_len));
     return tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>>(pBuffer, address);
   }
 
   /*!
    *
    */
-  TEint UdpSocket::Send(const shared_ptr<const IByteData>& pByteData) {
-    TEint bytes = sendto(priv->m_iSocket, reinterpret_cast<TEchar*>(const_cast<TEbyte*>(pByteData->GetRawByteData())),
-      pByteData->GetByteDataSize(), 0, priv->m_pAddress->ai_addr, static_cast<TEint>(priv->m_pAddress->ai_addrlen));
+  int UdpSocket::Send(const shared_ptr<const IByteData>& pByteData) {
+    int bytes = sendto(priv->m_iSocket, reinterpret_cast<char*>(const_cast<unsigned char*>(pByteData->GetRawByteData())),
+      pByteData->GetByteDataSize(), 0, priv->m_pAddress->ai_addr, static_cast<int>(priv->m_pAddress->ai_addrlen));
     return bytes;
   }
 
   /*!
    *
    */
-  TEint UdpSocket::SendTo(const shared_ptr<const IByteData>& pByteData,
+  int UdpSocket::SendTo(const shared_ptr<const IByteData>& pByteData,
       const shared_ptr<const address_t>& address) {
-    TEint bytes = sendto(priv->m_iSocket, reinterpret_cast<const TEchar*>(const_cast<const TEbyte*>(pByteData->GetRawByteData())),
+    int bytes = sendto(priv->m_iSocket, reinterpret_cast<const char*>(const_cast<const unsigned char*>(pByteData->GetRawByteData())),
       pByteData->GetByteDataSize(), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&address->ssAddress)), address->nLength);
     return bytes;
   }

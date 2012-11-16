@@ -45,20 +45,20 @@ namespace TE {
 
   public:
     Sequence();
-    explicit Sequence(const TEint& nAllocateSize);
+    explicit Sequence(const int& nAllocateSize);
     virtual ~Sequence(); 
 
     virtual void Add(const T& item);
     virtual void Remove(const T& item);
-    virtual TEint GetSize() const;
+    virtual int GetSize() const;
     virtual void Clear();
 
     virtual shared_ptr<IIterator<T>> Where(const function<bool(T)>& func);
 
-    virtual void SetCapacity(const TEint& nAmount);
-    virtual TEint GetCapacity();
-    virtual void Resize(const TEint& nSize);
-    virtual void ShrinkToSize(const TEint& nSize);
+    virtual void SetCapacity(const int& nAmount);
+    virtual int GetCapacity();
+    virtual void Resize(const int& nSize);
+    virtual void ShrinkToSize(const int& nSize);
     virtual const T* GetRawData() const;
   };
 
@@ -74,7 +74,7 @@ namespace TE {
    *
    */
   template <typename T>
-  Sequence<T>::Sequence(const TEint& nAllocateSize) :
+  Sequence<T>::Sequence(const int& nAllocateSize) :
       m_pVector(make_unique<vector<T>>(nAllocateSize)) {
   }
 
@@ -110,7 +110,7 @@ namespace TE {
    *
    */
   template <typename T>
-  TEint Sequence<T>::GetSize() const {
+  int Sequence<T>::GetSize() const {
     return m_pVector->size();
   }
 
@@ -140,7 +140,7 @@ namespace TE {
    *
    */
   template <typename T>
-  void Sequence<T>::SetCapacity(const TEint& nAmount) {
+  void Sequence<T>::SetCapacity(const int& nAmount) {
     m_pVector->reserve(nAmount);
   }
 
@@ -148,7 +148,7 @@ namespace TE {
    *
    */
   template <typename T>
-  TEint Sequence<T>::GetCapacity() {
+  int Sequence<T>::GetCapacity() {
     return m_pVector->capacity();
   }
 
@@ -156,7 +156,7 @@ namespace TE {
    *
    */
   template <typename T>
-  void Sequence<T>::Resize(const TEint& nSize) {
+  void Sequence<T>::Resize(const int& nSize) {
     m_pVector->resize(nSize);
   }
 
@@ -164,7 +164,7 @@ namespace TE {
    *
    */
   template <typename T>
-  void Sequence<T>::ShrinkToSize(const TEint& nSize) {
+  void Sequence<T>::ShrinkToSize(const int& nSize) {
     m_pVector->resize(nSize);
     m_pVector->shrink_to_fit();
   }

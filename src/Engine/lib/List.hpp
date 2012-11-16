@@ -32,6 +32,7 @@
 #include <list>
 
 namespace TE {
+  
   template <typename T>
   class IList : public ICollection<T> {
   public:
@@ -49,12 +50,12 @@ namespace TE {
 
     virtual void Add(const T& item);
     virtual void Remove(const T& item);
-    virtual TEint GetSize() const;
+    virtual int GetSize() const;
     virtual void Clear();
 
     virtual shared_ptr<IIterator<T>> Where(const function<bool(T)>& func);
 
-    virtual void Resize(const TEint& nSize);
+    virtual void Resize(const int& nSize);
   };
 
   /*!
@@ -97,7 +98,7 @@ namespace TE {
    *
    */
   template <typename T>
-  TEint List<T>::GetSize() const {
+  int List<T>::GetSize() const {
     return m_pList->size();
   }
 
@@ -127,7 +128,7 @@ namespace TE {
    *
    */
   template <typename T>
-  void List<T>::Resize(const TEint& nSize) {
+  void List<T>::Resize(const int& nSize) {
     m_pList->resize(nSize);
   }
 }

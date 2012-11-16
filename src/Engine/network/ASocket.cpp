@@ -31,25 +31,25 @@
 /*!
  *
  */
-static TE::TEint CreateSocket(const TE::TEint& domain,
-    const TE::TEint& type,
-    const TE::TEint& protocol) {
-  return static_cast<TE::TEint>(socket(domain, type, protocol));
+static int CreateSocket(const int& domain,
+    const int& type,
+    const int& protocol) {
+  return static_cast<int>(socket(domain, type, protocol));
 }
 
 /*!
  *
  */
-static TE::TEint BindSocket(const TE::TEint& sockfd,
+static int BindSocket(const int& sockfd,
     const struct sockaddr* const& my_addr,
-    const TE::TEint& addrlen) {
+    const int& addrlen) {
   return bind(sockfd, my_addr, addrlen);
 }
 
 /*!
  *
  */
-static TE::TEint CloseSocket(const TE::TEint& sockfd) {
+static int CloseSocket(const int& sockfd) {
 #ifdef __GNUC__
     return close(sockfd);
 #elif _MSC_VER
@@ -67,11 +67,11 @@ static std::string GetSocketAddress(const struct sockaddr_storage* const& pAddr)
       switch (pAddr->ss_family) {
       case AF_INET6:
         inet_ntop(pAddr->ss_family, &reinterpret_cast<struct sockaddr_in6*>(const_cast<struct sockaddr_storage*>(pAddr))->sin6_addr,
-          reinterpret_cast<TE::TEchar*>(const_cast<TE::TEchar*>(address.data())), INET6_ADDRSTRLEN);
+          reinterpret_cast<char*>(const_cast<char*>(address.data())), INET6_ADDRSTRLEN);
         break;
       default:
         inet_ntop(pAddr->ss_family, &reinterpret_cast<struct sockaddr_in*>(const_cast<struct sockaddr_storage*>(pAddr))->sin_addr,
-          reinterpret_cast<TE::TEchar*>(const_cast<TE::TEchar*>(address.data())), INET_ADDRSTRLEN);
+          reinterpret_cast<char*>(const_cast<char*>(address.data())), INET_ADDRSTRLEN);
         break;
       }
       return address.data();
@@ -89,9 +89,9 @@ namespace TE {
   /*!
    *
    */
-  void PASocket::Open(const TEbyte& bSocketType,
-      const TEbyte& bFamily,
-      const TEbyte& bFlags,
+  void PASocket::Open(const unsigned char& bSocketType,
+      const unsigned char& bFamily,
+      const unsigned char& bFlags,
       const string& szNodeName,
       const string& szServiceName) {
     m_iSocket = -1;
@@ -99,7 +99,7 @@ namespace TE {
 
 #ifdef _MSC_VER
     WSADATA wsaData;
-    TEint wsaResult;
+    int wsaResult;
 
     // Initialize Winsock
     wsaResult = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -107,7 +107,7 @@ namespace TE {
 #endif
 
     struct addrinfo hints, *p;
-    const TEchar* nodeName = nullptr;
+    const char* nodeName = nullptr;
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = bFamily;
@@ -116,7 +116,7 @@ namespace TE {
 
     // If the node name is empty, only pass 0 to getaddrinfo.
     if (!szNodeName.empty()) {
-      nodeName = static_cast<const TEchar*>(szNodeName.c_str());
+      nodeName = static_cast<const char*>(szNodeName.c_str());
     }
 
     if (getaddrinfo(nodeName, szServiceName.c_str(), &hints, &m_pAddressInfo) != 0) {
@@ -176,12 +176,12 @@ namespace TE {
   /*!
    *
    */
-  TEint ASocket::Bind(const TEushort& usPort) {
+  int ASocket::Bind(const unsigned short& usPort) {
     if (priv->m_iSocket != -1 && priv->m_pAddress) {
       struct sockaddr_in* sockaddr = reinterpret_cast<struct sockaddr_in*>(priv->m_pAddress->ai_addr);
 
       sockaddr->sin_port = ntohs(usPort);
-      if (BindSocket(priv->m_iSocket, priv->m_pAddress->ai_addr, static_cast<TEint>(priv->m_pAddress->ai_addrlen)) != 0) {
+      if (BindSocket(priv->m_iSocket, priv->m_pAddress->ai_addr, static_cast<int>(priv->m_pAddress->ai_addrlen)) != 0) {
         return -1;
       }
       return 0;

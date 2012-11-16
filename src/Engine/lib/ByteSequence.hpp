@@ -32,14 +32,14 @@
 #include "IByteData.hpp"
 
 namespace TE {
-  class ByteSequence : public Sequence<TEbyte>, public IByteData {
+  class ByteSequence : public Sequence<unsigned char>, public IByteData {
   public:
     ByteSequence();
-    explicit ByteSequence(const TEint& nAllocateSize);
+    explicit ByteSequence(const int& nAllocateSize);
     virtual ~ByteSequence();
 
-    virtual const TEbyte* GetRawByteData() const;
-    virtual TEint GetByteDataSize() const;
+    virtual const unsigned char* GetRawByteData() const;
+    virtual int GetByteDataSize() const;
   };
 }
 

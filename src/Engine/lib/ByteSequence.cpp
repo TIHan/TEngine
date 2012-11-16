@@ -37,7 +37,7 @@ namespace TE {
   /*!
    *
    */
-  ByteSequence::ByteSequence(const TEint& nAllocateSize) : Sequence(nAllocateSize) {
+  ByteSequence::ByteSequence(const int& nAllocateSize) : Sequence(nAllocateSize) {
   }
 
   /*!
@@ -49,14 +49,14 @@ namespace TE {
   /*!
    *
    */
-  const TEbyte* ByteSequence::GetRawByteData() const {
+  const unsigned char* ByteSequence::GetRawByteData() const {
     return GetRawData();
   }
 
   /*!
    *
    */
-  TEint ByteSequence::GetByteDataSize() const {
+  int ByteSequence::GetByteDataSize() const {
     return GetSize();
   }
 }

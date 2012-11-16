@@ -38,7 +38,7 @@ namespace TE {
 
     virtual void Add(const T& item) = 0;
     virtual void Remove(const T& item) = 0;
-    virtual TEint GetSize() const = 0;
+    virtual int GetSize() const = 0;
     virtual void Clear() = 0;
   };
 }

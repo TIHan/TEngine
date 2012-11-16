@@ -32,8 +32,8 @@
 
 namespace TE {
   namespace System {
-    TEuint64 GetTicks();
-    void Delay(TEuint ms);
+    unsigned long GetTicks();
+    void Delay(unsigned int ms);
   }
 }
 

@@ -43,7 +43,7 @@ GTEST_API_ int main(int argc, char **argv) {
 
 // [WS] Keep this here for now. :)
 /*
-  TEint answer = 0;
+  int answer = 0;
   do {
     cout << "(1) to host. (2) to connect.\n";
     cin >> answer;
@@ -52,10 +52,10 @@ GTEST_API_ int main(int argc, char **argv) {
   switch (answer) {
   case 1:
     {
-      TEushort port;
+      unsigned short port;
       cout << "Use port: ";
       cin >> port;
-      TEint count = 0;
+      int count = 0;
 
       shared_ptr<UdpSocket> socket(new UdpSocket(SOCKET_IPV4));
       cout << "Address: " << socket->GetAddress() << endl;

@@ -47,8 +47,8 @@ namespace TE {
     virtual void Open() = 0;
     virtual void Open(const string& szAddress, const string& szPort) = 0;
     virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> ReceiveFrom() = 0;
-    virtual TEint Send(const shared_ptr<const IByteData>& pByteData) = 0;
-    virtual TEint SendTo(const shared_ptr<const IByteData>& pByteData, const shared_ptr<const address_t>& address) = 0;
+    virtual int Send(const shared_ptr<const IByteData>& pByteData) = 0;
+    virtual int SendTo(const shared_ptr<const IByteData>& pByteData, const shared_ptr<const address_t>& address) = 0;
   };
 
   class UdpSocket : public ASocket, public IUdpSocket {
@@ -60,8 +60,8 @@ namespace TE {
     virtual void Open();
     virtual void Open(const string& szAddress, const string& szPort);
     virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> ReceiveFrom();
-    virtual TEint Send(const shared_ptr<const IByteData>& pByteData);
-    virtual TEint SendTo(const shared_ptr<const IByteData>& pByteData, const shared_ptr<const address_t>& address);
+    virtual int Send(const shared_ptr<const IByteData>& pByteData);
+    virtual int SendTo(const shared_ptr<const IByteData>& pByteData, const shared_ptr<const address_t>& address);
   };
 }
 

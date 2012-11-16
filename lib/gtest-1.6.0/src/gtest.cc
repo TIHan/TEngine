@@ -772,16 +772,16 @@ TimeInMillis GetTimeInMillis() {
 
   SYSTEMTIME now_systime;
   FILETIME now_filetime;
-  ULARGE_INTEGER now_int64;
+  ULARGE_INTEGER now_long;
   // TODO(kenton@google.com): Shouldn't this just use
   //   GetSystemTimeAsFileTime()?
   GetSystemTime(&now_systime);
   if (SystemTimeToFileTime(&now_systime, &now_filetime)) {
-    now_int64.LowPart = now_filetime.dwLowDateTime;
-    now_int64.HighPart = now_filetime.dwHighDateTime;
-    now_int64.QuadPart = (now_int64.QuadPart / kTenthMicrosInMilliSecond) -
+    now_long.LowPart = now_filetime.dwLowDateTime;
+    now_long.HighPart = now_filetime.dwHighDateTime;
+    now_long.QuadPart = (now_long.QuadPart / kTenthMicrosInMilliSecond) -
       kJavaEpochToWinFileTimeDelta;
-    return now_int64.QuadPart;
+    return now_long.QuadPart;
   }
   return 0;
 #elif GTEST_OS_WINDOWS && !GTEST_HAS_GETTIMEOFDAY_

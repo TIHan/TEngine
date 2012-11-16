@@ -31,7 +31,7 @@ namespace TE {
   class PByteStream {
 	public:
     shared_ptr<ByteSequence> m_pBuffer;
-    TEint m_iRead;
+    int m_iRead;
     TEboolean m_bError;
   };
 
@@ -40,7 +40,7 @@ namespace TE {
    * a maximum size for the ByteStream buffer.
    *
    */
-  ByteStream::ByteStream(const TEint& nMaxSize) :
+  ByteStream::ByteStream(const int& nMaxSize) :
       priv(make_unique<PByteStream>()) {
     priv->m_pBuffer = make_shared<ByteSequence>();
     priv->m_pBuffer->SetCapacity(nMaxSize);
@@ -67,18 +67,18 @@ namespace TE {
   /*!
    *
    */
-  TEbyte ByteStream::ReadByte() {
+  unsigned char ByteStream::ReadByte() {
     if (HasErrors()) {
       return 0;
     }
 
-    TEint size = sizeof(TEbyte);
+    int size = sizeof(unsigned char);
     if (GetSize() - size > GetMaxSize()) {
       priv->m_bError = true;
       return 0;
     }
 
-    TEbyte val = priv->m_pBuffer->GetRawData()[priv->m_iRead];
+    unsigned char val = priv->m_pBuffer->GetRawData()[priv->m_iRead];
     priv->m_iRead++;
     return val;
   }
@@ -86,12 +86,12 @@ namespace TE {
   /*!
    *
    */
-  void ByteStream::WriteByte(const TEbyte& byte) {
+  void ByteStream::WriteByte(const unsigned char& byte) {
     if (HasErrors()) {
       return;
     }
 
-    TEint size = sizeof(TEbyte);
+    int size = sizeof(unsigned char);
     if (GetSize() + size > GetMaxSize()) {
       priv->m_bError = true;
       return;
@@ -103,14 +103,14 @@ namespace TE {
   /*!
    *
    */
-  TEint ByteStream::GetSize() {
+  int ByteStream::GetSize() {
     return priv->m_pBuffer->GetSize();
   }
 
   /*!
    *
    */
-  TEint ByteStream::GetMaxSize() {
+  int ByteStream::GetMaxSize() {
     return priv->m_pBuffer->GetCapacity();
   }
 
@@ -133,14 +133,14 @@ namespace TE {
   /*!
    *
    */
-  const TEbyte* ByteStream::GetRawByteData() const {
+  const unsigned char* ByteStream::GetRawByteData() const {
     return priv->m_pBuffer->GetRawByteData();
   }
 
   /*!
    *
    */
-  TEint ByteStream::GetByteDataSize() const {
+  int ByteStream::GetByteDataSize() const {
     return priv->m_pBuffer->GetByteDataSize();
   }
 
@@ -148,10 +148,10 @@ namespace TE {
    *
    */
   string ByteStream::ReadString() {
-    TEint size = GetSize();
+    int size = GetSize();
     string sz;
 
-    for (TEint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
       sz.insert(sz.end(), ReadByte());
       if (sz.data()[i] == '\0') {
         return sz.data();
@@ -164,9 +164,9 @@ namespace TE {
    *
    */
   void ByteStream::WriteString(const string& sz) {
-    TEint size = sz.length();
+    int size = sz.length();
 
-    for (TEint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
       WriteByte(sz.data()[i]);
       if (i + 1 >= size) {
         WriteByte('\0');
@@ -178,7 +178,7 @@ namespace TE {
    *
    */
   void ByteStream::WriteStream(const shared_ptr<const ByteSequence>& pBuffer) {
-    for (TEint i = 0; i < pBuffer->GetSize(); i++) {
+    for (int i = 0; i < pBuffer->GetSize(); i++) {
       WriteByte(pBuffer.get()->GetRawData()[i]);
     }
   }

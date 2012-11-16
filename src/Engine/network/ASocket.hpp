@@ -51,7 +51,7 @@ namespace TE {
   public:
     virtual ~ISocket() {};
 
-    virtual TEint Bind(const TEushort& usPort) = 0;
+    virtual int Bind(const unsigned short& usPort) = 0;
     virtual string GetAddress() = 0;
     virtual SocketFamily GetFamily() = 0;
     virtual void Close() = 0;
@@ -67,7 +67,7 @@ namespace TE {
   public:
     virtual ~ASocket();
 
-    virtual TEint Bind(const TEushort& usPort);
+    virtual int Bind(const unsigned short& usPort);
     virtual string GetAddress();
     virtual SocketFamily GetFamily();
     virtual void Close();
