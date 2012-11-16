@@ -221,6 +221,7 @@ namespace TE {
   void ASocket::Close() {
     if (priv->m_pAddressInfo) {
       freeaddrinfo(priv->m_pAddressInfo);
+      priv->m_pAddressInfo = nullptr;
     }
 
     if (priv->m_iSocket != -1) {

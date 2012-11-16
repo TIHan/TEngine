@@ -42,6 +42,9 @@ TEST_F(SocketTest, SendAndReceive) {
 
   EXPECT_EQ("127.0.0.1", Socket::GetAddress(serverAddress));
   EXPECT_EQ("Hello", clientReceiveStream->ReadString());
+
+  server->Close();
+  client->Close();
 }
 
 TEST_F(SocketTest, SendAndReceive2) {
