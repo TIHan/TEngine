@@ -164,9 +164,9 @@ namespace TE {
    *
    */
   void ByteStream::WriteString(const string& sz) {
-    int size = sz.length();
+    auto size = sz.length();
 
-    for (int i = 0; i < size; i++) {
+    for (auto i = 0; i < size; i++) {
       WriteByte(sz.data()[i]);
       if (i + 1 >= size) {
         WriteByte('\0');

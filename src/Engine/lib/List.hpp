@@ -99,7 +99,7 @@ namespace TE {
    */
   template <typename T>
   int List<T>::GetSize() const {
-    return m_pList->size();
+    return static_cast<int>(m_pList->size());
   }
 
   /*!

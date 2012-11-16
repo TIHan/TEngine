@@ -111,7 +111,7 @@ namespace TE {
    */
   template <typename T>
   int Sequence<T>::GetSize() const {
-    return m_pVector->size();
+    return static_cast<int>(m_pVector->size());
   }
 
   /*!
@@ -149,7 +149,7 @@ namespace TE {
    */
   template <typename T>
   int Sequence<T>::GetCapacity() {
-    return m_pVector->capacity();
+    return static_cast<int>(m_pVector->capacity());
   }
 
   /*!
