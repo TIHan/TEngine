@@ -25,6 +25,6 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../Common.h"
-#include "../ByteStream.h"
-#include "../System.h"
+#include "../common.h"
+#include "../bytestream.h"
+#include "../system.h"

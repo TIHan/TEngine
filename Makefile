@@ -1,4 +1,4 @@
-CXX			= g++
+CXX		= g++
 CXXFLAGS	= -Wall -pedantic-errors -Wno-variadic-macros -std=c++0x -pthread
 SOURCES		= $(wildcard src/Engine/lib/*.cc) $(wildcard src/Engine/network/*.cc) $(wildcard src/UnitTests/*.cc)
 OBJECTS		= $(SOURCES:%.cc=%.o)
@@ -18,5 +18,5 @@ $(EXECUTABLE): $(OBJECTS)
 clean:
 	rm -f $(OBJECTS) $(EXECUTABLE)
 
-.cpp.o:
+.cc.o:
 	$(CXX) $(INCLUDES) -c -o $@ $< $(CXXFLAGS)
