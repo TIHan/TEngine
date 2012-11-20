@@ -25,53 +25,59 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __ASOCKET_HPP_
-#define __ASOCKET_HPP_
+#ifndef SOCKETBASE_H_
+#define SOCKETBASE_H_
 
-#ifndef NETWORK_NO_TELIB
-  #include <TELib.hpp>
+#ifndef NETWORK_NO_ENGINE_LIB
+# include <engine_lib.h>
 #endif
 
 #define SOCKET_MAX_BUFFER 1400
 
-namespace TE {
-  enum SocketFamily {
-    SOCKET_UNSPECIFIED,
-    SOCKET_IPV4,
-    SOCKET_IPV6
-  };
+namespace engine {
+namespace network {
 
-  typedef struct address_s address_t;
+enum SocketFamily {
+  SOCKET_UNSPECIFIED,
+  SOCKET_IPV4,
+  SOCKET_IPV6
+};
 
-  namespace Socket {
-    string GetAddress(const shared_ptr<const address_t>& address);
-  }
+typedef struct SocketAddressImpl SocketAddress;
 
-  class ISocket {
-  public:
-    virtual ~ISocket() {};
+std::string GetSocketAddress(const SocketAddress& address);
 
-    virtual int Bind(const unsigned short& usPort) = 0;
-    virtual string GetAddress() = 0;
-    virtual SocketFamily GetFamily() = 0;
-    virtual void Close() = 0;
-  };
+class SocketInterface {
+public:
+  virtual ~SocketInterface() {};
 
-  class PASocket;
-  class ASocket : public virtual ISocket {
-  protected:
-    unique_ptr<PASocket> priv;
+  virtual int Bind(const unsigned short& usPort) = 0;
+  virtual std::string GetAddress() = 0;
+  virtual void Close() = 0;
 
-    ASocket(); // Abstract class
+  /* Accessors / Mutators */
+  virtual SocketFamily family() = 0;
+};
 
-  public:
-    virtual ~ASocket();
+class SocketBaseImpl;
+class SocketBase : public virtual SocketInterface {
+public:
+  virtual ~SocketBase();
 
-    virtual int Bind(const unsigned short& usPort);
-    virtual string GetAddress();
-    virtual SocketFamily GetFamily();
-    virtual void Close();
-  };
-}
+  virtual int Bind(const unsigned short& port);
+  virtual std::string GetAddress();
+  virtual void Close();
 
-#endif /* __ASOCKET_HPP_ */
+  /* Accessors / Mutators */
+  virtual SocketFamily family();
+
+protected:
+  std::unique_ptr<SocketBaseImpl> impl;
+
+  SocketBase(); // Abstract class
+};
+
+} // end network namespace
+} // end engine namespace
+
+#endif // SOCKET_BASE_H_

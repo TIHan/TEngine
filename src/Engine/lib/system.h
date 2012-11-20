@@ -25,48 +25,18 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __PASOCKET_HPP_
-#define __PASOCKET_HPP_
+#ifndef SYSTEM_H_
+#define SYSTEM_H_
 
-#ifdef __GNUC__
-  #include <sys/socket.h>
-  #include <netdb.h>
-  #include <arpa/inet.h>
-  #include <netinet/in.h>
-  #include <cstring>
-  #include <stdlib.h>
-  #include <unistd.h>
-#elif _MSC_VER
-  #include <winsock2.h>
-  #include <ws2tcpip.h>
+#include "common.h"
 
-  #pragma comment(lib, "ws2_32.lib")
-#endif
+namespace engine {
+namespace lib {
 
-#ifndef NETWORK_NO_TELIB
-  #include <TELib.hpp>
-#endif
+unsigned long long GetTicks();
+void Delay(unsigned int ms);
 
-namespace TE {
-  struct address_s {
-    address_s(const struct sockaddr_storage& ss, const int& n) {
-      ssAddress = ss;
-      nLength = n;
-    }
-    struct sockaddr_storage ssAddress;
-    int nLength;
-  };
+} // end engine namespace
+} // end lib namespace
 
-  class PASocket {
-  public:
-    int m_iSocket;
-    struct addrinfo* m_pAddressInfo;
-    struct addrinfo* m_pAddress;
-    unsigned char m_bFamily;
-
-    void Open(const unsigned char& bSocketType, const unsigned char& bFamily, const unsigned char& bFlags, const string& szNodeName, const string& szServiceName);
-    void SetFamily(const SocketFamily& family);
-  };
-}
-
-#endif /* __PASOCKET_HPP_ */
+#endif // SYSTEM_H_

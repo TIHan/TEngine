@@ -1,10 +1,4 @@
-#include <TELib.hpp>
-#include <Network.hpp>
 #include <gtest/gtest.h>
-#include <iostream>
-#include <chrono>
-
-using namespace TE;
 
 class SystemTest : public ::testing::Test {
 };

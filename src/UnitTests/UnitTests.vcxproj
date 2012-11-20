@@ -134,12 +134,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ByteStreamTest.cpp" />
-    <ClCompile Include="CollectionTest.cpp" />
-    <ClCompile Include="ListTest.cpp" />
-    <ClCompile Include="MainTest.cpp" />
-    <ClCompile Include="SocketTest.cpp" />
-    <ClCompile Include=".\SystemTest.cpp" />
+    <ClCompile Include=".\bytestream_test.cc" />
+    <ClCompile Include=".\main_test.cc" />
+    <ClCompile Include=".\socket_test.cc" />
+    <ClCompile Include=".\system_test.cc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">

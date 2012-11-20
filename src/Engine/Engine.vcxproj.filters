@@ -33,73 +33,43 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lib\ByteStream.hpp">
+    <ClInclude Include=".\lib\bytestream.h">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="lib\include\TELib.hpp">
+    <ClInclude Include=".\lib\common.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include=".\lib\system.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include=".\lib\include\engine_lib.h">
       <Filter>Header Files\lib\include</Filter>
     </ClInclude>
-    <ClInclude Include="network\include\Network.hpp">
+    <ClInclude Include=".\network\include\network.h">
       <Filter>Header Files\network\include</Filter>
     </ClInclude>
-    <ClInclude Include="lib\System.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\Thread.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="network\UdpSocket.hpp">
+    <ClInclude Include=".\network\socket_base.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include=".\network\ASocket.hpp">
+    <ClInclude Include=".\network\socket_base-impl.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="network\PASocket.hpp">
+    <ClInclude Include=".\network\udp_socket.h">
       <Filter>Header Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\List.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\Sequence.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\Array.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\IIterator.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\ICollection.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include=".\lib\ByteSequence.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\IByteData.hpp">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include=".\lib\Common.hpp">
-      <Filter>Header Files\lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lib\ByteStream.cpp">
+    <ClCompile Include=".\lib\bytestream.cc">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
-    <ClCompile Include="lib\System.cpp">
+    <ClCompile Include=".\lib\system.cc">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
-    <ClCompile Include=".\network\ASocket.cpp">
+    <ClCompile Include=".\network\socket_base.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="network\UdpSocket.cpp">
+    <ClCompile Include=".\network\udp_socket.cc">
       <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\Thread.cpp">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\ByteSequence.cpp">
-      <Filter>Source Files\lib</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

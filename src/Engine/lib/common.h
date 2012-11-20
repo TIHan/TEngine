@@ -25,8 +25,8 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __PRECOMPILED_HPP_
-#define __PRECOMPILED_HPP_
+#ifndef COMMON_H_
+#define COMMON_H_
 
 #include <cstdint>
 #include <string>
@@ -35,28 +35,29 @@
 #include <tuple>
 #include <algorithm>
 #include <stdexcept>
+#include <vector>
+#include <list>
+#include <thread>
+#include <queue>
 
 // http://en.cppreference.com/w/cpp/utility/forward
 // Note: This should be in the C++11 standard eventually.
 template <typename T>
-std::unique_ptr<T> make_unique()
-{
+std::unique_ptr<T> make_unique() {
     return std::unique_ptr<T>(new T());
 }
 
 template <typename T, typename U>
-std::unique_ptr<T> make_unique(U&& u)
-{
+std::unique_ptr<T> make_unique(U&& u) {
     return std::unique_ptr<T>(new T(std::forward<U>(u)));
 }
 
-namespace TE {
-  using namespace std;
+namespace engine {
+namespace lib {
 
-  // [WS] TODO: Need to put this somewhere else.
-  namespace String {
-    inline string Empty() { return ""; }
-  }
-}
+inline std::string EmptyString() { return ""; }
 
-#endif /* __PRECOMPILED_HPP_ */
+} // end lib namespace
+} // end engine namespace
+
+#endif // COMMON_H_

@@ -25,16 +25,80 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __SYSTEM_HPP_
-#define __SYSTEM_HPP_
+#ifndef BYTESTREAM_H_
+#define BYTESTREAM_H_
 
-#include "Common.hpp"
+#include "common.h"
 
-namespace TE {
-  namespace System {
-    unsigned long GetTicks();
-    void Delay(unsigned int ms);
+namespace engine {
+namespace lib {
+
+class ByteStreamImpl;
+class ByteStream {
+  std::unique_ptr<ByteStreamImpl> impl;
+
+protected:
+  unsigned char ReadByte();
+  void WriteByte(const unsigned char& byte);
+
+public:
+  explicit ByteStream(const int& max_size);
+  virtual ~ByteStream();
+
+  int GetSize() const;
+  int GetMaxSize() const;
+  void Reset();
+
+  const unsigned char* GetRaw() const;
+
+  std::string ReadString();
+  void WriteString(const std::string& string);
+  void WriteStream(const std::vector<unsigned char>& buffer);
+
+  template <typename T>
+  T Read();
+
+  template <typename T>
+  void Write(const T& value);
+};
+
+/*!
+  *
+  */
+template <typename T>
+T ByteStream::Read() {
+  int size = sizeof(T);
+
+  union unpack_t {
+    unsigned char byte[sizeof(T)];
+    T value;
+  } unpack;
+
+  for (int i = 0; i < size; i++) {
+    unpack.byte[i] = ReadByte();
+  }
+  return unpack.value;
+}
+
+/*!
+  *
+  */
+template <typename T>
+void ByteStream::Write(const T& value) {
+  int size = sizeof(T);
+
+  union pack_t {
+    unsigned char byte[sizeof(T)];
+    T value;
+  } pack;
+  pack.value = value;
+
+  for (int i = 0; i < size; i++) {
+    WriteByte(pack.byte[i]);
   }
 }
 
-#endif /* __SYSTEM_HPP_ */
+} // end lib namespace
+} // end engine namespace
+
+#endif // BYTESTREAM_H_

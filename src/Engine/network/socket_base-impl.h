@@ -25,11 +25,54 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../Common.hpp"
-#include "../ByteStream.hpp"
-#include "../System.hpp"
-#include "../Thread.hpp"
-#include "../List.hpp"
-#include "../Sequence.hpp"
-#include "../IByteData.hpp"
-#include "../ByteSequence.hpp"
+#ifndef SOCKET_BASE_IMPL_H_
+#define SOCKET_BASE_IMPL_H_
+
+#ifdef __GNUC__
+# include <sys/socket.h>
+# include <netdb.h>
+# include <arpa/inet.h>
+# include <netinet/in.h>
+# include <cstring>
+# include <stdlib.h>
+# include <unistd.h>
+#elif _MSC_VER
+# include <winsock2.h>
+# include <ws2tcpip.h>
+
+# pragma comment(lib, "ws2_32.lib")
+#endif
+
+#ifndef NETWORK_NO_ENGINE_LIB
+# include <engine_lib.h>
+#endif
+
+namespace engine {
+namespace network {
+
+struct SocketAddressImpl {
+  SocketAddressImpl(const struct sockaddr_storage& address, const int& length) {
+    this->address = address;
+    this->length = length;
+  }
+  struct sockaddr_storage address;
+  int length;
+};
+
+class SocketBaseImpl {
+public:
+  int socket_;
+  struct addrinfo* address_info_;
+  struct addrinfo* current_address_info_;
+  SocketFamily family_;
+
+  void OpenOrDie(const unsigned char& socket_type,
+                 const unsigned char& flags,
+                 const std::string& node_name,
+                 const std::string& service_name);
+};
+
+} // end network namespace
+} // end engine namespace
+
+#endif // SOCKET_BASE_IMPL_H_

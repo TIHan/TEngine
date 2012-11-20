@@ -120,30 +120,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="lib\Array.hpp" />
-    <ClInclude Include=".\lib\ByteSequence.hpp" />
-    <ClInclude Include="lib\ByteStream.hpp" />
-    <ClInclude Include="lib\IByteData.hpp" />
-    <ClInclude Include="lib\ICollection.hpp" />
-    <ClInclude Include="lib\IIterator.hpp" />
-    <ClInclude Include="lib\include\TELib.hpp" />
-    <ClInclude Include="lib\List.hpp" />
-    <ClInclude Include=".\lib\Common.hpp" />
-    <ClInclude Include="lib\Sequence.hpp" />
-    <ClInclude Include="lib\System.hpp" />
-    <ClInclude Include="lib\Thread.hpp" />
-    <ClInclude Include="network\include\Network.hpp" />
-    <ClInclude Include=".\network\ASocket.hpp" />
-    <ClInclude Include="network\PASocket.hpp" />
-    <ClInclude Include="network\UdpSocket.hpp" />
+    <ClInclude Include=".\lib\bytestream.h" />
+    <ClInclude Include=".\lib\include\engine_lib.h" />
+    <ClInclude Include=".\lib\common.h" />
+    <ClInclude Include=".\lib\system.h" />
+    <ClInclude Include=".\network\include\network.h" />
+    <ClInclude Include=".\network\socket_base.h" />
+    <ClInclude Include=".\network\socket_base-impl.h" />
+    <ClInclude Include=".\network\udp_socket.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lib\ByteSequence.cpp" />
-    <ClCompile Include="lib\ByteStream.cpp" />
-    <ClCompile Include="lib\System.cpp" />
-    <ClCompile Include=".\network\ASocket.cpp" />
-    <ClCompile Include="lib\Thread.cpp" />
-    <ClCompile Include="network\UdpSocket.cpp" />
+    <ClCompile Include=".\lib\bytestream.cc" />
+    <ClCompile Include=".\lib\system.cc" />
+    <ClCompile Include=".\network\socket_base.cc" />
+    <ClCompile Include=".\network\udp_socket.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

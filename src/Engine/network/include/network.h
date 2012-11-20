@@ -25,37 +25,4 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "System.hpp"
-#ifdef __GNUC__
-  #include <sys/time.h>
-#elif _MSC_VER
-  #include <Windows.h>
-  #include <sys/timeb.h>
-#endif
-
-namespace TE {
-  namespace System {
-    unsigned long GetTicks() {
-#ifdef _MSC_VER
-      __timeb64 tb;
-      _ftime64_s(&tb);
-      return ((unsigned long)tb.time * 1000) + tb.millitm;
-#elif __GNUC__
-      struct timeval tv;
-      gettimeofday(&tv, nullptr);
-      return ((unsigned long)tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-#endif
-    }
-
-    void Delay(unsigned int ms) {
-#ifdef __GNUC__
-      struct timespec ts;
-      ts.tv_sec = ms / 1000;
-      ts.tv_nsec = (ms % 1000) * (1000 * 1000);
-      nanosleep(&ts, nullptr);
-#elif _MSC_VER
-      Sleep(ms);
-#endif
-    }
-  }
-}
+#define NETWORK_NO_ENGINE_LIB

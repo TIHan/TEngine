@@ -25,44 +25,39 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef __UDPSOCKET_HPP_
-#define __UDPSOCKET_HPP_
-
-#include "ASocket.hpp"
-
-#ifndef NETWORK_NO_TELIB
-  #include <TELib.hpp>
+#include "system.h"
+#ifdef __GNUC__
+# include <sys/time.h>
+#elif _MSC_VER
+# include <Windows.h>
+# include <sys/timeb.h>
 #endif
 
-// Microsoft gives a warning about virtual inheritance. Turn it off.
+namespace engine {
+namespace lib {
+
+unsigned long long GetTicks() {
 #ifdef _MSC_VER
-  #pragma warning( disable : 4250 ) // C4250 - 'class1' : inherits 'class2::member' via dominance
+  __timeb64 tb;
+  _ftime64_s(&tb);
+  return ((unsigned long long)tb.time * 1000) + tb.millitm;
+#elif __GNUC__
+  struct timeval tv;
+  gettimeofday(&tv, nullptr);
+  return ((unsigned long long)tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 #endif
-
-namespace TE {
-  class IUdpSocket : public virtual ISocket {
-  public:
-    virtual ~IUdpSocket() {};
-
-    virtual void Open() = 0;
-    virtual void Open(const string& szAddress, const string& szPort) = 0;
-    virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> ReceiveFrom() = 0;
-    virtual int Send(const shared_ptr<const IByteData>& pByteData) = 0;
-    virtual int SendTo(const shared_ptr<const IByteData>& pByteData, const shared_ptr<const address_t>& address) = 0;
-  };
-
-  class UdpSocket : public ASocket, public IUdpSocket {
-  public:
-    explicit UdpSocket();
-    explicit UdpSocket(const SocketFamily& family);
-    virtual ~UdpSocket();
-
-    virtual void Open();
-    virtual void Open(const string& szAddress, const string& szPort);
-    virtual tuple<shared_ptr<ByteSequence>, shared_ptr<address_t>> ReceiveFrom();
-    virtual int Send(const shared_ptr<const IByteData>& pByteData);
-    virtual int SendTo(const shared_ptr<const IByteData>& pByteData, const shared_ptr<const address_t>& address);
-  };
 }
 
-#endif /* __UDPSOCKET_HPP_ */
+void Delay(unsigned int ms) {
+#ifdef __GNUC__
+  struct timespec ts;
+  ts.tv_sec = ms / 1000;
+  ts.tv_nsec = (ms % 1000) * (1000 * 1000);
+  nanosleep(&ts, nullptr);
+#elif _MSC_VER
+  Sleep(ms);
+#endif
+}
+
+} // end lib namespace
+} // end engine namespace

@@ -25,4 +25,6 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define NETWORK_NO_TELIB
+#include "../Common.h"
+#include "../ByteStream.h"
+#include "../System.h"

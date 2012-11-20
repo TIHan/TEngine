@@ -15,22 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MainTest.cpp">
+    <ClCompile Include=".\bytestream_test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ListTest.cpp">
+    <ClCompile Include=".\main_test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SocketTest.cpp">
+    <ClCompile Include=".\socket_test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CollectionTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include=".\SystemTest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ByteStreamTest.cpp">
+    <ClCompile Include=".\system_test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
