@@ -2,8 +2,8 @@
   Copyright (c) 2012, William F. Smith
   All rights reserved.
 
-  Redistribution and use in source and binary forms, with or without modification,
-  are permitted provided that the following conditions are met:
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
 
   * Redistributions of source code must retain the above copyright notice,
   this list of conditions and the following disclaimer.
@@ -42,7 +42,6 @@ UdpSocket::UdpSocket(const SocketFamily& family) {
   *
   */
 UdpSocket::UdpSocket() {
-  impl_->family_ = (SOCKET_UNSPECIFIED);
 }
 
 /*!
@@ -61,21 +60,27 @@ void UdpSocket::Open() {
 /*!
   *
   */
-void UdpSocket::Open(const std::string& address,
-                     const std::string& port) {
+void UdpSocket::Open(const std::string& address, const std::string& port) {
   impl_->Open(SOCK_DGRAM, AI_PASSIVE, address, port);
 }
 
 /*!
   *
   */
-std::tuple<std::shared_ptr<std::vector<uint8_t>>, std::shared_ptr<SocketAddress>> UdpSocket::ReceiveFrom() {
-  struct sockaddr_storage sock_addr;
-  socklen_t addr_len = sizeof(sock_addr);
+std::tuple<std::shared_ptr<std::vector<uint8_t>>,
+           std::shared_ptr<SocketAddress>> UdpSocket::ReceiveFrom() {
+  struct sockaddr_storage sock_addr_storage;
+
+  int addr_len = static_cast<int>(sizeof(sock_addr_storage));
   auto buffer = std::make_shared<std::vector<uint8_t>>(SOCKET_MAX_BUFFER);
 
-  int bytes = recvfrom(impl_->socket_, reinterpret_cast<char*>(const_cast<uint8_t*>(buffer->data())),
-    static_cast<int>(buffer->size()), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&sock_addr)), &addr_len);
+  char* data = reinterpret_cast<char*>(const_cast<uint8_t*>(buffer->data()));
+  int data_size = static_cast<int>(buffer->size());
+  auto sock_addr = reinterpret_cast<sockaddr*>(
+      const_cast<struct sockaddr_storage*>(&sock_addr_storage));
+
+  int bytes = recvfrom(impl_->socket_, data,
+                       data_size, 0, sock_addr, &addr_len);
 
   if (bytes != -1) {
     buffer->resize(bytes);
@@ -84,16 +89,21 @@ std::tuple<std::shared_ptr<std::vector<uint8_t>>, std::shared_ptr<SocketAddress>
     buffer->clear();
   }
 
-  auto address = std::make_shared<SocketAddress>(sock_addr, static_cast<int>(addr_len));
-  return std::tuple<std::shared_ptr<std::vector<uint8_t>>, std::shared_ptr<SocketAddress>>(buffer, address);
+  auto address = std::make_shared<SocketAddress>(sock_addr_storage, addr_len);
+  return std::tuple<std::shared_ptr<std::vector<uint8_t>>,
+                    std::shared_ptr<SocketAddress>>(buffer, address);
 }
 
 /*!
   *
   */
 int UdpSocket::Send(const std::vector<uint8_t>& data) {
-  int bytes = sendto(impl_->socket_, reinterpret_cast<char*>(const_cast<uint8_t*>(data.data())),
-    static_cast<int>(data.size()), 0, impl_->current_address_info_->ai_addr, static_cast<int>(impl_->current_address_info_->ai_addrlen));
+  char* data_send = reinterpret_cast<char*>(const_cast<uint8_t*>(data.data()));
+  int data_size = static_cast<int>(data.size());
+  int addr_len = static_cast<int>(impl_->current_address_info_->ai_addrlen);
+
+  int bytes = sendto(impl_->socket_, data_send, data_size, 0,
+                     impl_->current_address_info_->ai_addr, addr_len);
   return bytes;
 }
 
@@ -101,8 +111,13 @@ int UdpSocket::Send(const std::vector<uint8_t>& data) {
   *
   */
 int UdpSocket::Send(const lib::ByteStream& data) {
-  int bytes = sendto(impl_->socket_, reinterpret_cast<const char*>(const_cast<uint8_t*>(data.GetRaw())),
-    data.GetSize(), 0, impl_->current_address_info_->ai_addr, static_cast<int>(impl_->current_address_info_->ai_addrlen));
+  char* data_send = reinterpret_cast<char*>
+      (const_cast<uint8_t*>(data.GetRaw()));
+  int data_size = static_cast<int>(data.GetSize());
+  int addr_len = static_cast<int>(impl_->current_address_info_->ai_addrlen);
+
+  int bytes = sendto(impl_->socket_, data_send, data_size, 0,
+                     impl_->current_address_info_->ai_addr, addr_len);
   return bytes;
 }
 
@@ -111,8 +126,13 @@ int UdpSocket::Send(const lib::ByteStream& data) {
   */
 int UdpSocket::SendTo(const std::vector<uint8_t>& data,
                       const SocketAddress& address) {
-  int bytes = sendto(impl_->socket_, reinterpret_cast<const char*>(const_cast<uint8_t*>(data.data())),
-    static_cast<int>(data.size()), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&address.address)), address.length);
+  char* data_send = reinterpret_cast<char*>(const_cast<uint8_t*>(data.data()));
+  int data_size = static_cast<int>(data.size());
+  auto sock_addr = reinterpret_cast<sockaddr*>(
+      const_cast<struct sockaddr_storage*>(&address.address));
+
+  int bytes = sendto(impl_->socket_, data_send, data_size, 0, sock_addr,
+                     address.length);
   return bytes;
 }
 
@@ -121,8 +141,14 @@ int UdpSocket::SendTo(const std::vector<uint8_t>& data,
   */
 int UdpSocket::SendTo(const lib::ByteStream& data,
                       const SocketAddress& address) {
-  int bytes = sendto(impl_->socket_, reinterpret_cast<const char*>(const_cast<const uint8_t*>(data.GetRaw())),
-    data.GetSize(), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&address.address)), address.length);
+  char* data_send = reinterpret_cast<char*>(const_cast<uint8_t*>(
+                                            data.GetRaw()));
+  int data_size = static_cast<int>(data.GetSize());
+  auto sock_addr = reinterpret_cast<sockaddr*>(
+      const_cast<struct sockaddr_storage*>(&address.address));
+
+  int bytes = sendto(impl_->socket_, data_send, data_size, 0, sock_addr,
+                     address.length);
   return bytes;
 }
 

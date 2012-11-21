@@ -2,8 +2,8 @@
   Copyright (c) 2012, William F. Smith
   All rights reserved.
 
-  Redistribution and use in source and binary forms, with or without modification,
-  are permitted provided that the following conditions are met:
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
 
   * Redistributions of source code must retain the above copyright notice,
   this list of conditions and the following disclaimer.
@@ -65,10 +65,8 @@ public:
   struct addrinfo* current_address_info_;
   SocketFamily family_;
 
-  void Open(const int& socket_type,
-            const int& flags,
-            const std::string& node_name,
-            const std::string& service_name);
+  void Open(const int& socket_type, const int& flags,
+            const std::string& node_name, const std::string& service_name);
 };
 
 } // end network namespace

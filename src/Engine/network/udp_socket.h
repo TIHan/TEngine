@@ -2,8 +2,8 @@
   Copyright (c) 2012, William F. Smith
   All rights reserved.
 
-  Redistribution and use in source and binary forms, with or without modification,
-  are permitted provided that the following conditions are met:
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
 
   * Redistributions of source code must retain the above copyright notice,
   this list of conditions and the following disclaimer.
@@ -32,7 +32,8 @@
 
 // Microsoft gives a warning about virtual inheritance. Turn it off.
 #ifdef _MSC_VER
-# pragma warning( disable : 4250 ) // C4250 - 'class1' : inherits 'class2::member' via dominance
+// C4250 - 'class1' : inherits 'class2::member' via dominance
+# pragma warning( disable : 4250 )
 #endif
 
 namespace engine {
@@ -44,11 +45,16 @@ public:
 
   virtual void Open() = 0;
   virtual void Open(const std::string& address, const std::string& port) = 0;
-  virtual std::tuple<std::shared_ptr<std::vector<uint8_t>>, std::shared_ptr<SocketAddress>> ReceiveFrom() = 0;
+
+  virtual std::tuple<std::shared_ptr<std::vector<uint8_t>>,
+                     std::shared_ptr<SocketAddress>> ReceiveFrom() = 0;
+
   virtual int Send(const std::vector<uint8_t>& data) = 0;
   virtual int Send(const lib::ByteStream& data) = 0;
-  virtual int SendTo(const std::vector<uint8_t>& data, const SocketAddress& address) = 0;
-  virtual int SendTo(const lib::ByteStream& data, const SocketAddress& address) = 0;
+  virtual int SendTo(const std::vector<uint8_t>& data,
+                     const SocketAddress& address) = 0;
+  virtual int SendTo(const lib::ByteStream& data,
+                     const SocketAddress& address) = 0;
 };
 
 class UdpSocket : public SocketBase, public UdpSocketInterface {
@@ -59,11 +65,16 @@ public:
 
   virtual void Open();
   virtual void Open(const std::string& address, const std::string& port);
-  virtual std::tuple<std::shared_ptr<std::vector<uint8_t>>, std::shared_ptr<SocketAddress>> ReceiveFrom();
+
+  virtual std::tuple<std::shared_ptr<std::vector<uint8_t>>,
+          std::shared_ptr<SocketAddress>> ReceiveFrom();
+
   virtual int Send(const std::vector<uint8_t>& data);
   virtual int Send(const lib::ByteStream& data);
-  virtual int SendTo(const std::vector<uint8_t>& data, const SocketAddress& address);
-  virtual int SendTo(const lib::ByteStream& data, const SocketAddress& address);
+  virtual int SendTo(const std::vector<uint8_t>& data,
+                     const SocketAddress& address);
+  virtual int SendTo(const lib::ByteStream& data,
+                     const SocketAddress& address);
 };
 
 } // end network namespace
