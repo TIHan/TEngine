@@ -75,7 +75,7 @@ std::tuple<std::shared_ptr<std::vector<uint8_t>>, std::shared_ptr<SocketAddress>
   auto buffer = std::make_shared<std::vector<uint8_t>>(SOCKET_MAX_BUFFER);
 
   int bytes = recvfrom(impl_->socket_, reinterpret_cast<char*>(const_cast<uint8_t*>(buffer->data())),
-    buffer->size(), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&sock_addr)), &addr_len);
+    static_cast<int>(buffer->size()), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&sock_addr)), &addr_len);
 
   if (bytes != -1) {
     buffer->resize(bytes);
@@ -93,7 +93,7 @@ std::tuple<std::shared_ptr<std::vector<uint8_t>>, std::shared_ptr<SocketAddress>
   */
 int UdpSocket::Send(const std::vector<uint8_t>& data) {
   int bytes = sendto(impl_->socket_, reinterpret_cast<char*>(const_cast<uint8_t*>(data.data())),
-    data.size(), 0, impl_->current_address_info_->ai_addr, static_cast<int>(impl_->current_address_info_->ai_addrlen));
+    static_cast<int>(data.size()), 0, impl_->current_address_info_->ai_addr, static_cast<int>(impl_->current_address_info_->ai_addrlen));
   return bytes;
 }
 
@@ -112,7 +112,7 @@ int UdpSocket::Send(const lib::ByteStream& data) {
 int UdpSocket::SendTo(const std::vector<uint8_t>& data,
                       const SocketAddress& address) {
   int bytes = sendto(impl_->socket_, reinterpret_cast<const char*>(const_cast<uint8_t*>(data.data())),
-    data.size(), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&address.address)), address.length);
+    static_cast<int>(data.size()), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&address.address)), address.length);
   return bytes;
 }
 

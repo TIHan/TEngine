@@ -73,14 +73,14 @@ void ByteStream::WriteByte(const uint8_t& byte) {
   *
   */
 int ByteStream::GetSize() const {
-  return impl_->buffer_.size();
+  return static_cast<int>(impl_->buffer_.size());
 }
 
 /*!
   *
   */
 int ByteStream::GetMaxSize() const {
-  return impl_->buffer_.capacity();
+  return static_cast<int>(impl_->buffer_.capacity());
 }
 
 /*!
@@ -103,7 +103,7 @@ const uint8_t* ByteStream::GetRaw() const {
   */
 std::string ByteStream::ReadString() {
   std::string string;
-  for (int i = 0; i < GetSize(); i++) {
+  for (int i = 0; i < GetSize(); ++i) {
     string.insert(string.end(), ReadByte());
     if (string.data()[i] == '\0') {
       return string.data();
@@ -118,7 +118,7 @@ std::string ByteStream::ReadString() {
 void ByteStream::WriteString(const std::string& string) {
   int size = static_cast<int>(string.length());
 
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < size; ++i) {
     WriteByte(string.data()[i]);
     if (i + 1 >= size) {
       WriteByte('\0');
@@ -130,7 +130,7 @@ void ByteStream::WriteString(const std::string& string) {
   *
   */
 void ByteStream::WriteStream(const std::vector<uint8_t>& buffer) {
-  for (int i = 0; i < static_cast<int>(buffer.size()); i++) {
+  for (int i = 0; i < static_cast<int>(buffer.size()); ++i) {
     WriteByte(buffer.at(i));
   }
 }

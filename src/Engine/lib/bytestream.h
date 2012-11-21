@@ -74,7 +74,7 @@ T ByteStream::Read() {
     T value;
   } unpack;
 
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < size; ++i) {
     unpack.byte[i] = ReadByte();
   }
   return unpack.value;
@@ -93,7 +93,7 @@ void ByteStream::Write(const T& value) {
   } pack;
   pack.value = value;
 
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < size; ++i) {
     WriteByte(pack.byte[i]);
   }
 }
