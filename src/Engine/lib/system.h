@@ -33,8 +33,8 @@
 namespace engine {
 namespace lib {
 
-unsigned long long GetTicks();
-void Delay(unsigned int ms);
+uint64_t GetTicks();
+void Delay(int ms);
 
 } // end engine namespace
 } // end lib namespace

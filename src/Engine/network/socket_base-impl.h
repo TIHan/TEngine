@@ -51,7 +51,8 @@ namespace engine {
 namespace network {
 
 struct SocketAddressImpl {
-  SocketAddressImpl(const struct sockaddr_storage& address, const int& length) {
+  SocketAddressImpl(const struct sockaddr_storage& address,
+                    const int& length) {
     this->address = address;
     this->length = length;
   }
@@ -66,10 +67,10 @@ public:
   struct addrinfo* current_address_info_;
   SocketFamily family_;
 
-  void Open(const unsigned char& socket_type,
-                 const unsigned char& flags,
-                 const std::string& node_name,
-                 const std::string& service_name);
+  void Open(const int& socket_type,
+            const int& flags,
+            const std::string& node_name,
+            const std::string& service_name);
 };
 
 } // end network namespace

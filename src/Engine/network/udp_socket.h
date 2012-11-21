@@ -44,10 +44,10 @@ public:
 
   virtual void Open() = 0;
   virtual void Open(const std::string& address, const std::string& port) = 0;
-  virtual std::tuple<std::shared_ptr<std::vector<unsigned char>>, std::shared_ptr<SocketAddress>> ReceiveFrom() = 0;
-  virtual int Send(const std::vector<unsigned char>& data) = 0;
+  virtual std::tuple<std::shared_ptr<std::vector<uint8_t>>, std::shared_ptr<SocketAddress>> ReceiveFrom() = 0;
+  virtual int Send(const std::vector<uint8_t>& data) = 0;
   virtual int Send(const lib::ByteStream& data) = 0;
-  virtual int SendTo(const std::vector<unsigned char>& data, const SocketAddress& address) = 0;
+  virtual int SendTo(const std::vector<uint8_t>& data, const SocketAddress& address) = 0;
   virtual int SendTo(const lib::ByteStream& data, const SocketAddress& address) = 0;
 };
 
@@ -59,10 +59,10 @@ public:
 
   virtual void Open();
   virtual void Open(const std::string& address, const std::string& port);
-  virtual std::tuple<std::shared_ptr<std::vector<unsigned char>>, std::shared_ptr<SocketAddress>> ReceiveFrom();
-  virtual int Send(const std::vector<unsigned char>& data);
+  virtual std::tuple<std::shared_ptr<std::vector<uint8_t>>, std::shared_ptr<SocketAddress>> ReceiveFrom();
+  virtual int Send(const std::vector<uint8_t>& data);
   virtual int Send(const lib::ByteStream& data);
-  virtual int SendTo(const std::vector<unsigned char>& data, const SocketAddress& address);
+  virtual int SendTo(const std::vector<uint8_t>& data, const SocketAddress& address);
   virtual int SendTo(const lib::ByteStream& data, const SocketAddress& address);
 };
 

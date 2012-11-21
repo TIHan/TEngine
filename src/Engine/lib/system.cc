@@ -36,19 +36,19 @@
 namespace engine {
 namespace lib {
 
-unsigned long long GetTicks() {
+uint64_t GetTicks() {
 #ifdef _MSC_VER
   __timeb64 tb;
   _ftime64_s(&tb);
-  return ((unsigned long long)tb.time * 1000) + tb.millitm;
+  return ((uint64_t)tb.time * 1000) + tb.millitm;
 #elif __GNUC__
   struct timeval tv;
   gettimeofday(&tv, nullptr);
-  return ((unsigned long long)tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+  return ((uint64_t)tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 #endif
 }
 
-void Delay(unsigned int ms) {
+void Delay(int ms) {
 #ifdef __GNUC__
   struct timespec ts;
   ts.tv_sec = ms / 1000;

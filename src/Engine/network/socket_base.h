@@ -49,7 +49,7 @@ class SocketInterface {
 public:
   virtual ~SocketInterface() {};
 
-  virtual int Bind(const unsigned short& usPort) = 0;
+  virtual int Bind(const uint16_t& port) = 0;
   virtual std::string GetAddress() = 0;
   virtual void Close() = 0;
 
@@ -62,7 +62,7 @@ class SocketBase : public virtual SocketInterface {
 public:
   virtual ~SocketBase();
 
-  virtual int Bind(const unsigned short& port);
+  virtual int Bind(const uint16_t& port);
   virtual std::string GetAddress();
   virtual void Close();
 

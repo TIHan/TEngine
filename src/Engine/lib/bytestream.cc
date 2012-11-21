@@ -32,7 +32,7 @@ namespace lib {
 
 class ByteStreamImpl {
 public:
-  std::vector<unsigned char> buffer_;
+  std::vector<uint8_t> buffer_;
   int read_position_;
 };
 
@@ -42,7 +42,7 @@ public:
   *
   */
 ByteStream::ByteStream(const int& max_size) :
-    impl_(make_unique<ByteStreamImpl>()) {
+    impl_(std::make_unique<ByteStreamImpl>()) {
   impl_->buffer_.reserve(max_size);
   impl_->read_position_ = 0;
 }
@@ -56,8 +56,8 @@ ByteStream::~ByteStream() {
 /*!
   *
   */
-unsigned char ByteStream::ReadByte() {
-  unsigned char value = impl_->buffer_.at(impl_->read_position_);
+uint8_t ByteStream::ReadByte() {
+  uint8_t value = impl_->buffer_.at(impl_->read_position_);
   impl_->read_position_++;
   return value;
 }
@@ -65,7 +65,7 @@ unsigned char ByteStream::ReadByte() {
 /*!
   *
   */
-void ByteStream::WriteByte(const unsigned char& byte) {
+void ByteStream::WriteByte(const uint8_t& byte) {
   impl_->buffer_.push_back(byte);
 }
 
@@ -94,7 +94,7 @@ void ByteStream::Reset() {
 /*!
   *
   */
-const unsigned char* ByteStream::GetRaw() const {
+const uint8_t* ByteStream::GetRaw() const {
   return impl_->buffer_.data();
 }
 
@@ -129,7 +129,7 @@ void ByteStream::WriteString(const std::string& string) {
 /*!
   *
   */
-void ByteStream::WriteStream(const std::vector<unsigned char>& buffer) {
+void ByteStream::WriteStream(const std::vector<uint8_t>& buffer) {
   for (int i = 0; i < static_cast<int>(buffer.size()); i++) {
     WriteByte(buffer.at(i));
   }

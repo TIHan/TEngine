@@ -42,15 +42,19 @@
 
 // http://en.cppreference.com/w/cpp/utility/forward
 // Note: This should be in the C++11 standard eventually.
+namespace std {
+
 template <typename T>
-std::unique_ptr<T> make_unique() {
-    return std::unique_ptr<T>(new T());
+unique_ptr<T> make_unique() {
+    return unique_ptr<T>(new T());
 }
 
 template <typename T, typename U>
-std::unique_ptr<T> make_unique(U&& u) {
-    return std::unique_ptr<T>(new T(std::forward<U>(u)));
+unique_ptr<T> make_unique(U&& u) {
+    return unique_ptr<T>(new T(forward<U>(u)));
 }
+
+} // end std namespace
 
 namespace engine {
 namespace lib {

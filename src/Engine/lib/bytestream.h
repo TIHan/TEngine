@@ -38,8 +38,8 @@ class ByteStream {
   std::unique_ptr<ByteStreamImpl> impl_;
 
 protected:
-  unsigned char ReadByte();
-  void WriteByte(const unsigned char& byte);
+  uint8_t ReadByte();
+  void WriteByte(const uint8_t& byte);
 
 public:
   explicit ByteStream(const int& max_size);
@@ -49,11 +49,11 @@ public:
   int GetMaxSize() const;
   void Reset();
 
-  const unsigned char* GetRaw() const;
+  const uint8_t* GetRaw() const;
 
   std::string ReadString();
   void WriteString(const std::string& string);
-  void WriteStream(const std::vector<unsigned char>& buffer);
+  void WriteStream(const std::vector<uint8_t>& buffer);
 
   template <typename T>
   T Read();
@@ -70,7 +70,7 @@ T ByteStream::Read() {
   int size = sizeof(T);
 
   union unpack_t {
-    unsigned char byte[sizeof(T)];
+    uint8_t byte[sizeof(T)];
     T value;
   } unpack;
 
@@ -88,7 +88,7 @@ void ByteStream::Write(const T& value) {
   int size = sizeof(T);
 
   union pack_t {
-    unsigned char byte[sizeof(T)];
+    uint8_t byte[sizeof(T)];
     T value;
   } pack;
   pack.value = value;

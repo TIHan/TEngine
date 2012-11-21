@@ -86,14 +86,14 @@ std::string GetSocketAddress(const SocketAddress& address) {
 /*!
   *
   */
-void SocketBaseImpl::Open(const unsigned char& socket_type,
-                               const unsigned char& flags,
-                               const std::string& node_name,
-                               const std::string& service_name) {
+void SocketBaseImpl::Open(const int& socket_type,
+                          const int& flags,
+                          const std::string& node_name,
+                          const std::string& service_name) {
   socket_ = -1;
   current_address_info_ = nullptr;
 
-  unsigned char family;
+  int family;
   switch(family_) {
   case SOCKET_UNSPECIFIED:
     family = AF_UNSPEC;
@@ -154,7 +154,7 @@ void SocketBaseImpl::Open(const unsigned char& socket_type,
 /*!
   *
   */
-SocketBase::SocketBase() : impl_(make_unique<SocketBaseImpl>()) {
+SocketBase::SocketBase() : impl_(std::make_unique<SocketBaseImpl>()) {
 }
 
 /*!
@@ -167,7 +167,7 @@ SocketBase::~SocketBase() {
 /*!
   *
   */
-int SocketBase::Bind(const unsigned short& port) {
+int SocketBase::Bind(const uint16_t& port) {
   if (impl_->socket_ == -1 || !impl_->current_address_info_) {
     return -1;
   }
