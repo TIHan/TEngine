@@ -71,7 +71,7 @@ std::tuple<std::shared_ptr<std::vector<uint8_t>>,
            std::shared_ptr<SocketAddress>> UdpSocket::ReceiveFrom() {
   struct sockaddr_storage sock_addr_storage;
 
-  int addr_len = static_cast<int>(sizeof(sock_addr_storage));
+  socklen_t addr_len = sizeof(sock_addr_storage);
   auto buffer = std::make_shared<std::vector<uint8_t>>(SOCKET_MAX_BUFFER);
 
   char* data = reinterpret_cast<char*>(const_cast<uint8_t*>(buffer->data()));
