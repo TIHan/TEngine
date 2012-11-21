@@ -45,9 +45,6 @@
     <ClInclude Include=".\lib\include\engine_lib.h">
       <Filter>Header Files\lib\include</Filter>
     </ClInclude>
-    <ClInclude Include=".\network\include\network.h">
-      <Filter>Header Files\network\include</Filter>
-    </ClInclude>
     <ClInclude Include=".\network\socket_base.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
@@ -56,6 +53,12 @@
     </ClInclude>
     <ClInclude Include=".\network\udp_socket.h">
       <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\server.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\include\engine_network.h">
+      <Filter>Header Files\network\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

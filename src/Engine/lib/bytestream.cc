@@ -42,9 +42,9 @@ public:
   *
   */
 ByteStream::ByteStream(const int& max_size) :
-    impl(make_unique<ByteStreamImpl>()) {
-  impl->buffer_.reserve(max_size);
-  impl->read_position_ = 0;
+    impl_(make_unique<ByteStreamImpl>()) {
+  impl_->buffer_.reserve(max_size);
+  impl_->read_position_ = 0;
 }
 
 /*!
@@ -57,8 +57,8 @@ ByteStream::~ByteStream() {
   *
   */
 unsigned char ByteStream::ReadByte() {
-  unsigned char value = impl->buffer_.at(impl->read_position_);
-  impl->read_position_++;
+  unsigned char value = impl_->buffer_.at(impl_->read_position_);
+  impl_->read_position_++;
   return value;
 }
 
@@ -66,36 +66,36 @@ unsigned char ByteStream::ReadByte() {
   *
   */
 void ByteStream::WriteByte(const unsigned char& byte) {
-  impl->buffer_.push_back(byte);
+  impl_->buffer_.push_back(byte);
 }
 
 /*!
   *
   */
 int ByteStream::GetSize() const {
-  return impl->buffer_.size();
+  return impl_->buffer_.size();
 }
 
 /*!
   *
   */
 int ByteStream::GetMaxSize() const {
-  return impl->buffer_.capacity();
+  return impl_->buffer_.capacity();
 }
 
 /*!
   *
   */
 void ByteStream::Reset() {
-  impl->buffer_.clear();
-  impl->read_position_ = 0;
+  impl_->buffer_.clear();
+  impl_->read_position_ = 0;
 }
 
 /*!
   *
   */
 const unsigned char* ByteStream::GetRaw() const {
-  return impl->buffer_.data();
+  return impl_->buffer_.data();
 }
 
 /*!

@@ -35,7 +35,7 @@ namespace lib {
 
 class ByteStreamImpl;
 class ByteStream {
-  std::unique_ptr<ByteStreamImpl> impl;
+  std::unique_ptr<ByteStreamImpl> impl_;
 
 protected:
   unsigned char ReadByte();

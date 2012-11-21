@@ -124,10 +124,11 @@
     <ClInclude Include=".\lib\include\engine_lib.h" />
     <ClInclude Include=".\lib\common.h" />
     <ClInclude Include=".\lib\system.h" />
-    <ClInclude Include=".\network\include\network.h" />
+    <ClInclude Include="network\include\engine_network.h" />
     <ClInclude Include=".\network\socket_base.h" />
     <ClInclude Include=".\network\socket_base-impl.h" />
     <ClInclude Include=".\network\udp_socket.h" />
+    <ClInclude Include="lib\server.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\lib\bytestream.cc" />

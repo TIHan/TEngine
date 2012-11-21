@@ -1,5 +1,3 @@
-#include <engine_lib.h>
-#include <network.h>
 #include "../Engine/network/udp_socket.h"
 #include <gtest/gtest.h>
 
@@ -11,16 +9,16 @@ class SocketTest : public ::testing::Test {
 
 TEST_F(SocketTest, SendAndReceive) {
   auto server = std::make_shared<network::UdpSocket>(network::SOCKET_IPV4); 
-  server->OpenOrDie();
+  server->Open();
   server->Bind(1337);
 
   // Test close and re-open.
   server->Close();
-  server->OpenOrDie();
+  server->Open();
   server->Bind(1337);
 
   auto client = std::make_shared<network::UdpSocket>();
-  client->OpenOrDie("127.0.0.1", "1337");
+  client->Open("127.0.0.1", "1337");
   auto clientStream = std::make_shared<lib::ByteStream>(512);
   clientStream->WriteString("Hello");
   client->Send(*clientStream);
@@ -51,11 +49,11 @@ TEST_F(SocketTest, SendAndReceive) {
 
 TEST_F(SocketTest, SendAndReceive2) {
   auto server = std::make_shared<network::UdpSocket>(network::SOCKET_IPV4); 
-  server->OpenOrDie();
+  server->Open();
   server->Bind(1337);
 
   auto client = std::make_shared<network::UdpSocket>();
-  client->OpenOrDie("127.0.0.1", "1337");
+  client->Open("127.0.0.1", "1337");
 
   auto clientStream = std::make_shared<lib::ByteStream>(512);
   clientStream->Write<int>(2147483647);

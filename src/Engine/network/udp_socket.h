@@ -30,10 +30,6 @@
 
 #include "socket_base.h"
 
-#ifndef NETWORK_NO_ENGINE_LIB
-# include <engine_lib.h>
-#endif
-
 // Microsoft gives a warning about virtual inheritance. Turn it off.
 #ifdef _MSC_VER
 # pragma warning( disable : 4250 ) // C4250 - 'class1' : inherits 'class2::member' via dominance
@@ -46,8 +42,8 @@ class UdpSocketInterface : public virtual SocketInterface {
 public:
   virtual ~UdpSocketInterface() {};
 
-  virtual void OpenOrDie() = 0;
-  virtual void OpenOrDie(const std::string& address, const std::string& port) = 0;
+  virtual void Open() = 0;
+  virtual void Open(const std::string& address, const std::string& port) = 0;
   virtual std::tuple<std::shared_ptr<std::vector<unsigned char>>, std::shared_ptr<SocketAddress>> ReceiveFrom() = 0;
   virtual int Send(const std::vector<unsigned char>& data) = 0;
   virtual int Send(const lib::ByteStream& data) = 0;
@@ -61,8 +57,8 @@ public:
   explicit UdpSocket(const SocketFamily& family);
   virtual ~UdpSocket();
 
-  virtual void OpenOrDie();
-  virtual void OpenOrDie(const std::string& address, const std::string& port);
+  virtual void Open();
+  virtual void Open(const std::string& address, const std::string& port);
   virtual std::tuple<std::shared_ptr<std::vector<unsigned char>>, std::shared_ptr<SocketAddress>> ReceiveFrom();
   virtual int Send(const std::vector<unsigned char>& data);
   virtual int Send(const lib::ByteStream& data);

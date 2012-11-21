@@ -32,8 +32,8 @@
  *
  */
 static int CreateSocket(const int& domain,
-    const int& type,
-    const int& protocol) {
+                        const int& type,
+                        const int& protocol) {
   return static_cast<int>(socket(domain, type, protocol));
 }
 
@@ -41,9 +41,9 @@ static int CreateSocket(const int& domain,
  *
  */
 static int BindSocket(const int& sockfd,
-    const struct sockaddr* const& addr,
-    const int& addrlen) {
-  return bind(sockfd, addr, addrlen);
+                      const struct sockaddr& addr,
+                      const int& addrlen) {
+  return bind(sockfd, &addr, addrlen);
 }
 
 /*!
@@ -60,37 +60,33 @@ static int CloseSocket(const int& sockfd) {
 /*!
  *
  */
-static std::string GetSocketAddress(const struct sockaddr_storage* const& addr) {
-    if (addr) {
-      std::string address(INET6_ADDRSTRLEN, '\0');
+static std::string GetSocketAddress(const struct sockaddr_storage& addr) {
+    std::string address(INET6_ADDRSTRLEN, '\0');
 
-      switch (addr->ss_family) {
-      case AF_INET6:
-        inet_ntop(addr->ss_family, &reinterpret_cast<struct sockaddr_in6*>(const_cast<struct sockaddr_storage*>(addr))->sin6_addr,
-          reinterpret_cast<char*>(const_cast<char*>(address.data())), INET6_ADDRSTRLEN);
-        break;
-      default:
-        inet_ntop(addr->ss_family, &reinterpret_cast<struct sockaddr_in*>(const_cast<struct sockaddr_storage*>(addr))->sin_addr,
-          reinterpret_cast<char*>(const_cast<char*>(address.data())), INET_ADDRSTRLEN);
-        break;
-      }
-      return address.data();
-    } else {
-      return engine::lib::EmptyString();
+    switch (addr.ss_family) {
+    case AF_INET6:
+      inet_ntop(addr.ss_family, &reinterpret_cast<struct sockaddr_in6*>(const_cast<struct sockaddr_storage*>(&addr))->sin6_addr,
+        reinterpret_cast<char*>(const_cast<char*>(address.data())), INET6_ADDRSTRLEN);
+      break;
+    default:
+      inet_ntop(addr.ss_family, &reinterpret_cast<struct sockaddr_in*>(const_cast<struct sockaddr_storage*>(&addr))->sin_addr,
+        reinterpret_cast<char*>(const_cast<char*>(address.data())), INET_ADDRSTRLEN);
+      break;
     }
+    return address.data();
 }
 
 namespace engine {
 namespace network {
 
 std::string GetSocketAddress(const SocketAddress& address) {
-  return GetSocketAddress(&address.address);
+  return GetSocketAddress(address.address);
 }
 
 /*!
   *
   */
-void SocketBaseImpl::OpenOrDie(const unsigned char& socket_type,
+void SocketBaseImpl::Open(const unsigned char& socket_type,
                                const unsigned char& flags,
                                const std::string& node_name,
                                const std::string& service_name) {
@@ -158,7 +154,7 @@ void SocketBaseImpl::OpenOrDie(const unsigned char& socket_type,
 /*!
   *
   */
-SocketBase::SocketBase() : impl(make_unique<SocketBaseImpl>()) {
+SocketBase::SocketBase() : impl_(make_unique<SocketBaseImpl>()) {
 }
 
 /*!
@@ -172,37 +168,40 @@ SocketBase::~SocketBase() {
   *
   */
 int SocketBase::Bind(const unsigned short& port) {
-  if (impl->socket_ != -1 && impl->current_address_info_) {
-    struct sockaddr_in* sockaddr = reinterpret_cast<struct sockaddr_in*>(impl->current_address_info_->ai_addr);
-
-    sockaddr->sin_port = ntohs(port);
-    if (BindSocket(impl->socket_, impl->current_address_info_->ai_addr, static_cast<int>(impl->current_address_info_->ai_addrlen)) != 0) {
-      return -1;
-    }
-    return 0;
+  if (impl_->socket_ == -1 || !impl_->current_address_info_) {
+    return -1;
   }
-  return -1;
+
+  struct sockaddr_in* sockaddr = reinterpret_cast<struct sockaddr_in*>(impl_->current_address_info_->ai_addr);
+  sockaddr->sin_port = ntohs(port);
+  if (BindSocket(impl_->socket_, *impl_->current_address_info_->ai_addr, static_cast<int>(impl_->current_address_info_->ai_addrlen)) != 0) {
+    return -1;
+  }
+  return 0;
 }
 
 /*!
   *
   */
 std::string SocketBase::GetAddress() {
-  return GetSocketAddress(reinterpret_cast<struct sockaddr_storage*>(impl->current_address_info_->ai_addr));
+  if (!impl_->current_address_info_) {
+    return lib::EmptyString();
+  }
+  return GetSocketAddress(*reinterpret_cast<struct sockaddr_storage*>(impl_->current_address_info_->ai_addr));
 }
 
 /*!
   *
   */
 void SocketBase::Close() {
-  if (impl->address_info_) {
-    freeaddrinfo(impl->address_info_);
-    impl->address_info_ = nullptr;
+  if (impl_->address_info_) {
+    freeaddrinfo(impl_->address_info_);
+    impl_->address_info_ = nullptr;
   }
 
-  if (impl->socket_ != -1) {
-    CloseSocket(impl->socket_);
-    impl->socket_ = -1;
+  if (impl_->socket_ != -1) {
+    CloseSocket(impl_->socket_);
+    impl_->socket_ = -1;
   }
 }
 
@@ -210,7 +209,7 @@ void SocketBase::Close() {
   *
   */
 SocketFamily SocketBase::family() {
-  return impl->family_;
+  return impl_->family_;
 }
 
 } // end network namespace

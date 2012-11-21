@@ -27,5 +27,8 @@
     <ClCompile Include=".\system_test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="network_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

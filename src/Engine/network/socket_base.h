@@ -28,9 +28,7 @@
 #ifndef SOCKETBASE_H_
 #define SOCKETBASE_H_
 
-#ifndef NETWORK_NO_ENGINE_LIB
-# include <engine_lib.h>
-#endif
+#include <engine_lib.h>
 
 #define SOCKET_MAX_BUFFER 1400
 
@@ -72,7 +70,7 @@ public:
   virtual SocketFamily family();
 
 protected:
-  std::unique_ptr<SocketBaseImpl> impl;
+  std::unique_ptr<SocketBaseImpl> impl_;
 
   SocketBase(); // Abstract class
 };

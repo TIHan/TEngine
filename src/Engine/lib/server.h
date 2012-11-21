@@ -25,4 +25,29 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define NETWORK_NO_ENGINE_LIB
+#ifndef SERVER_H_
+#define SERVER_H_
+
+#include <engine_lib.h>
+
+namespace engine {
+namespace network {
+
+class ServerInterface {
+public:
+  virtual ~ServerInterface() {}
+};
+
+class ServerImpl;
+class Server : public ServerInterface {
+public:
+  virtual ~Server() {}
+
+//private: // TODO
+//  std::unique_ptr<ServerImpl> impl_;
+};
+
+} // end network namespace
+} // end engine namespace
+
+#endif // SERVER_H_

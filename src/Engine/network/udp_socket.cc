@@ -35,14 +35,14 @@ namespace network {
   *
   */
 UdpSocket::UdpSocket(const SocketFamily& family) {
-  impl->family_ = family;
+  impl_->family_ = family;
 }
 
 /*!
   *
   */
 UdpSocket::UdpSocket() {
-  impl->family_ = (SOCKET_UNSPECIFIED);
+  impl_->family_ = (SOCKET_UNSPECIFIED);
 }
 
 /*!
@@ -54,15 +54,15 @@ UdpSocket::~UdpSocket() {
 /*!
   *
   */
-void UdpSocket::OpenOrDie() {
-  impl->OpenOrDie(SOCK_DGRAM, AI_PASSIVE, lib::EmptyString(), lib::EmptyString());
+void UdpSocket::Open() {
+  impl_->Open(SOCK_DGRAM, AI_PASSIVE, lib::EmptyString(), lib::EmptyString());
 }
 
 /*!
   *
   */
-void UdpSocket::OpenOrDie(const std::string& address, const std::string& port) {
-  impl->OpenOrDie(SOCK_DGRAM, AI_PASSIVE, address, port);
+void UdpSocket::Open(const std::string& address, const std::string& port) {
+  impl_->Open(SOCK_DGRAM, AI_PASSIVE, address, port);
 }
 
 /*!
@@ -73,7 +73,7 @@ std::tuple<std::shared_ptr<std::vector<unsigned char>>, std::shared_ptr<SocketAd
   socklen_t addr_len = sizeof(sock_addr);
   auto buffer = std::make_shared<std::vector<unsigned char>>(SOCKET_MAX_BUFFER);
 
-  int bytes = recvfrom(impl->socket_, reinterpret_cast<char*>(const_cast<unsigned char*>(buffer->data())),
+  int bytes = recvfrom(impl_->socket_, reinterpret_cast<char*>(const_cast<unsigned char*>(buffer->data())),
     buffer->size(), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&sock_addr)), &addr_len);
 
   if (bytes != -1) {
@@ -91,8 +91,8 @@ std::tuple<std::shared_ptr<std::vector<unsigned char>>, std::shared_ptr<SocketAd
   *
   */
 int UdpSocket::Send(const std::vector<unsigned char>& data) {
-  int bytes = sendto(impl->socket_, reinterpret_cast<char*>(const_cast<unsigned char*>(data.data())),
-    data.size(), 0, impl->current_address_info_->ai_addr, static_cast<int>(impl->current_address_info_->ai_addrlen));
+  int bytes = sendto(impl_->socket_, reinterpret_cast<char*>(const_cast<unsigned char*>(data.data())),
+    data.size(), 0, impl_->current_address_info_->ai_addr, static_cast<int>(impl_->current_address_info_->ai_addrlen));
   return bytes;
 }
 
@@ -100,8 +100,8 @@ int UdpSocket::Send(const std::vector<unsigned char>& data) {
   *
   */
 int UdpSocket::Send(const lib::ByteStream& data) {
-  int bytes = sendto(impl->socket_, reinterpret_cast<char*>(const_cast<unsigned char*>(data.GetRaw())),
-    data.GetSize(), 0, impl->current_address_info_->ai_addr, static_cast<int>(impl->current_address_info_->ai_addrlen));
+  int bytes = sendto(impl_->socket_, reinterpret_cast<char*>(const_cast<unsigned char*>(data.GetRaw())),
+    data.GetSize(), 0, impl_->current_address_info_->ai_addr, static_cast<int>(impl_->current_address_info_->ai_addrlen));
   return bytes;
 }
 
@@ -110,7 +110,7 @@ int UdpSocket::Send(const lib::ByteStream& data) {
   */
 int UdpSocket::SendTo(const std::vector<unsigned char>& data,
                       const SocketAddress& address) {
-  int bytes = sendto(impl->socket_, reinterpret_cast<const char*>(const_cast<const unsigned char*>(data.data())),
+  int bytes = sendto(impl_->socket_, reinterpret_cast<const char*>(const_cast<const unsigned char*>(data.data())),
     data.size(), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&address.address)), address.length);
   return bytes;
 }
@@ -120,7 +120,7 @@ int UdpSocket::SendTo(const std::vector<unsigned char>& data,
   */
 int UdpSocket::SendTo(const lib::ByteStream& data,
                       const SocketAddress& address) {
-  int bytes = sendto(impl->socket_, reinterpret_cast<const char*>(const_cast<const unsigned char*>(data.GetRaw())),
+  int bytes = sendto(impl_->socket_, reinterpret_cast<const char*>(const_cast<const unsigned char*>(data.GetRaw())),
     data.GetSize(), 0, reinterpret_cast<sockaddr*>(const_cast<struct sockaddr_storage*>(&address.address)), address.length);
   return bytes;
 }
