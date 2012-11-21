@@ -28,6 +28,8 @@
 #ifndef SOCKET_BASE_IMPL_H_
 #define SOCKET_BASE_IMPL_H_
 
+#include <engine_lib.h>
+
 #ifdef __GNUC__
 # include <sys/socket.h>
 # include <netdb.h>
@@ -41,10 +43,6 @@
 # include <ws2tcpip.h>
 
 # pragma comment(lib, "ws2_32.lib")
-#endif
-
-#ifndef NETWORK_NO_ENGINE_LIB
-# include <engine_lib.h>
 #endif
 
 namespace engine {
