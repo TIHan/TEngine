@@ -62,20 +62,24 @@ static std::string GetSocketAddress(const struct sockaddr_storage& addr) {
     std::string address(INET6_ADDRSTRLEN, '\0');
 
     switch (addr.ss_family) {
-    case AF_INET6:
-      auto sock_addr = &reinterpret_cast<struct sockaddr_in6*>(
-          const_cast<struct sockaddr_storage*>(&addr))->sin6_addr;
-      char* data = reinterpret_cast<char*>(const_cast<char*>(address.data()));
+      case AF_INET6: {
+        auto sock_addr = &reinterpret_cast<struct sockaddr_in6*>(
+            const_cast<struct sockaddr_storage*>(&addr))->sin6_addr;
+        char* data = reinterpret_cast<char*>(
+            const_cast<char*>(address.data()));
 
-      inet_ntop(addr.ss_family, sock_addr, data, INET6_ADDRSTRLEN);
-      break;
-    default:
-      auto sock_addr = &reinterpret_cast<struct sockaddr_in*>(
-          const_cast<struct sockaddr_storage*>(&addr))->sin_addr;
-      char* data = reinterpret_cast<char*>(const_cast<char*>(address.data()));
+        inet_ntop(addr.ss_family, sock_addr, data, INET6_ADDRSTRLEN);
+        break;
+      }
+      default: {
+        auto sock_addr = &reinterpret_cast<struct sockaddr_in*>(
+            const_cast<struct sockaddr_storage*>(&addr))->sin_addr;
+        char* data = reinterpret_cast<char*>(
+            const_cast<char*>(address.data()));
 
-      inet_ntop(addr.ss_family, sock_addr, data, INET_ADDRSTRLEN);
-      break;
+        inet_ntop(addr.ss_family, sock_addr, data, INET_ADDRSTRLEN);
+        break;
+      }
     }
     return address.data();
 }
@@ -95,17 +99,17 @@ void SocketBaseImpl::Open(const int& socket_type, const int& flags,
                           const std::string& service_name) {
   int family;
   switch(family_) {
-  case SOCKET_UNSPECIFIED:
-    family = AF_UNSPEC;
-    break;
-  case SOCKET_IPV4:
-    family = AF_INET;
-    break;
-  case SOCKET_IPV6:
-    family = AF_INET6;
-    break;
-  default:
-    throw std::logic_error("Invalid socket type.");
+    case SOCKET_UNSPECIFIED:
+      family = AF_UNSPEC;
+      break;
+    case SOCKET_IPV4:
+      family = AF_INET;
+      break;
+    case SOCKET_IPV6:
+      family = AF_INET6;
+      break;
+    default:
+      throw std::logic_error("Invalid socket type.");
   }
 
 #ifdef _MSC_VER
