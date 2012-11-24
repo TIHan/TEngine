@@ -57,17 +57,18 @@ public:
                      const SocketAddress& address) = 0;
 };
 
-class UdpSocket : public SocketBase, public UdpSocketInterface {
+class UdpSocket : public SocketBase, public virtual UdpSocketInterface {
 public:
   UdpSocket();
   explicit UdpSocket(const SocketFamily& family);
+
   virtual ~UdpSocket();
 
   virtual void Open();
   virtual void Open(const std::string& address, const std::string& port);
 
   virtual std::tuple<std::shared_ptr<std::vector<uint8_t>>,
-          std::shared_ptr<SocketAddress>> ReceiveFrom();
+                     std::shared_ptr<SocketAddress>> ReceiveFrom();
 
   virtual int Send(const std::vector<uint8_t>& data);
   virtual int Send(const lib::ByteStream& data);

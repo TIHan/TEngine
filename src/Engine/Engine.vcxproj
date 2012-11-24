@@ -129,6 +129,7 @@
     <ClInclude Include=".\network\socket_base-impl.h" />
     <ClInclude Include=".\network\udp_socket.h" />
     <ClInclude Include="lib\server.h" />
+    <ClInclude Include="network\message.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\lib\bytestream.cc" />

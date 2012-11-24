@@ -144,16 +144,14 @@ void SocketBaseImpl::Open(const int& socket_type, const int& flags,
     if (p->ai_family == family || family == AF_UNSPEC) {
       socket_ = CreateSocket(p->ai_family, p->ai_socktype, p->ai_protocol);
       if (socket_ != -1) {
-        //m_bFamily = p->ai_family; // TODO: What to do here?
         current_address_info_ = p;
         break;
       }
     }
   }
 
-  if (socket_ == -1) {
+  if (socket_ == -1)
     throw std::domain_error("Unable to create socket.");
-  }
 }
 
 /*!
@@ -176,9 +174,8 @@ SocketBase::~SocketBase() {
   *
   */
 int SocketBase::Bind(const uint16_t& port) {
-  if (impl_->socket_ == -1 || !impl_->current_address_info_) {
+  if (impl_->socket_ == -1 || !impl_->current_address_info_)
     return -1;
-  }
 
   auto sockaddr = reinterpret_cast<struct sockaddr_in*>(
       impl_->current_address_info_->ai_addr);
@@ -196,9 +193,9 @@ int SocketBase::Bind(const uint16_t& port) {
   *
   */
 std::string SocketBase::GetAddress() {
-  if (!impl_->current_address_info_) {
+  if (!impl_->current_address_info_)
     return lib::EmptyString();
-  }
+
   return GetSocketAddress(*reinterpret_cast<struct sockaddr_storage*>(
                           impl_->current_address_info_->ai_addr));
 }

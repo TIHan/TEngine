@@ -60,6 +60,9 @@
     <ClInclude Include="network\include\engine_network.h">
       <Filter>Header Files\network\include</Filter>
     </ClInclude>
+    <ClInclude Include="network\message.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\lib\bytestream.cc">

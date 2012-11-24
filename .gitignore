@@ -37,3 +37,6 @@ UpgradeLog.htm
 
 # Text Editor
 \#*#
+
+# Exclusions
+!lib/

@@ -39,7 +39,7 @@ public:
 };
 
 class ServerImpl;
-class Server : public ServerInterface {
+class Server : public virtual ServerInterface {
 public:
   virtual ~Server() {}
 
