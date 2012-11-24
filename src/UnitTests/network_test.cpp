@@ -11,5 +11,6 @@ TEST_F(NetworkTest, ServerTest) {
   //server.Start();
   //server.Stop();
   //server.Start();
+  //server.Wait();
 }
 
