@@ -70,15 +70,22 @@ std::shared_ptr<SendMessage> Server::CreateMessage(const int& type) {
   return std::make_shared<SendMessage>(sendStream_, type);
 }
 
-void Server::RegisterMessage(const int& type,
-                             std::function<void(ReceiveMessage)>& func) {
+void Server::RegisterMessageCallback(const int& type,
+    std::function<void(ReceiveMessage)>& func) {
+  // TODO
 }
 
 void Server::ProcessMessages() {
+ // TODO
 }
 
 void Server::SendMessages() {
-  // TODO
+  auto addresses = impl_->addresses_;
+
+  for_each(addresses.cbegin(), addresses.cend(),
+           [&] (std::shared_ptr<SocketAddress> address) {
+    impl_->socket_.SendTo(*sendStream_, *address);
+  });
 }
 
 int Server::port() const {

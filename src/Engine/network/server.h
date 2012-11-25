@@ -43,8 +43,8 @@ public:
   virtual void Stop() = 0;
 
   virtual std::shared_ptr<SendMessage> CreateMessage(const int& type) = 0;
-  virtual void RegisterMessage(const int& type,
-                               std::function<void(ReceiveMessage)>& func) = 0;
+  virtual void RegisterMessageCallback(const int& type,
+    std::function<void(ReceiveMessage)>& func) = 0;
   virtual void ProcessMessages() = 0;
   virtual void SendMessages() = 0;
 
@@ -63,8 +63,8 @@ public:
   virtual void Stop();
 
   virtual std::shared_ptr<SendMessage> CreateMessage(const int& type);
-  virtual void RegisterMessage(const int& type,
-                               std::function<void(ReceiveMessage)>& func);
+  virtual void RegisterMessageCallback(const int& type,
+    std::function<void(ReceiveMessage)>& func);
   virtual void ProcessMessages();
   virtual void SendMessages();
 
