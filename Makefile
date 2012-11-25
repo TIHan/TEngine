@@ -2,7 +2,7 @@ CXX		= g++
 CXXFLAGS	= -Wall -pedantic-errors -Wno-variadic-macros -std=c++0x -pthread
 SOURCES		= $(wildcard src/Engine/lib/*.cc) $(wildcard src/Engine/network/*.cc) $(wildcard src/UnitTests/*.cc)
 OBJECTS		= $(SOURCES:%.cc=%.o)
-INCLUDES	= -Isrc/Engine/lib/include -Isrc/Engine/network/include -Ilib/gtest-1.6.0 -Ilib/gtest-1.6.0/include
+INCLUDES	= -Isrc/Engine/lib/include -Isrc/Engine/network/include -Ilib/gmock-1.6.0 -Ilib/gmock-1.6.0/include -Ilib/gmock-1.6.0/gtest -Ilib/gmock-1.6.0/gtest/include
 LIBS		= src/GoogleTest/libGoogleTest.a
 EXECUTABLE	= te-test
 

@@ -1,6 +1,6 @@
-CXX			= g++
-CXXFLAGS	= -Wall -pedantic-errors -Wno-variadic-macros -std=c++0x -pthread
-SOURCES		= ../../lib/gtest-1.6.0/src/gtest-all.cc
+CXX		= g++
+CXXFLAGS	= -Wall -Wno-variadic-macros -std=c++0x -pthread
+SOURCES		= ../../lib/gmock-1.6.0/src/gmock-all.cc ../../lib/gmock-1.6.0/gtest/src/gtest-all.cc
 OBJECTS		= $(SOURCES:%.cc=%.o)
 INCLUDES	= -I../../lib/gmock-1.6.0 -I../../lib/gmock-1.6.0/include -I../../lib/gmock-1.6.0/gtest -I../../lib/gmock-1.6.0/gtest/include
 OUTPUT		= libGoogleTest.a
