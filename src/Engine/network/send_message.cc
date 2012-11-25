@@ -33,7 +33,7 @@ namespace network {
 SendMessage::SendMessage(std::shared_ptr<lib::ByteStream> sendStream,
                          const int& type)
     : byteStream_(std::make_shared<lib::ByteStream>()) {
-  if (!sendStream) throw std::exception("sendStream is null.");
+  if (!sendStream) throw std::invalid_argument("sendStream is null.");
   if (type < 0) throw std::out_of_range("type is below 0.");
 
   type_ = type;

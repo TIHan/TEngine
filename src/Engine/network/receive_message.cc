@@ -32,7 +32,7 @@ namespace network {
 
 ReceiveMessage::ReceiveMessage(std::shared_ptr<lib::ByteStream> receiveStream,
                                const int& type) {
-  if (!receiveStream) throw std::exception("receiveStream is null.");
+  if (!receiveStream) throw std::invalid_argument("receiveStream is null.");
   if (type < 0) throw std::out_of_range("type is below 0.");
 
   type_ = type;
