@@ -25,5 +25,21 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../server.h"
-#include "../message_base.h"
+#include "message_base.h"
+
+namespace engine {
+namespace network {
+
+void MessageBase::Initialize(const int& type) {
+  if (type < 0) throw std::out_of_range("type is below 0.");
+
+  type_ = type;
+  byteStream_.Write<uint8_t>(type);
+}
+
+int MessageBase::type() const {
+  return type_;
+}
+
+} // end network namespace
+} // end engine namespace

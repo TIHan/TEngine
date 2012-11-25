@@ -41,9 +41,8 @@ public:
   * a maximum size for the ByteStream buffer.
   *
   */
-ByteStream::ByteStream(const int& max_size) :
+ByteStream::ByteStream() :
     impl_(std::make_unique<ByteStreamImpl>()) {
-  impl_->buffer_.reserve(max_size);
   impl_->read_position_ = 0;
 }
 

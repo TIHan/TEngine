@@ -36,9 +36,9 @@ namespace engine {
 namespace network {
 
 enum SocketFamily {
-  SOCKET_UNSPECIFIED,
-  SOCKET_IPV4,
-  SOCKET_IPV6
+  kUnspecified,
+  kIpv4,
+  kIpv6
 };
 
 typedef struct SocketAddressImpl SocketAddress;

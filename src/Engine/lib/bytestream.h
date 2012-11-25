@@ -42,7 +42,7 @@ protected:
   void WriteByte(const uint8_t& byte);
 
 public:
-  explicit ByteStream(const int& max_size);
+  ByteStream();
   virtual ~ByteStream();
 
   int GetSize() const;

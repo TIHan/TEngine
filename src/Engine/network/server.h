@@ -36,15 +36,31 @@ namespace network {
 class ServerInterface {
 public:
   virtual ~ServerInterface() {}
+
+  virtual void Start() = 0;
+  virtual void Stop() = 0;
+
+  /* Accessors / Mutators */
+  virtual int port() const = 0;
+  virtual void set_port(const int& port) = 0;
 };
 
 class ServerImpl;
 class Server : public virtual ServerInterface {
 public:
-  virtual ~Server() {}
+  explicit Server(const int& port);
+  virtual ~Server();
 
-//private: // TODO
-//  std::unique_ptr<ServerImpl> impl_;
+  virtual void Start();
+  virtual void Stop();
+
+  /* Accessors / Mutators */
+  virtual int port() const;
+  virtual void set_port(const int& port);
+
+private:
+  std::unique_ptr<ServerImpl> impl_;
+  int port_;
 };
 
 } // end network namespace

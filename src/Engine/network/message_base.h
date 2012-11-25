@@ -36,14 +36,25 @@ namespace network {
 class MessageInterface {
 public:
   virtual ~MessageInterface() {}
+
+  /* Accessors / Mutators */
+  virtual int type() const = 0;
 };
 
-class Message : public virtual MessageInterface {
+class MessageBase : public virtual MessageInterface {
 public:
-  virtual ~Message() {}
+  virtual ~MessageBase() {}
 
-private:
-  uint16_t number_;
+  /* Accessors / Mutators */
+  virtual int type() const;
+
+protected:
+  MessageBase() {}; // abstract
+
+  void Initialize(const int& type);
+
+  int type_;
+  lib::ByteStream byteStream_;
 };
 
 } // end network namespace

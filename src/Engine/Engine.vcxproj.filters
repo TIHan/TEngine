@@ -54,13 +54,13 @@
     <ClInclude Include=".\network\udp_socket.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="lib\server.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
     <ClInclude Include="network\include\engine_network.h">
       <Filter>Header Files\network\include</Filter>
     </ClInclude>
-    <ClInclude Include="network\message.h">
+    <ClInclude Include="network\message_base.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
   </ItemGroup>
@@ -75,6 +75,12 @@
       <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include=".\network\udp_socket.cc">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\message_base.cc">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\server.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>

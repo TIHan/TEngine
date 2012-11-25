@@ -25,5 +25,51 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../server.h"
-#include "../message_base.h"
+#include "server.h"
+#include "udp_socket.h"
+
+namespace engine {
+namespace network {
+
+class ServerImpl {
+public:
+  UdpSocket socket_;
+};
+
+Server::Server(const int& port) : impl_(std::make_unique<ServerImpl>()) {
+  if (port <= 0) throw std::out_of_range("port is 0 or less.");
+  port_ = port;
+}
+
+Server::~Server() {
+}
+
+void Server::Start() {
+  impl_->socket_.Open();
+  
+  int success = -1;
+  for (int port = port_; port < port_ + 1000; ++port) {
+    success = impl_->socket_.Bind(port);
+    if (success == 0) {
+      port_ = port;
+      break;
+    }
+  }
+
+  if (success == -1) throw std::domain_error("Unable to bind port.");
+}
+
+void Server::Stop() {
+  impl_->socket_.Close();
+}
+
+int Server::port() const {
+  return port_;
+}
+
+void Server::set_port(const int& port) {
+  port_ = port;
+}
+
+} // end network namespace
+} // end engine namespace

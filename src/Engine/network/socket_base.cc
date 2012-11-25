@@ -99,13 +99,13 @@ void SocketBaseImpl::Open(const int& socket_type, const int& flags,
                           const std::string& service_name) {
   int family;
   switch(family_) {
-    case SOCKET_UNSPECIFIED:
+    case SocketFamily::kUnspecified:
       family = AF_UNSPEC;
       break;
-    case SOCKET_IPV4:
+    case SocketFamily::kIpv4:
       family = AF_INET;
       break;
-    case SOCKET_IPV6:
+    case SocketFamily::kIpv6:
       family = AF_INET6;
       break;
     default:
@@ -150,15 +150,14 @@ void SocketBaseImpl::Open(const int& socket_type, const int& flags,
     }
   }
 
-  if (socket_ == -1)
-    throw std::domain_error("Unable to create socket.");
+  if (socket_ == -1) throw std::domain_error("Unable to create socket.");
 }
 
 /*!
   *
   */
 SocketBase::SocketBase() : impl_(std::make_unique<SocketBaseImpl>()) {
-  impl_->family_ = SOCKET_UNSPECIFIED;
+  impl_->family_ = SocketFamily::kUnspecified;
   impl_->socket_ = -1;
   impl_->current_address_info_ = nullptr;
 }
