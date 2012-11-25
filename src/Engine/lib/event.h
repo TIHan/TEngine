@@ -25,21 +25,15 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "message_base.h"
+#ifndef EVENT_H_
+#define EVENT_H_
+
+#include "common.h"
 
 namespace engine {
-namespace network {
+namespace lib {
 
-void MessageBase::Initialize(const int& type) {
-  if (type < 0) throw std::out_of_range("type is below 0.");
-
-  type_ = type;
-  byteStream_.Write<uint8_t>(type);
-}
-
-int MessageBase::type() const {
-  return type_;
-}
-
-} // end network namespace
 } // end engine namespace
+} // end lib namespace
+
+#endif /* EVENT_H_ */

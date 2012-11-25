@@ -53,7 +53,8 @@ public:
 
   std::string ReadString();
   void WriteString(const std::string& string);
-  void WriteStream(const std::vector<uint8_t>& buffer);
+  void WriteBuffer(const std::vector<uint8_t>& buffer);
+  void WriteStream(std::shared_ptr<ByteStream> byteStream);
 
   template <typename T>
   T Read();

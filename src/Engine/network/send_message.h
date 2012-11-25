@@ -25,39 +25,41 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MESSAGE_H_
-#define MESSAGE_H_
+#ifndef SEND_MESSAGE_H_
+#define SEND_MESSAGE_H_
 
-#include <engine_lib.h>
+#include "message_interface.h"
 
 namespace engine {
 namespace network {
 
-class MessageInterface {
+class SendMessage : public virtual MessageInterface {
 public:
-  virtual ~MessageInterface() {}
+  SendMessage(std::shared_ptr<lib::ByteStream> sendStream, const int& type);
+  virtual ~SendMessage();
 
-  /* Accessors / Mutators */
-  virtual int type() const = 0;
-};
+  void WriteString(const std::string& string);
 
-class MessageBase : public virtual MessageInterface {
-public:
-  virtual ~MessageBase() {}
+  template <typename T>
+  void Write(const T& value);
+
+  void Send();
 
   /* Accessors / Mutators */
   virtual int type() const;
 
-protected:
-  MessageBase() {}; // abstract
-
-  void Initialize(const int& type);
-
+private:
   int type_;
-  lib::ByteStream byteStream_;
+  std::shared_ptr<lib::ByteStream> byteStream_;
+  std::shared_ptr<lib::ByteStream> sendStream_;
 };
+
+template <typename T>
+void SendMessage::Write(const T& value) {
+  byteStream_.Write<T>(value);
+}
 
 } // end network namespace
 } // end engine namespace
 
-#endif // MESSAGE_H_
+#endif // SEND_MESSAGE_H_

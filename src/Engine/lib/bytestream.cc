@@ -128,9 +128,18 @@ void ByteStream::WriteString(const std::string& string) {
 /*!
   *
   */
-void ByteStream::WriteStream(const std::vector<uint8_t>& buffer) {
+void ByteStream::WriteBuffer(const std::vector<uint8_t>& buffer) {
   for (int i = 0; i < static_cast<int>(buffer.size()); ++i) {
     WriteByte(buffer.at(i));
+  }
+}
+
+/*!
+  *
+  */
+void ByteStream::WriteStream(std::shared_ptr<ByteStream> byteStream) {
+  for (int i = 0; i < byteStream->GetSize(); ++i) {
+    WriteByte(byteStream->ReadByte());
   }
 }
 

@@ -30,8 +30,5 @@
     <ClCompile Include="network_test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="message_test.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

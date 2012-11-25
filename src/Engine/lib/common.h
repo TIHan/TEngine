@@ -39,6 +39,8 @@
 #include <list>
 #include <thread>
 #include <queue>
+#include <iostream>
+#include <map>
 
 // http://en.cppreference.com/w/cpp/utility/forward
 // Note: This should be in the C++11 standard eventually.
@@ -60,6 +62,7 @@ namespace engine {
 namespace lib {
 
 inline std::string EmptyString() { return ""; }
+inline void Print(std::string string) { std::cout << string << "\n"; }
 
 } // end lib namespace
 } // end engine namespace

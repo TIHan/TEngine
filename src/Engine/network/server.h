@@ -29,6 +29,8 @@
 #define SERVER_H_
 
 #include <engine_lib.h>
+#include "send_message.h"
+#include "receive_message.h"
 
 namespace engine {
 namespace network {
@@ -39,6 +41,12 @@ public:
 
   virtual void Start() = 0;
   virtual void Stop() = 0;
+
+  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type) = 0;
+  virtual void RegisterMessage(const int& type,
+                               std::function<void(ReceiveMessage)>& func) = 0;
+  virtual void ProcessMessages() = 0;
+  virtual void SendMessages() = 0;
 
   /* Accessors / Mutators */
   virtual int port() const = 0;
@@ -54,12 +62,20 @@ public:
   virtual void Start();
   virtual void Stop();
 
+  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type);
+  virtual void RegisterMessage(const int& type,
+                               std::function<void(ReceiveMessage)>& func);
+  virtual void ProcessMessages();
+  virtual void SendMessages();
+
   /* Accessors / Mutators */
   virtual int port() const;
   virtual void set_port(const int& port);
 
 private:
   std::unique_ptr<ServerImpl> impl_;
+  std::shared_ptr<lib::ByteStream> sendStream_;
+  std::shared_ptr<lib::ByteStream> receiveStream_;
   int port_;
 };
 

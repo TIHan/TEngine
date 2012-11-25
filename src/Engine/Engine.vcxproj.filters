@@ -57,10 +57,19 @@
     <ClInclude Include="network\include\engine_network.h">
       <Filter>Header Files\network\include</Filter>
     </ClInclude>
-    <ClInclude Include="network\message_base.h">
+    <ClInclude Include="network\server.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="network\server.h">
+    <ClInclude Include="lib\event.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="network\message_interface.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\send_message.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\receive_message.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,10 +86,13 @@
     <ClCompile Include=".\network\udp_socket.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="network\message_base.cc">
+    <ClCompile Include="network\server.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="network\server.cc">
+    <ClCompile Include="network\send_message.cc">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\receive_message.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>

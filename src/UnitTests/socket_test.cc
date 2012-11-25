@@ -28,7 +28,7 @@ TEST_F(SocketTest, SendAndReceive) {
   auto receiveSequence = std::get<0>(tupleReceive);
   auto address = std::get<1>(tupleReceive);
   auto serverStream = std::make_shared<lib::ByteStream>();
-  serverStream->WriteStream(*receiveSequence);
+  serverStream->WriteBuffer(*receiveSequence);
 
   EXPECT_EQ("127.0.0.1", network::GetSocketAddress(*address));
   EXPECT_EQ("Hello", serverStream->ReadString());
@@ -39,7 +39,7 @@ TEST_F(SocketTest, SendAndReceive) {
   auto clientReceive = std::get<0>(clientTupleReceive);
   auto serverAddress = std::get<1>(clientTupleReceive);
   auto clientReceiveStream = std::make_shared<lib::ByteStream>();
-  clientReceiveStream->WriteStream(*clientReceive);
+  clientReceiveStream->WriteBuffer(*clientReceive);
 
   EXPECT_EQ("127.0.0.1", network::GetSocketAddress(*serverAddress));
   EXPECT_EQ("Hello", clientReceiveStream->ReadString());

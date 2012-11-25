@@ -26,4 +26,3 @@
 */
 
 #include "../server.h"
-#include "../message_base.h"

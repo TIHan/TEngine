@@ -138,7 +138,6 @@
     <ClCompile Include=".\main_test.cc" />
     <ClCompile Include=".\socket_test.cc" />
     <ClCompile Include=".\system_test.cc" />
-    <ClCompile Include="message_test.cc" />
     <ClCompile Include="network_test.cc" />
   </ItemGroup>
   <ItemGroup>

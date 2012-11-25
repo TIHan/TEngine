@@ -25,69 +25,23 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "server.h"
-#include "udp_socket.h"
+#ifndef MESSAGE_INTERFACE_H_
+#define MESSAGE_INTERFACE_H_
+
+#include <engine_lib.h>
 
 namespace engine {
 namespace network {
 
-class ServerImpl {
+class MessageInterface {
 public:
-  UdpSocket socket_;
-  std::list<std::shared_ptr<SocketAddress>> addresses_;
+  virtual ~MessageInterface() {}
+
+  /* Accessors / Mutators */
+  virtual int type() const = 0;
 };
-
-Server::Server(const int& port) : impl_(std::make_unique<ServerImpl>()),
-      sendStream_(std::make_shared<lib::ByteStream>()),
-      receiveStream_(std::make_shared<lib::ByteStream>()) {
-  if (port <= 0) throw std::out_of_range("port is 0 or less.");
-  port_ = port;
-}
-
-Server::~Server() {
-}
-
-void Server::Start() {
-  impl_->socket_.Open();
-  
-  int success = -1;
-  for (int port = port_; port < port_ + 1000; ++port) {
-    success = impl_->socket_.Bind(port);
-    if (success == 0) {
-      port_ = port;
-      break;
-    }
-  }
-
-  if (success == -1) throw std::domain_error("Unable to bind port.");
-}
-
-void Server::Stop() {
-  impl_->socket_.Close();
-}
-
-std::shared_ptr<SendMessage> Server::CreateMessage(const int& type) {
-  return std::make_shared<SendMessage>(sendStream_, type);
-}
-
-void Server::RegisterMessage(const int& type,
-                             std::function<void(ReceiveMessage)>& func) {
-}
-
-void Server::ProcessMessages() {
-}
-
-void Server::SendMessages() {
-  // TODO
-}
-
-int Server::port() const {
-  return port_;
-}
-
-void Server::set_port(const int& port) {
-  port_ = port;
-}
 
 } // end network namespace
 } // end engine namespace
+
+#endif // MESSAGE_INTERFACE_H_
