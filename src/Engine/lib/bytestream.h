@@ -35,12 +35,6 @@ namespace lib {
 
 class ByteStreamImpl;
 class ByteStream {
-  std::unique_ptr<ByteStreamImpl> impl_;
-
-protected:
-  uint8_t ReadByte();
-  void WriteByte(const uint8_t& byte);
-
 public:
   ByteStream();
   virtual ~ByteStream();
@@ -61,6 +55,18 @@ public:
 
   template <typename T>
   void Write(const T& value);
+
+  /* Accessors / Mutators */
+  int read_position() const;
+  void set_read_position(int position);
+
+protected:
+  uint8_t ReadByte();
+  void WriteByte(const uint8_t& byte);
+
+private:
+  std::vector<uint8_t> buffer_;
+  int read_position_;
 };
 
 /*!

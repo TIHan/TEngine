@@ -30,20 +30,13 @@
 namespace engine {
 namespace lib {
 
-class ByteStreamImpl {
-public:
-  std::vector<uint8_t> buffer_;
-  int read_position_;
-};
-
 /*!
   * \brief The constructor for the ByteStream that requires
   * a maximum size for the ByteStream buffer.
   *
   */
-ByteStream::ByteStream() :
-    impl_(std::make_unique<ByteStreamImpl>()) {
-  impl_->read_position_ = 0;
+ByteStream::ByteStream() {
+  read_position_ = 0;
 }
 
 /*!
@@ -56,8 +49,8 @@ ByteStream::~ByteStream() {
   *
   */
 uint8_t ByteStream::ReadByte() {
-  uint8_t value = impl_->buffer_.at(impl_->read_position_);
-  impl_->read_position_++;
+  uint8_t value = buffer_.at(read_position_);
+  read_position_++;
   return value;
 }
 
@@ -65,36 +58,36 @@ uint8_t ByteStream::ReadByte() {
   *
   */
 void ByteStream::WriteByte(const uint8_t& byte) {
-  impl_->buffer_.push_back(byte);
+  buffer_.push_back(byte);
 }
 
 /*!
   *
   */
 int ByteStream::GetSize() const {
-  return static_cast<int>(impl_->buffer_.size());
+  return static_cast<int>(buffer_.size());
 }
 
 /*!
   *
   */
 int ByteStream::GetMaxSize() const {
-  return static_cast<int>(impl_->buffer_.capacity());
+  return static_cast<int>(buffer_.capacity());
 }
 
 /*!
   *
   */
 void ByteStream::Reset() {
-  impl_->buffer_.clear();
-  impl_->read_position_ = 0;
+  buffer_.clear();
+  read_position_ = 0;
 }
 
 /*!
   *
   */
 const uint8_t* ByteStream::GetRaw() const {
-  return impl_->buffer_.data();
+  return buffer_.data();
 }
 
 /*!
@@ -141,6 +134,20 @@ void ByteStream::WriteStream(std::shared_ptr<ByteStream> byteStream) {
   for (int i = 0; i < byteStream->GetSize(); ++i) {
     WriteByte(byteStream->ReadByte());
   }
+}
+
+/*!
+  *
+  */
+int ByteStream::read_position() const {
+  return read_position_;
+}
+
+/*!
+  *
+  */
+void ByteStream::set_read_position(int position) {
+  read_position_ = position;
 }
 
 } // end lib namespace

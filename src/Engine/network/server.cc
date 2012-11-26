@@ -71,12 +71,26 @@ std::shared_ptr<SendMessage> Server::CreateMessage(const int& type) {
 }
 
 void Server::RegisterMessageCallback(const int& type,
-    std::function<void(ReceiveMessage)>& func) {
-  // TODO
+    std::function<void(std::unique_ptr<ReceiveMessage>)>& func) {
+  callbacks_[type] = func;
 }
 
 void Server::ProcessMessages() {
- // TODO
+  auto stream = receiveStream_;
+  while (stream->read_position() < stream->GetSize()) {
+    uint8_t first_byte = stream->Read<uint8_t>();
+
+    std::map<int,
+        std::function<void(std::unique_ptr<ReceiveMessage>)>>
+        ::iterator iter = callbacks_.find(first_byte);
+
+    if (iter != callbacks_.end()) {
+      auto message = iter->second;
+      message(std::make_unique<ReceiveMessage>(stream, first_byte));
+    } else {
+      throw std::logic_error("Invalid message.");
+    }
+  }
 }
 
 void Server::SendMessages() {

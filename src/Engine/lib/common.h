@@ -51,9 +51,14 @@ unique_ptr<T> make_unique() {
     return unique_ptr<T>(new T());
 }
 
-template <typename T, typename U>
-unique_ptr<T> make_unique(U&& u) {
-    return unique_ptr<T>(new T(forward<U>(u)));
+template <typename T, typename V1>
+unique_ptr<T> make_unique(V1&& v1) {
+    return unique_ptr<T>(new T(forward<V1>(v1)));
+}
+
+template <typename T, typename V1, typename V2>
+unique_ptr<T> make_unique(V1&& v1, V2&& v2) {
+    return unique_ptr<T>(new T(forward<V1>(v1), forward<V2>(v2)));
 }
 
 } // end std namespace

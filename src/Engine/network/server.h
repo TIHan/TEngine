@@ -44,7 +44,7 @@ public:
 
   virtual std::shared_ptr<SendMessage> CreateMessage(const int& type) = 0;
   virtual void RegisterMessageCallback(const int& type,
-    std::function<void(ReceiveMessage)>& func) = 0;
+      std::function<void(std::unique_ptr<ReceiveMessage>)>& func) = 0;
   virtual void ProcessMessages() = 0;
   virtual void SendMessages() = 0;
 
@@ -64,7 +64,7 @@ public:
 
   virtual std::shared_ptr<SendMessage> CreateMessage(const int& type);
   virtual void RegisterMessageCallback(const int& type,
-    std::function<void(ReceiveMessage)>& func);
+      std::function<void(std::unique_ptr<ReceiveMessage>)>& func);
   virtual void ProcessMessages();
   virtual void SendMessages();
 
@@ -76,6 +76,8 @@ private:
   std::unique_ptr<ServerImpl> impl_;
   std::shared_ptr<lib::ByteStream> sendStream_;
   std::shared_ptr<lib::ByteStream> receiveStream_;
+  std::map<int,
+           std::function<void(std::unique_ptr<ReceiveMessage>)>> callbacks_;
   int port_;
 };
 
