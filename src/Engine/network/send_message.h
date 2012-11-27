@@ -56,7 +56,7 @@ private:
 
 template <typename T>
 void SendMessage::Write(const T& value) {
-  byteStream_.Write<T>(value);
+  byte_stream_.Write<T>(value);
 }
 
 } // end network namespace

@@ -54,7 +54,7 @@ private:
 
 template <typename T>
 T ReceiveMessage::Read() {
-  return byteStream_.Read<T>();
+  return byte_stream_.Read<T>();
 }
 
 } // end network namespace
