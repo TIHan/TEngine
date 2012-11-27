@@ -25,43 +25,31 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "server.h"
+#include "client.h"
 #include "udp_socket.h"
 
 namespace engine {
 namespace network {
 
-class ServerImpl {
+class ClientImpl {
 public:
   UdpSocket socket_;
-  std::list<std::shared_ptr<SocketAddress>> addresses_;
+  std::string server_address_;
+  std::string server_port_;
 };
 
-Server::Server(const int& port) : impl_(std::make_unique<ServerImpl>()),
+Client::Client() : impl_(std::make_unique<ClientImpl>()),
       send_stream_(std::make_shared<lib::ByteStream>()),
       receive_stream_(std::make_shared<lib::ByteStream>()) {
-  if (port <= 0) throw std::out_of_range("port is 0 or less.");
-  port_ = port;
   impl_->socket_.set_blocking(false);
 }
 
-Server::~Server() {
-  Stop();
+Client::~Client() {
+  Disconnect();
 }
 
-void Server::Start() {
-  impl_->socket_.Open();
-  
-  int success = -1;
-  for (int port = port_; port < port_ + 1000; ++port) {
-    success = impl_->socket_.Bind(port);
-    if (success == 0) {
-      port_ = port;
-      break;
-    }
-  }
-
-  if (success == -1) throw std::domain_error("Unable to bind port.");
+void Client::Connect(const std::string& address, const std::string& port) {
+  impl_->socket_.Open(address, port);
 
   close_receive_thread_ = false;
   receive_thread_ = std::make_unique<std::thread>([&] () {
@@ -75,7 +63,7 @@ void Server::Start() {
   });
 }
 
-void Server::Stop() {
+void Client::Disconnect() {
   if (!close_receive_thread_) {
     close_receive_thread_ = true;
     receive_thread_->join();
@@ -83,16 +71,16 @@ void Server::Stop() {
   impl_->socket_.Close();
 }
 
-std::shared_ptr<SendMessage> Server::CreateMessage(const int& type) {
+std::shared_ptr<SendMessage> Client::CreateMessage(const int& type) {
   return std::make_shared<SendMessage>(send_stream_, type);
 }
 
-void Server::RegisterMessageCallback(const int& type,
+void Client::RegisterMessageCallback(const int& type,
     std::function<void(std::unique_ptr<ReceiveMessage>)>& func) {
   callbacks_[type] = func;
 }
 
-void Server::ProcessMessages() {
+void Client::ProcessMessages() {
   auto stream = receive_stream_;
   while (stream->read_position() < stream->GetSize()) {
     uint8_t first_byte = stream->Read<uint8_t>();
@@ -110,21 +98,8 @@ void Server::ProcessMessages() {
   }
 }
 
-void Server::SendMessages() {
-  auto addresses = impl_->addresses_;
-
-  for_each(addresses.cbegin(), addresses.cend(),
-           [&] (std::shared_ptr<SocketAddress> address) {
-    impl_->socket_.SendTo(*send_stream_, *address);
-  });
-}
-
-int Server::port() const {
-  return port_;
-}
-
-void Server::set_port(const int& port) {
-  port_ = port;
+void Client::SendMessages() {
+  impl_->socket_.Send(*send_stream_);
 }
 
 } // end network namespace

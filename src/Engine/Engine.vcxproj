@@ -125,6 +125,7 @@
     <ClInclude Include=".\lib\common.h" />
     <ClInclude Include=".\lib\system.h" />
     <ClInclude Include="lib\event.h" />
+    <ClInclude Include="network\client.h" />
     <ClInclude Include="network\include\engine_network.h" />
     <ClInclude Include=".\network\socket_base.h" />
     <ClInclude Include=".\network\socket_base-impl.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include=".\lib\system.cc" />
     <ClCompile Include=".\network\socket_base.cc" />
     <ClCompile Include=".\network\udp_socket.cc" />
+    <ClCompile Include="network\client.cc" />
     <ClCompile Include="network\receive_message.cc" />
     <ClCompile Include="network\send_message.cc" />
     <ClCompile Include="network\server.cc" />

@@ -131,9 +131,12 @@ void ByteStream::WriteBuffer(const std::vector<uint8_t>& buffer) {
   *
   */
 void ByteStream::WriteStream(std::shared_ptr<ByteStream> byteStream) {
+  int revert_position = byteStream->read_position();
+  byteStream->set_read_position(0);
   for (int i = 0; i < byteStream->GetSize(); ++i) {
     WriteByte(byteStream->ReadByte());
   }
+  byteStream->set_read_position(revert_position);
 }
 
 /*!

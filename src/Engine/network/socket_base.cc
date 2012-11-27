@@ -153,14 +153,12 @@ void SocketBaseImpl::Open(const int& socket_type, const int& flags,
   if (socket_ == -1) throw std::domain_error("Unable to create socket.");
 
 #ifdef _MSC_VER
-  if (blocking_) {
-    u_long blocking = blocking_;
-    ioctlsocket(socket_, FIONBIO, &blocking);
+  if (!blocking_) {
+    u_long non_blocking = 1;
+    ioctlsocket(socket_, FIONBIO, &non_blocking);
   }
-#endif
-
-#ifdef __GNUC__
-  if (blocking_) {
+#elif __GNUC__
+  if (!blocking_) {
     fcntl(socket_, F_SETFL, O_NONBLOCK);
   }
 #endif
@@ -173,6 +171,7 @@ SocketBase::SocketBase() : impl_(std::make_unique<SocketBaseImpl>()) {
   impl_->family_ = SocketFamily::kUnspecified;
   impl_->socket_ = -1;
   impl_->current_address_info_ = nullptr;
+  impl_->blocking_ = true;
 }
 
 /*!
