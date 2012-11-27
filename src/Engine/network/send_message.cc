@@ -32,24 +32,24 @@ namespace network {
 
 SendMessage::SendMessage(std::shared_ptr<lib::ByteStream> sendStream,
                          const int& type)
-    : byteStream_(std::make_shared<lib::ByteStream>()) {
+    : byte_stream_(std::make_shared<lib::ByteStream>()) {
   if (!sendStream) throw std::invalid_argument("sendStream is null.");
   if (type < 0) throw std::out_of_range("type is below 0.");
 
   type_ = type;
-  sendStream_ = sendStream;
-  sendStream_->Write<uint8_t>(type);
+  send_stream_ = sendStream;
+  send_stream_->Write<uint8_t>(type);
 }
 
 SendMessage::~SendMessage() {
 }
 
 void SendMessage::WriteString(const std::string& string) {
-  byteStream_->WriteString(string);
+  byte_stream_->WriteString(string);
 }
 
 void SendMessage::Send() {
-  sendStream_->WriteStream(byteStream_);
+  send_stream_->WriteStream(byte_stream_);
 }
 
 int SendMessage::type() const {

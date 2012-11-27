@@ -35,7 +35,7 @@ namespace network {
 
 class ReceiveMessage : public virtual MessageInterface {
 public:
-  ReceiveMessage(std::shared_ptr<lib::ByteStream> receiveStream,
+  ReceiveMessage(std::shared_ptr<lib::ByteStream> receive_stream,
                  const int& type);
   virtual ~ReceiveMessage();
 
@@ -49,7 +49,7 @@ public:
 
 private:
   int type_;
-  lib::ByteStream byteStream_;
+  lib::ByteStream byte_stream_;
 };
 
 template <typename T>

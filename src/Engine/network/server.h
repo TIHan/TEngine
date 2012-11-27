@@ -48,7 +48,7 @@ public:
 
   virtual std::shared_ptr<SendMessage> CreateMessage(const int& type) = 0;
   virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::unique_ptr<ReceiveMessage>)>& func) = 0;
+      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
   virtual void ProcessMessages() = 0;
   virtual void SendMessages() = 0;
 
@@ -68,7 +68,7 @@ public:
 
   virtual std::shared_ptr<SendMessage> CreateMessage(const int& type);
   virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::unique_ptr<ReceiveMessage>)>& func);
+      std::function<void(std::shared_ptr<ReceiveMessage>)> func);
   virtual void ProcessMessages();
   virtual void SendMessages();
 
@@ -81,8 +81,9 @@ private:
   std::shared_ptr<lib::ByteStream> send_stream_;
   std::shared_ptr<lib::ByteStream> receive_stream_;
   std::map<int,
-           std::function<void(std::unique_ptr<ReceiveMessage>)>> callbacks_;
+           std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
   std::unique_ptr<std::thread> receive_thread_;
+  std::mutex receive_mutex_;
   int port_;
 
   /* Atomics */

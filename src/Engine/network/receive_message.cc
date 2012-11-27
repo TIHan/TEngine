@@ -30,20 +30,20 @@
 namespace engine {
 namespace network {
 
-ReceiveMessage::ReceiveMessage(std::shared_ptr<lib::ByteStream> receiveStream,
+ReceiveMessage::ReceiveMessage(std::shared_ptr<lib::ByteStream> receive_stream,
                                const int& type) {
-  if (!receiveStream) throw std::invalid_argument("receiveStream is null.");
+  if (!receive_stream) throw std::invalid_argument("receiveStream is null.");
   if (type < 0) throw std::out_of_range("type is below 0.");
 
   type_ = type;
-  byteStream_.WriteStream(receiveStream);
+  byte_stream_.WriteStream(receive_stream);
 }
 
 ReceiveMessage::~ReceiveMessage() {
 }
 
 std::string ReceiveMessage::ReadString() {
-  return byteStream_.ReadString();
+  return byte_stream_.ReadString();
 }
 
 int ReceiveMessage::type() const {

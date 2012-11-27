@@ -33,16 +33,22 @@ namespace network {
 
 class ServerImpl {
 public:
-  UdpSocket socket_;
+  ServerImpl();
+
+  std::unique_ptr<UdpSocket> socket_;
   std::list<std::shared_ptr<SocketAddress>> addresses_;
 };
+
+ServerImpl::ServerImpl()
+    : socket_(std::make_unique<UdpSocket>(SocketFamily::kIpv4)) {
+}
 
 Server::Server(const int& port) : impl_(std::make_unique<ServerImpl>()),
       send_stream_(std::make_shared<lib::ByteStream>()),
       receive_stream_(std::make_shared<lib::ByteStream>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
-  impl_->socket_.set_blocking(false);
+  impl_->socket_->set_blocking(false);
 }
 
 Server::~Server() {
@@ -50,11 +56,11 @@ Server::~Server() {
 }
 
 void Server::Start() {
-  impl_->socket_.Open();
+  impl_->socket_->Open();
   
   int success = -1;
   for (int port = port_; port < port_ + 1000; ++port) {
-    success = impl_->socket_.Bind(port);
+    success = impl_->socket_->Bind(port);
     if (success == 0) {
       port_ = port;
       break;
@@ -66,11 +72,15 @@ void Server::Start() {
   close_receive_thread_ = false;
   receive_thread_ = std::make_unique<std::thread>([&] () {
     while (!close_receive_thread_) {
-      auto receive = impl_->socket_.ReceiveFrom();
+      receive_mutex_.lock(); // LOCK
+
+      auto receive = impl_->socket_->ReceiveFrom();
       receive_stream_->WriteBuffer(*std::get<0>(receive));
       // Sleep for 1 microsecond.
       std::chrono::microseconds sleep(1);
       std::this_thread::sleep_for(sleep);
+
+      receive_mutex_.unlock(); // UNLOCK
     }
   });
 }
@@ -80,7 +90,7 @@ void Server::Stop() {
     close_receive_thread_ = true;
     receive_thread_->join();
   }
-  impl_->socket_.Close();
+  impl_->socket_->Close();
 }
 
 std::shared_ptr<SendMessage> Server::CreateMessage(const int& type) {
@@ -88,26 +98,29 @@ std::shared_ptr<SendMessage> Server::CreateMessage(const int& type) {
 }
 
 void Server::RegisterMessageCallback(const int& type,
-    std::function<void(std::unique_ptr<ReceiveMessage>)>& func) {
+    std::function<void(std::shared_ptr<ReceiveMessage>)> func) {
   callbacks_[type] = func;
 }
 
 void Server::ProcessMessages() {
+  receive_mutex_.lock(); // LOCK
+
   auto stream = receive_stream_;
   while (stream->read_position() < stream->GetSize()) {
     uint8_t first_byte = stream->Read<uint8_t>();
 
-    std::map<int,
-        std::function<void(std::unique_ptr<ReceiveMessage>)>>
-        ::iterator iter = callbacks_.find(first_byte);
+    auto iter = callbacks_.find(first_byte);
 
     if (iter != callbacks_.end()) {
       auto message = iter->second;
-      message(std::make_unique<ReceiveMessage>(stream, first_byte));
+      message(std::make_shared<ReceiveMessage>(stream, first_byte));
     } else {
       throw std::logic_error("Invalid message.");
     }
   }
+  receive_stream_->Reset();
+
+  receive_mutex_.unlock(); // UNLOCK
 }
 
 void Server::SendMessages() {
@@ -115,8 +128,9 @@ void Server::SendMessages() {
 
   for_each(addresses.cbegin(), addresses.cend(),
            [&] (std::shared_ptr<SocketAddress> address) {
-    impl_->socket_.SendTo(*send_stream_, *address);
+    impl_->socket_->SendTo(*send_stream_, *address);
   });
+  send_stream_->Reset();
 }
 
 int Server::port() const {

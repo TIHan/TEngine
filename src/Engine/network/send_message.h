@@ -50,8 +50,8 @@ public:
 
 private:
   int type_;
-  std::shared_ptr<lib::ByteStream> byteStream_;
-  std::shared_ptr<lib::ByteStream> sendStream_;
+  std::shared_ptr<lib::ByteStream> byte_stream_;
+  std::shared_ptr<lib::ByteStream> send_stream_;
 };
 
 template <typename T>

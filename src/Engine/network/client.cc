@@ -33,15 +33,20 @@ namespace network {
 
 class ClientImpl {
 public:
-  UdpSocket socket_;
+  ClientImpl();
+
+  std::unique_ptr<UdpSocket> socket_;
   std::string server_address_;
   std::string server_port_;
 };
 
+ClientImpl::ClientImpl() : socket_(std::make_unique<UdpSocket>()) {
+}
+
 Client::Client() : impl_(std::make_unique<ClientImpl>()),
       send_stream_(std::make_shared<lib::ByteStream>()),
       receive_stream_(std::make_shared<lib::ByteStream>()) {
-  impl_->socket_.set_blocking(false);
+  impl_->socket_->set_blocking(false);
 }
 
 Client::~Client() {
@@ -49,16 +54,20 @@ Client::~Client() {
 }
 
 void Client::Connect(const std::string& address, const std::string& port) {
-  impl_->socket_.Open(address, port);
+  impl_->socket_->Open(address, port);
 
   close_receive_thread_ = false;
   receive_thread_ = std::make_unique<std::thread>([&] () {
     while (!close_receive_thread_) {
-      auto receive = impl_->socket_.ReceiveFrom();
+      receive_mutex_.lock(); // LOCK
+
+      auto receive = impl_->socket_->ReceiveFrom();
       receive_stream_->WriteBuffer(*std::get<0>(receive));
       // Sleep for 1 microsecond.
       std::chrono::microseconds sleep(1);
       std::this_thread::sleep_for(sleep);
+
+      receive_mutex_.unlock(); // UNLOCK
     }
   });
 }
@@ -68,7 +77,7 @@ void Client::Disconnect() {
     close_receive_thread_ = true;
     receive_thread_->join();
   }
-  impl_->socket_.Close();
+  impl_->socket_->Close();
 }
 
 std::shared_ptr<SendMessage> Client::CreateMessage(const int& type) {
@@ -76,18 +85,18 @@ std::shared_ptr<SendMessage> Client::CreateMessage(const int& type) {
 }
 
 void Client::RegisterMessageCallback(const int& type,
-    std::function<void(std::unique_ptr<ReceiveMessage>)>& func) {
+    std::function<void(std::shared_ptr<ReceiveMessage>)>& func) {
   callbacks_[type] = func;
 }
 
 void Client::ProcessMessages() {
+  receive_mutex_.lock(); // LOCK
+
   auto stream = receive_stream_;
   while (stream->read_position() < stream->GetSize()) {
     uint8_t first_byte = stream->Read<uint8_t>();
 
-    std::map<int,
-        std::function<void(std::unique_ptr<ReceiveMessage>)>>
-        ::iterator iter = callbacks_.find(first_byte);
+    auto iter = callbacks_.find(first_byte);
 
     if (iter != callbacks_.end()) {
       auto message = iter->second;
@@ -96,10 +105,14 @@ void Client::ProcessMessages() {
       throw std::logic_error("Invalid message.");
     }
   }
+  receive_stream_->Reset();
+
+  receive_mutex_.unlock(); // UNLOCK
 }
 
 void Client::SendMessages() {
-  impl_->socket_.Send(*send_stream_);
+  impl_->socket_->Send(*send_stream_);
+  send_stream_->Reset();
 }
 
 } // end network namespace
