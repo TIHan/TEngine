@@ -35,6 +35,10 @@
 namespace engine {
 namespace network {
 
+enum ServerMessage {
+  kPrint = 248,
+};
+
 class ServerInterface {
 public:
   virtual ~ServerInterface() {}
@@ -74,10 +78,12 @@ public:
 
 private:
   std::unique_ptr<ServerImpl> impl_;
-  std::shared_ptr<lib::ByteStream> sendStream_;
-  std::shared_ptr<lib::ByteStream> receiveStream_;
+  std::shared_ptr<lib::ByteStream> send_stream_;
+  std::shared_ptr<lib::ByteStream> receive_stream_;
   std::map<int,
            std::function<void(std::unique_ptr<ReceiveMessage>)>> callbacks_;
+  std::unique_ptr<std::thread> receive_thread_;
+  std::atomic_bool close_receive_thread_;
   int port_;
 };
 

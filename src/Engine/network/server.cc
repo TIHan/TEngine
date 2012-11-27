@@ -38,13 +38,14 @@ public:
 };
 
 Server::Server(const int& port) : impl_(std::make_unique<ServerImpl>()),
-      sendStream_(std::make_shared<lib::ByteStream>()),
-      receiveStream_(std::make_shared<lib::ByteStream>()) {
+      send_stream_(std::make_shared<lib::ByteStream>()),
+      receive_stream_(std::make_shared<lib::ByteStream>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
 }
 
 Server::~Server() {
+  Stop();
 }
 
 void Server::Start() {
@@ -60,14 +61,26 @@ void Server::Start() {
   }
 
   if (success == -1) throw std::domain_error("Unable to bind port.");
+
+  close_receive_thread_ = false;
+  receive_thread_ = std::make_unique<std::thread>([&] () {
+    while (!close_receive_thread_) {
+     // auto receive = impl_->socket_.ReceiveFrom();
+     // receive_stream_->WriteBuffer(*std::get<0>(receive));
+    }
+  });
 }
 
 void Server::Stop() {
+  if (!close_receive_thread_) {
+    close_receive_thread_ = true;
+    receive_thread_->join();
+  }
   impl_->socket_.Close();
 }
 
 std::shared_ptr<SendMessage> Server::CreateMessage(const int& type) {
-  return std::make_shared<SendMessage>(sendStream_, type);
+  return std::make_shared<SendMessage>(send_stream_, type);
 }
 
 void Server::RegisterMessageCallback(const int& type,
@@ -76,7 +89,7 @@ void Server::RegisterMessageCallback(const int& type,
 }
 
 void Server::ProcessMessages() {
-  auto stream = receiveStream_;
+  auto stream = receive_stream_;
   while (stream->read_position() < stream->GetSize()) {
     uint8_t first_byte = stream->Read<uint8_t>();
 
@@ -98,7 +111,7 @@ void Server::SendMessages() {
 
   for_each(addresses.cbegin(), addresses.cend(),
            [&] (std::shared_ptr<SocketAddress> address) {
-    impl_->socket_.SendTo(*sendStream_, *address);
+    impl_->socket_.SendTo(*send_stream_, *address);
   });
 }
 
