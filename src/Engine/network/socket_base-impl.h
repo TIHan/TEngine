@@ -32,6 +32,8 @@
 
 #ifdef __GNUC__
 # include <sys/socket.h>
+#include <sys/unistd.h>
+#include <sys/fcntl.h>
 # include <netdb.h>
 # include <arpa/inet.h>
 # include <netinet/in.h>
@@ -67,6 +69,7 @@ public:
 
   void Open(const int& socket_type, const int& flags,
             const std::string& node_name, const std::string& service_name);
+  bool blocking_;
 };
 
 } // end network namespace

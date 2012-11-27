@@ -11,7 +11,8 @@ TEST_F(NetworkTest, ServerTest) {
   server.Start();
   server.Stop();
   server.Start();
-  server.Stop();
+  std::cout << "Press any key to continue...\n";
+  std::cin.get();
 }
 
                                                                                

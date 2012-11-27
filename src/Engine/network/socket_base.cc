@@ -117,7 +117,7 @@ void SocketBaseImpl::Open(const int& socket_type, const int& flags,
   // Initialize Winsock
   int wsa_result = WSAStartup(MAKEWORD(2,2), &wsa_data);
   if (wsa_result != 0) {
-    exit(1); // "WSAStartup failed with result %i"
+    throw std::runtime_error("Unable to initialize Winsock.");
   }
 #endif
 
@@ -151,6 +151,19 @@ void SocketBaseImpl::Open(const int& socket_type, const int& flags,
   }
 
   if (socket_ == -1) throw std::domain_error("Unable to create socket.");
+
+#ifdef _MSC_VER
+  if (blocking_) {
+    u_long blocking = blocking_;
+    ioctlsocket(socket_, FIONBIO, &blocking);
+  }
+#endif
+
+#ifdef __GNUC__
+  if (blocking_) {
+    fcntl(socket_, F_SETFL, O_NONBLOCK)
+  }
+#endif
 }
 
 /*!
@@ -219,6 +232,20 @@ void SocketBase::Close() {
   */
 SocketFamily SocketBase::family() {
   return impl_->family_;
+}
+
+/*!
+  *
+  */
+bool SocketBase::blocking() {
+  return impl_->blocking_;
+}
+
+/*!
+  *
+  */
+void SocketBase::set_blocking(const bool& blocking) {
+  impl_->blocking_ = blocking;
 }
 
 } // end network namespace

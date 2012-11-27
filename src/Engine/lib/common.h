@@ -42,6 +42,7 @@
 #include <iostream>
 #include <map>
 #include <atomic>
+#include <chrono>
 
 // http://en.cppreference.com/w/cpp/utility/forward
 // Note: This should be in the C++11 standard eventually.

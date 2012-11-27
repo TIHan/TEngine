@@ -42,6 +42,7 @@ Server::Server(const int& port) : impl_(std::make_unique<ServerImpl>()),
       receive_stream_(std::make_shared<lib::ByteStream>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
+  impl_->socket_.set_blocking(true);
 }
 
 Server::~Server() {
@@ -65,8 +66,11 @@ void Server::Start() {
   close_receive_thread_ = false;
   receive_thread_ = std::make_unique<std::thread>([&] () {
     while (!close_receive_thread_) {
-     // auto receive = impl_->socket_.ReceiveFrom();
-     // receive_stream_->WriteBuffer(*std::get<0>(receive));
+      auto receive = impl_->socket_.ReceiveFrom();
+      receive_stream_->WriteBuffer(*std::get<0>(receive));
+      // Sleep for 1 microsecond.
+      std::chrono::microseconds sleep(1);
+      std::this_thread::sleep_for(sleep);
     }
   });
 }

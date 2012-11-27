@@ -69,6 +69,9 @@ public:
   /* Accessors / Mutators */
   virtual SocketFamily family();
 
+  virtual bool blocking();
+  virtual void set_blocking(const bool& blocking);
+
 protected:
   std::unique_ptr<SocketBaseImpl> impl_;
 
