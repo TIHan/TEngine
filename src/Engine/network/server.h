@@ -78,8 +78,8 @@ public:
 
 private:
   std::unique_ptr<ServerImpl> impl_;
-  std::shared_ptr<lib::ByteStream> receive_stream_;
   std::shared_ptr<lib::ByteStream> send_stream_;
+  std::shared_ptr<lib::ByteStream> receive_stream_;
   std::map<int,
            std::function<void(std::unique_ptr<ReceiveMessage>)>> callbacks_;
   std::unique_ptr<std::thread> receive_thread_;

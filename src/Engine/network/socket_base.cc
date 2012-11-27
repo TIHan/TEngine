@@ -161,7 +161,7 @@ void SocketBaseImpl::Open(const int& socket_type, const int& flags,
 
 #ifdef __GNUC__
   if (blocking_) {
-    fcntl(socket_, F_SETFL, O_NONBLOCK)
+    fcntl(socket_, F_SETFL, O_NONBLOCK);
   }
 #endif
 }
