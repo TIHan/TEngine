@@ -28,9 +28,7 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
-#include <engine_lib.h>
-#include "send_message.h"
-#include "receive_message.h"
+#include "service_base.h"
 
 namespace engine {
 namespace network {
@@ -40,23 +38,24 @@ enum ClientMessage {
   kDisconnect = 249
 };
 
-class ClientInterface {
+
+// Microsoft gives a warning about virtual inheritance. Turn it off.
+#ifdef _MSC_VER
+// C4250 - 'class1' : inherits 'class2::member' via dominance
+# pragma warning( disable : 4250 )
+#endif
+
+class ClientInterface : public virtual ServiceInterface {
 public:
   virtual ~ClientInterface() {}
 
   virtual void Connect(const std::string& address,
                        const std::string& port) = 0;
   virtual void Disconnect() = 0;
-
-  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type) = 0;
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)>& func) = 0;
-  virtual void ProcessMessages() = 0;
-  virtual void SendMessages() = 0;
 };
 
 class ClientImpl;
-class Client : public virtual ClientInterface {
+class Client : public ServiceBase, public virtual ClientInterface {
 public:
   Client();
   virtual ~Client();
@@ -64,24 +63,11 @@ public:
   virtual void Connect(const std::string& address, const std::string& port);
   virtual void Disconnect();
 
-  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type);
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)>& func);
-  virtual void ProcessMessages();
   virtual void SendMessages();
 
 private:
   std::unique_ptr<ClientImpl> impl_;
-  std::shared_ptr<lib::ByteStream> send_stream_;
-  std::shared_ptr<lib::ByteStream> receive_stream_;
-  std::map<int,
-           std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
-  std::unique_ptr<std::thread> receive_thread_;
-  std::mutex receive_mutex_;
   int port_;
-
-  /* Atomics */
-  std::atomic<bool> close_receive_thread_;
 };
 
 } // end network namespace

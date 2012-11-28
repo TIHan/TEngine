@@ -134,6 +134,7 @@
     <ClInclude Include="network\receive_message.h" />
     <ClInclude Include="network\send_message.h" />
     <ClInclude Include="network\server.h" />
+    <ClInclude Include="network\service_base.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\lib\bytestream.cc" />
@@ -144,6 +145,7 @@
     <ClCompile Include="network\receive_message.cc" />
     <ClCompile Include="network\send_message.cc" />
     <ClCompile Include="network\server.cc" />
+    <ClCompile Include="network\service_base.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -38,7 +38,7 @@ SendMessage::SendMessage(std::shared_ptr<lib::ByteStream> sendStream,
 
   type_ = type;
   send_stream_ = sendStream;
-  send_stream_->Write<uint8_t>(type);
+  byte_stream_->Write<uint8_t>(type);
 }
 
 SendMessage::~SendMessage() {

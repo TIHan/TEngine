@@ -25,62 +25,47 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "client.h"
+#include "service_base.h"
 #include "udp_socket.h"
 
 namespace engine {
 namespace network {
 
-class ClientImpl {
-public:
-  ClientImpl();
-
-  UdpSocket socket_;
-  std::string server_address_;
-  std::string server_port_;
-};
-
-ClientImpl::ClientImpl() : socket_(SocketFamily::kIpv4) {
-  socket_.set_blocking(false);
+ServiceBase::ServiceBase() : send_stream_(std::make_shared<lib::ByteStream>()),
+    receive_stream_(std::make_shared<lib::ByteStream>()) {
 }
 
-Client::Client() : impl_(std::make_unique<ClientImpl>()) {
+ServiceBase::~ServiceBase() {
 }
 
-Client::~Client() {
-  Disconnect();
+std::shared_ptr<SendMessage> ServiceBase::CreateMessage(const int& type) {
+  return std::make_shared<SendMessage>(send_stream_, type);
 }
 
-void Client::Connect(const std::string& address, const std::string& port) {
-  impl_->socket_.Open(address, port);
+void ServiceBase::RegisterMessageCallback(const int& type,
+    std::function<void(std::shared_ptr<ReceiveMessage>)> func) {
+  callbacks_[type] = func;
+}
 
-  close_receive_thread_ = false;
-  receive_thread_ = std::make_unique<std::thread>([&] () {
-    while (!close_receive_thread_) {
-      receive_mutex_.lock(); // LOCK
+void ServiceBase::ProcessMessages() {
+  receive_mutex_.lock(); // LOCK
 
-      auto receive = impl_->socket_.ReceiveFrom();
-      receive_stream_->WriteBuffer(*std::get<0>(receive));
-      // Sleep for 1 microsecond.
-      std::chrono::microseconds sleep(1);
-      std::this_thread::sleep_for(sleep);
+  auto stream = receive_stream_;
+  while (stream->read_position() < stream->GetSize()) {
+    uint8_t first_byte = stream->Read<uint8_t>();
 
-      receive_mutex_.unlock(); // UNLOCK
+    auto iter = callbacks_.find(first_byte);
+
+    if (iter != callbacks_.end()) {
+      auto message = iter->second;
+      message(std::make_shared<ReceiveMessage>(stream, first_byte));
+    } else {
+      throw std::logic_error("Invalid message.");
     }
-  });
-}
-
-void Client::Disconnect() {
-  if (!close_receive_thread_) {
-    close_receive_thread_ = true;
-    receive_thread_->join();
   }
-  impl_->socket_.Close();
-}
+  receive_stream_->Reset();
 
-void Client::SendMessages() {
-  impl_->socket_.Send(*send_stream_);
-  send_stream_->Reset();
+  receive_mutex_.unlock(); // UNLOCK
 }
 
 } // end network namespace

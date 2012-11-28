@@ -25,63 +25,52 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "client.h"
-#include "udp_socket.h"
+#ifndef SERVICE_BASE_H_
+#define SERVICE_BASE_H_
+
+#include <engine_lib.h>
+#include "send_message.h"
+#include "receive_message.h"
 
 namespace engine {
 namespace network {
 
-class ClientImpl {
+class ServiceInterface {
 public:
-  ClientImpl();
+  virtual ~ServiceInterface() {}
 
-  UdpSocket socket_;
-  std::string server_address_;
-  std::string server_port_;
+  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type) = 0;
+  virtual void RegisterMessageCallback(const int& type,
+      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
+  virtual void ProcessMessages() = 0;
+  virtual void SendMessages() = 0;
 };
 
-ClientImpl::ClientImpl() : socket_(SocketFamily::kIpv4) {
-  socket_.set_blocking(false);
-}
+class ServiceBase : public virtual ServiceInterface {
+public:
+  virtual ~ServiceBase();
 
-Client::Client() : impl_(std::make_unique<ClientImpl>()) {
-}
+  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type);
+  virtual void RegisterMessageCallback(const int& type,
+      std::function<void(std::shared_ptr<ReceiveMessage>)> func);
+  virtual void ProcessMessages();
+  virtual void SendMessages() = 0;
 
-Client::~Client() {
-  Disconnect();
-}
+protected:
+  ServiceBase();
 
-void Client::Connect(const std::string& address, const std::string& port) {
-  impl_->socket_.Open(address, port);
+  std::shared_ptr<lib::ByteStream> send_stream_;
+  std::shared_ptr<lib::ByteStream> receive_stream_;
+  std::map<int,
+           std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
+  std::unique_ptr<std::thread> receive_thread_;
+  std::mutex receive_mutex_;
 
-  close_receive_thread_ = false;
-  receive_thread_ = std::make_unique<std::thread>([&] () {
-    while (!close_receive_thread_) {
-      receive_mutex_.lock(); // LOCK
-
-      auto receive = impl_->socket_.ReceiveFrom();
-      receive_stream_->WriteBuffer(*std::get<0>(receive));
-      // Sleep for 1 microsecond.
-      std::chrono::microseconds sleep(1);
-      std::this_thread::sleep_for(sleep);
-
-      receive_mutex_.unlock(); // UNLOCK
-    }
-  });
-}
-
-void Client::Disconnect() {
-  if (!close_receive_thread_) {
-    close_receive_thread_ = true;
-    receive_thread_->join();
-  }
-  impl_->socket_.Close();
-}
-
-void Client::SendMessages() {
-  impl_->socket_.Send(*send_stream_);
-  send_stream_->Reset();
-}
+  /* Atomics */
+  std::atomic<bool> close_receive_thread_;
+};
 
 } // end network namespace
 } // end engine namespace
+
+#endif // SERVICE_BASE_H_

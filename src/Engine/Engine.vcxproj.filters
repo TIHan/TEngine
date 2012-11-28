@@ -75,6 +75,9 @@
     <ClInclude Include="network\client.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
+    <ClInclude Include="network\service_base.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\lib\bytestream.cc">
@@ -99,6 +102,9 @@
       <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="network\client.cc">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\service_base.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>

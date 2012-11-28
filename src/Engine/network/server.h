@@ -28,9 +28,7 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
-#include <engine_lib.h>
-#include "send_message.h"
-#include "receive_message.h"
+#include "service_base.h"
 
 namespace engine {
 namespace network {
@@ -39,18 +37,19 @@ enum ServerMessage {
   kPrint = 248,
 };
 
-class ServerInterface {
+
+// Microsoft gives a warning about virtual inheritance. Turn it off.
+#ifdef _MSC_VER
+// C4250 - 'class1' : inherits 'class2::member' via dominance
+# pragma warning( disable : 4250 )
+#endif
+
+class ServerInterface : public virtual ServiceInterface {
 public:
   virtual ~ServerInterface() {}
 
   virtual void Start() = 0;
   virtual void Stop() = 0;
-
-  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type) = 0;
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
-  virtual void ProcessMessages() = 0;
-  virtual void SendMessages() = 0;
 
   /* Accessors / Mutators */
   virtual int port() const = 0;
@@ -58,7 +57,7 @@ public:
 };
 
 class ServerImpl;
-class Server : public virtual ServerInterface {
+class Server : public ServiceBase, public virtual ServerInterface {
 public:
   explicit Server(const int& port);
   virtual ~Server();
@@ -66,10 +65,6 @@ public:
   virtual void Start();
   virtual void Stop();
 
-  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type);
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func);
-  virtual void ProcessMessages();
   virtual void SendMessages();
 
   /* Accessors / Mutators */
@@ -78,16 +73,7 @@ public:
 
 private:
   std::unique_ptr<ServerImpl> impl_;
-  std::shared_ptr<lib::ByteStream> send_stream_;
-  std::shared_ptr<lib::ByteStream> receive_stream_;
-  std::map<int,
-           std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
-  std::unique_ptr<std::thread> receive_thread_;
-  std::mutex receive_mutex_;
   int port_;
-
-  /* Atomics */
-  std::atomic<bool> close_receive_thread_;
 };
 
 } // end network namespace
