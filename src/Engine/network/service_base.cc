@@ -58,8 +58,14 @@ void ServiceBase::ProcessMessages() {
 
     if (iter != callbacks_.end()) {
       auto message = iter->second;
-      message(std::make_shared<ReceiveMessage>(stream, first_byte));
+      try {
+        message(std::make_shared<ReceiveMessage>(stream, first_byte));
+      } catch (std::exception& e) {
+        receive_mutex_.unlock();
+        throw e;
+      }
     } else {
+      receive_mutex_.unlock();
       throw std::logic_error("Invalid message.");
     }
   }
