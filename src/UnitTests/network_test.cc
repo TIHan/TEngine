@@ -10,8 +10,9 @@ TEST_F(NetworkTest, ConnectTest) {
   network::Server server(1337);
   server.Start();
   server.RegisterMessageCallback(network::ClientMessage::kConnect,
-      [] (std::shared_ptr<network::ReceiveMessage>) {
+      [] (std::shared_ptr<network::ReceiveMessage> message) {
     std::cout << "Client connected.\n";
+    uint8_t hello = message->Read<uint8_t>();
   });
 
   network::Client client;
@@ -26,11 +27,7 @@ TEST_F(NetworkTest, ConnectTest) {
 
   std::cout << "Press any key to process messages...\n";
   std::cin.get();
-  try {
-    server.ProcessMessages();
-  } catch (const std::exception& e) {
-    std::cout << "Something bad happened on message read.\n";
-  }
+  server.ProcessMessages();
 }
 
                                                                                

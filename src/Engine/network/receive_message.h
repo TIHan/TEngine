@@ -49,12 +49,12 @@ public:
 
 private:
   int type_;
-  lib::ByteStream byte_stream_;
+  std::shared_ptr<lib::ByteStream> receive_stream_;
 };
 
 template <typename T>
 T ReceiveMessage::Read() {
-  return byte_stream_.Read<T>();
+  return receive_stream_->Read<T>();
 }
 
 } // end network namespace

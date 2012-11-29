@@ -36,14 +36,14 @@ ReceiveMessage::ReceiveMessage(std::shared_ptr<lib::ByteStream> receive_stream,
   if (type < 0) throw std::out_of_range("type is below 0.");
 
   type_ = type;
-  byte_stream_.WriteStream(receive_stream);
+  receive_stream_ = receive_stream;
 }
 
 ReceiveMessage::~ReceiveMessage() {
 }
 
 std::string ReceiveMessage::ReadString() {
-  return byte_stream_.ReadString();
+  return receive_stream_->ReadString();
 }
 
 int ReceiveMessage::type() const {
