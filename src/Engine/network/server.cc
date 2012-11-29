@@ -66,27 +66,18 @@ void Server::Start() {
 
   if (success == -1) throw std::domain_error("Unable to bind port.");
 
-  close_receive_thread_ = false;
-  receive_thread_ = std::make_unique<std::thread>([&] () {
-    while (!close_receive_thread_) {
-      receive_mutex_.lock(); // LOCK
+  receive_process_.Run([=] () {
+    receive_mutex_.lock(); // LOCK
 
-      auto receive = impl_->socket_.ReceiveFrom();
-      receive_stream_->WriteBuffer(*std::get<0>(receive));
-      // Sleep for 1 microsecond.
-      std::chrono::microseconds sleep(1);
-      std::this_thread::sleep_for(sleep);
+    auto receive = impl_->socket_.ReceiveFrom();
+    receive_stream_->WriteBuffer(*std::get<0>(receive));
 
-      receive_mutex_.unlock(); // UNLOCK
-    }
+    receive_mutex_.unlock(); // UNLOCK
   });
 }
 
 void Server::Stop() {
-  if (!close_receive_thread_) {
-    close_receive_thread_ = true;
-    receive_thread_->join();
-  }
+  receive_process_.Stop();
   impl_->socket_.Close();
 }
 

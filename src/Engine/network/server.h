@@ -73,6 +73,7 @@ public:
 
 private:
   std::unique_ptr<ServerImpl> impl_;
+  lib::Process receive_process_;
   int port_;
 };
 

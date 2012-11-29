@@ -50,7 +50,13 @@ void ServiceBase::RegisterMessageCallback(const int& type,
 void ServiceBase::ProcessMessages() {
   receive_mutex_.lock(); // LOCK
 
-  auto stream = receive_stream_;
+  // Flush
+  auto stream = std::make_shared<lib::ByteStream>();
+  stream->WriteStream(receive_stream_);
+  receive_stream_->Reset();
+
+  receive_mutex_.unlock(); // UNLOCK
+
   while (stream->read_position() < stream->GetSize()) {
     uint8_t first_byte = stream->Read<uint8_t>();
 
@@ -58,20 +64,11 @@ void ServiceBase::ProcessMessages() {
 
     if (iter != callbacks_.end()) {
       auto message = iter->second;
-      try {
-        message(std::make_shared<ReceiveMessage>(stream, first_byte));
-      } catch (std::exception& e) {
-        receive_mutex_.unlock();
-        throw e;
-      }
+      message(std::make_shared<ReceiveMessage>(stream, first_byte));
     } else {
-      receive_mutex_.unlock();
       throw std::logic_error("Invalid message.");
     }
   }
-  receive_stream_->Reset();
-
-  receive_mutex_.unlock(); // UNLOCK
 }
 
 } // end network namespace

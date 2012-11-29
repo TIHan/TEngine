@@ -67,6 +67,7 @@ public:
 
 private:
   std::unique_ptr<ClientImpl> impl_;
+  lib::Process receive_process_;
   int port_;
 };
 

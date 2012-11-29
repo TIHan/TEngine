@@ -25,47 +25,51 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SERVICE_BASE_H_
-#define SERVICE_BASE_H_
+#ifndef PROCESS_H_
+#define PROCESS_H_
 
-#include <engine_lib.h>
-#include "send_message.h"
-#include "receive_message.h"
+#include "common.h"
 
 namespace engine {
-namespace network {
+namespace lib {
 
-class ServiceInterface {
+// TODO: Need to handle exceptions.
+class Process {
 public:
-  virtual ~ServiceInterface() {}
+  Process();
+  virtual ~Process();
 
-  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type) = 0;
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
-  virtual void ProcessMessages() = 0;
-  virtual void SendMessages() = 0;
+  virtual void Run(const std::function<void()>& func);
+  virtual void Stop();
+
+  /* Accessors / Mutators */
+  virtual bool stopped();
+
+private:
+  std::unique_ptr<std::thread> thread_;
+  std::atomic_bool stopped_;
 };
 
-class ServiceBase : public virtual ServiceInterface {
-public:
-  virtual ~ServiceBase();
+inline Process::Process() {
+  stopped_ = true;
+}
 
-  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type);
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func);
-  virtual void ProcessMessages();
+inline Process::~Process() {
+  Stop();
+}
 
-protected:
-  ServiceBase();
+inline void Process::Stop() {
+  if (!stopped_) {
+    stopped_ = true;
+    thread_->join();
+  }
+}
 
-  std::shared_ptr<lib::ByteStream> send_stream_;
-  std::shared_ptr<lib::ByteStream> receive_stream_;
-  std::map<int,
-           std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
-  std::mutex receive_mutex_;
-};
+inline bool Process::stopped() {
+  return stopped_;
+}
 
-} // end network namespace
 } // end engine namespace
+} // end lib namespace
 
-#endif // SERVICE_BASE_H_
+#endif /* EVENT_H_ */

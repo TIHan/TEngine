@@ -25,47 +25,27 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SERVICE_BASE_H_
-#define SERVICE_BASE_H_
-
-#include <engine_lib.h>
-#include "send_message.h"
-#include "receive_message.h"
+#include "process.h"
 
 namespace engine {
-namespace network {
+namespace lib {
 
-class ServiceInterface {
-public:
-  virtual ~ServiceInterface() {}
+void Process::Run(const std::function<void()>& func) {
+  stopped_ = false;
+  thread_ = std::make_unique<std::thread>([=] () {
+    while (!stopped_) {
+      try {
+        func();
+        // Sleep for 1 microsecond.
+        std::chrono::microseconds sleep(1);
+        std::this_thread::sleep_for(sleep);
+      } catch (std::exception& e) {
+        stopped_ = true;
+        break;
+      }
+    }
+  });
+}
 
-  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type) = 0;
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
-  virtual void ProcessMessages() = 0;
-  virtual void SendMessages() = 0;
-};
-
-class ServiceBase : public virtual ServiceInterface {
-public:
-  virtual ~ServiceBase();
-
-  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type);
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func);
-  virtual void ProcessMessages();
-
-protected:
-  ServiceBase();
-
-  std::shared_ptr<lib::ByteStream> send_stream_;
-  std::shared_ptr<lib::ByteStream> receive_stream_;
-  std::map<int,
-           std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
-  std::mutex receive_mutex_;
-};
-
-} // end network namespace
 } // end engine namespace
-
-#endif // SERVICE_BASE_H_
+} // end lib namespace

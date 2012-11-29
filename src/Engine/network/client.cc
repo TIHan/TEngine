@@ -53,28 +53,18 @@ Client::~Client() {
 
 void Client::Connect(const std::string& address, const std::string& port) {
   impl_->socket_.Open(address, port);
+  receive_process_.Run([=] () {
+    receive_mutex_.lock(); // LOCK
 
-  close_receive_thread_ = false;
-  receive_thread_ = std::make_unique<std::thread>([&] () {
-    while (!close_receive_thread_) {
-      receive_mutex_.lock(); // LOCK
+    auto receive = impl_->socket_.ReceiveFrom();
+    receive_stream_->WriteBuffer(*std::get<0>(receive));
 
-      auto receive = impl_->socket_.ReceiveFrom();
-      receive_stream_->WriteBuffer(*std::get<0>(receive));
-      // Sleep for 1 microsecond.
-      std::chrono::microseconds sleep(1);
-      std::this_thread::sleep_for(sleep);
-
-      receive_mutex_.unlock(); // UNLOCK
-    }
+    receive_mutex_.unlock(); // UNLOCK
   });
 }
 
 void Client::Disconnect() {
-  if (!close_receive_thread_) {
-    close_receive_thread_ = true;
-    receive_thread_->join();
-  }
+  receive_process_.Stop();
   impl_->socket_.Close();
 }
 
