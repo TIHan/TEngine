@@ -7,7 +7,7 @@ class NetworkTest : public ::testing::Test {
 };
 
 TEST_F(NetworkTest, ConnectTest) {
-  network::Server server(1337); // TODO: need to set udp socket type
+  network::Server server(1337);
   server.Start();
   server.RegisterMessageCallback(network::ClientMessage::kConnect,
       [] (std::shared_ptr<network::ReceiveMessage>) {
@@ -15,8 +15,9 @@ TEST_F(NetworkTest, ConnectTest) {
   });
 
   network::Client client;
-  client.Connect("127.0.0.1", "1337"); // hack
+  client.Connect("127.0.0.1", "1337");
   auto connectMessage = client.CreateMessage(network::ClientMessage::kConnect);
+  connectMessage->Write<uint8_t>(238);
   connectMessage->Send();
 
   std::cout << "Press any key to connect...\n";
@@ -25,7 +26,11 @@ TEST_F(NetworkTest, ConnectTest) {
 
   std::cout << "Press any key to process messages...\n";
   std::cin.get();
-  server.ProcessMessages();
+  try {
+    server.ProcessMessages();
+  } catch (const std::exception& e) {
+    std::cout << "Something bad happened on message read.\n";
+  }
 }
 
                                                                                

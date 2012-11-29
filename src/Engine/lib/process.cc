@@ -37,8 +37,8 @@ void Process::Run(const std::function<void()>& func) {
       try {
         func();
         // Sleep for 1 microsecond.
-        std::chrono::microseconds sleep(1);
-        std::this_thread::sleep_for(sleep);
+        std::chrono::microseconds micro(1);
+        std::this_thread::sleep_for(micro);
       } catch (std::exception& e) {
         stopped_ = true;
         break;

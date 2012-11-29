@@ -48,9 +48,15 @@ public:
 private:
   std::unique_ptr<std::thread> thread_;
   std::atomic_bool stopped_;
+
+  /* Exceptions */
+  std::function<void(std::exception& e)> exception_func_;
+  std::exception exception_;
+  bool has_exception_;
 };
 
-inline Process::Process() {
+inline Process::Process()
+    : exception_func_([] (const std::exception& e) { throw e; }) {
   stopped_ = true;
 }
 
@@ -72,4 +78,4 @@ inline bool Process::stopped() {
 } // end engine namespace
 } // end lib namespace
 
-#endif /* EVENT_H_ */
+#endif /* PROCESS_H_ */

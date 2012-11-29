@@ -44,6 +44,7 @@
 #include <atomic>
 #include <chrono>
 #include <mutex>
+#include <future>
 
 // http://en.cppreference.com/w/cpp/utility/forward
 // Note: This should be in the C++11 standard eventually.
