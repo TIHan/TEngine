@@ -34,14 +34,15 @@ namespace network {
 /*!
   *
   */
-UdpSocket::UdpSocket(const SocketFamily& family) {
+UdpSocket::UdpSocket(const SocketFamily& family)
+    : receive_buffer_(SOCKET_MAX_BUFFER) {
   impl_->family_ = family;
 }
 
 /*!
   *
   */
-UdpSocket::UdpSocket() {
+UdpSocket::UdpSocket() : receive_buffer_(SOCKET_MAX_BUFFER) {
 }
 
 /*!
@@ -72,19 +73,23 @@ std::tuple<std::shared_ptr<std::vector<uint8_t>>,
   struct sockaddr_storage sock_addr_storage;
 
   socklen_t addr_len = sizeof(sock_addr_storage);
-  auto buffer = std::make_shared<std::vector<uint8_t>>(SOCKET_MAX_BUFFER);
 
-  char* data = reinterpret_cast<char*>(const_cast<uint8_t*>(buffer->data()));
-  int data_size = static_cast<int>(buffer->size());
+  char* data = reinterpret_cast<char*>(const_cast<uint8_t*>(
+      receive_buffer_.data()));
+  int data_size = static_cast<int>(receive_buffer_.size());
   auto sock_addr = reinterpret_cast<sockaddr*>(
       const_cast<struct sockaddr_storage*>(&sock_addr_storage));
 
   int bytes = recvfrom(impl_->socket_, data,
                        data_size, 0, sock_addr, &addr_len);
 
+  auto buffer = std::make_shared<std::vector<uint8_t>>();
+
   if (bytes != -1) {
     buffer->resize(bytes);
-    buffer->shrink_to_fit();
+    for (int i = 0; i < bytes; ++i) {
+      buffer->at(i) = receive_buffer_.at(i);
+    }
   } else {
     buffer->clear();
   }

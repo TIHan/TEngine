@@ -76,6 +76,9 @@ public:
                      const SocketAddress& address);
   virtual int SendTo(const lib::ByteStream& data,
                      const SocketAddress& address);
+
+private:
+  std::vector<uint8_t> receive_buffer_;
 };
 
 } // end network namespace
