@@ -43,7 +43,7 @@ ClientImpl::ClientImpl() : socket_(false) {
 
 Client::Client()
     : impl_(std::make_unique<ClientImpl>()),
-      send_queue_(std::make_shared<SendQueue>()) {
+      send_buffer_(std::make_shared<SendQueue>()) {
 }
 
 Client::~Client() {
@@ -67,11 +67,12 @@ void Client::Connect(const std::string& address, const std::string& port) {
 
 void Client::Disconnect() {
   receive_process_.Stop();
+  send_async_.wait();
   impl_->socket_.Close();
 }
 
 std::shared_ptr<ClientMessage> Client::CreateMessage(const int& type) {
-  return std::make_shared<ClientMessage>(send_queue_, type);
+  return std::make_shared<ClientMessage>(send_buffer_, type);
 }
 
 void Client::ProcessMessages() {
@@ -99,12 +100,21 @@ void Client::ProcessMessages() {
 }
 
 void Client::SendMessages() {
-  while (!send_queue_->empty()) {
-    impl_->socket_.Send(*send_queue_->front());
-    send_queue_->pop();
-    std::chrono::microseconds micro(1);
-    std::this_thread::sleep_for(micro);
-  }
+  send_mutex_.lock(); // LOCK
+  // Flush
+  send_queue_.swap(*send_buffer_);
+  send_mutex_.unlock(); // UNLOCK
+
+  send_async_ = std::async(std::launch::async, [=] {
+    send_mutex_.lock(); // LOCK
+    while (!send_queue_.empty()) {
+      impl_->socket_.Send(*send_queue_.front());
+      send_queue_.pop();
+      std::chrono::microseconds micro(1);
+      std::this_thread::sleep_for(micro);
+    }
+    send_mutex_.unlock(); // LOCK
+  });
 }
 
 } // end network namespace

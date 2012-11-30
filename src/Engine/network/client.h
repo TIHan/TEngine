@@ -72,7 +72,10 @@ public:
 
 private:
   std::unique_ptr<ClientImpl> impl_;
-  std::shared_ptr<SendQueue> send_queue_;
+  std::shared_ptr<SendQueue> send_buffer_;
+  SendQueue send_queue_;
+  std::mutex send_mutex_;
+  std::future<void> send_async_;
   std::string server_address_;
   std::string server_port_;
 };
