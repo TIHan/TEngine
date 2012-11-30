@@ -33,6 +33,10 @@
 namespace engine {
 namespace network {
 
+#define MTU 512
+
+typedef std::queue<std::shared_ptr<lib::ByteStream>> SendQueue;
+
 class MessageBase {
 public:
   virtual ~MessageBase();
@@ -46,21 +50,17 @@ public:
   int type() const;
 
 protected:
-  MessageBase(std::shared_ptr<lib::ByteStream> send_stream, const int& type);
+  MessageBase(const int& type);
 
   std::shared_ptr<lib::ByteStream> buffer_;
-  std::shared_ptr<lib::ByteStream> send_stream_;
   int type_;
 };
 
-inline MessageBase::MessageBase(std::shared_ptr<lib::ByteStream> send_stream,
-                                const int& type)
-    : buffer_(std::make_shared<lib::ByteStream>()) {
-  if (!send_stream) throw std::invalid_argument("send_stream is null.");
+inline MessageBase::MessageBase(const int& type)
+    : buffer_(std::make_shared<lib::ByteStream>()) {;
   if (type < 0) throw std::out_of_range("type is below 0.");
 
   type_ = type;
-  send_stream_ = send_stream;
   buffer_->WriteByte(type);
 }
 

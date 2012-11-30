@@ -31,12 +31,14 @@
 namespace engine {
 namespace network {
 
+typedef std::list<std::shared_ptr<SocketAddress>> AddressList;
+
 class ServerImpl {
 public:
   ServerImpl();
 
   UdpSocket socket_;
-  std::list<std::shared_ptr<SocketAddress>> addresses_;
+  AddressList addresses_;
 };
 
 ServerImpl::ServerImpl() : socket_(SocketFamily::kIpv4, false) {
@@ -44,7 +46,7 @@ ServerImpl::ServerImpl() : socket_(SocketFamily::kIpv4, false) {
 
 Server::Server(const int& port)
     : impl_(std::make_unique<ServerImpl>()),
-      send_stream_(std::make_shared<lib::ByteStream>()) {
+      send_queue_(std::make_shared<SendQueue>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
 }
@@ -83,7 +85,7 @@ void Server::Stop() {
 }
 
 std::shared_ptr<ServerMessage> Server::CreateMessage(const int& type) {
-  return std::make_shared<ServerMessage>(send_stream_, type);
+  return std::make_shared<ServerMessage>(send_queue_, type);
 }
 
 void Server::ProcessMessages() {
@@ -113,11 +115,14 @@ void Server::ProcessMessages() {
 void Server::SendMessages() {
   auto addresses = impl_->addresses_;
 
-  for_each(addresses.cbegin(), addresses.cend(),
-           [&] (std::shared_ptr<SocketAddress> address) {
-    impl_->socket_.SendTo(*send_stream_, *address);
-  });
-  send_stream_->Reset();
+  while (!send_queue_->empty()) {
+    auto data = send_queue_->front();
+    for_each(addresses.cbegin(), addresses.cend(),
+             [&] (std::shared_ptr<SocketAddress> address) {
+      impl_->socket_.SendTo(*data, *address);
+    });
+    send_queue_->pop();
+  }
 }
 
 int Server::port() const {

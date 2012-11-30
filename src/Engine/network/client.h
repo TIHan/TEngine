@@ -72,7 +72,7 @@ public:
 
 private:
   std::unique_ptr<ClientImpl> impl_;
-  std::shared_ptr<lib::ByteStream> send_stream_;
+  std::shared_ptr<SendQueue> send_queue_;
   std::string server_address_;
   std::string server_port_;
 };

@@ -76,7 +76,7 @@ public:
 
 private:
   std::unique_ptr<ServerImpl> impl_;
-  std::shared_ptr<lib::ByteStream> send_stream_;
+  std::shared_ptr<SendQueue> send_queue_;
   int port_;
 };
 

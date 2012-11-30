@@ -35,22 +35,37 @@ namespace network {
 
 class ServerMessage : public MessageBase {
 public:
-  ServerMessage(std::shared_ptr<lib::ByteStream> send_stream, const int& type);
+  ServerMessage(std::shared_ptr<SendQueue> send_queue, const int& type);
   virtual ~ServerMessage();
 
   void Send();
+
+private:
+  std::shared_ptr<SendQueue> send_queue_;
 };
 
 inline ServerMessage::ServerMessage(
-    std::shared_ptr<lib::ByteStream> send_stream, const int& type)
-    : MessageBase(send_stream, type) {
+    std::shared_ptr<SendQueue> send_queue, const int& type)
+    : MessageBase(type), send_queue_(send_queue) {
+  if (send_queue_->empty()) {
+    send_queue_->push(std::make_shared<lib::ByteStream>());
+  }
 }
 
 inline ServerMessage::~ServerMessage() {
 }
 
 inline void ServerMessage::Send() {
-  send_stream_->WriteStream(buffer_);
+  if (buffer_->GetSize() > MTU)
+    throw std::out_of_range("Message is too big.");
+  auto newest_stream = send_queue_->back();
+
+  // Do we have enough room?
+  if (newest_stream->GetSize() + buffer_->GetSize() > MTU) {
+    send_queue_->push(buffer_);
+  } else {
+    newest_stream->WriteStream(buffer_);
+  }
 }
 
 } // end network namespace

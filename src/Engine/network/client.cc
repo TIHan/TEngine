@@ -43,7 +43,7 @@ ClientImpl::ClientImpl() : socket_(false) {
 
 Client::Client()
     : impl_(std::make_unique<ClientImpl>()),
-      send_stream_(std::make_shared<lib::ByteStream>()) {
+      send_queue_(std::make_shared<SendQueue>()) {
 }
 
 Client::~Client() {
@@ -71,7 +71,7 @@ void Client::Disconnect() {
 }
 
 std::shared_ptr<ClientMessage> Client::CreateMessage(const int& type) {
-  return std::make_shared<ClientMessage>(send_stream_, type);
+  return std::make_shared<ClientMessage>(send_queue_, type);
 }
 
 void Client::ProcessMessages() {
@@ -99,8 +99,12 @@ void Client::ProcessMessages() {
 }
 
 void Client::SendMessages() {
-  impl_->socket_.Send(*send_stream_);
-  send_stream_->Reset();
+  while (!send_queue_->empty()) {
+    impl_->socket_.Send(*send_queue_->front());
+    send_queue_->pop();
+    std::chrono::microseconds micro(1);
+    std::this_thread::sleep_for(micro);
+  }
 }
 
 } // end network namespace

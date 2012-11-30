@@ -11,16 +11,25 @@ TEST_F(NetworkTest, ConnectTest) {
   server.Start();
   server.RegisterMessageCallback(network::ReservedClientMessage::kConnect,
       [] (std::shared_ptr<network::ReceiveMessage> message) {
-    std::cout << "Client connected.\n";
-    uint8_t hello = message->Read<uint8_t>();
+    static int count;
+    count++;
+    std::cout << "Message " << count << std::endl;
+    for (int i = 0; i < 511; ++i) {
+      uint8_t hello = message->Read<uint8_t>();
+    }
   });
 
   network::Client client;
   client.Connect("127.0.0.1", "1337");
+
+  for (int i = 0; i < 512; ++i) {
   auto connectMessage = client.CreateMessage(
       network::ReservedClientMessage::kConnect);
-  connectMessage->Write<uint8_t>(238);
+  for (int i = 0; i < 511; ++i) {
+    connectMessage->Write<uint8_t>(255);
+  }
   connectMessage->Send();
+  }
 
   std::cout << "Press any key to connect...\n";
   std::cin.get();
