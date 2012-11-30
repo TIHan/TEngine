@@ -39,8 +39,7 @@ public:
   std::list<std::shared_ptr<SocketAddress>> addresses_;
 };
 
-ServerImpl::ServerImpl() : socket_(SocketFamily::kIpv4) {
-  socket_.set_blocking(false);
+ServerImpl::ServerImpl() : socket_(SocketFamily::kIpv4, false) {
 }
 
 Server::Server(const int& port) : impl_(std::make_unique<ServerImpl>()) {
@@ -79,6 +78,10 @@ void Server::Start() {
 void Server::Stop() {
   receive_process_.Stop();
   impl_->socket_.Close();
+}
+
+std::shared_ptr<ServerMessage> Server::CreateMessage(const int& type) {
+  return std::make_shared<ServerMessage>(send_stream_, type);
 }
 
 void Server::SendMessages() {

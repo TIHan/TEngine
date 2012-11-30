@@ -40,8 +40,7 @@ public:
   std::string server_port_;
 };
 
-ClientImpl::ClientImpl() : socket_(SocketFamily::kIpv4) {
-  socket_.set_blocking(false);
+ClientImpl::ClientImpl() : socket_(SocketFamily::kIpv4, false) {
 }
 
 Client::Client() : impl_(std::make_unique<ClientImpl>()) {
@@ -66,6 +65,10 @@ void Client::Connect(const std::string& address, const std::string& port) {
 void Client::Disconnect() {
   receive_process_.Stop();
   impl_->socket_.Close();
+}
+
+std::shared_ptr<ClientMessage> Client::CreateMessage(const int& type) {
+  return std::make_shared<ClientMessage>(send_stream_, type);
 }
 
 void Client::SendMessages() {

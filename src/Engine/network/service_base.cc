@@ -38,10 +38,6 @@ ServiceBase::ServiceBase() : send_stream_(std::make_shared<lib::ByteStream>()),
 ServiceBase::~ServiceBase() {
 }
 
-std::shared_ptr<SendMessage> ServiceBase::CreateMessage(const int& type) {
-  return std::make_shared<SendMessage>(send_stream_, type);
-}
-
 void ServiceBase::RegisterMessageCallback(const int& type,
     std::function<void(std::shared_ptr<ReceiveMessage>)> func) {
   callbacks_[type] = func;
@@ -52,7 +48,7 @@ void ServiceBase::ProcessMessages() {
 
   while (receive_stream_->read_position() < receive_stream_->GetSize()) {
     try {
-      uint8_t first_byte = receive_stream_->Read<uint8_t>();
+      uint8_t first_byte = receive_stream_->ReadByte();
 
       auto iter = callbacks_.find(first_byte);
 

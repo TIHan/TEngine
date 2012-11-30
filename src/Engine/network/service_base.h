@@ -29,7 +29,6 @@
 #define SERVICE_BASE_H_
 
 #include <engine_lib.h>
-#include "send_message.h"
 #include "receive_message.h"
 
 namespace engine {
@@ -39,7 +38,6 @@ class ServiceInterface {
 public:
   virtual ~ServiceInterface() {}
 
-  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type) = 0;
   virtual void RegisterMessageCallback(const int& type,
       std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
   virtual void ProcessMessages() = 0;
@@ -50,7 +48,6 @@ class ServiceBase : public virtual ServiceInterface {
 public:
   virtual ~ServiceBase();
 
-  virtual std::shared_ptr<SendMessage> CreateMessage(const int& type);
   virtual void RegisterMessageCallback(const int& type,
       std::function<void(std::shared_ptr<ReceiveMessage>)> func);
   virtual void ProcessMessages();

@@ -56,13 +56,12 @@ public:
   template <typename T>
   void Write(const T& value);
 
+  uint8_t ReadByte();
+  void WriteByte(const uint8_t& byte);
+
   /* Accessors / Mutators */
   int read_position() const;
   void set_read_position(int position);
-
-protected:
-  uint8_t ReadByte();
-  void WriteByte(const uint8_t& byte);
 
 private:
   std::vector<uint8_t> buffer_;

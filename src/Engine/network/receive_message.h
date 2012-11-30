@@ -52,9 +52,29 @@ private:
   std::shared_ptr<lib::ByteStream> receive_stream_;
 };
 
+inline ReceiveMessage::ReceiveMessage(std::shared_ptr<lib::ByteStream> receive_stream,
+                               const int& type) {
+  if (!receive_stream) throw std::invalid_argument("receiveStream is null.");
+  if (type < 0) throw std::out_of_range("type is below 0.");
+
+  type_ = type;
+  receive_stream_ = receive_stream;
+}
+
+inline ReceiveMessage::~ReceiveMessage() {
+}
+
+inline std::string ReceiveMessage::ReadString() {
+  return receive_stream_->ReadString();
+}
+
 template <typename T>
-T ReceiveMessage::Read() {
+inline T ReceiveMessage::Read() {
   return receive_stream_->Read<T>();
+}
+
+inline int ReceiveMessage::type() const {
+  return type_;
 }
 
 } // end network namespace

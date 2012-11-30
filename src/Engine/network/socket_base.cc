@@ -240,12 +240,5 @@ bool SocketBase::blocking() {
   return impl_->blocking_;
 }
 
-/*!
-  *
-  */
-void SocketBase::set_blocking(const bool& blocking) {
-  impl_->blocking_ = blocking;
-}
-
 } // end network namespace
 } // end engine namespace

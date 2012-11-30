@@ -9,7 +9,7 @@ class NetworkTest : public ::testing::Test {
 TEST_F(NetworkTest, ConnectTest) {
   network::Server server(1337);
   server.Start();
-  server.RegisterMessageCallback(network::ClientMessage::kConnect,
+  server.RegisterMessageCallback(network::ReservedClientMessage::kConnect,
       [] (std::shared_ptr<network::ReceiveMessage> message) {
     std::cout << "Client connected.\n";
     uint8_t hello = message->Read<uint8_t>();
@@ -17,7 +17,8 @@ TEST_F(NetworkTest, ConnectTest) {
 
   network::Client client;
   client.Connect("127.0.0.1", "1337");
-  auto connectMessage = client.CreateMessage(network::ClientMessage::kConnect);
+  auto connectMessage = client.CreateMessage(
+      network::ReservedClientMessage::kConnect);
   connectMessage->Write<uint8_t>(238);
   connectMessage->Send();
 

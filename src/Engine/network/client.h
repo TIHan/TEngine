@@ -29,15 +29,15 @@
 #define CLIENT_H_
 
 #include "service_base.h"
+#include "client_message.h"
 
 namespace engine {
 namespace network {
 
-enum ClientMessage {
+enum ReservedClientMessage {
   kConnect = 248,
   kDisconnect = 249
 };
-
 
 // Microsoft gives a warning about virtual inheritance. Turn it off.
 #ifdef _MSC_VER
@@ -52,6 +52,8 @@ public:
   virtual void Connect(const std::string& address,
                        const std::string& port) = 0;
   virtual void Disconnect() = 0;
+
+  virtual std::shared_ptr<ClientMessage> CreateMessage(const int& type) = 0;
 };
 
 class ClientImpl;
@@ -62,6 +64,8 @@ public:
 
   virtual void Connect(const std::string& address, const std::string& port);
   virtual void Disconnect();
+
+  virtual std::shared_ptr<ClientMessage> CreateMessage(const int& type);
 
   virtual void SendMessages();
 

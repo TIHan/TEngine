@@ -48,22 +48,6 @@ ByteStream::~ByteStream() {
 /*!
   *
   */
-uint8_t ByteStream::ReadByte() {
-  uint8_t value = buffer_.at(read_position_);
-  read_position_++;
-  return value;
-}
-
-/*!
-  *
-  */
-void ByteStream::WriteByte(const uint8_t& byte) {
-  buffer_.push_back(byte);
-}
-
-/*!
-  *
-  */
 int ByteStream::GetSize() const {
   return static_cast<int>(buffer_.size());
 }
@@ -137,6 +121,22 @@ void ByteStream::WriteStream(std::shared_ptr<ByteStream> byteStream) {
     WriteByte(byteStream->ReadByte());
   }
   byteStream->set_read_position(revert_position);
+}
+
+/*!
+  *
+  */
+uint8_t ByteStream::ReadByte() {
+  uint8_t value = buffer_.at(read_position_);
+  read_position_++;
+  return value;
+}
+
+/*!
+  *
+  */
+void ByteStream::WriteByte(const uint8_t& byte) {
+  buffer_.push_back(byte);
 }
 
 /*!

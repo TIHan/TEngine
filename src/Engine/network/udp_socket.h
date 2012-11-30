@@ -61,6 +61,7 @@ class UdpSocket : public SocketBase, public virtual UdpSocketInterface {
 public:
   UdpSocket();
   explicit UdpSocket(const SocketFamily& family);
+  UdpSocket(const SocketFamily& family, const bool& blocking);
 
   virtual ~UdpSocket();
 

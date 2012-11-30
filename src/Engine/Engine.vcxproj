@@ -134,7 +134,6 @@
     <ClInclude Include=".\network\udp_socket.h" />
     <ClInclude Include="network\message_interface.h" />
     <ClInclude Include="network\receive_message.h" />
-    <ClInclude Include="network\send_message.h" />
     <ClInclude Include="network\server.h" />
     <ClInclude Include="network\server_message.h" />
     <ClInclude Include="network\service_base.h" />
@@ -146,8 +145,6 @@
     <ClCompile Include=".\network\udp_socket.cc" />
     <ClCompile Include="lib\process.cc" />
     <ClCompile Include="network\client.cc" />
-    <ClCompile Include="network\receive_message.cc" />
-    <ClCompile Include="network\send_message.cc" />
     <ClCompile Include="network\server.cc" />
     <ClCompile Include="network\service_base.cc" />
   </ItemGroup>

@@ -34,6 +34,12 @@ namespace network {
 /*!
   *
   */
+UdpSocket::UdpSocket() : receive_buffer_(SOCKET_MAX_BUFFER) {
+}
+
+/*!
+  *
+  */
 UdpSocket::UdpSocket(const SocketFamily& family)
     : receive_buffer_(SOCKET_MAX_BUFFER) {
   impl_->family_ = family;
@@ -42,7 +48,10 @@ UdpSocket::UdpSocket(const SocketFamily& family)
 /*!
   *
   */
-UdpSocket::UdpSocket() : receive_buffer_(SOCKET_MAX_BUFFER) {
+UdpSocket::UdpSocket(const SocketFamily& family, const bool& blocking)
+    : receive_buffer_(SOCKET_MAX_BUFFER) {
+  impl_->family_ = family;
+  impl_->blocking_ = blocking;
 }
 
 /*!

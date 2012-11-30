@@ -66,9 +66,6 @@
     <ClInclude Include="network\message_interface.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="network\send_message.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
     <ClInclude Include="network\receive_message.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
@@ -102,12 +99,6 @@
       <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="network\server.cc">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="network\send_message.cc">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="network\receive_message.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="network\client.cc">

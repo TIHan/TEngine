@@ -29,11 +29,12 @@
 #define SERVER_H_
 
 #include "service_base.h"
+#include "server_message.h"
 
 namespace engine {
 namespace network {
 
-enum ServerMessage {
+enum ReservedServerMessage {
   kPrint = 248,
 };
 
@@ -51,6 +52,8 @@ public:
   virtual void Start() = 0;
   virtual void Stop() = 0;
 
+  virtual std::shared_ptr<ServerMessage> CreateMessage(const int& type) = 0;
+
   /* Accessors / Mutators */
   virtual int port() const = 0;
   virtual void set_port(const int& port) = 0;
@@ -64,6 +67,8 @@ public:
 
   virtual void Start();
   virtual void Stop();
+
+  virtual std::shared_ptr<ServerMessage> CreateMessage(const int& type);
 
   virtual void SendMessages();
 
