@@ -37,6 +37,7 @@ class ByteStreamImpl;
 class ByteStream {
 public:
   ByteStream();
+  explicit ByteStream(const std::vector<uint8_t>& buffer);
   virtual ~ByteStream();
 
   int GetSize() const;

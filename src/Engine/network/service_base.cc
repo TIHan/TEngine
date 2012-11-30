@@ -31,8 +31,7 @@
 namespace engine {
 namespace network {
 
-ServiceBase::ServiceBase()
-    : receive_stream_(std::make_shared<lib::ByteStream>()) {
+ServiceBase::ServiceBase() {
 }
 
 ServiceBase::~ServiceBase() {

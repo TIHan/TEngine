@@ -46,7 +46,7 @@ ServerImpl::ServerImpl() : socket_(SocketFamily::kIpv4, false) {
 
 Server::Server(const int& port)
     : impl_(std::make_unique<ServerImpl>()),
-      send_queue_(std::make_shared<SendQueue>()) {
+      send_buffer_(std::make_shared<SendQueue>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
 }
@@ -71,10 +71,14 @@ void Server::Start() {
 
   receive_process_.Run([=] () {
     receive_mutex_.lock(); // LOCK
-
     auto receive = impl_->socket_.ReceiveFrom();
-    receive_stream_->WriteBuffer(*std::get<0>(receive));
+    auto buffer = *std::get<0>(receive);
 
+    if (buffer.size() != 0) {
+      auto stream = std::make_shared<lib::ByteStream>();
+      stream->WriteBuffer(buffer);
+      receive_buffer_.push(stream);
+    }
     receive_mutex_.unlock(); // UNLOCK
   });
 }
@@ -85,44 +89,56 @@ void Server::Stop() {
 }
 
 std::shared_ptr<ServerMessage> Server::CreateMessage(const int& type) {
-  return std::make_shared<ServerMessage>(send_queue_, type);
+  return std::make_shared<ServerMessage>(send_buffer_, type);
 }
 
 void Server::ProcessMessages() {
   receive_mutex_.lock(); // LOCK
-
-  while (receive_stream_->read_position() < receive_stream_->GetSize()) {
-    try {
-      uint8_t first_byte = receive_stream_->ReadByte();
-
-      auto iter = callbacks_.find(first_byte);
-
-      if (iter != callbacks_.end()) {
-        auto message = iter->second;
-        message(std::make_shared<ReceiveMessage>(receive_stream_, first_byte));
-      } else {
-        throw std::logic_error("Invalid message.");
-      }
-    } catch (const std::exception& e) {
-      receive_mutex_.unlock(); // UNLOCK
-      throw e;
-    }
-  }
-
+  receive_queue_.swap(receive_buffer_);
   receive_mutex_.unlock(); // UNLOCK
+
+  while (!receive_queue_.empty()) {
+    auto stream = receive_queue_.front();
+    while (stream->read_position() < stream->GetSize()) {
+      try {
+        uint8_t first_byte = stream->ReadByte();
+
+        auto iter = callbacks_.find(first_byte);
+
+        if (iter != callbacks_.end()) {
+          auto message = iter->second;
+          message(std::make_shared<ReceiveMessage>(stream, first_byte));
+        } else {
+          throw std::logic_error("Invalid message.");
+        }
+      } catch (const std::exception& e) {
+        throw e;
+      }
+    }
+    receive_queue_.pop();
+  }
 }
 
 void Server::SendMessages() {
+  send_mutex_.lock(); // LOCK
+  send_queue_.swap(*send_buffer_);
+  send_mutex_.unlock(); // UNLOCK
+
   auto addresses = impl_->addresses_;
 
-  while (!send_queue_->empty()) {
-    auto data = send_queue_->front();
-    for_each(addresses.cbegin(), addresses.cend(),
-             [&] (std::shared_ptr<SocketAddress> address) {
-      impl_->socket_.SendTo(*data, *address);
-    });
-    send_queue_->pop();
-  }
+  send_async_ = std::async(std::launch::async, [=] {
+    send_mutex_.lock(); // LOCK
+    while (!send_queue_.empty()) {
+      for_each(addresses.cbegin(), addresses.cend(),
+               [&] (std::shared_ptr<SocketAddress> address) {
+        impl_->socket_.Send(*send_queue_.front());
+      });
+      send_queue_.pop();
+      std::chrono::microseconds micro(1);
+      std::this_thread::sleep_for(micro);
+    }
+    send_mutex_.unlock(); // LOCK
+  });
 }
 
 int Server::port() const {

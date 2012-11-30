@@ -54,7 +54,6 @@ public:
 protected:
   ServiceBase();
 
-  std::shared_ptr<lib::ByteStream> receive_stream_;
   lib::Process receive_process_;
   std::map<int,
            std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;

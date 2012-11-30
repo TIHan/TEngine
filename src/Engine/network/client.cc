@@ -57,10 +57,9 @@ void Client::Connect(const std::string& address, const std::string& port) {
 
   receive_process_.Run([=] () {
     receive_mutex_.lock(); // LOCK
-
     auto receive = impl_->socket_.ReceiveFrom();
-    receive_stream_->WriteBuffer(*std::get<0>(receive));
-
+    receive_buffer_.push(std::make_shared<lib::ByteStream>(
+        *std::get<0>(receive)));
     receive_mutex_.unlock(); // UNLOCK
   });
 }
@@ -77,31 +76,33 @@ std::shared_ptr<ClientMessage> Client::CreateMessage(const int& type) {
 
 void Client::ProcessMessages() {
   receive_mutex_.lock(); // LOCK
-
-  while (receive_stream_->read_position() < receive_stream_->GetSize()) {
-    try {
-      uint8_t first_byte = receive_stream_->ReadByte();
-
-      auto iter = callbacks_.find(first_byte);
-
-      if (iter != callbacks_.end()) {
-        auto message = iter->second;
-        message(std::make_shared<ReceiveMessage>(receive_stream_, first_byte));
-      } else {
-        throw std::logic_error("Invalid message.");
-      }
-    } catch (const std::exception& e) {
-      receive_mutex_.unlock(); // UNLOCK
-      throw e;
-    }
-  }
-
+  receive_queue_.swap(receive_buffer_);
   receive_mutex_.unlock(); // UNLOCK
+
+  while (!receive_queue_.empty()) {
+    auto stream = receive_queue_.front();
+    while (stream->read_position() < stream->GetSize()) {
+      try {
+        uint8_t first_byte = stream->ReadByte();
+
+        auto iter = callbacks_.find(first_byte);
+
+        if (iter != callbacks_.end()) {
+          auto message = iter->second;
+          message(std::make_shared<ReceiveMessage>(stream, first_byte));
+        } else {
+          throw std::logic_error("Invalid message.");
+        }
+      } catch (const std::exception& e) {
+        throw e;
+      }
+    }
+    receive_queue_.pop();
+  }
 }
 
 void Client::SendMessages() {
   send_mutex_.lock(); // LOCK
-  // Flush
   send_queue_.swap(*send_buffer_);
   send_mutex_.unlock(); // UNLOCK
 

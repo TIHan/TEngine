@@ -42,6 +42,13 @@ ByteStream::ByteStream() {
 /*!
   *
   */
+ByteStream::ByteStream(const std::vector<uint8_t>& buffer) {
+  WriteBuffer(buffer);
+}
+
+/*!
+  *
+  */
 ByteStream::~ByteStream() {
 }
 
