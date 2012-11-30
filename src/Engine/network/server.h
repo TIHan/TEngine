@@ -38,7 +38,6 @@ enum ReservedServerMessage {
   kPrint = 248,
 };
 
-
 // Microsoft gives a warning about virtual inheritance. Turn it off.
 #ifdef _MSC_VER
 // C4250 - 'class1' : inherits 'class2::member' via dominance

@@ -74,7 +74,7 @@ inline void ServerMessage::WriteString(const std::string& string) {
 
 template <typename T>
 inline void ServerMessage::Write(const T& value) {
-  buffer__->Write<T>(value);
+  buffer_->Write<T>(value);
 }
 
 inline void ServerMessage::Send() {
