@@ -41,7 +41,9 @@ public:
 ClientImpl::ClientImpl() : socket_(false) {
 }
 
-Client::Client() : impl_(std::make_unique<ClientImpl>()) {
+Client::Client()
+    : impl_(std::make_unique<ClientImpl>()),
+      send_stream_(std::make_shared<lib::ByteStream>()) {
 }
 
 Client::~Client() {
@@ -70,6 +72,30 @@ void Client::Disconnect() {
 
 std::shared_ptr<ClientMessage> Client::CreateMessage(const int& type) {
   return std::make_shared<ClientMessage>(send_stream_, type);
+}
+
+void Client::ProcessMessages() {
+  receive_mutex_.lock(); // LOCK
+
+  while (receive_stream_->read_position() < receive_stream_->GetSize()) {
+    try {
+      uint8_t first_byte = receive_stream_->ReadByte();
+
+      auto iter = callbacks_.find(first_byte);
+
+      if (iter != callbacks_.end()) {
+        auto message = iter->second;
+        message(std::make_shared<ReceiveMessage>(receive_stream_, first_byte));
+      } else {
+        throw std::logic_error("Invalid message.");
+      }
+    } catch (const std::exception& e) {
+      receive_mutex_.unlock(); // UNLOCK
+      throw e;
+    }
+  }
+
+  receive_mutex_.unlock(); // UNLOCK
 }
 
 void Client::SendMessages() {

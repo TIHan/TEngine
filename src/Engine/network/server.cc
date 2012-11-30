@@ -42,7 +42,9 @@ public:
 ServerImpl::ServerImpl() : socket_(SocketFamily::kIpv4, false) {
 }
 
-Server::Server(const int& port) : impl_(std::make_unique<ServerImpl>()) {
+Server::Server(const int& port)
+    : impl_(std::make_unique<ServerImpl>()),
+      send_stream_(std::make_shared<lib::ByteStream>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
 }
@@ -84,6 +86,30 @@ std::shared_ptr<ServerMessage> Server::CreateMessage(const int& type) {
   return std::make_shared<ServerMessage>(send_stream_, type);
 }
 
+void Server::ProcessMessages() {
+  receive_mutex_.lock(); // LOCK
+
+  while (receive_stream_->read_position() < receive_stream_->GetSize()) {
+    try {
+      uint8_t first_byte = receive_stream_->ReadByte();
+
+      auto iter = callbacks_.find(first_byte);
+
+      if (iter != callbacks_.end()) {
+        auto message = iter->second;
+        message(std::make_shared<ReceiveMessage>(receive_stream_, first_byte));
+      } else {
+        throw std::logic_error("Invalid message.");
+      }
+    } catch (const std::exception& e) {
+      receive_mutex_.unlock(); // UNLOCK
+      throw e;
+    }
+  }
+
+  receive_mutex_.unlock(); // UNLOCK
+}
+
 void Server::SendMessages() {
   auto addresses = impl_->addresses_;
 
@@ -96,10 +122,6 @@ void Server::SendMessages() {
 
 int Server::port() const {
   return port_;
-}
-
-void Server::set_port(const int& port) {
-  port_ = port;
 }
 
 } // end network namespace

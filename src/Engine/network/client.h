@@ -67,10 +67,12 @@ public:
 
   virtual std::shared_ptr<ClientMessage> CreateMessage(const int& type);
 
+  virtual void ProcessMessages();
   virtual void SendMessages();
 
 private:
   std::unique_ptr<ClientImpl> impl_;
+  std::shared_ptr<lib::ByteStream> send_stream_;
   std::string server_address_;
   std::string server_port_;
 };

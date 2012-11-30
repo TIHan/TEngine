@@ -50,12 +50,10 @@ public:
 
   virtual void RegisterMessageCallback(const int& type,
       std::function<void(std::shared_ptr<ReceiveMessage>)> func);
-  virtual void ProcessMessages();
 
 protected:
   ServiceBase();
 
-  std::shared_ptr<lib::ByteStream> send_stream_;
   std::shared_ptr<lib::ByteStream> receive_stream_;
   lib::Process receive_process_;
   std::map<int,

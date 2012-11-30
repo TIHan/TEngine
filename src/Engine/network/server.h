@@ -55,7 +55,6 @@ public:
 
   /* Accessors / Mutators */
   virtual int port() const = 0;
-  virtual void set_port(const int& port) = 0;
 };
 
 class ServerImpl;
@@ -69,14 +68,15 @@ public:
 
   virtual std::shared_ptr<ServerMessage> CreateMessage(const int& type);
 
+  virtual void ProcessMessages();
   virtual void SendMessages();
 
   /* Accessors / Mutators */
   virtual int port() const;
-  virtual void set_port(const int& port);
 
 private:
   std::unique_ptr<ServerImpl> impl_;
+  std::shared_ptr<lib::ByteStream> send_stream_;
   int port_;
 };
 

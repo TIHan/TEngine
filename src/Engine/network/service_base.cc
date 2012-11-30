@@ -31,8 +31,8 @@
 namespace engine {
 namespace network {
 
-ServiceBase::ServiceBase() : send_stream_(std::make_shared<lib::ByteStream>()),
-    receive_stream_(std::make_shared<lib::ByteStream>()) {
+ServiceBase::ServiceBase()
+    : receive_stream_(std::make_shared<lib::ByteStream>()) {
 }
 
 ServiceBase::~ServiceBase() {
@@ -41,30 +41,6 @@ ServiceBase::~ServiceBase() {
 void ServiceBase::RegisterMessageCallback(const int& type,
     std::function<void(std::shared_ptr<ReceiveMessage>)> func) {
   callbacks_[type] = func;
-}
-
-void ServiceBase::ProcessMessages() {
-  receive_mutex_.lock(); // LOCK
-
-  while (receive_stream_->read_position() < receive_stream_->GetSize()) {
-    try {
-      uint8_t first_byte = receive_stream_->ReadByte();
-
-      auto iter = callbacks_.find(first_byte);
-
-      if (iter != callbacks_.end()) {
-        auto message = iter->second;
-        message(std::make_shared<ReceiveMessage>(receive_stream_, first_byte));
-      } else {
-        throw std::logic_error("Invalid message.");
-      }
-    } catch (const std::exception& e) {
-      receive_mutex_.unlock(); // UNLOCK
-      throw e;
-    }
-  }
-
-  receive_mutex_.unlock(); // UNLOCK
 }
 
 } // end network namespace
