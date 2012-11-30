@@ -34,30 +34,46 @@ namespace network {
 /*!
   *
   */
-UdpSocket::UdpSocket() : receive_buffer_(SOCKET_MAX_BUFFER) {
+UdpSocket::UdpSocket() {
+  Init();
 }
 
 /*!
   *
   */
-UdpSocket::UdpSocket(const SocketFamily& family)
-    : receive_buffer_(SOCKET_MAX_BUFFER) {
+UdpSocket::UdpSocket(const SocketFamily& family) {
   impl_->family_ = family;
+  Init();
 }
 
 /*!
   *
   */
-UdpSocket::UdpSocket(const SocketFamily& family, const bool& blocking)
-    : receive_buffer_(SOCKET_MAX_BUFFER) {
+UdpSocket::UdpSocket(const bool& blocking) {
+  impl_->blocking_ = blocking;
+  Init();
+}
+
+/*!
+  *
+  */
+UdpSocket::UdpSocket(const SocketFamily& family, const bool& blocking) {
   impl_->family_ = family;
   impl_->blocking_ = blocking;
+  Init();
 }
 
 /*!
   *
   */
 UdpSocket::~UdpSocket() {
+}
+
+/*!
+  *
+  */
+void UdpSocket::Init() {
+  receive_buffer_ = std::make_unique<std::vector<uint8_t>>(SOCKET_MAX_BUFFER);
 }
 
 /*!
@@ -83,8 +99,8 @@ std::tuple<std::shared_ptr<std::vector<uint8_t>>,
   socklen_t addr_len = sizeof(sock_addr_storage);
 
   char* data = reinterpret_cast<char*>(const_cast<uint8_t*>(
-      receive_buffer_.data()));
-  int data_size = static_cast<int>(receive_buffer_.size());
+      receive_buffer_->data()));
+  int data_size = static_cast<int>(receive_buffer_->size());
   auto sock_addr = reinterpret_cast<sockaddr*>(
       const_cast<struct sockaddr_storage*>(&sock_addr_storage));
 
@@ -95,7 +111,7 @@ std::tuple<std::shared_ptr<std::vector<uint8_t>>,
   if (bytes != -1) {
     buffer->reserve(bytes);
     for (int i = 0; i < bytes; ++i) {
-      buffer->push_back(receive_buffer_.at(i));
+      buffer->push_back(receive_buffer_->at(i));
     }
   }
 

@@ -62,13 +62,13 @@ struct SocketAddressImpl {
 
 class SocketBaseImpl {
 public:
+  void Open(const int& socket_type, const int& flags,
+            const std::string& node_name, const std::string& service_name);
+
   int socket_;
   struct addrinfo* address_info_;
   struct addrinfo* current_address_info_;
   SocketFamily family_;
-
-  void Open(const int& socket_type, const int& flags,
-            const std::string& node_name, const std::string& service_name);
   bool blocking_;
 };
 

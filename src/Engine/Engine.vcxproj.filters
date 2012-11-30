@@ -63,9 +63,6 @@
     <ClInclude Include="lib\event.h">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="network\message_interface.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
     <ClInclude Include="network\receive_message.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
@@ -83,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="lib\process.h">
       <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="network\message_base.h">
+      <Filter>Header Files\network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

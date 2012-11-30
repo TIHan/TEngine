@@ -168,9 +168,10 @@ void SocketBaseImpl::Open(const int& socket_type, const int& flags,
   *
   */
 SocketBase::SocketBase() : impl_(std::make_unique<SocketBaseImpl>()) {
-  impl_->family_ = SocketFamily::kUnspecified;
   impl_->socket_ = -1;
+  impl_->address_info_ = nullptr;
   impl_->current_address_info_ = nullptr;
+  impl_->family_ = SocketFamily::kUnspecified;
   impl_->blocking_ = true;
 }
 

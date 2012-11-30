@@ -132,7 +132,7 @@
     <ClInclude Include=".\network\socket_base.h" />
     <ClInclude Include=".\network\socket_base-impl.h" />
     <ClInclude Include=".\network\udp_socket.h" />
-    <ClInclude Include="network\message_interface.h" />
+    <ClInclude Include="network\message_base.h" />
     <ClInclude Include="network\receive_message.h" />
     <ClInclude Include="network\server.h" />
     <ClInclude Include="network\server_message.h" />

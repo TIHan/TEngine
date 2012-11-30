@@ -28,61 +28,29 @@
 #ifndef CLIENT_MESSAGE_H_
 #define CLIENT_MESSAGE_H_
 
-#include "message_interface.h"
+#include "message_base.h"
 
 namespace engine {
 namespace network {
 
-class ClientMessage : public virtual MessageInterface {
+class ClientMessage : public MessageBase {
 public:
   ClientMessage(std::shared_ptr<lib::ByteStream> send_stream, const int& type);
   virtual ~ClientMessage();
 
-  void WriteString(const std::string& string);
-
-  template <typename T>
-  void Write(const T& value);
-
   void Send();
-
-  /* Accessors / Mutators */
-  virtual int type() const;
-
-private:
-  std::shared_ptr<lib::ByteStream> buffer_;
-  std::shared_ptr<lib::ByteStream> send_stream_;
-  int type_;
 };
 
 inline ClientMessage::ClientMessage(
     std::shared_ptr<lib::ByteStream> send_stream, const int& type)
-    : buffer_(std::make_shared<lib::ByteStream>()) {
-  if (!send_stream) throw std::invalid_argument("send_stream is null.");
-  if (type < 0) throw std::out_of_range("type is below 0.");
-
-  type_ = type;
-  send_stream_ = send_stream;
-  buffer_->WriteByte(type);
+    : MessageBase(send_stream, type) {
 }
 
 inline ClientMessage::~ClientMessage() {
 }
 
-inline void ClientMessage::WriteString(const std::string& string) {
-  buffer_->WriteString(string);
-}
-
-template <typename T>
-inline void ClientMessage::Write(const T& value) {
-  buffer_->Write<T>(value);
-}
-
 inline void ClientMessage::Send() {
   send_stream_->WriteStream(buffer_);
-}
-
-inline int ClientMessage::type() const {
-  return type_;
 }
 
 } // end network namespace

@@ -57,6 +57,7 @@ protected:
 
   std::shared_ptr<lib::ByteStream> send_stream_;
   std::shared_ptr<lib::ByteStream> receive_stream_;
+  lib::Process receive_process_;
   std::map<int,
            std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
   std::mutex receive_mutex_;

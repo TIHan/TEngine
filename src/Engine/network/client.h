@@ -71,8 +71,8 @@ public:
 
 private:
   std::unique_ptr<ClientImpl> impl_;
-  lib::Process receive_process_;
-  int port_;
+  std::string server_address_;
+  std::string server_port_;
 };
 
 } // end network namespace

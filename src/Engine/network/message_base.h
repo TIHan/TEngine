@@ -25,23 +25,62 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MESSAGE_INTERFACE_H_
-#define MESSAGE_INTERFACE_H_
+#ifndef MESSAGE_BASE_H_
+#define MESSAGE_BASE_H_
 
 #include <engine_lib.h>
 
 namespace engine {
 namespace network {
 
-class MessageInterface {
+class MessageBase {
 public:
-  virtual ~MessageInterface() {}
+  virtual ~MessageBase();
+
+  void WriteString(const std::string& string);
+
+  template <typename T>
+  void Write(const T& value);
 
   /* Accessors / Mutators */
-  virtual int type() const = 0;
+  int type() const;
+
+protected:
+  MessageBase(std::shared_ptr<lib::ByteStream> send_stream, const int& type);
+
+  std::shared_ptr<lib::ByteStream> buffer_;
+  std::shared_ptr<lib::ByteStream> send_stream_;
+  int type_;
 };
+
+inline MessageBase::MessageBase(std::shared_ptr<lib::ByteStream> send_stream,
+                                const int& type)
+    : buffer_(std::make_shared<lib::ByteStream>()) {
+  if (!send_stream) throw std::invalid_argument("send_stream is null.");
+  if (type < 0) throw std::out_of_range("type is below 0.");
+
+  type_ = type;
+  send_stream_ = send_stream;
+  buffer_->WriteByte(type);
+}
+
+inline MessageBase::~MessageBase() {
+}
+
+inline void MessageBase::WriteString(const std::string& string) {
+  buffer_->WriteString(string);
+}
+
+template <typename T>
+inline void MessageBase::Write(const T& value) {
+  buffer_->Write<T>(value);
+}
+
+inline int MessageBase::type() const {
+  return type_;
+}
 
 } // end network namespace
 } // end engine namespace
 
-#endif // MESSAGE_INTERFACE_H_
+#endif // MESSAGE_BASE_H_

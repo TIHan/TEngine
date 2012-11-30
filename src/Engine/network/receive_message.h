@@ -28,12 +28,10 @@
 #ifndef RECEIVE_MESSAGE_H_
 #define RECEIVE_MESSAGE_H_
 
-#include "message_interface.h"
-
 namespace engine {
 namespace network {
 
-class ReceiveMessage : public virtual MessageInterface {
+class ReceiveMessage {
 public:
   ReceiveMessage(std::shared_ptr<lib::ByteStream> receive_stream,
                  const int& type);

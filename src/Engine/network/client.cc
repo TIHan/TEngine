@@ -36,11 +36,9 @@ public:
   ClientImpl();
 
   UdpSocket socket_;
-  std::string server_address_;
-  std::string server_port_;
 };
 
-ClientImpl::ClientImpl() : socket_(SocketFamily::kIpv4, false) {
+ClientImpl::ClientImpl() : socket_(false) {
 }
 
 Client::Client() : impl_(std::make_unique<ClientImpl>()) {
@@ -52,6 +50,9 @@ Client::~Client() {
 
 void Client::Connect(const std::string& address, const std::string& port) {
   impl_->socket_.Open(address, port);
+  server_address_ = address;
+  server_port_ = port;
+
   receive_process_.Run([=] () {
     receive_mutex_.lock(); // LOCK
 

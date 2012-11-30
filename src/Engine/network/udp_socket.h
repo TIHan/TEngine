@@ -61,6 +61,7 @@ class UdpSocket : public SocketBase, public virtual UdpSocketInterface {
 public:
   UdpSocket();
   explicit UdpSocket(const SocketFamily& family);
+  explicit UdpSocket(const bool& blocking);
   UdpSocket(const SocketFamily& family, const bool& blocking);
 
   virtual ~UdpSocket();
@@ -79,7 +80,9 @@ public:
                      const SocketAddress& address);
 
 private:
-  std::vector<uint8_t> receive_buffer_;
+  void Init();
+
+  std::unique_ptr<std::vector<uint8_t>> receive_buffer_;
 };
 
 } // end network namespace
