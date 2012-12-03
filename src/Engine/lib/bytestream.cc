@@ -143,7 +143,7 @@ uint8_t ByteStream::ReadByte() {
   *
   */
 void ByteStream::WriteByte(const uint8_t& byte) {
-  buffer_.push_back(byte);
+  buffer_.emplace_back(byte);
 }
 
 /*!

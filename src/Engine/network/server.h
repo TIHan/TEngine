@@ -36,6 +36,7 @@ namespace network {
 
 enum ReservedServerMessage {
   kPrint = 248,
+  kHandshake = 249
 };
 
 // Microsoft gives a warning about virtual inheritance. Turn it off.

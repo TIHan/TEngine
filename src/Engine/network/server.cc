@@ -31,17 +31,35 @@
 namespace engine {
 namespace network {
 
-typedef std::list<std::shared_ptr<SocketAddress>> AddressList;
+struct Recipient {
+  std::shared_ptr<SocketAddress> address;
+  int id;
+};
+
+typedef std::list<std::shared_ptr<Recipient>> RecipientList;
 
 class ServerImpl {
 public:
   ServerImpl();
 
+  std::unique_ptr<Recipient> CreateRecipient(
+      std::shared_ptr<SocketAddress> address);
+
   UdpSocket socket_;
-  AddressList addresses_;
+  RecipientList recipients_;
 };
 
 ServerImpl::ServerImpl() : socket_(SocketFamily::kIpv4, false) {
+}
+
+std::atomic_int g_id_count;
+
+std::unique_ptr<Recipient> ServerImpl::CreateRecipient(
+    std::shared_ptr<SocketAddress> address) {
+  auto recipient = std::make_unique<Recipient>();
+  recipient->address = address;
+  recipient->id = ++g_id_count;
+  return recipient;
 }
 
 Server::Server(const int& port)
@@ -124,17 +142,17 @@ void Server::SendMessages() {
   send_queue_.swap(*send_buffer_);
   send_mutex_.unlock(); // UNLOCK
 
-  auto addresses = impl_->addresses_;
+  auto addresses = impl_->recipients_;
 
   send_async_ = std::async(std::launch::async, [=] {
     send_mutex_.lock(); // LOCK
     while (!send_queue_.empty()) {
       for_each(addresses.cbegin(), addresses.cend(),
-               [&] (std::shared_ptr<SocketAddress> address) {
-        impl_->socket_.Send(*send_queue_.front());
+               [&] (std::shared_ptr<Recipient> recipient) {
+        impl_->socket_.SendTo(*send_queue_.front(), *recipient->address);
       });
       send_queue_.pop();
-      std::chrono::microseconds usec(50);
+      std::chrono::microseconds usec(1);
       std::this_thread::sleep_for(usec);
     }
     send_mutex_.unlock(); // LOCK

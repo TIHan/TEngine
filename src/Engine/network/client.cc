@@ -58,8 +58,13 @@ void Client::Connect(const std::string& address, const std::string& port) {
   receive_process_.Run([=] () {
     receive_mutex_.lock(); // LOCK
     auto receive = impl_->socket_.ReceiveFrom();
-    receive_buffer_.push(std::make_shared<lib::ByteStream>(
-        *std::get<0>(receive)));
+    auto buffer = *std::get<0>(receive);
+
+    if (buffer.size() != 0) {
+      auto stream = std::make_shared<lib::ByteStream>();
+      stream->WriteBuffer(buffer);
+      receive_buffer_.push(stream);
+    }
     receive_mutex_.unlock(); // UNLOCK
   });
 }
@@ -111,7 +116,7 @@ void Client::SendMessages() {
     while (!send_queue_.empty()) {
       impl_->socket_.Send(*send_queue_.front());
       send_queue_.pop();
-      std::chrono::microseconds usec(2500);
+      std::chrono::microseconds usec(1);
       std::this_thread::sleep_for(usec);
     }
     send_mutex_.unlock(); // LOCK
