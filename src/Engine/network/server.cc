@@ -134,8 +134,8 @@ void Server::SendMessages() {
         impl_->socket_.Send(*send_queue_.front());
       });
       send_queue_.pop();
-      std::chrono::microseconds micro(1);
-      std::this_thread::sleep_for(micro);
+      std::chrono::microseconds usec(50);
+      std::this_thread::sleep_for(usec);
     }
     send_mutex_.unlock(); // LOCK
   });

@@ -33,7 +33,7 @@
 namespace engine {
 namespace network {
 
-#define MTU 512
+#define MTU 1400
 
 typedef std::queue<std::shared_ptr<lib::ByteStream>> SendQueue;
 

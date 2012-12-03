@@ -6,14 +6,13 @@ using namespace engine;
 class NetworkTest : public ::testing::Test {
 };
 
-TEST_F(NetworkTest, ConnectTest) {
+TEST_F(NetworkTest, MassiveMessageTest) {
+  static int count = 0;
   network::Server server(1337);
   server.Start();
   server.RegisterMessageCallback(network::ReservedClientMessage::kConnect,
       [] (std::shared_ptr<network::ReceiveMessage> message) {
-    static int count;
     count++;
-    std::cout << "Message " << count << std::endl;
     for (int i = 0; i < 511; ++i) {
       uint8_t hello = message->Read<uint8_t>();
     }
@@ -22,7 +21,7 @@ TEST_F(NetworkTest, ConnectTest) {
   network::Client client;
   client.Connect("127.0.0.1", "1337");
 
-  for (int i = 0; i < 10000; ++i) {
+  for (int i = 0; i < 1000; ++i) {
     auto connectMessage = client.CreateMessage(
         network::ReservedClientMessage::kConnect);
     for (int i = 0; i < 511; ++i) {
@@ -35,13 +34,11 @@ TEST_F(NetworkTest, ConnectTest) {
   std::cin.get();
   client.SendMessages();
 
-  std::cout << "Press any key to process messages...\n";
-  std::cin.get();
-  server.ProcessMessages();
+  std::chrono::seconds sec(1);
+  std::this_thread::sleep_for(sec);
 
-  std::cout << "Press any key to process messages again...\n";
-  std::cin.get();
   server.ProcessMessages();
+  EXPECT_EQ(count, 1000);
 }
 
                                                                                
