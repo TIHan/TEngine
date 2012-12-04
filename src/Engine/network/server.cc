@@ -64,7 +64,8 @@ std::unique_ptr<Recipient> ServerImpl::CreateRecipient(
 
 Server::Server(const int& port)
     : impl_(std::make_unique<ServerImpl>()),
-      send_buffer_(std::make_shared<SendQueue>()) {
+      send_buffer_(
+        std::make_shared<std::queue<std::shared_ptr<lib::ByteStream>>>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
 }
@@ -152,8 +153,6 @@ void Server::SendMessages() {
         impl_->socket_.SendTo(*send_queue_.front(), *recipient->address);
       });
       send_queue_.pop();
-      std::chrono::microseconds usec(1);
-      std::this_thread::sleep_for(usec);
     }
     send_mutex_.unlock(); // LOCK
   });

@@ -34,6 +34,10 @@
 namespace engine {
 namespace network {
 
+const int kMaxClients = 256;
+const int kMaxServerPerClientTransfer = 8192;
+const int kMaxClientTransfer = 16;
+
 class ServiceInterface {
 public:
   virtual ~ServiceInterface() {}

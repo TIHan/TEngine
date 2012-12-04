@@ -33,9 +33,7 @@
 namespace engine {
 namespace network {
 
-#define MTU 1400
-
-typedef std::queue<std::shared_ptr<lib::ByteStream>> SendQueue;
+const int kMaximumTransmissionUnit = 1024;
 
 class MessageBase {
 public:

@@ -73,7 +73,7 @@ UdpSocket::~UdpSocket() {
   *
   */
 void UdpSocket::Init() {
-  receive_buffer_ = std::make_unique<std::vector<uint8_t>>(SOCKET_MAX_BUFFER);
+  receive_buffer_ = std::make_unique<std::vector<uint8_t>>(kMaxReceiveBuffer);
 }
 
 /*!

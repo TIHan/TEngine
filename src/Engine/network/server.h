@@ -84,8 +84,8 @@ private:
   // END RECEIVE
 
   // SEND
-  std::shared_ptr<SendQueue> send_buffer_;
-  SendQueue send_queue_;
+  std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer_;
+  std::queue<std::shared_ptr<lib::ByteStream>> send_queue_;
   std::mutex send_mutex_;
   std::future<void> send_async_;
   // END SEND

@@ -43,7 +43,8 @@ ClientImpl::ClientImpl() : socket_(false) {
 
 Client::Client()
     : impl_(std::make_unique<ClientImpl>()),
-      send_buffer_(std::make_shared<SendQueue>()) {
+      send_buffer_(
+        std::make_shared<std::queue<std::shared_ptr<lib::ByteStream>>>()) {
 }
 
 Client::~Client() {
@@ -116,8 +117,6 @@ void Client::SendMessages() {
     while (!send_queue_.empty()) {
       impl_->socket_.Send(*send_queue_.front());
       send_queue_.pop();
-      std::chrono::microseconds usec(1);
-      std::this_thread::sleep_for(usec);
     }
     send_mutex_.unlock(); // LOCK
   });

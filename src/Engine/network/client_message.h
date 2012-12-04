@@ -35,17 +35,20 @@ namespace network {
 
 class ClientMessage : public MessageBase {
 public:
-  ClientMessage(std::shared_ptr<SendQueue> send_buffer, const int& type);
+  ClientMessage(
+      std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer,
+      const int& type);
   virtual ~ClientMessage();
 
   void Send();
 
 private:
-  std::shared_ptr<SendQueue> send_buffer_;
+  std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer_;
 };
 
 inline ClientMessage::ClientMessage(
-    std::shared_ptr<SendQueue> send_buffer, const int& type)
+      std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer,
+      const int& type)
     : MessageBase(type), send_buffer_(send_buffer) {
   if (send_buffer_->empty()) {
     send_buffer_->push(std::make_shared<lib::ByteStream>());
@@ -56,12 +59,12 @@ inline ClientMessage::~ClientMessage() {
 }
 
 inline void ClientMessage::Send() {
-  if (buffer_->GetSize() > MTU)
+  if (buffer_->GetSize() > kMaximumTransmissionUnit)
     throw std::out_of_range("Message is too big.");
   auto newest_stream = send_buffer_->back();
 
   // Do we have enough room?
-  if (newest_stream->GetSize() + buffer_->GetSize() > MTU) {
+  if (newest_stream->GetSize() + buffer_->GetSize() > kMaximumTransmissionUnit) {
     send_buffer_->push(buffer_);
   } else {
     newest_stream->WriteStream(buffer_);

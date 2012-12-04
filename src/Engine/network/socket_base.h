@@ -30,10 +30,10 @@
 
 #include <engine_lib.h>
 
-#define SOCKET_MAX_BUFFER 1400
-
 namespace engine {
 namespace network {
+
+const int kMaxReceiveBuffer = 1024;
 
 enum SocketFamily {
   kUnspecified,
