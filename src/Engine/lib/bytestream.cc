@@ -62,13 +62,6 @@ int ByteStream::GetSize() const {
 /*!
   *
   */
-int ByteStream::GetMaxSize() const {
-  return static_cast<int>(buffer_.capacity());
-}
-
-/*!
-  *
-  */
 void ByteStream::Reset() {
   buffer_.clear();
   read_position_ = 0;
@@ -88,7 +81,7 @@ std::string ByteStream::ReadString() {
   std::string string;
   for (int i = 0; i < GetSize(); ++i) {
     string.insert(string.end(), ReadByte());
-    if (string.data()[i] == '\0') {
+    if (string.at(i) == '\0') {
       return string.data();
     }
   }

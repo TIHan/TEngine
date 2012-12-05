@@ -33,7 +33,6 @@
 namespace engine {
 namespace lib {
 
-class ByteStreamImpl;
 class ByteStream {
 public:
   ByteStream();
@@ -41,7 +40,6 @@ public:
   virtual ~ByteStream();
 
   int GetSize() const;
-  int GetMaxSize() const;
   void Reset();
 
   const uint8_t* GetRaw() const;
