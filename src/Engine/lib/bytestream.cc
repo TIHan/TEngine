@@ -134,9 +134,7 @@ void ByteStream::WriteStream(std::shared_ptr<ByteStream> byteStream) {
   *
   */
 uint8_t ByteStream::ReadByte() {
-  uint8_t value = buffer_.at(read_position_);
-  read_position_++;
-  return value;
+  return buffer_.at(read_position_++);
 }
 
 /*!
