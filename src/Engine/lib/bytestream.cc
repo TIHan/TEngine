@@ -62,7 +62,7 @@ int ByteStream::GetSize() const {
 /*!
   *
   */
-void ByteStream::Reset() {
+void ByteStream::Clear() {
   buffer_.clear();
   read_position_ = 0;
 }

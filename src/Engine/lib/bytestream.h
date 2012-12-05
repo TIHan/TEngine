@@ -40,7 +40,7 @@ public:
   virtual ~ByteStream();
 
   int GetSize() const;
-  void Reset();
+  void Clear();
 
   const uint8_t* GetRaw() const;
 
