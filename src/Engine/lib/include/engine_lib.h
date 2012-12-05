@@ -27,5 +27,3 @@
 
 #include "../common.h"
 #include "../bytestream.h"
-#include "../system.h"
-#include "../process.h"

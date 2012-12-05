@@ -39,9 +39,6 @@
     <ClInclude Include=".\lib\common.h">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include=".\lib\system.h">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
     <ClInclude Include=".\lib\include\engine_lib.h">
       <Filter>Header Files\lib\include</Filter>
     </ClInclude>
@@ -78,18 +75,12 @@
     <ClInclude Include="network\server_message.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="lib\process.h">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
     <ClInclude Include="network\message_base.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\lib\bytestream.cc">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
-    <ClCompile Include=".\lib\system.cc">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include=".\network\socket_base.cc">
@@ -106,9 +97,6 @@
     </ClCompile>
     <ClCompile Include="network\service_base.cc">
       <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\process.cc">
-      <Filter>Source Files\lib</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

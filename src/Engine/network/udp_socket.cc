@@ -178,5 +178,27 @@ int UdpSocket::SendTo(const lib::ByteStream& data,
   return bytes;
 }
 
+/*!
+  *
+  */
+bool UdpSocket::WaitToRead(int usec) {
+  timeval tv;
+  fd_set read_set;
+
+  tv.tv_sec = 0;
+  tv.tv_usec = usec;
+
+  FD_ZERO(&read_set);
+  FD_SET(impl_->socket_, &read_set);
+
+  select(0, &read_set, 0, 0, &tv);
+
+  if (FD_ISSET(impl_->socket_, &read_set)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 } // end network namespace
 } // end 

@@ -79,6 +79,8 @@ public:
   virtual int SendTo(const lib::ByteStream& data,
                      const SocketAddress& address);
 
+  virtual bool WaitToRead(int usec);
+
 private:
   void Init();
 

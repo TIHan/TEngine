@@ -56,23 +56,28 @@ void Client::Connect(const std::string& address, const std::string& port) {
   server_address_ = address;
   server_port_ = port;
 
-  receive_process_.Run([=] () {
-    receive_mutex_.lock(); // LOCK
-    auto receive = impl_->socket_.ReceiveFrom();
-    auto buffer = *std::get<0>(receive);
+  receive_thread_ = std::thread([=] () {
+    while (!receive_close_) {
+      receive_mutex_.lock(); // LOCK
+      if (impl_->socket_.WaitToRead(2500)) {
+        auto receive = impl_->socket_.ReceiveFrom();
+        auto buffer = *std::get<0>(receive);
 
-    if (buffer.size() != 0) {
-      auto stream = std::make_shared<lib::ByteStream>();
-      stream->WriteBuffer(buffer);
-      receive_buffer_.push(stream);
+        if (buffer.size() != 0) {
+          auto stream = std::make_shared<lib::ByteStream>();
+          stream->WriteBuffer(buffer);
+          receive_buffer_.push(stream);
+        }
+      }
+      receive_mutex_.unlock(); // UNLOCK
     }
-    receive_mutex_.unlock(); // UNLOCK
   });
 }
 
 void Client::Disconnect() {
-  receive_process_.Stop();
-  send_async_.wait();
+  receive_close_ = true;
+  receive_thread_.join();
+  if (send_async_.valid()) send_async_.wait();
   impl_->socket_.Close();
 }
 

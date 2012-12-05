@@ -32,6 +32,7 @@ namespace engine {
 namespace network {
 
 ServiceBase::ServiceBase() {
+  receive_close_ = false;
 }
 
 ServiceBase::~ServiceBase() {

@@ -123,9 +123,7 @@
     <ClInclude Include=".\lib\bytestream.h" />
     <ClInclude Include=".\lib\include\engine_lib.h" />
     <ClInclude Include=".\lib\common.h" />
-    <ClInclude Include=".\lib\system.h" />
     <ClInclude Include="lib\event.h" />
-    <ClInclude Include="lib\process.h" />
     <ClInclude Include="network\client.h" />
     <ClInclude Include="network\client_message.h" />
     <ClInclude Include="network\include\engine_network.h" />
@@ -140,10 +138,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\lib\bytestream.cc" />
-    <ClCompile Include=".\lib\system.cc" />
     <ClCompile Include=".\network\socket_base.cc" />
     <ClCompile Include=".\network\udp_socket.cc" />
-    <ClCompile Include="lib\process.cc" />
     <ClCompile Include="network\client.cc" />
     <ClCompile Include="network\server.cc" />
     <ClCompile Include="network\service_base.cc" />

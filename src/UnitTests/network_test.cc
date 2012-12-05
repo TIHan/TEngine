@@ -37,7 +37,7 @@ TEST_F(NetworkTest, BasicTest) {
 
   client.SendMessages();
 
-  std::chrono::milliseconds time(50);
+  std::chrono::milliseconds time(25);
   std::this_thread::sleep_for(time);
 
   server.ProcessMessages();

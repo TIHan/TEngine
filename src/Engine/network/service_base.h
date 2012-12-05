@@ -58,7 +58,8 @@ public:
 protected:
   ServiceBase();
 
-  lib::Process receive_process_;
+  std::thread receive_thread_;
+  std::atomic_bool receive_close_;
   std::map<int,
            std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
   std::mutex receive_mutex_;
