@@ -137,7 +137,6 @@
     <ClInclude Include="network\service_base.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include=".\lib\bytestream.cc" />
     <ClCompile Include=".\network\socket_base.cc" />
     <ClCompile Include=".\network\udp_socket.cc" />
     <ClCompile Include="network\client.cc" />

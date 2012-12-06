@@ -34,7 +34,6 @@ TEST_F(NetworkTest, BasicTest) {
   std::cout << "Press any key to send messages...\n";
   std::cin.get();
 
-
   client.SendMessages();
 
   std::chrono::milliseconds time(25);

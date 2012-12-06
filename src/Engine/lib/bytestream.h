@@ -103,6 +103,127 @@ void ByteStream::Write(const T& value) {
   }
 }
 
+/*!
+  * \brief The constructor for the ByteStream that requires
+  * a maximum size for the ByteStream buffer.
+  *
+  */
+inline ByteStream::ByteStream() {
+  read_position_ = 0;
+}
+
+/*!
+  *
+  */
+inline ByteStream::ByteStream(const std::vector<uint8_t>& buffer) {
+  WriteBuffer(buffer);
+}
+
+/*!
+  *
+  */
+inline ByteStream::~ByteStream() {
+}
+
+/*!
+  *
+  */
+inline int ByteStream::GetSize() const {
+  return static_cast<int>(buffer_.size());
+}
+
+/*!
+  *
+  */
+inline void ByteStream::Clear() {
+  buffer_.clear();
+  read_position_ = 0;
+}
+
+/*!
+  *
+  */
+inline const uint8_t* ByteStream::GetRaw() const {
+  return buffer_.data();
+}
+
+/*!
+  *
+  */
+inline std::string ByteStream::ReadString() {
+  std::string string;
+  for (int i = 0; i < GetSize(); ++i) {
+    string.insert(string.end(), ReadByte());
+    if (string.at(i) == '\0') {
+      return string.data();
+    }
+  }
+  return EmptyString();
+}
+
+/*!
+  *
+  */
+inline void ByteStream::WriteString(const std::string& string) {
+  int size = static_cast<int>(string.length());
+
+  for (int i = 0; i < size; ++i) {
+    WriteByte(string.data()[i]);
+    if (i + 1 >= size) {
+      WriteByte('\0');
+    }
+  }
+}
+
+/*!
+  *
+  */
+inline void ByteStream::WriteBuffer(const std::vector<uint8_t>& buffer) {
+  for (int i = 0; i < static_cast<int>(buffer.size()); ++i) {
+    WriteByte(buffer.at(i));
+  }
+}
+
+/*!
+  *
+  */
+inline void ByteStream::WriteStream(std::shared_ptr<ByteStream> byteStream) {
+  int revert_position = byteStream->read_position();
+  byteStream->set_read_position(0);
+  for (int i = 0; i < byteStream->GetSize(); ++i) {
+    WriteByte(byteStream->ReadByte());
+  }
+  byteStream->set_read_position(revert_position);
+}
+
+/*!
+  *
+  */
+inline uint8_t ByteStream::ReadByte() {
+  return buffer_.at(read_position_++);
+}
+
+/*!
+  *
+  */
+inline void ByteStream::WriteByte(const uint8_t& byte) {
+  buffer_.push_back(byte);
+}
+
+/*!
+  *
+  */
+inline int ByteStream::read_position() const {
+  return read_position_;
+}
+
+/*!
+  *
+  */
+inline void ByteStream::set_read_position(int position) {
+  read_position_ = position;
+}
+
 } // end lib namespace
 } // end engine namespace
 
