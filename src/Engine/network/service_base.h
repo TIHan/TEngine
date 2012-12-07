@@ -38,22 +38,14 @@ const int kMaxClients = 256;
 const int kMaxServerPerClientTransfer = 8192;
 const int kMaxClientTransfer = 16;
 
-class ServiceInterface {
-public:
-  virtual ~ServiceInterface() {}
-
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
-  virtual void ProcessMessages() = 0;
-  virtual void SendMessages() = 0;
-};
-
-class ServiceBase : public virtual ServiceInterface {
+class ServiceBase {
 public:
   virtual ~ServiceBase();
 
   virtual void RegisterMessageCallback(const int& type,
       std::function<void(std::shared_ptr<ReceiveMessage>)> func);
+  virtual void ProcessMessages() = 0;
+  virtual void SendMessages() = 0;
 
 protected:
   ServiceBase();

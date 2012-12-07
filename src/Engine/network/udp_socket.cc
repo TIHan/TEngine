@@ -114,8 +114,10 @@ std::tuple<std::shared_ptr<std::vector<uint8_t>>,
       buffer->push_back(receive_buffer_->at(i));
     }
   }
-
-  auto address = std::make_shared<SocketAddress>(sock_addr_storage, addr_len);
+  
+  auto address_data =
+      std::make_shared<SocketAddressData>(sock_addr_storage, addr_len);
+  auto address = std::make_shared<SocketAddress>(address_data);
   return std::tuple<std::shared_ptr<std::vector<uint8_t>>,
                     std::shared_ptr<SocketAddress>>(buffer, address);
 }
@@ -155,10 +157,10 @@ int UdpSocket::SendTo(const std::vector<uint8_t>& data,
   char* data_send = reinterpret_cast<char*>(const_cast<uint8_t*>(data.data()));
   int data_size = static_cast<int>(data.size());
   auto sock_addr = reinterpret_cast<sockaddr*>(
-      const_cast<struct sockaddr_storage*>(&address.address));
+      const_cast<void*>(address.GetRaw()));
 
   int bytes = sendto(impl_->socket_, data_send, data_size, 0, sock_addr,
-                     address.length);
+                     address.GetLength());
   return bytes;
 }
 
@@ -171,10 +173,10 @@ int UdpSocket::SendTo(const lib::ByteStream& data,
                                             data.GetRaw()));
   int data_size = static_cast<int>(data.GetSize());
   auto sock_addr = reinterpret_cast<sockaddr*>(
-      const_cast<struct sockaddr_storage*>(&address.address));
+      const_cast<void*>(address.GetRaw()));
 
   int bytes = sendto(impl_->socket_, data_send, data_size, 0, sock_addr,
-                     address.length);
+                     address.GetLength());
   return bytes;
 }
 
@@ -191,7 +193,8 @@ bool UdpSocket::WaitToRead(int usec) {
   FD_ZERO(&read_set);
   FD_SET(impl_->socket_, &read_set);
 
-  select(0, &read_set, 0, 0, &tv);
+  // Is this right? Works for now in Windows + Linux.
+  select(impl_->socket_ + 1, &read_set, 0, 0, &tv);
 
   if (FD_ISSET(impl_->socket_, &read_set)) {
     return true;

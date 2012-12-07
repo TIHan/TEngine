@@ -30,34 +30,15 @@
 
 #include "socket_base.h"
 
-// Microsoft gives a warning about virtual inheritance. Turn it off.
-#ifdef _MSC_VER
-// C4250 - 'class1' : inherits 'class2::member' via dominance
-# pragma warning( disable : 4250 )
-#endif
-
 namespace engine {
 namespace network {
 
-class UdpSocketInterface : public virtual SocketInterface {
-public:
-  virtual ~UdpSocketInterface() {};
-
-  virtual void Open() = 0;
-  virtual void Open(const std::string& address, const std::string& port) = 0;
-
-  virtual std::tuple<std::shared_ptr<std::vector<uint8_t>>,
-                     std::shared_ptr<SocketAddress>> ReceiveFrom() = 0;
-
-  virtual int Send(const std::vector<uint8_t>& data) = 0;
-  virtual int Send(const lib::ByteStream& data) = 0;
-  virtual int SendTo(const std::vector<uint8_t>& data,
-                     const SocketAddress& address) = 0;
-  virtual int SendTo(const lib::ByteStream& data,
-                     const SocketAddress& address) = 0;
+struct UdpSocketOptions {
+  SocketFamily family;
+  bool blocking;
 };
 
-class UdpSocket : public SocketBase, public virtual UdpSocketInterface {
+class UdpSocket : public SocketBase {
 public:
   UdpSocket();
   explicit UdpSocket(const SocketFamily& family);

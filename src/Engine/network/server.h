@@ -39,27 +39,8 @@ enum ReservedServerMessage {
   kHandshake = 249
 };
 
-// Microsoft gives a warning about virtual inheritance. Turn it off.
-#ifdef _MSC_VER
-// C4250 - 'class1' : inherits 'class2::member' via dominance
-# pragma warning( disable : 4250 )
-#endif
-
-class ServerInterface : public virtual ServiceInterface {
-public:
-  virtual ~ServerInterface() {}
-
-  virtual void Start() = 0;
-  virtual void Stop() = 0;
-
-  virtual std::shared_ptr<ServerMessage> CreateMessage(const int& type) = 0;
-
-  /* Accessors / Mutators */
-  virtual int port() const = 0;
-};
-
 class ServerImpl;
-class Server : public ServiceBase, public virtual ServerInterface {
+class Server : public ServiceBase {
 public:
   explicit Server(const int& port);
   virtual ~Server();

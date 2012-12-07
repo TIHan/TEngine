@@ -50,14 +50,19 @@
 namespace engine {
 namespace network {
 
-struct SocketAddressImpl {
-  SocketAddressImpl(const struct sockaddr_storage& address,
-                    const int& length) {
-    this->address = address;
-    this->length = length;
-  }
+struct SocketAddressData {
+  SocketAddressData(const struct sockaddr_storage& address, const int& length)
+      : address(address), length(length) {}
   struct sockaddr_storage address;
   int length;
+};
+
+class SocketAddressImpl {
+public:
+  SocketAddressImpl(std::shared_ptr<SocketAddressData> addr_data);
+  virtual ~SocketAddressImpl();
+
+  std::shared_ptr<SocketAddressData> data_;
 };
 
 class SocketBaseImpl {

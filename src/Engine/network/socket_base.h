@@ -41,25 +41,24 @@ enum SocketFamily {
   kIpv6
 };
 
-typedef struct SocketAddressImpl SocketAddress;
+struct SocketAddressData;
 
-std::string GetSocketAddress(const SocketAddress& address);
-
-class SocketInterface {
+class SocketAddressImpl;
+class SocketAddress {
 public:
-  virtual ~SocketInterface() {};
+  SocketAddress(std::shared_ptr<SocketAddressData> addr_data);
+  virtual ~SocketAddress();
 
-  virtual int Bind(const uint16_t& port) = 0;
-  virtual std::string GetAddress() = 0;
-  virtual void Close() = 0;
+  std::string GetText() const;
+  int GetLength() const;
+  const void* GetRaw() const;
 
-  /* Accessors / Mutators */
-  virtual SocketFamily family() = 0;
-  virtual bool blocking() = 0;
+private:
+  std::unique_ptr<SocketAddressImpl> impl_;
 };
 
 class SocketBaseImpl;
-class SocketBase : public virtual SocketInterface {
+class SocketBase {
 public:
   virtual ~SocketBase();
 
@@ -72,9 +71,9 @@ public:
   virtual bool blocking();
 
 protected:
-  std::unique_ptr<SocketBaseImpl> impl_;
+  SocketBase();
 
-  SocketBase(); // Abstract class
+  std::unique_ptr<SocketBaseImpl> impl_;
 };
 
 } // end network namespace

@@ -87,8 +87,51 @@ static std::string GetSocketAddress(const struct sockaddr_storage& addr) {
 namespace engine {
 namespace network {
 
-std::string GetSocketAddress(const SocketAddress& address) {
-  return GetSocketAddress(address.address);
+/*!
+  *
+  */
+SocketAddress::SocketAddress(std::shared_ptr<SocketAddressData> addr_data)
+    : impl_(std::make_unique<SocketAddressImpl>(addr_data)) {
+}
+
+/*!
+  *
+  */
+SocketAddress::~SocketAddress() {
+}
+
+/*!
+  *
+  */
+std::string SocketAddress::GetText() const {
+  return GetSocketAddress(impl_->data_->address);
+}
+
+/*!
+  *
+  */
+int SocketAddress::GetLength() const {
+  return impl_->data_->length;
+}
+
+/*!
+  *
+  */
+SocketAddressImpl::SocketAddressImpl(
+    std::shared_ptr<SocketAddressData> addr_data) : data_(addr_data) {
+}
+
+/*!
+  *
+  */
+SocketAddressImpl::~SocketAddressImpl() {
+}
+
+/*!
+  *
+  */
+const void* SocketAddress::GetRaw() const {
+  return &impl_->data_->address;
 }
 
 /*!
@@ -113,11 +156,15 @@ void SocketBaseImpl::Open(const int& socket_type, const int& flags,
   }
 
 #ifdef _MSC_VER
-  WSADATA wsa_data;
-  // Initialize Winsock
-  int wsa_result = WSAStartup(MAKEWORD(2,2), &wsa_data);
-  if (wsa_result != 0) {
-    throw std::runtime_error("Unable to initialize Winsock.");
+  static std::atomic_bool once;
+  if (!once) {
+    once = true;
+    WSADATA wsa_data;
+    // Initialize Winsock
+    int wsa_result = WSAStartup(MAKEWORD(2,2), &wsa_data);
+    if (wsa_result != 0) {
+      throw std::runtime_error("Unable to initialize Winsock.");
+    }
   }
 #endif
 
