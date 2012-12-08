@@ -122,13 +122,8 @@ void Client::SendMessages() {
   send_async_ = std::async(std::launch::async, [=] {
     send_mutex_.lock(); // LOCK
     while (!send_queue_.empty()) {
-      auto t1 = std::chrono::high_resolution_clock::now();
       impl_->socket_->Send(*send_queue_.front());
       send_queue_.pop();
-      auto t2 = std::chrono::high_resolution_clock::now();
-      auto time = std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count();
-      if (time > 0)
-        std::cout << "Time " << time << std::endl;
     }
     send_mutex_.unlock(); // LOCK
   });

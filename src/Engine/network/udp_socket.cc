@@ -147,7 +147,8 @@ bool UdpSocket::WaitToRead(int usec) {
   FD_SET(impl_->socket_, &read_set);
 
   // Is this right? Works for now in Windows + Linux.
-  select(impl_->socket_ + 1, &read_set, 0, 0, &tv);
+  if (select(impl_->socket_ + 1, &read_set, 0, 0, &tv) <= 0)
+    return false;
 
   if (FD_ISSET(impl_->socket_, &read_set)) {
     return true;
