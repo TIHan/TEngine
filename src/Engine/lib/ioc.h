@@ -25,47 +25,53 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SERVICE_BASE_H_
-#define SERVICE_BASE_H_
+#ifndef IOC_H_
+#define IOC_H_
 
-#include <engine_lib.h>
-#include "receive_message.h"
+#include "common.h"
 
 namespace engine {
-namespace network {
+namespace lib {
 
-const int kMaxClients = 64;
-const int kMaxServerPerClientTransfer = 8192;
-const int kMaxClientTransfer = 128;
-
-class ServiceBaseInterface {
+template <typename T>
+class IocObject {
 public:
-  virtual ~ServiceBaseInterface() {};
+  IocObject();
+  virtual ~IocObject();
 
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
-  virtual void ProcessMessages() = 0;
-  virtual void SendMessages() = 0;
+  std::shared_ptr<T> GetInstance();
 };
 
-class ServiceBase : public virtual ServiceBaseInterface {
+template <typename T>
+IocObject<T>::IocObject() {
+}
+
+template <typename T>
+IocObject<T>::~IocObject() {
+}
+
+template <typename T>
+std::shared_ptr<T> IocObject<T>::GetInstance() {
+  return std::make_shared<T>();
+}
+
+class Ioc {
 public:
-  virtual ~ServiceBase();
+  template <typename T, typename U>
+  static void Register() {
+    container_[typeid(T).] = std::make_unique<IocObject<U>>();
+  }
 
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func);
+  template <typename T>
+  static std::shared_ptr<T> Resolve() {
+    return std::static_pointer_cast<T>(container_[typeid(T).name()]->GetInstance());
+  }
 
-protected:
-  ServiceBase();
-
-  std::thread receive_thread_;
-  std::atomic_bool receive_close_;
-  std::map<int,
-           std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
-  std::mutex receive_mutex_;
+private:
+  static std::map<std::string, std::unique_ptr<IocObject<void>>> container_;
 };
 
-} // end network namespace
 } // end engine namespace
+} // end lib namespace
 
-#endif // SERVICE_BASE_H_
+#endif /* IOC_H_ */

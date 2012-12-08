@@ -25,47 +25,15 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SERVICE_BASE_H_
-#define SERVICE_BASE_H_
+#ifndef EVENT_AGGREGATOR_H_
+#define EVENT_AGGREGATOR_H_
 
-#include <engine_lib.h>
-#include "receive_message.h"
+#include "event.h"
 
 namespace engine {
-namespace network {
+namespace lib {
 
-const int kMaxClients = 64;
-const int kMaxServerPerClientTransfer = 8192;
-const int kMaxClientTransfer = 128;
-
-class ServiceBaseInterface {
-public:
-  virtual ~ServiceBaseInterface() {};
-
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
-  virtual void ProcessMessages() = 0;
-  virtual void SendMessages() = 0;
-};
-
-class ServiceBase : public virtual ServiceBaseInterface {
-public:
-  virtual ~ServiceBase();
-
-  virtual void RegisterMessageCallback(const int& type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func);
-
-protected:
-  ServiceBase();
-
-  std::thread receive_thread_;
-  std::atomic_bool receive_close_;
-  std::map<int,
-           std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
-  std::mutex receive_mutex_;
-};
-
-} // end network namespace
 } // end engine namespace
+} // end lib namespace
 
-#endif // SERVICE_BASE_H_
+#endif /* EVENT_AGGREGATOR_H_ */

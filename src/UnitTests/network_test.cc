@@ -14,7 +14,7 @@ TEST_F(NetworkTest, BasicTest) {
   server.RegisterMessageCallback(network::ReservedClientMessage::kConnect,
       [] (std::shared_ptr<network::ReceiveMessage> message) {
     count++;
-    for (int i = 0; i < 15; ++i) {
+    for (int i = 0; i < 127; ++i) {
       uint8_t hello = message->Read<uint8_t>();
     }
   });
@@ -22,10 +22,10 @@ TEST_F(NetworkTest, BasicTest) {
   network::Client client;
   client.Connect("127.0.0.1", "1337");
 
-  for (int i = 0; i < 256; ++i) {
+  for (int i = 0; i < 64; ++i) {
     auto connectMessage = client.CreateMessage(
         network::ReservedClientMessage::kConnect);
-    for (int i = 0; i < 15; ++i) {
+    for (int i = 0; i < 127; ++i) {
       connectMessage->Write<uint8_t>(255);
     }
     connectMessage->Send();
@@ -41,7 +41,7 @@ TEST_F(NetworkTest, BasicTest) {
 
   server.ProcessMessages();
 
-  EXPECT_EQ(count, 256);
+  EXPECT_EQ(count, 64);
 }
 
                                                                                

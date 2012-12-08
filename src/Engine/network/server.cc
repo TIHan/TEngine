@@ -51,7 +51,7 @@ public:
 
 ServerImpl::ServerImpl() {
   UdpSocketOptions options;
-  options.max_receive_buffer = 16;
+  options.max_receive_buffer = 128;
   options.family = SocketFamily::kIpv4;
   options.blocking = false;
   socket_ = std::make_unique<UdpSocket>(options);
@@ -111,7 +111,7 @@ void Server::Start() {
 
 void Server::Stop() {
   receive_close_ = true;
-  receive_thread_.join();
+  if (receive_thread_.joinable()) receive_thread_.join();
   if (send_async_.valid()) send_async_.wait();
   impl_->socket_->Close();
 }

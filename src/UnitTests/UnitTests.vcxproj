@@ -35,7 +35,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120_CTP_Nov2012</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -139,6 +139,7 @@
     <ClCompile Include=".\socket_test.cc" />
     <ClCompile Include=".\system_test.cc" />
     <ClCompile Include="c11_test.cc" />
+    <ClCompile Include="ioc_test.cc" />
     <ClCompile Include="network_test.cc" />
   </ItemGroup>
   <ItemGroup>

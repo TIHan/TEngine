@@ -78,6 +78,12 @@
     <ClInclude Include="network\message_base.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
+    <ClInclude Include="lib\ioc.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\event_aggregator.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\network\socket_base.cc">

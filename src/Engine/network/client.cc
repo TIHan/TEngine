@@ -78,7 +78,7 @@ void Client::Connect(const std::string& address, const std::string& port) {
 
 void Client::Disconnect() {
   receive_close_ = true;
-  receive_thread_.join();
+  if (receive_thread_.joinable()) receive_thread_.join();
   if (send_async_.valid()) send_async_.wait();
   impl_->socket_->Close();
 }

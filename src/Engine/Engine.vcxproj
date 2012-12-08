@@ -34,7 +34,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120_CTP_Nov2012</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -124,6 +124,8 @@
     <ClInclude Include=".\lib\include\engine_lib.h" />
     <ClInclude Include=".\lib\common.h" />
     <ClInclude Include="lib\event.h" />
+    <ClInclude Include="lib\event_aggregator.h" />
+    <ClInclude Include="lib\ioc.h" />
     <ClInclude Include="network\client.h" />
     <ClInclude Include="network\client_message.h" />
     <ClInclude Include="network\include\engine_network.h" />

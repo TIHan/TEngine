@@ -50,19 +50,9 @@
 // Note: This should be in the C++11 standard eventually.
 namespace std {
 
-template <typename T>
-unique_ptr<T> make_unique() {
-    return unique_ptr<T>(new T());
-}
-
-template <typename T, typename V1>
-unique_ptr<T> make_unique(V1&& v1) {
-    return unique_ptr<T>(new T(forward<V1>(v1)));
-}
-
-template <typename T, typename V1, typename V2>
-unique_ptr<T> make_unique(V1&& v1, V2&& v2) {
-    return unique_ptr<T>(new T(forward<V1>(v1), forward<V2>(v2)));
+template <typename T, typename... Args>
+unique_ptr<T> make_unique(Args&&... args) {
+    return unique_ptr<T>(new T(forward<Args>(args)...));
 }
 
 } // end std namespace

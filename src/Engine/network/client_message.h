@@ -59,12 +59,12 @@ inline ClientMessage::~ClientMessage() {
 }
 
 inline void ClientMessage::Send() {
-  if (buffer_->GetSize() > 16)
+  if (buffer_->GetSize() > 128)
     throw std::out_of_range("Message is too big.");
   auto newest_stream = send_buffer_->back();
 
   // Do we have enough room?
-  if (newest_stream->GetSize() + buffer_->GetSize() > 16) {
+  if (newest_stream->GetSize() + buffer_->GetSize() > 128) {
     send_buffer_->push(buffer_);
   } else {
     newest_stream->WriteStream(buffer_);
