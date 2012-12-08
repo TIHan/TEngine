@@ -38,6 +38,7 @@ public:
   ByteStream();
   explicit ByteStream(const int& reserve);
   explicit ByteStream(const std::vector<uint8_t>& buffer);
+  ByteStream(const std::vector<uint8_t>& buffer, int size);
   virtual ~ByteStream();
 
   int GetSize() const;
@@ -48,6 +49,7 @@ public:
   std::string ReadString();
   void WriteString(const std::string& string);
   void WriteBuffer(const std::vector<uint8_t>& buffer);
+  void WriteBuffer(const std::vector<uint8_t>& buffer, int size);
   void WriteStream(std::shared_ptr<ByteStream> byteStream);
 
   template <typename T>
@@ -127,8 +129,15 @@ inline ByteStream::ByteStream(const int& reserve) {
   */
 inline ByteStream::ByteStream(const std::vector<uint8_t>& buffer) {
   read_position_ = 0;
-  buffer_.reserve(buffer.size());
   WriteBuffer(buffer);
+}
+
+/*!
+  *
+  */
+inline ByteStream::ByteStream(const std::vector<uint8_t>& buffer, int size) {
+  read_position_ = 0;
+  WriteBuffer(buffer, size);
 }
 
 /*!
@@ -191,7 +200,19 @@ inline void ByteStream::WriteString(const std::string& string) {
   *
   */
 inline void ByteStream::WriteBuffer(const std::vector<uint8_t>& buffer) {
+  buffer_.reserve(buffer_.size() + buffer.size());
   for (int i = 0; i < static_cast<int>(buffer.size()); ++i) {
+    WriteByte(buffer.at(i));
+  }
+}
+
+/*!
+  *
+  */
+inline void ByteStream::WriteBuffer(const std::vector<uint8_t>& buffer,
+                                    int size) {
+  buffer_.reserve(buffer_.size() + size);
+  for (int i = 0; i < static_cast<int>(size); ++i) {
     WriteByte(buffer.at(i));
   }
 }

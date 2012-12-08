@@ -45,11 +45,16 @@ public:
   std::unique_ptr<Recipient> CreateRecipient(
       std::shared_ptr<SocketAddress> address);
 
-  UdpSocket socket_;
+  std::unique_ptr<UdpSocket> socket_;
   RecipientList recipients_;
 };
 
-ServerImpl::ServerImpl() : socket_(SocketFamily::kIpv4, false) {
+ServerImpl::ServerImpl() {
+  UdpSocketOptions options;
+  options.max_receive_buffer = 16;
+  options.family = SocketFamily::kIpv4;
+  options.blocking = false;
+  socket_ = std::make_unique<UdpSocket>(options);
 }
 
 std::atomic_int g_id_count;
@@ -75,11 +80,11 @@ Server::~Server() {
 }
 
 void Server::Start() {
-  impl_->socket_.Open();
+  impl_->socket_->Open();
   
   int success = -1;
   for (int port = port_; port < port_ + 1000; ++port) {
-    success = impl_->socket_.Bind(port);
+    success = impl_->socket_->Bind(port);
     if (success == 0) {
       port_ = port;
       break;
@@ -90,8 +95,8 @@ void Server::Start() {
 
   receive_thread_ = std::thread([=] () {
     while (!receive_close_) {
-      if (impl_->socket_.WaitToRead(2500)) {
-        auto receive = impl_->socket_.ReceiveFrom();
+      if (impl_->socket_->WaitToRead(2500)) {
+        auto receive = impl_->socket_->ReceiveFrom();
         auto buffer = std::get<0>(receive);
 
         if (buffer->GetSize() != 0) {
@@ -108,7 +113,7 @@ void Server::Stop() {
   receive_close_ = true;
   receive_thread_.join();
   if (send_async_.valid()) send_async_.wait();
-  impl_->socket_.Close();
+  impl_->socket_->Close();
 }
 
 std::shared_ptr<ServerMessage> Server::CreateMessage(const int& type) {
@@ -154,7 +159,7 @@ void Server::SendMessages() {
     while (!send_queue_.empty()) {
       for_each(addresses.cbegin(), addresses.cend(),
                [&] (std::shared_ptr<Recipient> recipient) {
-        impl_->socket_.SendTo(*send_queue_.front(), *recipient->address);
+        impl_->socket_->SendTo(*send_queue_.front(), *recipient->address);
       });
       send_queue_.pop();
     }

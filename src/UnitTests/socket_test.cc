@@ -8,8 +8,9 @@ class SocketTest : public ::testing::Test {
 };
 
 TEST_F(SocketTest, SendAndReceive) {
-  auto server = std::make_shared<network::UdpSocket>(
-      network::SocketFamily::kIpv4); 
+  network::UdpSocketOptions server_options;
+  server_options.family = network::SocketFamily::kIpv4;
+  auto server = std::make_shared<network::UdpSocket>(server_options); 
   server->Open();
   server->Bind(1337);
 
@@ -45,8 +46,9 @@ TEST_F(SocketTest, SendAndReceive) {
 }
 
 TEST_F(SocketTest, SendAndReceive2) {
-  auto server = std::make_shared<network::UdpSocket>(
-      network::SocketFamily::kIpv4); 
+  network::UdpSocketOptions server_options;
+  server_options.family = network::SocketFamily::kIpv4;
+  auto server = std::make_shared<network::UdpSocket>(server_options); 
   server->Open();
   server->Bind(1337);
 

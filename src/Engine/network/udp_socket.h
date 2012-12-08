@@ -34,6 +34,12 @@ namespace engine {
 namespace network {
 
 struct UdpSocketOptions {
+  UdpSocketOptions() {
+    blocking = true;
+    family = SocketFamily::kUnspecified;
+    max_receive_buffer = 1024;
+  }
+  int max_receive_buffer;
   SocketFamily family;
   bool blocking;
 };
@@ -41,9 +47,7 @@ struct UdpSocketOptions {
 class UdpSocket : public SocketBase {
 public:
   UdpSocket();
-  explicit UdpSocket(const SocketFamily& family);
-  explicit UdpSocket(const bool& blocking);
-  UdpSocket(const SocketFamily& family, const bool& blocking);
+  explicit UdpSocket(const UdpSocketOptions& options);
 
   virtual ~UdpSocket();
 
@@ -62,6 +66,7 @@ public:
 private:
   void Init();
 
+  UdpSocketOptions options_;
   std::unique_ptr<std::vector<uint8_t>> receive_buffer_;
 };
 

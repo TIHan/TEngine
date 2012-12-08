@@ -33,8 +33,6 @@
 namespace engine {
 namespace network {
 
-const int kMaxReceiveBuffer = 1024;
-
 enum SocketFamily {
   kUnspecified,
   kIpv4,

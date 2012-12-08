@@ -41,25 +41,8 @@ UdpSocket::UdpSocket() {
 /*!
   *
   */
-UdpSocket::UdpSocket(const SocketFamily& family) {
-  impl_->family_ = family;
-  Init();
-}
-
-/*!
-  *
-  */
-UdpSocket::UdpSocket(const bool& blocking) {
-  impl_->blocking_ = blocking;
-  Init();
-}
-
-/*!
-  *
-  */
-UdpSocket::UdpSocket(const SocketFamily& family, const bool& blocking) {
-  impl_->family_ = family;
-  impl_->blocking_ = blocking;
+UdpSocket::UdpSocket(const UdpSocketOptions& options) {
+  options_ = options;
   Init();
 }
 
@@ -73,7 +56,10 @@ UdpSocket::~UdpSocket() {
   *
   */
 void UdpSocket::Init() {
-  receive_buffer_ = std::make_unique<std::vector<uint8_t>>(kMaxReceiveBuffer);
+  receive_buffer_ = std::make_unique<std::vector<uint8_t>>(
+      options_.max_receive_buffer);
+  impl_->family_ = options_.family;
+  impl_->blocking_ = options_.blocking;
 }
 
 /*!
@@ -99,7 +85,7 @@ std::tuple<std::shared_ptr<lib::ByteStream>,
   socklen_t addr_len = sizeof(sock_addr_storage);
 
   char* data = reinterpret_cast<char*>(const_cast<uint8_t*>(
-      receive_buffer_->data()));
+       receive_buffer_->data()));
   int data_size = static_cast<int>(receive_buffer_->size());
   auto sock_addr = reinterpret_cast<sockaddr*>(
       const_cast<struct sockaddr_storage*>(&sock_addr_storage));
@@ -107,7 +93,9 @@ std::tuple<std::shared_ptr<lib::ByteStream>,
   int bytes = recvfrom(impl_->socket_, data,
                        data_size, 0, sock_addr, &addr_len);
 
-  auto buffer = std::make_shared<lib::ByteStream>(*receive_buffer_);
+  auto buffer = std::make_shared<lib::ByteStream>();
+  if (bytes != -1)
+    buffer->WriteBuffer(*receive_buffer_, bytes);
   
   auto address_data =
       std::make_shared<SocketAddressData>(sock_addr_storage, addr_len);

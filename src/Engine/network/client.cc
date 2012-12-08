@@ -35,10 +35,14 @@ class ClientImpl {
 public:
   ClientImpl();
 
-  UdpSocket socket_;
+  std::unique_ptr<UdpSocket> socket_;
 };
 
-ClientImpl::ClientImpl() : socket_(false) {
+ClientImpl::ClientImpl() {
+  UdpSocketOptions options;
+  options.max_receive_buffer = 1024;
+  options.blocking = false;
+  socket_ = std::make_unique<UdpSocket>(options);
 }
 
 Client::Client()
@@ -52,14 +56,14 @@ Client::~Client() {
 }
 
 void Client::Connect(const std::string& address, const std::string& port) {
-  impl_->socket_.Open(address, port);
+  impl_->socket_->Open(address, port);
   server_address_ = address;
   server_port_ = port;
 
   receive_thread_ = std::thread([=] () {
     while (!receive_close_) {
-      if (impl_->socket_.WaitToRead(2500)) {
-        auto receive = impl_->socket_.ReceiveFrom();
+      if (impl_->socket_->WaitToRead(2500)) {
+        auto receive = impl_->socket_->ReceiveFrom();
         auto buffer = std::get<0>(receive);
 
         if (buffer->GetSize() != 0) {
@@ -76,7 +80,7 @@ void Client::Disconnect() {
   receive_close_ = true;
   receive_thread_.join();
   if (send_async_.valid()) send_async_.wait();
-  impl_->socket_.Close();
+  impl_->socket_->Close();
 }
 
 std::shared_ptr<ClientMessage> Client::CreateMessage(const int& type) {
@@ -118,7 +122,7 @@ void Client::SendMessages() {
   send_async_ = std::async(std::launch::async, [=] {
     send_mutex_.lock(); // LOCK
     while (!send_queue_.empty()) {
-      impl_->socket_.Send(*send_queue_.front());
+      impl_->socket_->Send(*send_queue_.front());
       send_queue_.pop();
     }
     send_mutex_.unlock(); // LOCK
