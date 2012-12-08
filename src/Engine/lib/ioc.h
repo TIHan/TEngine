@@ -33,42 +33,106 @@
 namespace engine {
 namespace lib {
 
-template <typename T>
-class IocObject {
+class ObjectFactoryMarker {
 public:
-  IocObject();
-  virtual ~IocObject();
-
-  std::shared_ptr<T> GetInstance();
+  virtual ~ObjectFactoryMarker() {}
 };
 
 template <typename T>
-IocObject<T>::IocObject() {
+class ObjectFactoryInterface : public virtual ObjectFactoryMarker {
+public:
+  virtual ~ObjectFactoryInterface() {};
+
+  virtual std::shared_ptr<T> CreateInstance() = 0;
+};
+
+// Object Factory
+template <typename T, typename U>
+class ObjectFactory : public virtual ObjectFactoryInterface<T> {
+public:
+  ObjectFactory();
+  virtual ~ObjectFactory();
+
+  virtual std::shared_ptr<T> CreateInstance();
+
+  bool singleton();
+  void set_singleton(bool value);
+
+private:
+  std::shared_ptr<U> singleton_instance_;
+  std::mutex mutex_;
+  std::atomic_bool singleton_;
+};
+
+template <typename T, typename U>
+ObjectFactory<T, U>::ObjectFactory() {
 }
 
-template <typename T>
-IocObject<T>::~IocObject() {
+template <typename T, typename U>
+ObjectFactory<T, U>::~ObjectFactory() {
 }
 
-template <typename T>
-std::shared_ptr<T> IocObject<T>::GetInstance() {
-  return std::make_shared<T>();
+template <typename T, typename U>
+std::shared_ptr<T> ObjectFactory<T, U>::CreateInstance() {
+  if (singleton_) {
+      mutex_.lock(); // LOCK
+    if (!singleton_instance_) {
+      singleton_instance_ = std::make_shared<U>();
+      mutex_.unlock(); // UNLOCK
+      return singleton_instance_;
+    } else {
+      mutex_.unlock(); // UNLOCK
+      return singleton_instance_;
+    }
+  }
+  return std::make_shared<U>();
 }
+
+template <typename T, typename U>
+bool ObjectFactory<T, U>::singleton() {
+  return singleton_;
+}
+
+template <typename T, typename U>
+void ObjectFactory<T, U>::set_singleton(bool value) {
+  singleton_ = value;
+}
+
+// Component
+template <typename T, typename U>
+class Component {
+public:
+  Component(std::shared_ptr<ObjectFactory<T, U>> object_factory) {
+    object_factory_ = object_factory;
+  }
+
+  std::unique_ptr<Component<T, U>> Singleton() {
+    object_factory_->set_singleton(true);
+    return std::make_unique<Component<T, U>>(
+        object_factory_->CreateInstance());
+  }
+
+private:
+  std::shared_ptr<ObjectFactory<T, U>> object_factory_;
+};
+
+static std::map<size_t, std::shared_ptr<ObjectFactoryMarker>> g_container;
 
 class Ioc {
 public:
-  template <typename T, typename U>
-  static void Register() {
-    container_[typeid(T).] = std::make_unique<IocObject<U>>();
+  template <typename T, typename U, typename... Args>
+  static std::unique_ptr<Component<T, U>> Register(Args&&... args) {
+    auto factory = std::make_shared<ObjectFactory<T, U>>();
+    g_container[typeid(T).hash_code()] = factory;
+    return std::make_unique<Component<T, U>>(factory);
   }
 
   template <typename T>
   static std::shared_ptr<T> Resolve() {
-    return std::static_pointer_cast<T>(container_[typeid(T).name()]->GetInstance());
+    auto factory = std::static_pointer_cast<ObjectFactoryInterface<T>>(
+      g_container[typeid(T).hash_code()]);
+    return factory->CreateInstance();
   }
-
-private:
-  static std::map<std::string, std::unique_ptr<IocObject<void>>> container_;
 };
 
 } // end engine namespace

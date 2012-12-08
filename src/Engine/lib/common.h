@@ -46,10 +46,10 @@
 #include <mutex>
 #include <future>
 
-// http://en.cppreference.com/w/cpp/utility/forward
-// Note: This should be in the C++11 standard eventually.
 namespace std {
 
+// http://stackoverflow.com/questions/7038357/make-unique-and-perfect-forwarding
+// Note: This should be in the C++11 standard eventually.
 template <typename T, typename... Args>
 unique_ptr<T> make_unique(Args&&... args) {
     return unique_ptr<T>(new T(forward<Args>(args)...));
