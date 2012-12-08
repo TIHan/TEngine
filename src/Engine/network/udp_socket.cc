@@ -93,7 +93,7 @@ void UdpSocket::Open(const std::string& address, const std::string& port) {
 /*!
   *
   */
-std::tuple<std::shared_ptr<std::vector<uint8_t>>,
+std::tuple<std::shared_ptr<lib::ByteStream>,
            std::shared_ptr<SocketAddress>> UdpSocket::ReceiveFrom() {
   struct sockaddr_storage sock_addr_storage;
   socklen_t addr_len = sizeof(sock_addr_storage);
@@ -107,32 +107,12 @@ std::tuple<std::shared_ptr<std::vector<uint8_t>>,
   int bytes = recvfrom(impl_->socket_, data,
                        data_size, 0, sock_addr, &addr_len);
 
-  auto buffer = std::make_shared<std::vector<uint8_t>>();
-  if (bytes != -1) {
-    buffer->reserve(bytes);
-    for (int i = 0; i < bytes; ++i) {
-      buffer->push_back(receive_buffer_->at(i));
-    }
-  }
+  auto buffer = std::make_shared<lib::ByteStream>(*receive_buffer_);
   
   auto address_data =
       std::make_shared<SocketAddressData>(sock_addr_storage, addr_len);
   auto address = std::make_shared<SocketAddress>(address_data);
-  return std::tuple<std::shared_ptr<std::vector<uint8_t>>,
-                    std::shared_ptr<SocketAddress>>(buffer, address);
-}
-
-/*!
-  *
-  */
-int UdpSocket::Send(const std::vector<uint8_t>& data) {
-  char* data_send = reinterpret_cast<char*>(const_cast<uint8_t*>(data.data()));
-  int data_size = static_cast<int>(data.size());
-  int addr_len = static_cast<int>(impl_->current_address_info_->ai_addrlen);
-
-  int bytes = sendto(impl_->socket_, data_send, data_size, 0,
-                     impl_->current_address_info_->ai_addr, addr_len);
-  return bytes;
+  return std::make_tuple(buffer, address);
 }
 
 /*!
@@ -146,21 +126,6 @@ int UdpSocket::Send(const lib::ByteStream& data) {
 
   int bytes = sendto(impl_->socket_, data_send, data_size, 0,
                      impl_->current_address_info_->ai_addr, addr_len);
-  return bytes;
-}
-
-/*!
-  *
-  */
-int UdpSocket::SendTo(const std::vector<uint8_t>& data,
-                      const SocketAddress& address) {
-  char* data_send = reinterpret_cast<char*>(const_cast<uint8_t*>(data.data()));
-  int data_size = static_cast<int>(data.size());
-  auto sock_addr = reinterpret_cast<sockaddr*>(
-      const_cast<void*>(address.GetRaw()));
-
-  int bytes = sendto(impl_->socket_, data_send, data_size, 0, sock_addr,
-                     address.GetLength());
   return bytes;
 }
 

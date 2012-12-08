@@ -60,14 +60,11 @@ void Client::Connect(const std::string& address, const std::string& port) {
     while (!receive_close_) {
       if (impl_->socket_.WaitToRead(2500)) {
         auto receive = impl_->socket_.ReceiveFrom();
-        auto buffer = *std::get<0>(receive);
+        auto buffer = std::get<0>(receive);
 
-        if (buffer.size() != 0) {
-          auto stream = std::make_shared<lib::ByteStream>();
-          stream->WriteBuffer(buffer);
-
+        if (buffer->GetSize() != 0) {
           receive_mutex_.lock(); // LOCK
-          receive_buffer_.push(stream);
+          receive_buffer_.push(buffer);
           receive_mutex_.unlock(); // UNLOCK
         }
       }

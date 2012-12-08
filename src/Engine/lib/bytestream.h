@@ -36,6 +36,7 @@ namespace lib {
 class ByteStream {
 public:
   ByteStream();
+  explicit ByteStream(const int& reserve);
   explicit ByteStream(const std::vector<uint8_t>& buffer);
   virtual ~ByteStream();
 
@@ -63,6 +64,8 @@ public:
   void set_read_position(int position);
 
 private:
+  void Init();
+
   std::vector<uint8_t> buffer_;
   int read_position_;
 };
@@ -104,8 +107,7 @@ void ByteStream::Write(const T& value) {
 }
 
 /*!
-  * \brief The constructor for the ByteStream that requires
-  * a maximum size for the ByteStream buffer.
+  * \brief The constructor for the ByteStream.
   *
   */
 inline ByteStream::ByteStream() {
@@ -115,7 +117,17 @@ inline ByteStream::ByteStream() {
 /*!
   *
   */
+inline ByteStream::ByteStream(const int& reserve) {
+  read_position_ = 0;
+  buffer_.reserve(reserve);
+}
+
+/*!
+  *
+  */
 inline ByteStream::ByteStream(const std::vector<uint8_t>& buffer) {
+  read_position_ = 0;
+  buffer_.reserve(buffer.size());
   WriteBuffer(buffer);
 }
 
