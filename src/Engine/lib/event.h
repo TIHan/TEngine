@@ -33,7 +33,7 @@
 namespace engine {
 namespace lib {
 
-} // end engine namespace
 } // end lib namespace
+} // end engine namespace
 
 #endif /* EVENT_H_ */

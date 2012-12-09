@@ -50,7 +50,8 @@ public:
 template <typename T, typename U, typename... Args>
 class ObjectFactory : public virtual ObjectFactoryInterface<T> {
 public:
-  ObjectFactory(const std::tuple<Args...>& args);
+  explicit ObjectFactory(
+      const std::function<std::shared_ptr<U>()>& create_func);
   virtual ~ObjectFactory();
 
   virtual std::shared_ptr<T> CreateInstance();
@@ -60,14 +61,15 @@ public:
 
 private:
   std::shared_ptr<U> singleton_instance_;
-  std::mutex mutex_;
-  std::atomic_bool singleton_;
-  std::tuple<Args...> args_;
+  std::function<std::shared_ptr<U>()> create_func_;
+  bool singleton_;
 };
 
 template <typename T, typename U, typename... Args>
-ObjectFactory<T, U, Args...>::ObjectFactory(const std::tuple<Args...>& args) {
-  args_ = args;
+ObjectFactory<T, U, Args...>::ObjectFactory(
+    const std::function<std::shared_ptr<U>()>& create_func) {
+  create_func_ = create_func;
+  singleton_ = false;
 }
 
 template <typename T, typename U, typename... Args>
@@ -77,17 +79,14 @@ ObjectFactory<T, U, Args...>::~ObjectFactory() {
 template <typename T, typename U, typename... Args>
 std::shared_ptr<T> ObjectFactory<T, U, Args...>::CreateInstance() {
   if (singleton_) { 
-      mutex_.lock(); // LOCK
     if (!singleton_instance_) {
-      singleton_instance_ = std::make_shared<U>(1331);
-      mutex_.unlock(); // UNLOCK
+      singleton_instance_ = create_func_();
       return singleton_instance_;
     } else {
-      mutex_.unlock(); // UNLOCK
       return singleton_instance_;
     }
   }
-  return std::make_shared<U>(1331);
+  return create_func_();
 }
 
 template <typename T, typename U, typename... Args>
@@ -108,9 +107,9 @@ public:
     object_factory_ = object_factory;
   }
 
-  Component<T, U, Args...>& Singleton() {
+  Component<T, U, Args...>* Singleton() {
     object_factory_->set_singleton(true);
-    return *this;
+    return this;
   }
 
 private:
@@ -123,8 +122,9 @@ class Ioc {
 public:
   template <typename T, typename U, typename... Args>
   static std::unique_ptr<Component<T, U, Args...>> Register(Args&&... args) {
-    auto tuple_args = std::make_tuple(args...);
-    auto factory = std::make_shared<ObjectFactory<T, U, Args...>>(tuple_args);
+    auto factory = std::make_shared<ObjectFactory<T, U, Args...>>([&] {
+      return std::make_shared<U>(args...);
+    });
     g_container[typeid(T).hash_code()] = factory;
     return std::make_unique<Component<T, U, Args...>>(factory);
   }
@@ -137,7 +137,7 @@ public:
   }
 };
 
-} // end engine namespace
 } // end lib namespace
+} // end engine namespace
 
 #endif /* IOC_H_ */
