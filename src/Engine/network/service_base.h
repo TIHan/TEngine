@@ -42,7 +42,7 @@ class ServiceBaseInterface {
 public:
   virtual ~ServiceBaseInterface() {};
 
-  virtual void RegisterMessageCallback(const int& type,
+  virtual void RegisterMessageCallback(int type,
       std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
   virtual void ProcessMessages() = 0;
   virtual void SendMessages() = 0;
@@ -52,7 +52,7 @@ class ServiceBase : public virtual ServiceBaseInterface {
 public:
   virtual ~ServiceBase();
 
-  virtual void RegisterMessageCallback(const int& type,
+  virtual void RegisterMessageCallback(int type,
       std::function<void(std::shared_ptr<ReceiveMessage>)> func);
 
 protected:

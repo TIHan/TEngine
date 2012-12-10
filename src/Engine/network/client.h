@@ -48,7 +48,7 @@ public:
   virtual void Connect(const std::string& address, const std::string& port);
   virtual void Disconnect();
 
-  virtual std::shared_ptr<ClientMessage> CreateMessage(const int& type);
+  virtual std::shared_ptr<ClientMessage> CreateMessage(int type);
 
   virtual void ProcessMessages();
   virtual void SendMessages();

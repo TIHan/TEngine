@@ -42,19 +42,19 @@ public:
   void WriteString(const std::string& string);
 
   template <typename T>
-  void Write(const T& value);
+  void Write(T value);
 
   /* Accessors / Mutators */
   int type() const;
 
 protected:
-  MessageBase(const int& type);
+  MessageBase(int type);
 
   std::shared_ptr<lib::ByteStream> buffer_;
   int type_;
 };
 
-inline MessageBase::MessageBase(const int& type)
+inline MessageBase::MessageBase(int type)
     : buffer_(std::make_shared<lib::ByteStream>()) {;
   if (type < 0) throw std::out_of_range("type is below 0.");
 
@@ -70,7 +70,7 @@ inline void MessageBase::WriteString(const std::string& string) {
 }
 
 template <typename T>
-inline void MessageBase::Write(const T& value) {
+inline void MessageBase::Write(T value) {
   buffer_->Write<T>(value);
 }
 

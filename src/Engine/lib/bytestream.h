@@ -36,7 +36,7 @@ namespace lib {
 class ByteStream {
 public:
   ByteStream();
-  explicit ByteStream(const int& reserve);
+  explicit ByteStream(int reserve);
   explicit ByteStream(const std::vector<uint8_t>& buffer);
   ByteStream(const std::vector<uint8_t>& buffer, int size);
   virtual ~ByteStream();
@@ -56,10 +56,10 @@ public:
   T Read();
 
   template <typename T>
-  void Write(const T& value);
+  void Write(T value);
 
   uint8_t ReadByte();
-  void WriteByte(const uint8_t& byte);
+  void WriteByte(uint8_t byte);
 
   /* Accessors / Mutators */
   int read_position() const;
@@ -94,7 +94,7 @@ T ByteStream::Read() {
   *
   */
 template <typename T>
-void ByteStream::Write(const T& value) {
+void ByteStream::Write(T value) {
   int size = sizeof(T);
 
   union pack_t {
@@ -119,7 +119,7 @@ inline ByteStream::ByteStream() {
 /*!
   *
   */
-inline ByteStream::ByteStream(const int& reserve) {
+inline ByteStream::ByteStream(int reserve) {
   read_position_ = 0;
   buffer_.reserve(reserve);
 }
@@ -239,7 +239,7 @@ inline uint8_t ByteStream::ReadByte() {
 /*!
   *
   */
-inline void ByteStream::WriteByte(const uint8_t& byte) {
+inline void ByteStream::WriteByte(uint8_t byte) {
   buffer_.push_back(byte);
 }
 

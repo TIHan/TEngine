@@ -52,7 +52,7 @@ public:
   virtual void Start() = 0;
   virtual void Stop() = 0;
 
-  virtual std::shared_ptr<ServerMessage> CreateMessage(const int& type) = 0;
+  virtual std::shared_ptr<ServerMessage> CreateMessage(int type) = 0;
 
   /* Accessors / Mutators */
   virtual int port() const = 0;
@@ -61,13 +61,13 @@ public:
 class ServerImpl;
 class Server : public ServiceBase, public virtual ServerInterface {
 public:
-  explicit Server(const int& port);
+  explicit Server(int port);
   virtual ~Server();
 
   virtual void Start();
   virtual void Stop();
 
-  virtual std::shared_ptr<ServerMessage> CreateMessage(const int& type);
+  virtual std::shared_ptr<ServerMessage> CreateMessage(int type);
 
   virtual void ProcessMessages();
   virtual void SendMessages();

@@ -60,7 +60,7 @@ class SocketBase {
 public:
   virtual ~SocketBase();
 
-  virtual int Bind(const uint16_t& port);
+  virtual int Bind(uint16_t port);
   virtual std::string GetAddress();
   virtual void Close();
 

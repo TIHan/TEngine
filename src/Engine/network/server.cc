@@ -67,7 +67,7 @@ std::unique_ptr<Recipient> ServerImpl::CreateRecipient(
   return recipient;
 }
 
-Server::Server(const int& port)
+Server::Server(int port)
     : impl_(std::make_unique<ServerImpl>()),
       send_buffer_(
         std::make_shared<std::queue<std::shared_ptr<lib::ByteStream>>>()) {
@@ -116,7 +116,7 @@ void Server::Stop() {
   impl_->socket_->Close();
 }
 
-std::shared_ptr<ServerMessage> Server::CreateMessage(const int& type) {
+std::shared_ptr<ServerMessage> Server::CreateMessage(int type) {
   return std::make_shared<ServerMessage>(send_buffer_, type);
 }
 

@@ -83,7 +83,7 @@ void Client::Disconnect() {
   impl_->socket_->Close();
 }
 
-std::shared_ptr<ClientMessage> Client::CreateMessage(const int& type) {
+std::shared_ptr<ClientMessage> Client::CreateMessage(int type) {
   return std::make_shared<ClientMessage>(send_buffer_, type);
 }
 

@@ -51,7 +51,7 @@ namespace engine {
 namespace network {
 
 struct SocketAddressData {
-  SocketAddressData(const struct sockaddr_storage& address, const int& length)
+  SocketAddressData(const struct sockaddr_storage& address, int length)
       : address(address), length(length) {}
   struct sockaddr_storage address;
   int length;
@@ -67,8 +67,8 @@ public:
 
 class SocketBaseImpl {
 public:
-  void Open(const int& socket_type, const int& flags,
-            const std::string& node_name, const std::string& service_name);
+  void Open(int socket_type, int flags, const std::string& node_name,
+            const std::string& service_name);
 
   int socket_;
   struct addrinfo* address_info_;

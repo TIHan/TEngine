@@ -31,23 +31,21 @@
 /*!
  *
  */
-static int CreateSocket(const int& domain, const int& type,
-                        const int& protocol) {
+static int CreateSocket(int domain, int type, int protocol) {
   return static_cast<int>(socket(domain, type, protocol));
 }
 
 /*!
  *
  */
-static int BindSocket(const int& sockfd, const struct sockaddr& addr,
-                      const int& addrlen) {
+static int BindSocket(int sockfd, const struct sockaddr& addr, int addrlen) {
   return bind(sockfd, &addr, addrlen);
 }
 
 /*!
  *
  */
-static int CloseSocket(const int& sockfd) {
+static int CloseSocket(int sockfd) {
 #ifdef __GNUC__
     return close(sockfd);
 #elif _MSC_VER
@@ -137,7 +135,7 @@ const void* SocketAddress::GetRaw() const {
 /*!
   *
   */
-void SocketBaseImpl::Open(const int& socket_type, const int& flags,
+void SocketBaseImpl::Open(int socket_type, int flags,
                           const std::string& node_name,
                           const std::string& service_name) {
   int family;
@@ -232,7 +230,7 @@ SocketBase::~SocketBase() {
 /*!
   *
   */
-int SocketBase::Bind(const uint16_t& port) {
+int SocketBase::Bind(uint16_t port) {
   if (impl_->socket_ == -1 || !impl_->current_address_info_)
     return -1;
 

@@ -37,7 +37,7 @@ class ClientMessage : public MessageBase {
 public:
   ClientMessage(
       std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer,
-      const int& type);
+      int type);
   virtual ~ClientMessage();
 
   void Send();
@@ -48,7 +48,7 @@ private:
 
 inline ClientMessage::ClientMessage(
       std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer,
-      const int& type)
+      int type)
     : MessageBase(type), send_buffer_(send_buffer) {
   if (send_buffer_->empty()) {
     send_buffer_->push(std::make_shared<lib::ByteStream>());

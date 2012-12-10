@@ -50,8 +50,7 @@ public:
 template <typename T, typename U>
 class ObjectFactory : public virtual ObjectFactoryInterface<T> {
 public:
-  explicit ObjectFactory(
-      const std::function<std::shared_ptr<U>()>& create_func);
+  explicit ObjectFactory(std::function<std::shared_ptr<U>()> create_func);
   virtual ~ObjectFactory();
 
   virtual std::shared_ptr<T> CreateInstance();
@@ -67,7 +66,7 @@ private:
 
 template <typename T, typename U>
 ObjectFactory<T, U>::ObjectFactory(
-    const std::function<std::shared_ptr<U>()>& create_func) {
+    std::function<std::shared_ptr<U>()> create_func) {
   create_func_ = create_func;
   singleton_ = false;
 }

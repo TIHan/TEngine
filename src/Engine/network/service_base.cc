@@ -38,7 +38,7 @@ ServiceBase::ServiceBase() {
 ServiceBase::~ServiceBase() {
 }
 
-void ServiceBase::RegisterMessageCallback(const int& type,
+void ServiceBase::RegisterMessageCallback(int type,
     std::function<void(std::shared_ptr<ReceiveMessage>)> func) {
   callbacks_[type] = func;
 }
