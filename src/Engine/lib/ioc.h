@@ -115,6 +115,18 @@ private:
   std::shared_ptr<ObjectFactory<T, U>> object_factory_;
 };
 
+namespace stdext {
+  template <typename T, typename Tuple, unsigned... Indices>
+  std::shared_ptr<T> make_shared_impl(const Tuple& tuple) {
+    return std::make_shared<T>(std::get<Indices - 1>(tuple)...);
+  }
+
+  template <typename T, typename... Args>
+  std::shared_ptr<T> make_shared(const std::tuple<Args...>& tuple) {
+    return make_shared_impl<T, std::tuple<Args...>, sizeof... (Args)>(tuple);
+  }
+}
+
 static std::map<size_t, std::shared_ptr<ObjectFactoryMarker>> g_container;
 
 class Ioc {
@@ -134,7 +146,7 @@ public:
     // function.
     auto tuple_args = std::make_tuple(args...);
     auto factory = std::make_shared<ObjectFactory<T, U>>([=] {
-      return std::make_shared<U>(std::get<(sizeof... (Args)) - 1>(tuple_args));
+      return stdext::make_shared<U, Args...>(tuple_args);
     });
 #if 0
     // This is perfectly acceptable code according to the standard, but not
