@@ -119,8 +119,17 @@ static std::map<size_t, std::shared_ptr<ObjectFactoryMarker>> g_container;
 
 class Ioc {
 public:
+  template <typename T, typename U>
+  static std::unique_ptr<Component<T, U>> Register() {
+    auto factory = std::make_shared<ObjectFactory<T, U>>([] {
+      return std::make_shared<U>();
+    });
+    g_container[typeid(T).hash_code()] = factory;
+    return std::make_unique<Component<T, U>>(factory);
+  }
+
   template <typename T, typename U, typename... Args>
-  static std::unique_ptr<Component<T, U>> Register(Args&&... args) {
+  static std::unique_ptr<Component<T, U>> RegisterSpecial(Args&&... args) {
     // Make a tuple to include in our arguments, then unpack them in the
     // function.
     auto tuple_args = std::make_tuple(args...);

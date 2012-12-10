@@ -31,6 +31,12 @@
 #include "service_base.h"
 #include "client_message.h"
 
+// Microsoft gives a warning about virtual inheritance. Turn it off.
+#ifdef _MSC_VER
+// C4250 - 'class1' : inherits 'class2::member' via dominance
+# pragma warning( disable : 4250 )
+#endif
+
 namespace engine {
 namespace network {
 
@@ -39,8 +45,19 @@ enum ReservedClientMessage {
   kDisconnect = 249
 };
 
+class ClientInterface : public virtual ServiceBaseInterface {
+public:
+  virtual ~ClientInterface() {}
+
+  virtual void Connect(const std::string& address,
+                       const std::string& port) = 0;
+  virtual void Disconnect() = 0;
+
+  virtual std::shared_ptr<ClientMessage> CreateMessage(int type) = 0;
+};
+
 class ClientImpl;
-class Client : public ServiceBase {
+class Client : public ServiceBase, public virtual ClientInterface {
 public:
   Client();
   virtual ~Client();
