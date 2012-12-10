@@ -47,7 +47,7 @@ public:
 };
 
 // Object Factory
-template <typename T, typename U, typename... Args>
+template <typename T, typename U>
 class ObjectFactory : public virtual ObjectFactoryInterface<T> {
 public:
   explicit ObjectFactory(
@@ -65,19 +65,19 @@ private:
   bool singleton_;
 };
 
-template <typename T, typename U, typename... Args>
-ObjectFactory<T, U, Args...>::ObjectFactory(
+template <typename T, typename U>
+ObjectFactory<T, U>::ObjectFactory(
     const std::function<std::shared_ptr<U>()>& create_func) {
   create_func_ = create_func;
   singleton_ = false;
 }
 
-template <typename T, typename U, typename... Args>
-ObjectFactory<T, U, Args...>::~ObjectFactory() {
+template <typename T, typename U>
+ObjectFactory<T, U>::~ObjectFactory() {
 }
 
-template <typename T, typename U, typename... Args>
-std::shared_ptr<T> ObjectFactory<T, U, Args...>::CreateInstance() {
+template <typename T, typename U>
+std::shared_ptr<T> ObjectFactory<T, U>::CreateInstance() {
   if (singleton_) { 
     if (!singleton_instance_) {
       singleton_instance_ = create_func_();
@@ -89,31 +89,31 @@ std::shared_ptr<T> ObjectFactory<T, U, Args...>::CreateInstance() {
   return create_func_();
 }
 
-template <typename T, typename U, typename... Args>
-bool ObjectFactory<T, U, Args...>::singleton() {
+template <typename T, typename U>
+bool ObjectFactory<T, U>::singleton() {
   return singleton_;
 }
 
-template <typename T, typename U, typename... Args>
-void ObjectFactory<T, U, Args...>::set_singleton(bool value) {
+template <typename T, typename U>
+void ObjectFactory<T, U>::set_singleton(bool value) {
   singleton_ = value;
 }
 
 // Component
-template <typename T, typename U, typename... Args>
+template <typename T, typename U>
 class Component {
 public:
-  Component(std::shared_ptr<ObjectFactory<T, U, Args...>> object_factory) {
+  Component(std::shared_ptr<ObjectFactory<T, U>> object_factory) {
     object_factory_ = object_factory;
   }
 
-  Component<T, U, Args...>* Singleton() {
+  Component<T, U>* Singleton() {
     object_factory_->set_singleton(true);
     return this;
   }
 
 private:
-  std::shared_ptr<ObjectFactory<T, U, Args...>> object_factory_;
+  std::shared_ptr<ObjectFactory<T, U>> object_factory_;
 };
 
 static std::map<size_t, std::shared_ptr<ObjectFactoryMarker>> g_container;
@@ -121,12 +121,22 @@ static std::map<size_t, std::shared_ptr<ObjectFactoryMarker>> g_container;
 class Ioc {
 public:
   template <typename T, typename U, typename... Args>
-  static std::unique_ptr<Component<T, U, Args...>> Register(Args&&... args) {
-    auto factory = std::make_shared<ObjectFactory<T, U, Args...>>([&] {
+  static std::unique_ptr<Component<T, U>> Register(Args&&... args) {
+    // Make a tuple to include in our arguments, then unpack them in the
+    // function.
+    auto tuple_args = std::make_tuple(args...);
+    auto factory = std::make_shared<ObjectFactory<T, U>>([=] {
+      return std::make_shared<U>(std::get<(sizeof... (Args)) - 1>(tuple_args));
+    });
+#if 0
+    // This is perfectly acceptable code according to the standard, but not
+    // implemented in all compilers.
+    auto factory = std::make_shared<ObjectFactory<T, U>>([&] {
       return std::make_shared<U>(args...);
     });
+#endif
     g_container[typeid(T).hash_code()] = factory;
-    return std::make_unique<Component<T, U, Args...>>(factory);
+    return std::make_unique<Component<T, U>>(factory);
   }
 
   template <typename T>
