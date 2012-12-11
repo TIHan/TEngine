@@ -77,13 +77,11 @@ ObjectFactory<T, U>::~ObjectFactory() {
 
 template <typename T, typename U>
 std::shared_ptr<T> ObjectFactory<T, U>::CreateInstance() {
-  if (singleton_) { 
-    if (!singleton_instance_) {
+  if (singleton_instance_) {
+    return singleton_instance_;
+  } else if (singleton_) {
       singleton_instance_ = create_func_();
       return singleton_instance_;
-    } else {
-      return singleton_instance_;
-    }
   }
   return create_func_();
 }
@@ -102,29 +100,24 @@ void ObjectFactory<T, U>::set_singleton(bool value) {
 template <typename T, typename U>
 class Component {
 public:
-  Component(std::shared_ptr<ObjectFactory<T, U>> object_factory) {
-    object_factory_ = object_factory;
-  }
+  Component(std::shared_ptr<ObjectFactory<T, U>> object_factory);
 
-  Component<T, U>* Singleton() {
-    object_factory_->set_singleton(true);
-    return this;
-  }
+  Component<T, U>* Singleton();
 
 private:
   std::shared_ptr<ObjectFactory<T, U>> object_factory_;
 };
 
-namespace stdext {
-  template <typename T, typename Tuple, unsigned... Indices>
-  std::shared_ptr<T> make_shared_impl(const Tuple& tuple) {
-    return std::make_shared<T>(std::get<Indices - 1>(tuple)...);
-  }
+template <typename T, typename U>
+Component<T, U>::Component(
+    std::shared_ptr<ObjectFactory<T, U>> object_factory) {
+  object_factory_ = object_factory;
+}
 
-  template <typename T, typename... Args>
-  std::shared_ptr<T> make_shared(const std::tuple<Args...>& tuple) {
-    return make_shared_impl<T, std::tuple<Args...>, sizeof... (Args)>(tuple);
-  }
+template <typename T, typename U>
+Component<T, U>* Component<T, U>::Singleton() {
+    object_factory_->set_singleton(true);
+    return this;
 }
 
 static std::map<size_t, std::shared_ptr<ObjectFactoryMarker>> g_container;
@@ -136,33 +129,40 @@ public:
     auto factory = std::make_shared<ObjectFactory<T, U>>([] {
       return std::make_shared<U>();
     });
-    g_container[typeid(T).hash_code()] = factory;
+    g_container.emplace(
+        std::pair<size_t, std::shared_ptr<ObjectFactoryMarker>>(
+        typeid(T).hash_code(),
+        factory));
     return std::make_unique<Component<T, U>>(factory);
   }
 
   template <typename T, typename U, typename... Args>
-  static std::unique_ptr<Component<T, U>> RegisterSpecial(Args&&... args) {
+  static std::unique_ptr<Component<T, U>> RegisterWithArgs(Args&&... args) {
     // Make a tuple to include in our arguments, then unpack them in the
     // function.
-    auto tuple_args = std::make_tuple(args...);
+    auto tuple_args = std::forward_as_tuple(args...);
     auto factory = std::make_shared<ObjectFactory<T, U>>([=] {
-      return stdext::make_shared<U, Args...>(tuple_args);
+      return stdext::make_shared<U, sizeof... (Args)>(std::move(tuple_args));
     });
 #if 0
     // This is perfectly acceptable code according to the standard, but not
     // implemented in all compilers.
     auto factory = std::make_shared<ObjectFactory<T, U>>([&] {
-      return std::make_shared<U>(args...);
+      return std::make_shared<U>(std::move(args)...);
     });
 #endif
-    g_container[typeid(T).hash_code()] = factory;
+    g_container.emplace(
+        std::pair<size_t, std::shared_ptr<ObjectFactoryMarker>>(
+        typeid(T).hash_code(),
+        factory));
     return std::make_unique<Component<T, U>>(factory);
   }
 
   template <typename T>
   static std::shared_ptr<T> Resolve() {
+    auto iter = g_container.find(typeid(T).hash_code());
     auto factory = std::static_pointer_cast<ObjectFactoryInterface<T>>(
-      g_container[typeid(T).hash_code()]);
+        iter->second);
     return factory->CreateInstance();
   }
 };

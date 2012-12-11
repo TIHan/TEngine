@@ -8,7 +8,7 @@ using namespace engine;
 using namespace lib;
 
 TEST_F(IocTest, Singleton) {
-  Ioc::RegisterSpecial<network::ServerInterface, network::Server>(1331)
+  Ioc::RegisterWithArgs<network::ServerInterface, network::Server>(1331)
       ->Singleton();
   auto server = Ioc::Resolve<network::ServerInterface>();
   auto server2 = Ioc::Resolve<network::ServerInterface>();

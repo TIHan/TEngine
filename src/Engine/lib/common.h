@@ -57,6 +57,16 @@ unique_ptr<T> make_unique(Args&&... args) {
 
 } // end std namespace
 
+namespace stdext {
+
+  template <typename T, size_t... Indices, typename Tuple>
+  std::shared_ptr<T> make_shared(Tuple&& tuple) {
+    return std::make_shared<T>(std::get<Indices - 1>(std::forward<Tuple>(tuple))...);
+  }
+
+} // end stdext namespace
+
+
 namespace engine {
 namespace lib {
 
