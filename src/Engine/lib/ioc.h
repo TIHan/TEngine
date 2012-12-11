@@ -67,9 +67,8 @@ public:
   template <typename T>
   static std::shared_ptr<T> Resolve() {
     auto iter = container_.find(typeid(T).hash_code());
-    auto factory = std::static_pointer_cast<ObjectFactoryInterface<T>>(
+    auto factory = std::dynamic_pointer_cast<ObjectFactoryInterface<T>>(
         iter->second);
-    auto instance = factory->CreateInstance();
     return factory->CreateInstance();
   }
 

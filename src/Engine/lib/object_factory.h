@@ -39,7 +39,7 @@ public:
 };
 
 template <typename T, typename Derived>
-class ObjectFactoryBase {
+class ObjectFactoryBase : public virtual ObjectFactoryMarker{
 public:
   template <typename... Args>
   std::shared_ptr<T> CreateInstanceWithArgs(Args&&... args) {
@@ -48,7 +48,7 @@ public:
 };
 
 template <typename T>
-class ObjectFactoryInterface : public ObjectFactoryMarker {
+class ObjectFactoryInterface : public virtual ObjectFactoryMarker {
 public:
   virtual ~ObjectFactoryInterface() {};
 
