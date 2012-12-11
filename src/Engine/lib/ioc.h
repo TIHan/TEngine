@@ -28,143 +28,53 @@
 #ifndef IOC_H_
 #define IOC_H_
 
-#include "common.h"
+#include "object_factory.h"
+#include "component.h"
 
 namespace engine {
 namespace lib {
 
-class ObjectFactoryMarker {
-public:
-  virtual ~ObjectFactoryMarker() {}
-};
-
-template <typename T>
-class ObjectFactoryInterface : public ObjectFactoryMarker {
-public:
-  virtual ~ObjectFactoryInterface() {};
-
-  virtual std::shared_ptr<T> CreateInstance() = 0;
-};
-
-// Object Factory
-template <typename T, typename U>
-class ObjectFactory : public virtual ObjectFactoryInterface<T> {
-public:
-  explicit ObjectFactory(std::function<std::shared_ptr<U>()> create_func);
-  virtual ~ObjectFactory();
-
-  virtual std::shared_ptr<T> CreateInstance();
-
-  bool singleton();
-  void set_singleton(bool value);
-
-private:
-  std::shared_ptr<U> singleton_instance_;
-  std::function<std::shared_ptr<U>()> create_func_;
-  bool singleton_;
-};
-
-template <typename T, typename U>
-ObjectFactory<T, U>::ObjectFactory(
-    std::function<std::shared_ptr<U>()> create_func) {
-  create_func_ = create_func;
-  singleton_ = false;
-}
-
-template <typename T, typename U>
-ObjectFactory<T, U>::~ObjectFactory() {
-}
-
-template <typename T, typename U>
-std::shared_ptr<T> ObjectFactory<T, U>::CreateInstance() {
-  if (singleton_instance_) {
-    return singleton_instance_;
-  } else if (singleton_) {
-      singleton_instance_ = create_func_();
-      return singleton_instance_;
-  }
-  return create_func_();
-}
-
-template <typename T, typename U>
-bool ObjectFactory<T, U>::singleton() {
-  return singleton_;
-}
-
-template <typename T, typename U>
-void ObjectFactory<T, U>::set_singleton(bool value) {
-  singleton_ = value;
-}
-
-// Component
-template <typename T, typename U>
-class Component {
-public:
-  Component(std::shared_ptr<ObjectFactory<T, U>> object_factory);
-
-  Component<T, U>* Singleton();
-
-private:
-  std::shared_ptr<ObjectFactory<T, U>> object_factory_;
-};
-
-template <typename T, typename U>
-Component<T, U>::Component(
-    std::shared_ptr<ObjectFactory<T, U>> object_factory) {
-  object_factory_ = object_factory;
-}
-
-template <typename T, typename U>
-Component<T, U>* Component<T, U>::Singleton() {
-    object_factory_->set_singleton(true);
-    return this;
-}
-
-static std::map<size_t, std::shared_ptr<ObjectFactoryMarker>> g_container;
-
 class Ioc {
 public:
   template <typename T, typename U>
-  static std::unique_ptr<Component<T, U>> Register() {
-    auto factory = std::make_shared<ObjectFactory<T, U>>([] {
+  static std::unique_ptr<Component<T>> Register() {
+    auto factory = std::make_shared<ObjectFactory<T>>([] {
       return std::make_shared<U>();
     });
-    g_container.emplace(
-        std::pair<size_t, std::shared_ptr<ObjectFactoryMarker>>(
-        typeid(T).hash_code(),
-        factory));
-    return std::make_unique<Component<T, U>>(factory);
+    container_.emplace(typeid(T).hash_code(), factory);
+    return std::make_unique<Component<T>>(factory);
   }
 
   template <typename T, typename U, typename... Args>
-  static std::unique_ptr<Component<T, U>> RegisterWithArgs(Args&&... args) {
+  static std::unique_ptr<Component<T>> RegisterWithArgs(Args&&... args) {
     // Make a tuple to include in our arguments, then unpack them in the
     // function.
     auto tuple_args = std::forward_as_tuple(args...);
-    auto factory = std::make_shared<ObjectFactory<T, U>>([=] {
+    auto factory = std::make_shared<ObjectFactory<T>>([=] {
       return stdext::make_shared<U, sizeof... (Args)>(std::move(tuple_args));
     });
 #if 0
     // This is perfectly acceptable code according to the standard, but not
     // implemented in all compilers.
-    auto factory = std::make_shared<ObjectFactory<T, U>>([&] {
+    auto factory = std::make_shared<ObjectFactory<T>>([&] {
       return std::make_shared<U>(std::move(args)...);
     });
 #endif
-    g_container.emplace(
-        std::pair<size_t, std::shared_ptr<ObjectFactoryMarker>>(
-        typeid(T).hash_code(),
-        factory));
-    return std::make_unique<Component<T, U>>(factory);
+    container_.emplace(typeid(T).hash_code(), factory);
+    return std::make_unique<Component<T>>(factory);
   }
 
   template <typename T>
   static std::shared_ptr<T> Resolve() {
-    auto iter = g_container.find(typeid(T).hash_code());
+    auto iter = container_.find(typeid(T).hash_code());
     auto factory = std::static_pointer_cast<ObjectFactoryInterface<T>>(
         iter->second);
+    auto instance = factory->CreateInstance();
     return factory->CreateInstance();
   }
+
+private:
+  static std::map<size_t, std::shared_ptr<ObjectFactoryMarker>> container_;
 };
 
 } // end lib namespace
