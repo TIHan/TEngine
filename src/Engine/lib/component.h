@@ -33,26 +33,74 @@
 namespace engine {
 namespace lib {
 
-template <typename T>
-class Component {
+class ComponentInterface {
 public:
-  Component(std::shared_ptr<ObjectFactory<T>> object_factory);
+  virtual ~ComponentInterface() {}
 
-  Component<T>* Singleton();
-
-private:
-  std::shared_ptr<ObjectFactory<T>> object_factory_;
+  virtual ComponentInterface* Singleton() = 0;
 };
 
 template <typename T>
-Component<T>::Component(
-    std::shared_ptr<ObjectFactory<T>> object_factory) {
-  object_factory_ = object_factory;
+class Component : public virtual ComponentInterface {
+public:
+  explicit Component(std::function<std::shared_ptr<T>()> func);
+  virtual ~Component();
+
+  virtual ComponentInterface* Singleton();
+
+  std::shared_ptr<T> GetInstance();
+  std::shared_ptr<T> GetInstance(
+      std::function<std::shared_ptr<T>()> override_func);
+  std::function<std::shared_ptr<T>()> GetCreateFunction();
+  void SetCreateFunction(std::function<std::shared_ptr<T>()> func);
+
+private:
+  std::unique_ptr<ObjectFactory<T>> object_factory_;
+  std::shared_ptr<T> singleton_instance_;
+  bool singleton_;
+};
+
+template <typename T>
+Component<T>::Component(std::function<std::shared_ptr<T>()> func)
+    : object_factory_(std::make_unique<ObjectFactory<T>>(func)) {
 }
 
 template <typename T>
-Component<T>* Component<T>::Singleton() {
-    return this;
+Component<T>::~Component() {
+}
+
+template <typename T>
+ComponentInterface* Component<T>::Singleton() {
+  singleton_ = true;
+  return this;
+}
+
+template <typename T>
+std::shared_ptr<T> Component<T>::GetInstance() {
+  if (singleton_instance_) {
+    return singleton_instance_;
+  } else if (singleton_) {
+    singleton_instance_ = object_factory_->CreateInstance();
+    return singleton_instance_;
+  }
+  return object_factory_->CreateInstance();
+}
+
+template <typename T>
+std::shared_ptr<T> Component<T>::GetInstance(
+    std::function<std::shared_ptr<T>()> override_func) {
+  return object_factory_->CreateInstance(override_func);
+}
+
+template <typename T>
+std::function<std::shared_ptr<T>()> Component<T>::GetCreateFunction() {
+  return object_factory_->create_func();
+}
+
+template <typename T>
+void Component<T>::SetCreateFunction(
+    std::function<std::shared_ptr<T>()> func) {
+  object_factory_->set_create_func(func);
 }
 
 } // end lib namespace

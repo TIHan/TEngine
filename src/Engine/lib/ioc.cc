@@ -30,7 +30,7 @@
 namespace engine {
 namespace lib {
 
-std::map<size_t, std::shared_ptr<ObjectFactoryMarker>> Ioc::container_;
+std::map<size_t, std::shared_ptr<ComponentInterface>> Ioc::container_;
 
 } // end lib namespace
 } // end engine namespace

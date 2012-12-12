@@ -33,19 +33,17 @@
 namespace engine {
 namespace lib {
 
-class ObjectFactoryMarker {
-public:
-  virtual ~ObjectFactoryMarker() {}
-};
-
 template <typename T>
-class ObjectFactory : public virtual ObjectFactoryMarker {
+class ObjectFactory {
 public:
   ObjectFactory(std::function<std::shared_ptr<T>()> func);
   virtual ~ObjectFactory();
 
   std::shared_ptr<T> CreateInstance();
+  std::shared_ptr<T> CreateInstance(
+      std::function<std::shared_ptr<T>()> func);
 
+  std::function<std::shared_ptr<T>()> create_func();
   void set_create_func(std::function<std::shared_ptr<T>()> func);
 
 private:
@@ -62,13 +60,25 @@ ObjectFactory<T>::~ObjectFactory() {
 }
 
 template <typename T>
-void ObjectFactory<T>::set_create_func(std::function<std::shared_ptr<T>()> func) {
-  create_func_ = func;
+std::shared_ptr<T> ObjectFactory<T>::CreateInstance() {
+  return create_func_();
 }
 
 template <typename T>
-std::shared_ptr<T> ObjectFactory<T>::CreateInstance() {
-  return create_func_();
+std::shared_ptr<T> ObjectFactory<T>::CreateInstance(
+    std::function<std::shared_ptr<T>()> func) {
+  return func();
+}
+
+template <typename T>
+std::function<std::shared_ptr<T>()> ObjectFactory<T>::create_func() {
+  return create_func_;
+}
+
+template <typename T>
+void ObjectFactory<T>::set_create_func(
+    std::function<std::shared_ptr<T>()> func) {
+  create_func_ = func;
 }
 
 } // end lib namespace

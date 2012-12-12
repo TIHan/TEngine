@@ -37,35 +37,34 @@ namespace lib {
 class Ioc {
 public:
   template <typename T>
-  static std::unique_ptr<Component<T>> Register(
+  static std::shared_ptr<ComponentInterface> Register(
       std::function<std::shared_ptr<T>()> func) {
-    auto factory = std::make_shared<ObjectFactory<T>>(func);
-    container_.emplace(typeid(T).hash_code(), factory);
-    return std::make_unique<Component<T>>(factory);
+    auto component = std::make_shared<Component<T>>(func);
+    container_.emplace(typeid(T).hash_code(), component);
+    return component;
   }
 
   template <typename T>
   static std::shared_ptr<T> Resolve() {
     auto iter = container_.find(typeid(T).hash_code());
-    auto factory = std::dynamic_pointer_cast<ObjectFactory<T>>(iter->second);
-    if (!factory)
+    auto component = std::dynamic_pointer_cast<Component<T>>(iter->second);
+    if (!component)
       throw std::runtime_error("Type not registered.");
-    return factory->CreateInstance();
+    return component->GetInstance();
   }
 
   template <typename T>
   static std::shared_ptr<T> Resolve(
       std::function<std::shared_ptr<T>()> func) {
     auto iter = container_.find(typeid(T).hash_code());
-    auto factory = std::dynamic_pointer_cast<ObjectFactory<T>>(iter->second);
-    if (!factory)
+    auto component = std::dynamic_pointer_cast<Component<T>>(iter->second);
+    if (!component)
       throw std::runtime_error("Type not registered.");
-    factory->set_create_func(func);
-    return factory->CreateInstance();
+    return component->GetInstance(func);
   }
 
 private:
-  static std::map<size_t, std::shared_ptr<ObjectFactoryMarker>> container_;
+  static std::map<size_t, std::shared_ptr<ComponentInterface>> container_;
 };
 
 } // end lib namespace
