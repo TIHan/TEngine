@@ -40,7 +40,11 @@ public:
   static std::shared_ptr<ComponentInterface> Register(
       std::function<std::shared_ptr<T>()> func) {
     auto component = std::make_shared<Component<T>>(func);
+#ifdef _MSC_VER
     container_.emplace(typeid(T).hash_code(), component);
+#else
+    container_[typeid(T).hash_code()] = component;
+#endif
     return component;
   }
 
