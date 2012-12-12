@@ -52,7 +52,6 @@ Component<T>::Component(
 
 template <typename T>
 Component<T>* Component<T>::Singleton() {
-    object_factory_->set_singleton(true);
     return this;
 }
 

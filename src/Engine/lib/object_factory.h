@@ -38,50 +38,23 @@ public:
   virtual ~ObjectFactoryMarker() {}
 };
 
-template <typename T, typename Derived>
-class ObjectFactoryBase : public virtual ObjectFactoryMarker{
-public:
-  template <typename... Args>
-  std::shared_ptr<T> CreateInstanceWithArgs(Args&&... args) {
-    return static_cast<Derived*>(this)->CreateInstanceWithArgs(args...);
-  }
-};
-
 template <typename T>
-class ObjectFactoryInterface : public virtual ObjectFactoryMarker {
+class ObjectFactory : public virtual ObjectFactoryMarker {
 public:
-  virtual ~ObjectFactoryInterface() {};
-
-  virtual std::shared_ptr<T> CreateInstance() = 0;
-};
-
-template <typename T>
-class ObjectFactory
-    : public ObjectFactoryBase<T, ObjectFactory<T>>,
-      public ObjectFactoryInterface<T> {
-public:
-  explicit ObjectFactory(std::function<std::shared_ptr<T>()> create_func);
+  ObjectFactory(std::function<std::shared_ptr<T>()> func);
   virtual ~ObjectFactory();
 
-  virtual std::shared_ptr<T> CreateInstance();
+  std::shared_ptr<T> CreateInstance();
 
-  template <typename... Args>
-  std::shared_ptr<T> CreateInstanceWithArgs(Args&&... args);
-
-  bool singleton();
-  void set_singleton(bool value);
+  void set_create_func(std::function<std::shared_ptr<T>()> func);
 
 private:
-  std::shared_ptr<T> singleton_instance_;
   std::function<std::shared_ptr<T>()> create_func_;
-  bool singleton_;
 };
 
 template <typename T>
-ObjectFactory<T>::ObjectFactory(
-    std::function<std::shared_ptr<T>()> create_func) {
-  create_func_ = create_func;
-  singleton_ = false;
+ObjectFactory<T>::ObjectFactory(std::function<std::shared_ptr<T>()> func) {
+  create_func_ = func;
 }
 
 template <typename T>
@@ -89,36 +62,13 @@ ObjectFactory<T>::~ObjectFactory() {
 }
 
 template <typename T>
+void ObjectFactory<T>::set_create_func(std::function<std::shared_ptr<T>()> func) {
+  create_func_ = func;
+}
+
+template <typename T>
 std::shared_ptr<T> ObjectFactory<T>::CreateInstance() {
-  if (singleton_instance_) {
-    return singleton_instance_;
-  } else if (singleton_) {
-      singleton_instance_ = create_func_();
-      return singleton_instance_;
-  }
   return create_func_();
-}
-
-template <typename T>
-template <typename... Args>
-std::shared_ptr<T> ObjectFactory<T>::CreateInstanceWithArgs(Args&&... args) {
-  if (singleton_instance_) {
-    return singleton_instance_;
-  } else if (singleton_) {
-      singleton_instance_ = std::make_shared<T>(args...);
-      return singleton_instance_;
-  }
-  return std::make_shared<T>(args...);
-}
-
-template <typename T>
-bool ObjectFactory<T>::singleton() {
-  return singleton_;
-}
-
-template <typename T>
-void ObjectFactory<T>::set_singleton(bool value) {
-  singleton_ = value;
 }
 
 } // end lib namespace

@@ -36,30 +36,10 @@ namespace lib {
 
 class Ioc {
 public:
-  template <typename T, typename U>
-  static std::unique_ptr<Component<T>> Register() {
-    auto factory = std::make_shared<ObjectFactory<T>>([] {
-      return std::make_shared<U>();
-    });
-    container_.emplace(typeid(T).hash_code(), factory);
-    return std::make_unique<Component<T>>(factory);
-  }
-
-  template <typename T, typename U, typename... Args>
-  static std::unique_ptr<Component<T>> RegisterWithArgs(Args&&... args) {
-    // Make a tuple to include in our arguments, then unpack them in the
-    // function.
-    auto tuple_args = std::forward_as_tuple(args...);
-    auto factory = std::make_shared<ObjectFactory<T>>([=] {
-      return stdext::make_shared<U, sizeof... (Args)>(std::move(tuple_args));
-    });
-#if 0
-    // This is perfectly acceptable code according to the standard, but not
-    // implemented in all compilers.
-    auto factory = std::make_shared<ObjectFactory<T>>([&] {
-      return std::make_shared<U>(std::move(args)...);
-    });
-#endif
+  template <typename T>
+  static std::unique_ptr<Component<T>> Register(
+      std::function<std::shared_ptr<T>()> func) {
+    auto factory = std::make_shared<ObjectFactory<T>>(func);
     container_.emplace(typeid(T).hash_code(), factory);
     return std::make_unique<Component<T>>(factory);
   }
@@ -67,8 +47,20 @@ public:
   template <typename T>
   static std::shared_ptr<T> Resolve() {
     auto iter = container_.find(typeid(T).hash_code());
-    auto factory = std::dynamic_pointer_cast<ObjectFactoryInterface<T>>(
-        iter->second);
+    auto factory = std::dynamic_pointer_cast<ObjectFactory<T>>(iter->second);
+    if (!factory)
+      throw std::runtime_error("Type not registered.");
+    return factory->CreateInstance();
+  }
+
+  template <typename T>
+  static std::shared_ptr<T> Resolve(
+      std::function<std::shared_ptr<T>()> func) {
+    auto iter = container_.find(typeid(T).hash_code());
+    auto factory = std::dynamic_pointer_cast<ObjectFactory<T>>(iter->second);
+    if (!factory)
+      throw std::runtime_error("Type not registered.");
+    factory->set_create_func(func);
     return factory->CreateInstance();
   }
 
