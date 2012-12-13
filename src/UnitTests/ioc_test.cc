@@ -27,6 +27,9 @@ TEST_F(IocTest, Singleton) {
   auto obj3 = Ioc::Resolve<IocObjectInterface>([] {
     return std::make_shared<IocObject>();
   });
+  for (int i = 0; i < 1000000; ++i) auto c = Ioc::Resolve<IocObjectInterface>([] {
+    return std::make_shared<IocObject>();
+  });
   EXPECT_FALSE(obj == obj3);
   EXPECT_EQ(obj, obj2);
 }

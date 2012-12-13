@@ -50,25 +50,28 @@ public:
 
   template <typename T>
   static std::shared_ptr<T> Resolve() {
-    auto iter = container_.find(typeid(T).hash_code());
-    auto component = std::dynamic_pointer_cast<Component<T>>(iter->second);
-    if (!component)
-      throw std::runtime_error("Type not registered.");
+    auto component = FindComponentByType<T>();
     return component->GetInstance();
   }
 
   template <typename T>
   static std::shared_ptr<T> Resolve(
-      std::function<std::shared_ptr<T>()> func) {
-    auto iter = container_.find(typeid(T).hash_code());
-    auto component = std::dynamic_pointer_cast<Component<T>>(iter->second);
-    if (!component)
-      throw std::runtime_error("Type not registered.");
-    return component->GetInstance(func);
+      std::function<std::shared_ptr<T>()>&& func) {
+    auto component = FindComponentByType<T>();
+    return component->GetInstance(std::move(func));
   }
 
 private:
   static std::map<size_t, std::shared_ptr<ComponentInterface>> container_;
+
+  template <typename T>
+  static std::shared_ptr<Component<T>> FindComponentByType() {
+    auto iter = container_.find(typeid(T).hash_code());
+    auto component = std::dynamic_pointer_cast<Component<T>>(iter->second);
+    if (!component)
+      throw std::runtime_error("Type not registered.");
+    return component;
+  }
 };
 
 } // end lib namespace

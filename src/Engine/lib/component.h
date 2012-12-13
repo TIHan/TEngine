@@ -50,7 +50,7 @@ public:
 
   std::shared_ptr<T> GetInstance();
   std::shared_ptr<T> GetInstance(
-      std::function<std::shared_ptr<T>()> override_func);
+      std::function<std::shared_ptr<T>()>&& override_func);
   std::function<std::shared_ptr<T>()> GetCreateFunction();
   void SetCreateFunction(std::function<std::shared_ptr<T>()> func);
 
@@ -88,8 +88,8 @@ std::shared_ptr<T> Component<T>::GetInstance() {
 
 template <typename T>
 std::shared_ptr<T> Component<T>::GetInstance(
-    std::function<std::shared_ptr<T>()> override_func) {
-  return object_factory_->CreateInstance(override_func);
+    std::function<std::shared_ptr<T>()>&& override_func) {
+  return object_factory_->CreateInstance(std::move(override_func));
 }
 
 template <typename T>

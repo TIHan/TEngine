@@ -41,7 +41,7 @@ public:
 
   std::shared_ptr<T> CreateInstance();
   std::shared_ptr<T> CreateInstance(
-      std::function<std::shared_ptr<T>()> func);
+      std::function<std::shared_ptr<T>()>&& func);
 
   std::function<std::shared_ptr<T>()> create_func();
   void set_create_func(std::function<std::shared_ptr<T>()> func);
@@ -66,7 +66,7 @@ std::shared_ptr<T> ObjectFactory<T>::CreateInstance() {
 
 template <typename T>
 std::shared_ptr<T> ObjectFactory<T>::CreateInstance(
-    std::function<std::shared_ptr<T>()> func) {
+    std::function<std::shared_ptr<T>()>&& func) {
   return func();
 }
 
