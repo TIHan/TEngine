@@ -123,11 +123,8 @@
     <ClInclude Include=".\lib\bytestream.h" />
     <ClInclude Include=".\lib\include\engine_lib.h" />
     <ClInclude Include=".\lib\common.h" />
-    <ClInclude Include="lib\component.h" />
     <ClInclude Include="lib\event.h" />
     <ClInclude Include="lib\event_aggregator.h" />
-    <ClInclude Include="lib\ioc.h" />
-    <ClInclude Include="lib\object_factory.h" />
     <ClInclude Include="network\client.h" />
     <ClInclude Include="network\client_message.h" />
     <ClInclude Include="network\include\engine_network.h" />

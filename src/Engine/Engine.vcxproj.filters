@@ -31,9 +31,6 @@
     <Filter Include="Header Files\lib\include">
       <UniqueIdentifier>{ad81bc26-a16f-4c82-ae14-0fec8011abbb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\lib\ioc">
-      <UniqueIdentifier>{4dddf8d8-8a61-40fe-8566-071d6d61e835}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include=".\lib\bytestream.h">
@@ -83,15 +80,6 @@
     </ClInclude>
     <ClInclude Include="lib\event_aggregator.h">
       <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\ioc.h">
-      <Filter>Header Files\lib\ioc</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\component.h">
-      <Filter>Header Files\lib\ioc</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\object_factory.h">
-      <Filter>Header Files\lib\ioc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
