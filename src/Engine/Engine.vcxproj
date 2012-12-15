@@ -140,7 +140,6 @@
   <ItemGroup>
     <ClCompile Include=".\network\socket_base.cc" />
     <ClCompile Include=".\network\udp_socket.cc" />
-    <ClCompile Include="lib\ioc.cc" />
     <ClCompile Include="network\client.cc" />
     <ClCompile Include="network\server.cc" />
     <ClCompile Include="network\service_base.cc" />

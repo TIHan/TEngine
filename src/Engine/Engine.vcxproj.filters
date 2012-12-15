@@ -98,8 +98,5 @@
     <ClCompile Include="network\service_base.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="lib\ioc.cc">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
