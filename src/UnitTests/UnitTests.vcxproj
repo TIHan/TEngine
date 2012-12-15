@@ -139,7 +139,6 @@
     <ClCompile Include=".\socket_test.cc" />
     <ClCompile Include=".\system_test.cc" />
     <ClCompile Include="c11_test.cc" />
-    <ClCompile Include="ioc_test.cc" />
     <ClCompile Include="network_test.cc" />
   </ItemGroup>
   <ItemGroup>
