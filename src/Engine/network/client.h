@@ -29,13 +29,15 @@
 #define CLIENT_H_
 
 #include "service_base.h"
-#include "client_message.h"
+#include "client_message_processor.h"
 
 // Microsoft gives a warning about virtual inheritance. Turn it off.
 #ifdef _MSC_VER
 // C4250 - 'class1' : inherits 'class2::member' via dominance
 # pragma warning( disable : 4250 )
 #endif
+
+using namespace engine::lib;
 
 namespace engine {
 namespace network {
@@ -54,6 +56,8 @@ public:
   virtual void Disconnect() = 0;
 
   virtual std::shared_ptr<ClientMessage> CreateMessage(int type) = 0;
+  virtual void RegisterMessageCallback(int type,
+      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
 };
 
 class ClientImpl;
@@ -66,6 +70,8 @@ public:
   virtual void Disconnect();
 
   virtual std::shared_ptr<ClientMessage> CreateMessage(int type);
+  virtual void RegisterMessageCallback(int type,
+      std::function<void(std::shared_ptr<ReceiveMessage>)> func);
 
   virtual void ProcessMessages();
   virtual void SendMessages();
@@ -73,20 +79,9 @@ public:
 private:
   std::unique_ptr<ClientImpl> impl_;
 
-  // RECEVE
-  std::queue<std::shared_ptr<lib::ByteStream>> receive_buffer_;
-  std::queue<std::shared_ptr<lib::ByteStream>> receive_queue_;
-  // END RECEIVE
-
-  // SEND
-  std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer_;
-  std::queue<std::shared_ptr<lib::ByteStream>> send_queue_;
-  std::mutex send_mutex_;
-  std::future<void> send_async_;
-  // END SEND
-
   std::string server_address_;
   std::string server_port_;
+  ClientMessageProcessor message_processor_;
 };
 
 } // end network namespace

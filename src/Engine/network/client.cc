@@ -28,6 +28,8 @@
 #include "client.h"
 #include "udp_socket.h"
 
+using namespace engine::lib;
+
 namespace engine {
 namespace network {
 
@@ -46,9 +48,7 @@ ClientImpl::ClientImpl() {
 }
 
 Client::Client()
-    : impl_(std::make_unique<ClientImpl>()),
-      send_buffer_(
-        std::make_shared<std::queue<std::shared_ptr<lib::ByteStream>>>()) {
+    : impl_(std::make_unique<ClientImpl>()) {
 }
 
 Client::~Client() {
@@ -60,72 +60,37 @@ void Client::Connect(const std::string& address, const std::string& port) {
   server_address_ = address;
   server_port_ = port;
 
-  receive_thread_ = std::thread([=] () {
-    while (!receive_close_) {
-      if (impl_->socket_->WaitToRead(2500)) {
-        auto receive = impl_->socket_->ReceiveFrom();
-        auto buffer = std::get<0>(receive);
-
-        if (buffer->GetSize() != 0) {
-          receive_mutex_.lock(); // LOCK
-          receive_buffer_.push(buffer);
-          receive_mutex_.unlock(); // UNLOCK
-        }
-      }
+  message_processor_.StartReceiving([=] () {
+    if (impl_->socket_->WaitToRead(2500)) {
+      auto receive = impl_->socket_->ReceiveFrom();
+      return std::get<0>(receive);
+    } else {
+      return std::make_shared<ByteStream>();
     }
   });
 }
 
 void Client::Disconnect() {
-  receive_close_ = true;
-  if (receive_thread_.joinable()) receive_thread_.join();
-  if (send_async_.valid()) send_async_.wait();
+  message_processor_.Stop();
   impl_->socket_->Close();
 }
 
 std::shared_ptr<ClientMessage> Client::CreateMessage(int type) {
-  return std::make_shared<ClientMessage>(send_buffer_, type);
+  return message_processor_.CreateMessage(type);
+}
+
+void Client::RegisterMessageCallback(int type,
+    std::function<void(std::shared_ptr<ReceiveMessage>)> func) {
+  message_processor_.RegisterMessageCallback(type, func);
 }
 
 void Client::ProcessMessages() {
-  receive_mutex_.lock(); // LOCK
-  receive_queue_.swap(receive_buffer_);
-  receive_mutex_.unlock(); // UNLOCK
-
-  while (!receive_queue_.empty()) {
-    auto stream = receive_queue_.front();
-    while (stream->read_position() < stream->GetSize()) {
-      try {
-        uint8_t first_byte = stream->ReadByte();
-
-        auto iter = callbacks_.find(first_byte);
-
-        if (iter != callbacks_.end()) {
-          auto message = iter->second;
-          message(std::make_shared<ReceiveMessage>(stream, first_byte));
-        } else {
-          throw std::logic_error("Invalid message.");
-        }
-      } catch (const std::exception& e) {
-        throw e;
-      }
-    }
-    receive_queue_.pop();
-  }
+  message_processor_.Process();
 }
 
 void Client::SendMessages() {
-  send_mutex_.lock(); // LOCK
-  send_queue_.swap(*send_buffer_);
-  send_mutex_.unlock(); // UNLOCK
-
-  send_async_ = std::async(std::launch::async, [=] {
-    send_mutex_.lock(); // LOCK
-    while (!send_queue_.empty()) {
-      impl_->socket_->Send(*send_queue_.front());
-      send_queue_.pop();
-    }
-    send_mutex_.unlock(); // LOCK
+  message_processor_.Send([=] (const ByteStream& buffer) {
+    impl_->socket_->Send(buffer);
   });
 }
 

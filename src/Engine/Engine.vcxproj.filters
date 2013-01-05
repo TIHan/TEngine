@@ -81,6 +81,9 @@
     <ClInclude Include="lib\event_aggregator.h">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
+    <ClInclude Include="network\client_message_processor.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\network\socket_base.cc">
@@ -96,6 +99,9 @@
       <Filter>Source Files\network</Filter>
     </ClCompile>
     <ClCompile Include="network\service_base.cc">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\client_message_processor.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>

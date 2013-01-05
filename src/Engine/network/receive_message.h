@@ -28,12 +28,16 @@
 #ifndef RECEIVE_MESSAGE_H_
 #define RECEIVE_MESSAGE_H_
 
+#include <engine_lib.h>
+
+using namespace engine::lib;
+
 namespace engine {
 namespace network {
 
 class ReceiveMessage {
 public:
-  ReceiveMessage(std::shared_ptr<lib::ByteStream> receive_stream,
+  ReceiveMessage(std::shared_ptr<ByteStream> receive_stream,
                  const int& type);
   virtual ~ReceiveMessage();
 
@@ -47,10 +51,10 @@ public:
 
 private:
   int type_;
-  std::shared_ptr<lib::ByteStream> receive_stream_;
+  std::shared_ptr<ByteStream> receive_stream_;
 };
 
-inline ReceiveMessage::ReceiveMessage(std::shared_ptr<lib::ByteStream> receive_stream,
+inline ReceiveMessage::ReceiveMessage(std::shared_ptr<ByteStream> receive_stream,
                                const int& type) {
   if (!receive_stream) throw std::invalid_argument("receiveStream is null.");
   if (type < 0) throw std::out_of_range("type is below 0.");
@@ -78,4 +82,4 @@ inline int ReceiveMessage::type() const {
 } // end network namespace
 } // end engine namespace
 
-#endif // MESSAGE_INTERFACE_H_
+#endif // RECEIVE_MESSAGE_H_

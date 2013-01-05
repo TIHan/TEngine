@@ -127,6 +127,7 @@
     <ClInclude Include="lib\event_aggregator.h" />
     <ClInclude Include="network\client.h" />
     <ClInclude Include="network\client_message.h" />
+    <ClInclude Include="network\client_message_processor.h" />
     <ClInclude Include="network\include\engine_network.h" />
     <ClInclude Include=".\network\socket_base.h" />
     <ClInclude Include=".\network\socket_base-impl.h" />
@@ -141,6 +142,7 @@
     <ClCompile Include=".\network\socket_base.cc" />
     <ClCompile Include=".\network\udp_socket.cc" />
     <ClCompile Include="network\client.cc" />
+    <ClCompile Include="network\client_message_processor.cc" />
     <ClCompile Include="network\server.cc" />
     <ClCompile Include="network\service_base.cc" />
   </ItemGroup>
