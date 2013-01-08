@@ -28,6 +28,10 @@
 #include "socket_base.h"
 #include "socket_base-impl.h"
 
+#define CAST_INET(storage) \
+  &reinterpret_cast<struct sockaddr_in*>( \
+      const_cast<struct sockaddr_storage*>(&storage))->sin_addr \
+
 /*!
  *
  */
@@ -110,6 +114,26 @@ std::string SocketAddress::GetText() const {
   */
 int SocketAddress::GetLength() const {
   return impl_->data_->length;
+}
+
+/*!
+  *
+  */
+bool SocketAddress::operator==(const SocketAddress& compare) const {
+  auto addr = impl_->data_->address;
+  auto addr_cmp = compare.impl_->data_->address;
+
+  if (memcmp(&addr, &addr_cmp, sizeof(struct sockaddr_storage)) == 0) {
+    return true;
+  }
+  //if (addr.ss_family == addr_cmp.ss_family) {
+  //  if (addr.ss_family == AF_INET) {
+  //    if (memcmp(CAST_INET(addr), CAST_INET(addr_cmp), sizeof(struct in_addr)) == 0) {
+  //      return true;
+  //    }
+  //  }
+  //}
+  return false;
 }
 
 /*!

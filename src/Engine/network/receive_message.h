@@ -37,12 +37,14 @@ namespace network {
 
 enum ReservedServerMessage {
   kPrint = 248,
-  kHandshake = 249
+  kHandshake = 249,
+  kAckHeartbeat = 250,
 };
 
 enum ReservedClientMessage {
   kConnect = 248,
-  kDisconnect = 249
+  kDisconnect = 249,
+  kHeartbeat = 250
 };
 
 class ReceiveMessage {

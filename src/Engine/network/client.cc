@@ -55,6 +55,12 @@ Client::Client()
     connected_ = true;
     std::cout << "CONNECTED!" << std::endl;
   });
+
+  message_processor_.RegisterMessageCallback(ReservedServerMessage::kAckHeartbeat,
+      [=] (std::shared_ptr<network::ReceiveMessage> message) {
+    std::cout << "Server Acknowledged Heartbeat!" << std::endl;
+  });
+     
 }
 
 Client::~Client() {
@@ -116,6 +122,11 @@ void Client::SendMessages() {
   message_processor_.Send([=] (const ByteStream& buffer) {
     impl_->socket_->Send(buffer);
   });
+}
+
+void Client::SendHeartbeat() {
+  auto connect_msg = CreateMessage(ReservedClientMessage::kHeartbeat);
+  connect_msg->Send();
 }
 
 } // end network namespace

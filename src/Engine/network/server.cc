@@ -59,6 +59,15 @@ Server::Server(int port)
       [=] (std::shared_ptr<network::ReceiveMessage> message,
            uint8_t recipient_id) {
   });
+
+  message_processor_.RegisterMessageCallback(ReservedClientMessage::kHeartbeat,
+      [=] (std::shared_ptr<network::ReceiveMessage> message,
+           uint8_t recipient_id) {
+    std::cout << "Client Sent a Heartbeat!" << std::endl;
+    auto ack = message_processor_.
+        CreateMessage(ReservedServerMessage::kAckHeartbeat, recipient_id);
+    ack->Send();
+  });
 }
 
 Server::~Server() {
@@ -86,7 +95,7 @@ void Server::Start() {
       auto address = std::get<1>(receive);
       
       for (auto recipient : impl_->recipients_) {
-        if (recipient.second->GetRaw() == address->GetRaw()) {
+        if (*recipient.second == *address) {
           return std::make_pair(recipient.first, buffer);
         }
       }

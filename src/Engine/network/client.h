@@ -52,6 +52,7 @@ public:
   // Message Handlers
   virtual void OnConnect(std::function<void()> func) = 0;
   virtual void OnDisconnect(std::function<void()> func) = 0;
+  virtual void SendHeartbeat() = 0;
 };
 
 class ClientImpl;
@@ -73,6 +74,7 @@ public:
   // Message Handlers
   virtual void OnConnect(std::function<void()> func);
   virtual void OnDisconnect(std::function<void()> func);
+  virtual void SendHeartbeat();
 
 private:
   std::unique_ptr<ClientImpl> impl_;

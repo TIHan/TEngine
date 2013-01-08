@@ -51,6 +51,8 @@ public:
   int GetLength() const;
   const void* GetRaw() const;
 
+  bool operator==(const SocketAddress& compare) const;
+
 private:
   std::unique_ptr<SocketAddressImpl> impl_;
 };
