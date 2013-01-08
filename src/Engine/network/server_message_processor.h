@@ -25,60 +25,81 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef CLIENT_MESSAGE_PROCESSOR_H_
-#define CLIENT_MESSAGE_PROCESSOR_H_
+#ifndef SERVER_MESSAGE_PROCESSOR_H_
+#define SERVER_MESSAGE_PROCESSOR_H_
 
 #include "receive_message.h"
-#include "client_message.h"
+#include "server_message.h"
+#include <unordered_map>
 
 using namespace engine::lib;
 
 namespace engine {
 namespace network {
 
-class ClientMessageProcessorInterface {
-public:
-  virtual ~ClientMessageProcessorInterface() {}
+struct TwoWayBuffer {
+  TwoWayBuffer() {
+    send = std::make_shared<std::queue<std::shared_ptr<ByteStream>>>();
+    receive = std::make_shared<std::queue<std::shared_ptr<ByteStream>>>();
+  }
 
-  virtual void StartReceiving(
-      std::function<std::shared_ptr<ByteStream>()> func) = 0;
-
-  virtual void Send(
-      std::function<void(const ByteStream& buffer)> func) = 0;
-
-  virtual void Stop() = 0;
-  virtual void Process(bool connected) = 0;
-  virtual std::shared_ptr<ClientMessage> CreateMessage(int type) = 0;
-  virtual void RegisterMessageCallback(int type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
+  std::shared_ptr<std::queue<std::shared_ptr<ByteStream>>> send;
+  std::shared_ptr<std::queue<std::shared_ptr<ByteStream>>> receive;
 };
 
-class ClientMessageProcessor : public virtual ClientMessageProcessorInterface {
+class ServerMessageProcessorInterface {
 public:
-  ClientMessageProcessor();
-  virtual ~ClientMessageProcessor();
+  virtual ~ServerMessageProcessorInterface() {}
 
   virtual void StartReceiving(
-      std::function<std::shared_ptr<ByteStream>()> func);
+      std::function<std::pair<int, std::shared_ptr<ByteStream>>()> func) = 0;
 
   virtual void Send(
-      std::function<void(const ByteStream& buffer)> func);
+      std::function<
+          void(const ByteStream& buffer, uint8_t recipient_id)> func) = 0;
+
+  virtual void Stop() = 0;
+  virtual void Process() = 0;
+  virtual std::shared_ptr<ServerMessage> CreateMessage(int type) = 0;
+  virtual std::shared_ptr<ServerMessage> CreateMessage(int type,
+                                                       uint8_t recipient_id) = 0;
+  virtual void RegisterMessageCallback(int type,
+      std::function<void(std::shared_ptr<ReceiveMessage>, int)> func) = 0;
+
+  virtual void AddRecipientId(uint8_t id) = 0;
+  virtual void RemoveRecipientId(uint8_t id) = 0;
+};
+
+class ServerMessageProcessor : public virtual ServerMessageProcessorInterface {
+public:
+  ServerMessageProcessor();
+  virtual ~ServerMessageProcessor();
+
+  virtual void StartReceiving(
+      std::function<std::pair<int, std::shared_ptr<ByteStream>>()> func);
+
+  virtual void Send(
+      std::function<void(const ByteStream& buffer, uint8_t recipient_id)> func);
 
   virtual void Stop();
-  virtual void Process(bool connected);
-  virtual std::shared_ptr<ClientMessage> CreateMessage(int type);
+  virtual void Process();
+  virtual std::shared_ptr<ServerMessage> CreateMessage(int type);
+  virtual std::shared_ptr<ServerMessage> CreateMessage(int type,
+                                                       uint8_t recipient_id);
   virtual void RegisterMessageCallback(int type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func);
+      std::function<void(std::shared_ptr<ReceiveMessage>, int)> func);
+
+  virtual void AddRecipientId(uint8_t id);
+  virtual void RemoveRecipientId(uint8_t id);
 
 private:
   // RECEVE
-  std::queue<std::shared_ptr<ByteStream>> receive_buffer_;
-  std::queue<std::shared_ptr<ByteStream>> receive_queue_;
   std::mutex receive_mutex_;
   std::thread receive_thread_;
   std::atomic_bool receive_close_;
   std::map<int,
-           std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
+           std::function<void(std::shared_ptr<ReceiveMessage>,
+                              int)>> callbacks_;
   // END RECEIVE
 
   // SEND
@@ -87,6 +108,8 @@ private:
   std::mutex send_mutex_;
   std::future<void> send_async_;
   // END SEND
+
+  std::unordered_map<uint8_t, std::shared_ptr<TwoWayBuffer>> recipient_buffers_;
 };
 
 } // end network namespace

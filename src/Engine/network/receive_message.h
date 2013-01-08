@@ -35,6 +35,16 @@ using namespace engine::lib;
 namespace engine {
 namespace network {
 
+enum ReservedServerMessage {
+  kPrint = 248,
+  kHandshake = 249
+};
+
+enum ReservedClientMessage {
+  kConnect = 248,
+  kDisconnect = 249
+};
+
 class ReceiveMessage {
 public:
   ReceiveMessage(std::shared_ptr<ByteStream> receive_stream,

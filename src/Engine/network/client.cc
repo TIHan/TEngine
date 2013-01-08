@@ -49,6 +49,12 @@ ClientImpl::ClientImpl() {
 
 Client::Client()
     : impl_(std::make_unique<ClientImpl>()) {
+  connected_ = false;
+  message_processor_.RegisterMessageCallback(ReservedServerMessage::kHandshake,
+      [=] (std::shared_ptr<network::ReceiveMessage> message) {
+    connected_ = true;
+    std::cout << "CONNECTED!" << std::endl;
+  });
 }
 
 Client::~Client() {
@@ -68,9 +74,27 @@ void Client::Connect(const std::string& address, const std::string& port) {
       return std::make_shared<ByteStream>();
     }
   });
+
+  auto connect_msg = CreateMessage(ReservedClientMessage::kConnect);
+  connect_msg->Send();
+  SendMessages();
+}
+
+void Client::OnConnect(std::function<void()> func) {
+  connect_func_ = func;
+}
+
+void Client::OnDisconnect(std::function<void()> func) {
+  disconnect_func_ = func;
 }
 
 void Client::Disconnect() {
+  if (connected_) {
+    auto disconnect_msg = CreateMessage(ReservedClientMessage::kDisconnect);
+    disconnect_msg->Send();
+    SendMessages();
+  }
+
   message_processor_.Stop();
   impl_->socket_->Close();
 }
@@ -85,7 +109,7 @@ void Client::RegisterMessageCallback(int type,
 }
 
 void Client::ProcessMessages() {
-  message_processor_.Process();
+  message_processor_.Process(connected_);
 }
 
 void Client::SendMessages() {

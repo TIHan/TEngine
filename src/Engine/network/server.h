@@ -28,24 +28,15 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
-#include "service_base.h"
-#include "server_message.h"
-
-// Microsoft gives a warning about virtual inheritance. Turn it off.
-#ifdef _MSC_VER
-// C4250 - 'class1' : inherits 'class2::member' via dominance
-# pragma warning( disable : 4250 )
-#endif
+#include "server_message_processor.h"
 
 namespace engine {
 namespace network {
 
-enum ReservedServerMessage {
-  kPrint = 248,
-  kHandshake = 249
-};
+const int kMaxClients = 64;
+const int kMaxServerPerClientTransfer = 8192;
 
-class ServerInterface : public virtual ServiceBaseInterface {
+class ServerInterface {
 public:
   virtual ~ServerInterface() {}
 
@@ -54,12 +45,15 @@ public:
 
   virtual std::shared_ptr<ServerMessage> CreateMessage(int type) = 0;
 
+  virtual void ProcessMessages() = 0;
+  virtual void SendMessages() = 0;
+
   /* Accessors / Mutators */
   virtual int port() const = 0;
 };
 
 class ServerImpl;
-class Server : public ServiceBase, public virtual ServerInterface {
+class Server : public virtual ServerInterface {
 public:
   explicit Server(int port);
   virtual ~Server();
@@ -78,18 +72,7 @@ public:
 private:
   std::unique_ptr<ServerImpl> impl_;
 
-  // RECEVE
-  std::queue<std::shared_ptr<lib::ByteStream>> receive_buffer_;
-  std::queue<std::shared_ptr<lib::ByteStream>> receive_queue_;
-  // END RECEIVE
-
-  // SEND
-  std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer_;
-  std::queue<std::shared_ptr<lib::ByteStream>> send_queue_;
-  std::mutex send_mutex_;
-  std::future<void> send_async_;
-  // END SEND
-
+  ServerMessageProcessor message_processor_;
   int port_;
 };
 

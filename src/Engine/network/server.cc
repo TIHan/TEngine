@@ -27,26 +27,17 @@
 
 #include "server.h"
 #include "udp_socket.h"
+#include <unordered_map>
 
 namespace engine {
 namespace network {
-
-struct Recipient {
-  std::shared_ptr<SocketAddress> address;
-  int id;
-};
-
-typedef std::list<std::shared_ptr<Recipient>> RecipientList;
 
 class ServerImpl {
 public:
   ServerImpl();
 
-  std::unique_ptr<Recipient> CreateRecipient(
-      std::shared_ptr<SocketAddress> address);
-
   std::unique_ptr<UdpSocket> socket_;
-  RecipientList recipients_;
+  std::unordered_map<uint8_t, std::shared_ptr<SocketAddress>> recipients_;
 };
 
 ServerImpl::ServerImpl() {
@@ -57,22 +48,17 @@ ServerImpl::ServerImpl() {
   socket_ = std::make_unique<UdpSocket>(options);
 }
 
-std::atomic_int g_id_count;
-
-std::unique_ptr<Recipient> ServerImpl::CreateRecipient(
-    std::shared_ptr<SocketAddress> address) {
-  auto recipient = std::make_unique<Recipient>();
-  recipient->address = address;
-  recipient->id = ++g_id_count;
-  return recipient;
-}
+std::atomic_uint8_t g_id_count;
 
 Server::Server(int port)
-    : impl_(std::make_unique<ServerImpl>()),
-      send_buffer_(
-        std::make_shared<std::queue<std::shared_ptr<lib::ByteStream>>>()) {
+    : impl_(std::make_unique<ServerImpl>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
+
+  message_processor_.RegisterMessageCallback(ReservedClientMessage::kConnect,
+      [=] (std::shared_ptr<network::ReceiveMessage> message,
+           uint8_t recipient_id) {
+  });
 }
 
 Server::~Server() {
@@ -93,77 +79,60 @@ void Server::Start() {
 
   if (success == -1) throw std::domain_error("Unable to bind port.");
 
-  receive_thread_ = std::thread([=] () {
-    while (!receive_close_) {
-      if (impl_->socket_->WaitToRead(2500)) {
-        auto receive = impl_->socket_->ReceiveFrom();
-        auto buffer = std::get<0>(receive);
-
-        if (buffer->GetSize() != 0) {
-          receive_mutex_.lock(); // LOCK
-          receive_buffer_.push(buffer);
-          receive_mutex_.unlock(); // UNLOCK
+  message_processor_.StartReceiving([=] () {
+    if (impl_->socket_->WaitToRead(2500)) {
+      auto receive = impl_->socket_->ReceiveFrom();
+      auto buffer = std::get<0>(receive);
+      auto address = std::get<1>(receive);
+      
+      for (auto recipient : impl_->recipients_) {
+        if (recipient.second->GetRaw() == address->GetRaw()) {
+          return std::make_pair(recipient.first, buffer);
         }
       }
+
+      if (buffer->ReadByte() == ReservedClientMessage::kConnect) {
+        // Got a new recipient, add him to the list.
+        uint8_t id = ++g_id_count;
+        impl_->recipients_[id] = address;
+        message_processor_.AddRecipientId(id);
+
+        auto handshake = message_processor_.
+            CreateMessage(ReservedServerMessage::kHandshake, id);
+        handshake->Send();
+
+        return std::make_pair(id, buffer);
+      }
+
+      return std::make_pair(static_cast<uint8_t>(0),
+                            std::make_shared<ByteStream>());
+    } else {
+      return std::make_pair(static_cast<uint8_t>(0),
+                            std::make_shared<ByteStream>());
     }
   });
 }
 
 void Server::Stop() {
-  receive_close_ = true;
-  if (receive_thread_.joinable()) receive_thread_.join();
-  if (send_async_.valid()) send_async_.wait();
+  message_processor_.Stop();
   impl_->socket_->Close();
 }
 
 std::shared_ptr<ServerMessage> Server::CreateMessage(int type) {
-  return std::make_shared<ServerMessage>(send_buffer_, type);
+  return message_processor_.CreateMessage(type);
 }
 
 void Server::ProcessMessages() {
-  receive_mutex_.lock(); // LOCK
-  receive_queue_.swap(receive_buffer_);
-  receive_mutex_.unlock(); // UNLOCK
-
-  while (!receive_queue_.empty()) {
-    auto stream = receive_queue_.front();
-    while (stream->read_position() < stream->GetSize()) {
-      try {
-        uint8_t first_byte = stream->ReadByte();
-
-        auto iter = callbacks_.find(first_byte);
-
-        if (iter != callbacks_.end()) {
-          auto message = iter->second;
-          message(std::make_shared<ReceiveMessage>(stream, first_byte));
-        } else {
-          throw std::logic_error("Invalid message.");
-        }
-      } catch (const std::exception& e) {
-        throw e;
-      }
-    }
-    receive_queue_.pop();
-  }
+  message_processor_.Process();
 }
 
 void Server::SendMessages() {
-  send_mutex_.lock(); // LOCK
-  send_queue_.swap(*send_buffer_);
-  send_mutex_.unlock(); // UNLOCK
-
-  auto addresses = impl_->recipients_;
-
-  send_async_ = std::async(std::launch::async, [=] {
-    send_mutex_.lock(); // LOCK
-    while (!send_queue_.empty()) {
-      for_each(addresses.cbegin(), addresses.cend(),
-               [&] (std::shared_ptr<Recipient> recipient) {
-        impl_->socket_->SendTo(*send_queue_.front(), *recipient->address);
-      });
-      send_queue_.pop();
+  message_processor_.Send([=] (const ByteStream& buffer, int recipient_id) {
+    for (auto recipient : impl_->recipients_) {
+      if (recipient.first == recipient_id) {
+        impl_->socket_->SendTo(buffer, *recipient.second);
+      }
     }
-    send_mutex_.unlock(); // LOCK
   });
 }
 

@@ -136,7 +136,7 @@
     <ClInclude Include="network\receive_message.h" />
     <ClInclude Include="network\server.h" />
     <ClInclude Include="network\server_message.h" />
-    <ClInclude Include="network\service_base.h" />
+    <ClInclude Include="network\server_message_processor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\network\socket_base.cc" />
@@ -144,7 +144,7 @@
     <ClCompile Include="network\client.cc" />
     <ClCompile Include="network\client_message_processor.cc" />
     <ClCompile Include="network\server.cc" />
-    <ClCompile Include="network\service_base.cc" />
+    <ClCompile Include="network\server_message_processor.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

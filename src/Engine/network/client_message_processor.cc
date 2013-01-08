@@ -78,7 +78,7 @@ void ClientMessageProcessor::Stop() {
   if (send_async_.valid()) send_async_.wait();
 }
 
-void ClientMessageProcessor::Process() {
+void ClientMessageProcessor::Process(bool connected) {
   receive_mutex_.lock(); // LOCK
   receive_queue_.swap(receive_buffer_);
   receive_mutex_.unlock(); // UNLOCK
@@ -88,6 +88,9 @@ void ClientMessageProcessor::Process() {
     while (stream->read_position() < stream->GetSize()) {
       try {
         uint8_t first_byte = stream->ReadByte();
+
+        if (!connected && first_byte != ReservedServerMessage::kHandshake)
+          throw std::domain_error("Not connected, need handshake first.");
 
         auto iter = callbacks_.find(first_byte);
 

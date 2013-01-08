@@ -66,9 +66,6 @@
     <ClInclude Include="network\client.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="network\service_base.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
     <ClInclude Include="network\client_message.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
@@ -82,6 +79,9 @@
       <Filter>Header Files\lib</Filter>
     </ClInclude>
     <ClInclude Include="network\client_message_processor.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_message_processor.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,10 +98,10 @@
     <ClCompile Include="network\client.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="network\service_base.cc">
+    <ClCompile Include="network\client_message_processor.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="network\client_message_processor.cc">
+    <ClCompile Include="network\server_message_processor.cc">
       <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>

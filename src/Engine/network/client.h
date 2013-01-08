@@ -28,26 +28,16 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
-#include "service_base.h"
 #include "client_message_processor.h"
-
-// Microsoft gives a warning about virtual inheritance. Turn it off.
-#ifdef _MSC_VER
-// C4250 - 'class1' : inherits 'class2::member' via dominance
-# pragma warning( disable : 4250 )
-#endif
 
 using namespace engine::lib;
 
 namespace engine {
 namespace network {
 
-enum ReservedClientMessage {
-  kConnect = 248,
-  kDisconnect = 249
-};
+const int kMaxClientTransfer = 128;
 
-class ClientInterface : public virtual ServiceBaseInterface {
+class ClientInterface {
 public:
   virtual ~ClientInterface() {}
 
@@ -58,10 +48,14 @@ public:
   virtual std::shared_ptr<ClientMessage> CreateMessage(int type) = 0;
   virtual void RegisterMessageCallback(int type,
       std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
+
+  // Message Handlers
+  virtual void OnConnect(std::function<void()> func) = 0;
+  virtual void OnDisconnect(std::function<void()> func) = 0;
 };
 
 class ClientImpl;
-class Client : public ServiceBase, public virtual ClientInterface {
+class Client : public virtual ClientInterface {
 public:
   Client();
   virtual ~Client();
@@ -76,12 +70,19 @@ public:
   virtual void ProcessMessages();
   virtual void SendMessages();
 
+  // Message Handlers
+  virtual void OnConnect(std::function<void()> func);
+  virtual void OnDisconnect(std::function<void()> func);
+
 private:
   std::unique_ptr<ClientImpl> impl_;
 
   std::string server_address_;
   std::string server_port_;
   ClientMessageProcessor message_processor_;
+  std::atomic_bool connected_;
+  std::function<void()> connect_func_;
+  std::function<void()> disconnect_func_;
 };
 
 } // end network namespace
