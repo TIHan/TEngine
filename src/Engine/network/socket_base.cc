@@ -28,9 +28,13 @@
 #include "socket_base.h"
 #include "socket_base-impl.h"
 
-#define CAST_INET(storage) \
+#define CAST_IN_ADDR(storage) \
   &reinterpret_cast<struct sockaddr_in*>( \
-      const_cast<struct sockaddr_storage*>(&storage))->sin_addr \
+    const_cast<struct sockaddr_storage*>(&storage))->sin_addr \
+
+#define CAST_IN6_ADDR(storage) \
+  &reinterpret_cast<struct sockaddr_in6*>( \
+    const_cast<struct sockaddr_storage*>(&storage))->sin6_addr \
 
 /*!
  *
@@ -65,8 +69,7 @@ static std::string GetSocketAddress(const struct sockaddr_storage& addr) {
 
     switch (addr.ss_family) {
       case AF_INET6: {
-        auto sock_addr = &reinterpret_cast<struct sockaddr_in6*>(
-            const_cast<struct sockaddr_storage*>(&addr))->sin6_addr;
+        auto sock_addr = CAST_IN6_ADDR(addr);
         char* data = reinterpret_cast<char*>(
             const_cast<char*>(address.data()));
 
@@ -74,8 +77,7 @@ static std::string GetSocketAddress(const struct sockaddr_storage& addr) {
         break;
       }
       default: {
-        auto sock_addr = &reinterpret_cast<struct sockaddr_in*>(
-            const_cast<struct sockaddr_storage*>(&addr))->sin_addr;
+        auto sock_addr = CAST_IN_ADDR(addr);
         char* data = reinterpret_cast<char*>(
             const_cast<char*>(address.data()));
 
@@ -123,16 +125,16 @@ bool SocketAddress::operator==(const SocketAddress& compare) const {
   auto addr = impl_->data_->address;
   auto addr_cmp = compare.impl_->data_->address;
 
-  if (memcmp(&addr, &addr_cmp, sizeof(struct sockaddr_storage)) == 0) {
-    return true;
+  if (addr.ss_family == addr_cmp.ss_family) {
+    if (addr.ss_family == AF_INET6 && 
+        memcmp(CAST_IN6_ADDR(addr), CAST_IN6_ADDR(addr_cmp),
+               sizeof(struct sockaddr_in6)) == 0) {
+      return true;
+    } else if (memcmp(CAST_IN_ADDR(addr), CAST_IN_ADDR(addr_cmp),
+               sizeof(struct sockaddr_in)) == 0) {
+      return true;
+    }
   }
-  //if (addr.ss_family == addr_cmp.ss_family) {
-  //  if (addr.ss_family == AF_INET) {
-  //    if (memcmp(CAST_INET(addr), CAST_INET(addr_cmp), sizeof(struct in_addr)) == 0) {
-  //      return true;
-  //    }
-  //  }
-  //}
   return false;
 }
 
