@@ -29,45 +29,47 @@
 #define SERVER_MESSAGE_H_
 
 #include "message_base.h"
+#include "server_message_processor.h"
 
 namespace engine {
 namespace network {
 
 class ServerMessage : public MessageBase {
 public:
-  ServerMessage(
-      std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_queue,
-      int type);
+  ServerMessage(std::shared_ptr<ServerMessageProcessor> processor, int type);
   virtual ~ServerMessage();
 
   void Send();
+ void ServerMessage::Send(uint8_t recipient_id);
 
 private:
-  std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_queue_;
+  std::shared_ptr<ServerMessageProcessor> processor_;
 };
 
 inline ServerMessage::ServerMessage(
-    std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_queue,
-    int type)
-    : MessageBase(type), send_queue_(send_queue) {
-  if (send_queue_->empty()) {
-    send_queue_->push(std::make_shared<lib::ByteStream>());
-  }
+    std::shared_ptr<ServerMessageProcessor> processor, int type)
+    : MessageBase(type), processor_(processor) {
 }
 
 inline ServerMessage::~ServerMessage() {
 }
 
 inline void ServerMessage::Send() {
+  for (auto id : *processor_->GetAllRecipientIds()) {
+    Send(id);
+  }
+}
+
+inline void ServerMessage::Send(uint8_t recipient_id) {
   if (buffer_->GetSize() > kMaximumTransmissionUnit)
     throw std::out_of_range("Message is too big.");
-  auto newest_stream = send_queue_->back();
 
   // Do we have enough room?
-  if (newest_stream->GetSize() + buffer_->GetSize() > kMaximumTransmissionUnit) {
-    send_queue_->push(buffer_);
+  if (processor_->GetSendBufferSize(recipient_id) + 
+      buffer_->GetSize() > kMaximumTransmissionUnit) {
+    processor_->PushBufferOnSendBuffer(recipient_id, buffer_);
   } else {
-    newest_stream->WriteStream(buffer_);
+    processor_->WriteStreamOnSendBuffer(recipient_id, buffer_);
   }
 }
 

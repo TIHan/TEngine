@@ -28,6 +28,10 @@
 #include "client.h"
 #include "udp_socket.h"
 
+#define REGISTER_MESSAGE_CALLBACK(type, func) \
+  message_processor_.RegisterMessageCallback(type, \
+      [=] (std::shared_ptr<network::ReceiveMessage> message) func) \
+
 using namespace engine::lib;
 
 namespace engine {
@@ -50,17 +54,15 @@ ClientImpl::ClientImpl() {
 Client::Client()
     : impl_(std::make_unique<ClientImpl>()) {
   connected_ = false;
-  message_processor_.RegisterMessageCallback(ReservedServerMessage::kHandshake,
-      [=] (std::shared_ptr<network::ReceiveMessage> message) {
+
+  REGISTER_MESSAGE_CALLBACK(ReservedServerMessage::kAckClientConnect, {
     connected_ = true;
     std::cout << "CONNECTED!" << std::endl;
   });
 
-  message_processor_.RegisterMessageCallback(ReservedServerMessage::kAckHeartbeat,
-      [=] (std::shared_ptr<network::ReceiveMessage> message) {
+  REGISTER_MESSAGE_CALLBACK(ReservedServerMessage::kAckClientHeartbeat, {
     std::cout << "Server Acknowledged Heartbeat!" << std::endl;
   });
-     
 }
 
 Client::~Client() {
@@ -83,7 +85,6 @@ void Client::Connect(const std::string& address, const std::string& port) {
 
   auto connect_msg = CreateMessage(ReservedClientMessage::kConnect);
   connect_msg->Send();
-  SendMessages();
 }
 
 void Client::OnConnect(std::function<void()> func) {
@@ -115,7 +116,7 @@ void Client::RegisterMessageCallback(int type,
 }
 
 void Client::ProcessMessages() {
-  message_processor_.Process(connected_);
+  message_processor_.Process();
 }
 
 void Client::SendMessages() {

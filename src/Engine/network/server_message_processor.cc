@@ -32,9 +32,7 @@ using namespace engine::lib;
 namespace engine {
 namespace network {
 
-ServerMessageProcessor::ServerMessageProcessor()
-    : send_buffer_(
-        std::make_shared<std::queue<std::shared_ptr<lib::ByteStream>>>()) {
+ServerMessageProcessor::ServerMessageProcessor() {
   receive_close_ = false;
 }
 
@@ -47,12 +45,9 @@ void ServerMessageProcessor::StartReceiving(
   receive_thread_ = std::thread([=] () {
     while (!receive_close_) {
       auto receive = func();
-
       if (receive.second && receive.second->GetSize() != 0) {
         receive_mutex_.lock(); // LOCK
-
         recipient_buffers_[receive.first]->receive->push(receive.second);
-
         receive_mutex_.unlock(); // UNLOCK
       }
     }
@@ -61,11 +56,23 @@ void ServerMessageProcessor::StartReceiving(
 
 void ServerMessageProcessor::Send(
     std::function<void(const ByteStream& buffer, uint8_t recipient_id)> func) {
+  std::unordered_map<uint8_t, std::shared_ptr<TwoWayBuffer>> buffers;
+
+  send_mutex_.lock(); // LOCK
+  for (auto recipient_buffer : recipient_buffers_) {
+    auto buffer = std::shared_ptr<TwoWayBuffer>();
+    buffer.swap(recipient_buffer.second);
+    buffers[recipient_buffer.first] = buffer;
+  }
+  send_mutex_.unlock(); // UNLOCK
+
+
   send_async_ = std::async(std::launch::async, [=] {
-    for (auto recipient_buffer : recipient_buffers_) {
-      while (!recipient_buffer.second->send->empty()) {
-        func(*recipient_buffer.second->send->front(), recipient_buffer.first);
-        recipient_buffer.second->send->pop();
+    for (auto buffer : buffers) {
+      while (!buffer.second->send->empty()) {
+        auto buf = *buffer.second->send->front();
+        func(buf, buffer.first);
+        buffer.second->send->pop();
       }
     }
   });
@@ -92,7 +99,6 @@ void ServerMessageProcessor::Process() {
           uint8_t first_byte = stream->ReadByte();
 
           auto iter = callbacks_.find(first_byte);
-
           if (iter != callbacks_.end()) {
             auto message = iter->second;
             message(std::make_shared<ReceiveMessage>(stream, first_byte),
@@ -109,28 +115,47 @@ void ServerMessageProcessor::Process() {
   }
 }
 
-std::shared_ptr<ServerMessage> ServerMessageProcessor::CreateMessage(
-    int type) {
-  return std::make_shared<ServerMessage>(send_buffer_, type);
-}
-
-std::shared_ptr<ServerMessage> ServerMessageProcessor::CreateMessage(
-    int type, uint8_t recipient_id) {
-  return std::make_shared<ServerMessage>(
-      recipient_buffers_[recipient_id]->send, type);
-}
-
 void ServerMessageProcessor::RegisterMessageCallback(int type,
     std::function<void(std::shared_ptr<ReceiveMessage>, int)> func) {
   callbacks_[type] = func;
 }
 
-void ServerMessageProcessor::AddRecipientId(uint8_t id) {
+uint8_t ServerMessageProcessor::CreateRecipient() {
+  uint8_t id = id_count_++;
   recipient_buffers_[id] = std::make_shared<TwoWayBuffer>();
+  return id;
 }
 
 void ServerMessageProcessor::RemoveRecipientId(uint8_t id) {
   recipient_buffers_.erase(id);
+}
+
+std::unique_ptr<std::list<uint8_t>> ServerMessageProcessor::GetAllRecipientIds() {
+  auto list = std::make_unique<std::list<uint8_t>>();
+  for (auto recipient_buffer : recipient_buffers_) {
+    list->push_back(recipient_buffer.first);
+  }
+  return std::move(list);
+}
+
+// Send buffer
+// Hmm, my code smell tells me we should do something here about
+// this whole section of send buffer. Perhaps we should introduce
+// a new class called channels that deal with some of this.
+int ServerMessageProcessor::GetSendBufferSize(uint8_t recipient_id) {
+  return static_cast<int>(recipient_buffers_[recipient_id]->send->size());
+}
+
+void ServerMessageProcessor::PushBufferOnSendBuffer(uint8_t recipient_id,
+    std::shared_ptr<ByteStream> buffer) {
+  return recipient_buffers_[recipient_id]->send->push(buffer);
+}
+
+void ServerMessageProcessor::WriteStreamOnSendBuffer(uint8_t recipient_id,
+    std::shared_ptr<ByteStream> buffer) {
+  auto send_buffer =recipient_buffers_[recipient_id]->send;
+  if (send_buffer->empty()) send_buffer->push(std::make_shared<ByteStream>());
+  return send_buffer->back()->WriteStream(buffer);
 }
 
 } // end network namespace

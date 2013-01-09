@@ -29,7 +29,6 @@
 #define SERVER_MESSAGE_PROCESSOR_H_
 
 #include "receive_message.h"
-#include "server_message.h"
 #include <unordered_map>
 
 using namespace engine::lib;
@@ -47,30 +46,7 @@ struct TwoWayBuffer {
   std::shared_ptr<std::queue<std::shared_ptr<ByteStream>>> receive;
 };
 
-class ServerMessageProcessorInterface {
-public:
-  virtual ~ServerMessageProcessorInterface() {}
-
-  virtual void StartReceiving(
-      std::function<std::pair<int, std::shared_ptr<ByteStream>>()> func) = 0;
-
-  virtual void Send(
-      std::function<
-          void(const ByteStream& buffer, uint8_t recipient_id)> func) = 0;
-
-  virtual void Stop() = 0;
-  virtual void Process() = 0;
-  virtual std::shared_ptr<ServerMessage> CreateMessage(int type) = 0;
-  virtual std::shared_ptr<ServerMessage> CreateMessage(int type,
-                                                       uint8_t recipient_id) = 0;
-  virtual void RegisterMessageCallback(int type,
-      std::function<void(std::shared_ptr<ReceiveMessage>, int)> func) = 0;
-
-  virtual void AddRecipientId(uint8_t id) = 0;
-  virtual void RemoveRecipientId(uint8_t id) = 0;
-};
-
-class ServerMessageProcessor : public virtual ServerMessageProcessorInterface {
+class ServerMessageProcessor {
 public:
   ServerMessageProcessor();
   virtual ~ServerMessageProcessor();
@@ -83,14 +59,19 @@ public:
 
   virtual void Stop();
   virtual void Process();
-  virtual std::shared_ptr<ServerMessage> CreateMessage(int type);
-  virtual std::shared_ptr<ServerMessage> CreateMessage(int type,
-                                                       uint8_t recipient_id);
   virtual void RegisterMessageCallback(int type,
       std::function<void(std::shared_ptr<ReceiveMessage>, int)> func);
 
-  virtual void AddRecipientId(uint8_t id);
+  virtual uint8_t CreateRecipient();
   virtual void RemoveRecipientId(uint8_t id);
+  virtual std::unique_ptr<std::list<uint8_t>> GetAllRecipientIds();
+
+  // Send buffer
+  virtual int GetSendBufferSize(uint8_t recipient_id);
+  virtual void PushBufferOnSendBuffer(uint8_t recipient_id,
+                                      std::shared_ptr<ByteStream> buffer);
+  virtual void WriteStreamOnSendBuffer(uint8_t recipient_id,
+                                       std::shared_ptr<ByteStream> buffer);
 
 private:
   // RECEVE
@@ -103,13 +84,12 @@ private:
   // END RECEIVE
 
   // SEND
-  std::shared_ptr<std::queue<std::shared_ptr<ByteStream>>> send_buffer_;
-  std::queue<std::shared_ptr<ByteStream>> send_queue_;
   std::mutex send_mutex_;
   std::future<void> send_async_;
   // END SEND
 
   std::unordered_map<uint8_t, std::shared_ptr<TwoWayBuffer>> recipient_buffers_;
+  std::atomic_uint8_t id_count_;
 };
 
 } // end network namespace

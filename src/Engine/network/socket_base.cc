@@ -260,6 +260,7 @@ int SocketBase::Bind(uint16_t port) {
   if (impl_->socket_ == -1 || !impl_->current_address_info_)
     return -1;
 
+  // TODO: Currently not handling ipv6.
   auto sockaddr = reinterpret_cast<struct sockaddr_in*>(
       impl_->current_address_info_->ai_addr);
   sockaddr->sin_port = ntohs(port);

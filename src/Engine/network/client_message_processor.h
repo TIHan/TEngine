@@ -47,7 +47,7 @@ public:
       std::function<void(const ByteStream& buffer)> func) = 0;
 
   virtual void Stop() = 0;
-  virtual void Process(bool connected) = 0;
+  virtual void Process() = 0;
   virtual std::shared_ptr<ClientMessage> CreateMessage(int type) = 0;
   virtual void RegisterMessageCallback(int type,
       std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
@@ -65,7 +65,7 @@ public:
       std::function<void(const ByteStream& buffer)> func);
 
   virtual void Stop();
-  virtual void Process(bool connected);
+  virtual void Process();
   virtual std::shared_ptr<ClientMessage> CreateMessage(int type);
   virtual void RegisterMessageCallback(int type,
       std::function<void(std::shared_ptr<ReceiveMessage>)> func);

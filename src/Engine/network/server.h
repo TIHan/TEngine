@@ -29,6 +29,7 @@
 #define SERVER_H_
 
 #include "server_message_processor.h"
+#include "server_message.h"
 
 namespace engine {
 namespace network {
@@ -72,7 +73,7 @@ public:
 private:
   std::unique_ptr<ServerImpl> impl_;
 
-  ServerMessageProcessor message_processor_;
+  std::shared_ptr<ServerMessageProcessor> message_processor_;
   int port_;
 };
 

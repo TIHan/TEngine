@@ -29,6 +29,11 @@
 #include "udp_socket.h"
 #include <unordered_map>
 
+#define REGISTER_MESSAGE_CALLBACK(type, func) \
+  message_processor_->RegisterMessageCallback(type, \
+      [=] (std::shared_ptr<network::ReceiveMessage> message, \
+          uint8_t recipient_id) func) \
+
 namespace engine {
 namespace network {
 
@@ -51,22 +56,18 @@ ServerImpl::ServerImpl() {
 std::atomic_uint8_t g_id_count;
 
 Server::Server(int port)
-    : impl_(std::make_unique<ServerImpl>()) {
+    : impl_(std::make_unique<ServerImpl>()),
+      message_processor_(std::make_shared<ServerMessageProcessor>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
 
-  message_processor_.RegisterMessageCallback(ReservedClientMessage::kConnect,
-      [=] (std::shared_ptr<network::ReceiveMessage> message,
-           uint8_t recipient_id) {
+  REGISTER_MESSAGE_CALLBACK(ReservedClientMessage::kConnect, {
   });
 
-  message_processor_.RegisterMessageCallback(ReservedClientMessage::kHeartbeat,
-      [=] (std::shared_ptr<network::ReceiveMessage> message,
-           uint8_t recipient_id) {
+  REGISTER_MESSAGE_CALLBACK(ReservedClientMessage::kHeartbeat, {
     std::cout << "Client Sent a Heartbeat!" << std::endl;
-    auto ack = message_processor_.
-        CreateMessage(ReservedServerMessage::kAckHeartbeat, recipient_id);
-    ack->Send();
+    auto ack = CreateMessage(ReservedServerMessage::kAckClientHeartbeat);
+    ack->Send(recipient_id);
   });
 }
 
@@ -88,7 +89,7 @@ void Server::Start() {
 
   if (success == -1) throw std::domain_error("Unable to bind port.");
 
-  message_processor_.StartReceiving([=] () {
+  message_processor_->StartReceiving([=] () {
     if (impl_->socket_->WaitToRead(2500)) {
       auto receive = impl_->socket_->ReceiveFrom();
       auto buffer = std::get<0>(receive);
@@ -100,15 +101,14 @@ void Server::Start() {
         }
       }
 
+      // Client is not connected, only accept connect messages.
       if (buffer->ReadByte() == ReservedClientMessage::kConnect) {
         // Got a new recipient, add him to the list.
-        uint8_t id = ++g_id_count;
+        uint8_t id = message_processor_->CreateRecipient();
         impl_->recipients_[id] = address;
-        message_processor_.AddRecipientId(id);
 
-        auto handshake = message_processor_.
-            CreateMessage(ReservedServerMessage::kHandshake, id);
-        handshake->Send();
+        auto handshake = CreateMessage(ReservedServerMessage::kAckClientConnect);
+        handshake->Send(id);
 
         return std::make_pair(id, buffer);
       }
@@ -123,20 +123,20 @@ void Server::Start() {
 }
 
 void Server::Stop() {
-  message_processor_.Stop();
+  message_processor_->Stop();
   impl_->socket_->Close();
 }
 
 std::shared_ptr<ServerMessage> Server::CreateMessage(int type) {
-  return message_processor_.CreateMessage(type);
+  return std::make_shared<ServerMessage>(message_processor_, type);
 }
 
 void Server::ProcessMessages() {
-  message_processor_.Process();
+  message_processor_->Process();
 }
 
 void Server::SendMessages() {
-  message_processor_.Send([=] (const ByteStream& buffer, int recipient_id) {
+  message_processor_->Send([=] (const ByteStream& buffer, int recipient_id) {
     for (auto recipient : impl_->recipients_) {
       if (recipient.first == recipient_id) {
         impl_->socket_->SendTo(buffer, *recipient.second);

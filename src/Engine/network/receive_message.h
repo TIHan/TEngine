@@ -36,9 +36,9 @@ namespace engine {
 namespace network {
 
 enum ReservedServerMessage {
-  kPrint = 248,
-  kHandshake = 249,
-  kAckHeartbeat = 250,
+  kAckClientConnect = 248,
+  kAckClientDisconnect = 250,
+  kAckClientHeartbeat = 249
 };
 
 enum ReservedClientMessage {
