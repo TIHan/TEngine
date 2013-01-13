@@ -32,8 +32,6 @@
   message_processor_.RegisterMessageCallback(type, \
       [=] (std::shared_ptr<network::ReceiveMessage> message) func) \
 
-using namespace engine::lib;
-
 namespace engine {
 namespace network {
 

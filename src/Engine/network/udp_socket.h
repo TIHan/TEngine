@@ -54,11 +54,11 @@ public:
   virtual void Open();
   virtual void Open(const std::string& address, const std::string& port);
 
-  virtual std::tuple<std::shared_ptr<lib::ByteStream>,
+  virtual std::tuple<std::shared_ptr<ByteStream>,
                      std::shared_ptr<SocketAddress>> ReceiveFrom();
 
-  virtual int Send(const lib::ByteStream& data);
-  virtual int SendTo(const lib::ByteStream& data,
+  virtual int Send(const ByteStream& data);
+  virtual int SendTo(const ByteStream& data,
                      const SocketAddress& address);
 
   virtual bool WaitToRead(int usec);

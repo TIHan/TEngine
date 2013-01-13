@@ -27,14 +27,12 @@
 
 #include "client_message_processor.h"
 
-using namespace engine::lib;
-
 namespace engine {
 namespace network {
 
 ClientMessageProcessor::ClientMessageProcessor()
     : send_buffer_(
-        std::make_shared<std::queue<std::shared_ptr<lib::ByteStream>>>()) {
+        std::make_shared<std::queue<std::shared_ptr<ByteStream>>>()) {
   receive_close_ = false;
 }
 

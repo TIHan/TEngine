@@ -50,12 +50,12 @@ public:
 protected:
   MessageBase(int type);
 
-  std::shared_ptr<lib::ByteStream> buffer_;
+  std::shared_ptr<ByteStream> buffer_;
   int type_;
 };
 
 inline MessageBase::MessageBase(int type)
-    : buffer_(std::make_shared<lib::ByteStream>()) {;
+    : buffer_(std::make_shared<ByteStream>()) {;
   if (type < 0) throw std::out_of_range("type is below 0.");
 
   type_ = type;

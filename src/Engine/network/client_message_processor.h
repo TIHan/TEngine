@@ -31,8 +31,6 @@
 #include "receive_message.h"
 #include "client_message.h"
 
-using namespace engine::lib;
-
 namespace engine {
 namespace network {
 

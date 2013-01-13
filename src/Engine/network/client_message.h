@@ -36,22 +36,22 @@ namespace network {
 class ClientMessage : public MessageBase {
 public:
   ClientMessage(
-      std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer,
+      std::shared_ptr<std::queue<std::shared_ptr<ByteStream>>> send_buffer,
       int type);
   virtual ~ClientMessage();
 
   void Send();
 
 private:
-  std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer_;
+  std::shared_ptr<std::queue<std::shared_ptr<ByteStream>>> send_buffer_;
 };
 
 inline ClientMessage::ClientMessage(
-      std::shared_ptr<std::queue<std::shared_ptr<lib::ByteStream>>> send_buffer,
+      std::shared_ptr<std::queue<std::shared_ptr<ByteStream>>> send_buffer,
       int type)
     : MessageBase(type), send_buffer_(send_buffer) {
   if (send_buffer_->empty()) {
-    send_buffer_->push(std::make_shared<lib::ByteStream>());
+    send_buffer_->push(std::make_shared<ByteStream>());
   }
 }
 

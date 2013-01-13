@@ -80,7 +80,7 @@ void UdpSocket::Open(const std::string& address, const std::string& port) {
 /*!
   *
   */
-std::tuple<std::shared_ptr<lib::ByteStream>,
+std::tuple<std::shared_ptr<ByteStream>,
            std::shared_ptr<SocketAddress>> UdpSocket::ReceiveFrom() {
   struct sockaddr_storage sock_addr_storage;
   socklen_t addr_len = sizeof(sock_addr_storage);
@@ -94,7 +94,7 @@ std::tuple<std::shared_ptr<lib::ByteStream>,
   int bytes = recvfrom(impl_->socket_, data,
                        data_size, 0, sock_addr, &addr_len);
 
-  auto buffer = std::make_shared<lib::ByteStream>();
+  auto buffer = std::make_shared<ByteStream>();
   if (bytes != -1)
     buffer->WriteBuffer(*receive_buffer_, bytes);
   
@@ -107,7 +107,7 @@ std::tuple<std::shared_ptr<lib::ByteStream>,
 /*!
   *
   */
-int UdpSocket::Send(const lib::ByteStream& data) {
+int UdpSocket::Send(const ByteStream& data) {
   char* data_send = reinterpret_cast<char*>
       (const_cast<uint8_t*>(data.GetRaw()));
   int data_size = static_cast<int>(data.GetSize());
@@ -121,7 +121,7 @@ int UdpSocket::Send(const lib::ByteStream& data) {
 /*!
   *
   */
-int UdpSocket::SendTo(const lib::ByteStream& data,
+int UdpSocket::SendTo(const ByteStream& data,
                       const SocketAddress& address) {
   char* data_send = reinterpret_cast<char*>(const_cast<uint8_t*>(
                                             data.GetRaw()));

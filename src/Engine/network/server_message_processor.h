@@ -29,9 +29,6 @@
 #define SERVER_MESSAGE_PROCESSOR_H_
 
 #include "receive_message.h"
-#include <unordered_map>
-
-using namespace engine::lib;
 
 namespace engine {
 namespace network {

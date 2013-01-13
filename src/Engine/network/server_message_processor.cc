@@ -27,8 +27,6 @@
 
 #include "server_message_processor.h"
 
-using namespace engine::lib;
-
 namespace engine {
 namespace network {
 

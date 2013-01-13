@@ -30,8 +30,6 @@
 
 #include <engine_lib.h>
 
-using namespace engine::lib;
-
 namespace engine {
 namespace network {
 

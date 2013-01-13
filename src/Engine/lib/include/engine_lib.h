@@ -27,3 +27,5 @@
 
 #include "../common.h"
 #include "../byte_stream.h"
+
+using namespace engine::lib;

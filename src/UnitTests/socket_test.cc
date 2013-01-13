@@ -21,7 +21,7 @@ TEST_F(SocketTest, SendAndReceive) {
 
   auto client = std::make_shared<network::UdpSocket>();
   client->Open("127.0.0.1", "1337");
-  auto clientStream = std::make_shared<lib::ByteStream>();
+  auto clientStream = std::make_shared<ByteStream>();
   clientStream->WriteString("Hello");
   client->Send(*clientStream);
 
@@ -55,7 +55,7 @@ TEST_F(SocketTest, SendAndReceive2) {
   auto client = std::make_shared<network::UdpSocket>();
   client->Open("127.0.0.1", "1337");
 
-  auto clientStream = std::make_shared<lib::ByteStream>();
+  auto clientStream = std::make_shared<ByteStream>();
   clientStream->Write<int>(2147483647);
   int bytes = client->Send(*clientStream);
   EXPECT_EQ(4, bytes);
