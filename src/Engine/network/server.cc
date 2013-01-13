@@ -53,8 +53,6 @@ ServerImpl::ServerImpl() {
   socket_ = std::make_unique<UdpSocket>(options);
 }
 
-std::atomic_uint8_t g_id_count;
-
 Server::Server(int port)
     : impl_(std::make_unique<ServerImpl>()),
       message_processor_(std::make_shared<ServerMessageProcessor>()) {
