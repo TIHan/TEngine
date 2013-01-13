@@ -278,7 +278,7 @@ int SocketBase::Bind(uint16_t port) {
   */
 std::string SocketBase::GetAddress() {
   if (!impl_->current_address_info_)
-    return lib::EmptyString();
+    return stdext::string::empty();
 
   return GetSocketAddress(*reinterpret_cast<struct sockaddr_storage*>(
                           impl_->current_address_info_->ai_addr));

@@ -181,7 +181,7 @@ inline std::string ByteStream::ReadString() {
       return string.data();
     }
   }
-  return EmptyString();
+  return stdext::string::empty();
 }
 
 /*!

@@ -66,7 +66,8 @@ void UdpSocket::Init() {
   *
   */
 void UdpSocket::Open() {
-  impl_->Open(SOCK_DGRAM, AI_PASSIVE, lib::EmptyString(), lib::EmptyString());
+  impl_->Open(SOCK_DGRAM, AI_PASSIVE, stdext::string::empty(),
+              stdext::string::empty());
 }
 
 /*!

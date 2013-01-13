@@ -26,4 +26,4 @@
 */
 
 #include "../common.h"
-#include "../bytestream.h"
+#include "../byte_stream.h"

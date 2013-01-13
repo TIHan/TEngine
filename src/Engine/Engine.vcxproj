@@ -120,7 +120,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include=".\lib\bytestream.h" />
+    <ClInclude Include="lib\byte_stream.h" />
     <ClInclude Include=".\lib\include\engine_lib.h" />
     <ClInclude Include=".\lib\common.h" />
     <ClInclude Include="lib\event.h" />

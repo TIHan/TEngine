@@ -57,13 +57,12 @@ unique_ptr<T> make_unique(Args&&... args) {
 
 } // end std namespace
 
-namespace engine {
-namespace lib {
+namespace stdext {
+namespace string {
 
-inline std::string EmptyString() { return ""; }
-inline void Print(std::string string) { std::cout << string << "\n"; }
+inline std::string empty() { return ""; }
 
-} // end lib namespace
-} // end engine namespace
+} // end stdext namespace
+} // end string namespace
 
 #endif // COMMON_H_

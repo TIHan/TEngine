@@ -33,9 +33,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include=".\lib\bytestream.h">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
     <ClInclude Include=".\lib\common.h">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
@@ -83,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="network\server_message_processor.h">
       <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\byte_stream.h">
+      <Filter>Header Files\lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
