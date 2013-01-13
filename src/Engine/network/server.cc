@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012, William F. Smith
+  Copyright (c) 2012-2013, William F. Smith
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -93,9 +93,9 @@ void Server::Start() {
       auto buffer = std::get<0>(receive);
       auto address = std::get<1>(receive);
       
-      for (auto recipient : impl_->clients_) {
-        if (*recipient.second == *address) {
-          return std::make_pair(recipient.first, buffer);
+      for (auto client : impl_->clients_) {
+        if (*client.second == *address) {
+          return std::make_pair(client.first, buffer);
         }
       }
 
@@ -140,6 +140,10 @@ void Server::SendMessages() {
       }
     }
   });
+}
+
+int Server::ClientCount() {
+  return static_cast<int>(impl_->clients_.size());
 }
 
 int Server::port() const {

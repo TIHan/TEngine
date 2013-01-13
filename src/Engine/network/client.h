@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012, William F. Smith
+  Copyright (c) 2012-2013, William F. Smith
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -28,30 +28,13 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
+#include "client_interface.h"
 #include "client_message_processor.h"
 
 namespace engine {
 namespace network {
 
 const int kMaxClientTransfer = 128;
-
-class ClientInterface {
-public:
-  virtual ~ClientInterface() {}
-
-  virtual void Connect(const std::string& address,
-                       const std::string& port) = 0;
-  virtual void Disconnect() = 0;
-
-  virtual std::shared_ptr<ClientMessage> CreateMessage(int type) = 0;
-  virtual void RegisterMessageCallback(int type,
-      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
-
-  // Message Handlers
-  virtual void OnConnect(std::function<void()> func) = 0;
-  virtual void OnDisconnect(std::function<void()> func) = 0;
-  virtual void SendHeartbeat() = 0;
-};
 
 class ClientImpl;
 class Client : public virtual ClientInterface {

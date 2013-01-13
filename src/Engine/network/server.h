@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012, William F. Smith
+  Copyright (c) 2012-2013, William F. Smith
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -28,30 +28,14 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
+#include "server_interface.h"
 #include "server_message_processor.h"
-#include "server_message.h"
 
 namespace engine {
 namespace network {
 
 const int kMaxClients = 64;
 const int kMaxServerPerClientTransfer = 8192;
-
-class ServerInterface {
-public:
-  virtual ~ServerInterface() {}
-
-  virtual void Start() = 0;
-  virtual void Stop() = 0;
-
-  virtual std::shared_ptr<ServerMessage> CreateMessage(int type) = 0;
-
-  virtual void ProcessMessages() = 0;
-  virtual void SendMessages() = 0;
-
-  /* Accessors / Mutators */
-  virtual int port() const = 0;
-};
 
 class ServerImpl;
 class Server : public virtual ServerInterface {
@@ -66,6 +50,8 @@ public:
 
   virtual void ProcessMessages();
   virtual void SendMessages();
+
+  virtual int ClientCount();
 
   /* Accessors / Mutators */
   virtual int port() const;

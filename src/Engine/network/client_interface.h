@@ -25,7 +25,34 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../common.h"
-#include "../byte_stream.h"
+#ifndef CLIENT_INTERFACE_H_
+#define CLIENT_INTERFACE_H_
 
-using namespace engine::lib;
+#include "receive_message.h"
+#include "client_message.h"
+
+namespace engine {
+namespace network {
+
+class ClientInterface {
+public:
+  virtual ~ClientInterface() {}
+
+  virtual void Connect(const std::string& address,
+                       const std::string& port) = 0;
+  virtual void Disconnect() = 0;
+
+  virtual std::shared_ptr<ClientMessage> CreateMessage(int type) = 0;
+  virtual void RegisterMessageCallback(int type,
+      std::function<void(std::shared_ptr<ReceiveMessage>)> func) = 0;
+
+  // Message Handlers
+  virtual void OnConnect(std::function<void()> func) = 0;
+  virtual void OnDisconnect(std::function<void()> func) = 0;
+  virtual void SendHeartbeat() = 0;
+};
+
+} // end network namespace
+} // end engine namespace
+
+#endif // CLIENT_INTERFACE_H_

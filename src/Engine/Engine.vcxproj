@@ -126,6 +126,7 @@
     <ClInclude Include="lib\event.h" />
     <ClInclude Include="lib\event_aggregator.h" />
     <ClInclude Include="network\client.h" />
+    <ClInclude Include="network\client_interface.h" />
     <ClInclude Include="network\client_message.h" />
     <ClInclude Include="network\client_message_processor.h" />
     <ClInclude Include="network\include\engine_network.h" />
@@ -135,6 +136,7 @@
     <ClInclude Include="network\message_base.h" />
     <ClInclude Include="network\receive_message.h" />
     <ClInclude Include="network\server.h" />
+    <ClInclude Include="network\server_interface.h" />
     <ClInclude Include="network\server_message.h" />
     <ClInclude Include="network\server_message_processor.h" />
   </ItemGroup>

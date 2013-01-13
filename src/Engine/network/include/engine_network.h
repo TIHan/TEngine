@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2012, William F. Smith
+  Copyright (c) 2012-2013, William F. Smith
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without

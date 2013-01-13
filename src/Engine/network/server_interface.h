@@ -25,7 +25,32 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../common.h"
-#include "../byte_stream.h"
+#ifndef SERVER_INTERFACE_H_
+#define SERVER_INTERFACE_H_
 
-using namespace engine::lib;
+#include "receive_message.h"
+#include "server_message.h"
+
+namespace engine {
+namespace network {
+
+class ServerInterface {
+public:
+  virtual ~ServerInterface() {}
+
+  virtual void Start() = 0;
+  virtual void Stop() = 0;
+
+  virtual std::shared_ptr<ServerMessage> CreateMessage(int type) = 0;
+
+  virtual void ProcessMessages() = 0;
+  virtual void SendMessages() = 0;
+
+  /* Accessors / Mutators */
+  virtual int port() const = 0;
+};
+
+} // end network namespace
+} // end engine namespace
+
+#endif // SERVER_INTERFACE_H_

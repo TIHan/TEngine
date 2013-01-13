@@ -1,108 +1,102 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Header Files\lib">
+    <Filter Include="lib">
       <UniqueIdentifier>{80be8373-d92a-4039-830e-893dff3e4f10}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\network">
+    <Filter Include="lib\include">
+      <UniqueIdentifier>{ad81bc26-a16f-4c82-ae14-0fec8011abbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
       <UniqueIdentifier>{9bd3fc34-8ba0-4876-90b2-17a81c74e410}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\lib">
-      <UniqueIdentifier>{0d113abb-a689-4ac1-9eb7-7c42e4e175f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\network">
-      <UniqueIdentifier>{d79dcd6e-a3ac-4533-ad72-eece3601eb42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\network\include">
+    <Filter Include="network\include">
       <UniqueIdentifier>{c9b0c6a1-9e61-4c05-b967-cef566d4ab73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\lib\include">
-      <UniqueIdentifier>{ad81bc26-a16f-4c82-ae14-0fec8011abbb}</UniqueIdentifier>
+    <Filter Include="network\domain">
+      <UniqueIdentifier>{d79719b5-c8b8-4ebf-9f7e-5b348d324d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network\infrastructure">
+      <UniqueIdentifier>{5b938e7b-620c-4342-89ac-61f94e2d6d40}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include=".\lib\common.h">
-      <Filter>Header Files\lib</Filter>
+      <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include=".\lib\include\engine_lib.h">
-      <Filter>Header Files\lib\include</Filter>
-    </ClInclude>
-    <ClInclude Include=".\network\socket_base.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include=".\network\socket_base-impl.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include=".\network\udp_socket.h">
-      <Filter>Header Files\network</Filter>
+      <Filter>lib\include</Filter>
     </ClInclude>
     <ClInclude Include="network\include\engine_network.h">
-      <Filter>Header Files\network\include</Filter>
+      <Filter>network\include</Filter>
     </ClInclude>
     <ClInclude Include="network\server.h">
-      <Filter>Header Files\network</Filter>
+      <Filter>network</Filter>
     </ClInclude>
     <ClInclude Include="lib\event.h">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="network\receive_message.h">
-      <Filter>Header Files\network</Filter>
+      <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="network\client.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="network\client_message.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_message.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="network\message_base.h">
-      <Filter>Header Files\network</Filter>
+      <Filter>network</Filter>
     </ClInclude>
     <ClInclude Include="lib\event_aggregator.h">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="network\client_message_processor.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_message_processor.h">
-      <Filter>Header Files\network</Filter>
+      <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="lib\byte_stream.h">
-      <Filter>Header Files\lib</Filter>
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="network\client_message.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="network\client_message_processor.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="network\message_base.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="network\receive_message.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_message.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_message_processor.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
+    <ClInclude Include=".\network\udp_socket.h">
+      <Filter>network\infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include=".\network\socket_base.h">
+      <Filter>network\infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include=".\network\socket_base-impl.h">
+      <Filter>network\infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="network\client_interface.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_interface.h">
+      <Filter>network\domain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include=".\network\socket_base.cc">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include=".\network\udp_socket.cc">
-      <Filter>Source Files\network</Filter>
+    <ClCompile Include="network\client.cc">
+      <Filter>network</Filter>
     </ClCompile>
     <ClCompile Include="network\server.cc">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
-    <ClCompile Include="network\client.cc">
-      <Filter>Source Files\network</Filter>
+      <Filter>network</Filter>
     </ClCompile>
     <ClCompile Include="network\client_message_processor.cc">
-      <Filter>Source Files\network</Filter>
+      <Filter>network\domain</Filter>
     </ClCompile>
     <ClCompile Include="network\server_message_processor.cc">
-      <Filter>Source Files\network</Filter>
+      <Filter>network\domain</Filter>
+    </ClCompile>
+    <ClCompile Include=".\network\udp_socket.cc">
+      <Filter>network\infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include=".\network\socket_base.cc">
+      <Filter>network\infrastructure</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
