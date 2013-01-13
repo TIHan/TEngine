@@ -32,7 +32,7 @@
 #define REGISTER_MESSAGE_CALLBACK(type, func) \
   message_processor_->RegisterMessageCallback(type, \
       [=] (std::shared_ptr<network::ReceiveMessage> message, \
-          uint8_t recipient_id) func) \
+          uint8_t client_id) func) \
 
 namespace engine {
 namespace network {
@@ -42,7 +42,7 @@ public:
   ServerImpl();
 
   std::unique_ptr<UdpSocket> socket_;
-  std::unordered_map<uint8_t, std::shared_ptr<SocketAddress>> recipients_;
+  std::unordered_map<uint8_t, std::shared_ptr<SocketAddress>> clients_;
 };
 
 ServerImpl::ServerImpl() {
@@ -65,7 +65,7 @@ Server::Server(int port)
   REGISTER_MESSAGE_CALLBACK(ReservedClientMessage::kHeartbeat, {
     std::cout << "Client Sent a Heartbeat!" << std::endl;
     auto ack = CreateMessage(ReservedServerMessage::kAckClientHeartbeat);
-    ack->Send(recipient_id);
+    ack->Send(client_id);
   });
 }
 
@@ -93,7 +93,7 @@ void Server::Start() {
       auto buffer = std::get<0>(receive);
       auto address = std::get<1>(receive);
       
-      for (auto recipient : impl_->recipients_) {
+      for (auto recipient : impl_->clients_) {
         if (*recipient.second == *address) {
           return std::make_pair(recipient.first, buffer);
         }
@@ -102,7 +102,7 @@ void Server::Start() {
       // Client is not connected, only accept connect messages.
       if (buffer->ReadByte() == ReservedClientMessage::kConnect) {
         auto id = ++id_count_;
-        impl_->recipients_[id] = address;
+        impl_->clients_[id] = address;
 
         auto handshake = CreateMessage(ReservedServerMessage::kAckClientConnect);
         handshake->Send(id);
@@ -133,10 +133,10 @@ void Server::ProcessMessages() {
 }
 
 void Server::SendMessages() {
-  message_processor_->Send([=] (const ByteStream& buffer, int recipient_id) {
-    for (auto recipient : impl_->recipients_) {
-      if (recipient.first == recipient_id) {
-        impl_->socket_->SendTo(buffer, *recipient.second);
+  message_processor_->Send([=] (const ByteStream& buffer, int client_id) {
+    for (auto client : impl_->clients_) {
+      if (client.first == client_id) {
+        impl_->socket_->SendTo(buffer, *client.second);
       }
     }
   });
