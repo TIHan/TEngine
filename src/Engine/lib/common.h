@@ -28,23 +28,40 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+// Common
 #include <cstdint>
 #include <string>
 #include <memory>
 #include <functional>
-#include <tuple>
 #include <algorithm>
 #include <stdexcept>
-#include <vector>
+#include <tuple>
+
+// Containers
+#include <array>
+#include <bitset>
+#include <deque>
+#include <forward_list>
 #include <list>
-#include <thread>
-#include <queue>
-#include <iostream>
 #include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+
+// Input / Output
+#include <iostream>
+
+// Threading
+#include <thread>
 #include <atomic>
-#include <chrono>
 #include <mutex>
 #include <future>
+
+// Other
+#include <chrono>
 
 namespace std {
 
