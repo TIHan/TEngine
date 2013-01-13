@@ -74,6 +74,7 @@ private:
   std::unique_ptr<ServerImpl> impl_;
 
   std::shared_ptr<ServerMessageProcessor> message_processor_;
+  uint8_t id_count_;
   int port_;
 };
 

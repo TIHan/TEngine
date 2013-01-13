@@ -103,8 +103,7 @@ void Server::Start() {
 
       // Client is not connected, only accept connect messages.
       if (buffer->ReadByte() == ReservedClientMessage::kConnect) {
-        // Got a new recipient, add him to the list.
-        uint8_t id = message_processor_->CreateRecipient();
+        auto id = ++id_count_;
         impl_->recipients_[id] = address;
 
         auto handshake = CreateMessage(ReservedServerMessage::kAckClientConnect);

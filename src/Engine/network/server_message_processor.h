@@ -36,15 +36,71 @@ using namespace engine::lib;
 namespace engine {
 namespace network {
 
-struct TwoWayBuffer {
-  TwoWayBuffer() {
-    send = std::make_shared<std::queue<std::shared_ptr<ByteStream>>>();
-    receive = std::make_shared<std::queue<std::shared_ptr<ByteStream>>>();
-  }
+class ServerPacket : public ByteStream {
+public:
+  ServerPacket(int client_id);
+  virtual ~ServerPacket();
 
-  std::shared_ptr<std::queue<std::shared_ptr<ByteStream>>> send;
-  std::shared_ptr<std::queue<std::shared_ptr<ByteStream>>> receive;
+  // Accessors / Mutators
+  int client_id();
+
+private:
+  int client_id_;
 };
+
+inline ServerPacket::ServerPacket(int client_id) {
+  client_id_ = client_id;
+}
+
+inline ServerPacket::~ServerPacket() {
+}
+
+inline int ServerPacket::client_id() {
+  return client_id_;
+}
+
+class ServerChannel {
+public:
+  ServerChannel();
+  virtual ~ServerChannel();
+
+  void Push(std::shared_ptr<ByteStream> stream, int client_id);
+  void Flush(std::function<void(std::shared_ptr<ServerPacket> packet)> func);
+
+private:
+  std::vector<std::shared_ptr<ServerPacket>> packet_buffer_;
+  std::mutex mutex_;
+};
+
+inline ServerChannel::ServerChannel() {
+}
+
+inline ServerChannel::~ServerChannel() {
+}
+
+inline void ServerChannel::Push(std::shared_ptr<ByteStream> stream, 
+                                       int client_id) {
+  auto packet = std::make_shared<ServerPacket>(client_id);
+
+  packet->SwapStreamBuffer(stream);
+
+  mutex_.lock();
+  packet_buffer_.push_back(packet);
+  mutex_.unlock();
+}
+
+inline void ServerChannel::Flush(
+    std::function<void(std::shared_ptr<ServerPacket> packet)> func) {
+  std::vector<std::shared_ptr<ServerPacket>> packet_buffer;
+
+  mutex_.lock();
+  packet_buffer.swap(packet_buffer_);
+  mutex_.unlock();
+
+  for (auto packet : packet_buffer) {
+    func(packet);
+  }
+}
 
 class ServerMessageProcessor {
 public:
@@ -62,34 +118,19 @@ public:
   virtual void RegisterMessageCallback(int type,
       std::function<void(std::shared_ptr<ReceiveMessage>, int)> func);
 
-  virtual uint8_t CreateRecipient();
-  virtual void RemoveRecipientId(uint8_t id);
-  virtual std::unique_ptr<std::list<uint8_t>> GetAllRecipientIds();
-
-  // Send buffer
-  virtual int GetSendBufferSize(uint8_t recipient_id);
-  virtual void PushBufferOnSendBuffer(uint8_t recipient_id,
-                                      std::shared_ptr<ByteStream> buffer);
-  virtual void WriteStreamOnSendBuffer(uint8_t recipient_id,
-                                       std::shared_ptr<ByteStream> buffer);
+  virtual void PushOnSend(std::shared_ptr<ByteStream> stream, int client_id);
 
 private:
-  // RECEVE
-  std::mutex receive_mutex_;
   std::thread receive_thread_;
   std::atomic_bool receive_close_;
   std::map<int,
            std::function<void(std::shared_ptr<ReceiveMessage>,
                               int)>> callbacks_;
-  // END RECEIVE
 
-  // SEND
-  std::mutex send_mutex_;
   std::future<void> send_async_;
-  // END SEND
 
-  std::unordered_map<uint8_t, std::shared_ptr<TwoWayBuffer>> recipient_buffers_;
-  std::atomic_uint8_t id_count_;
+  ServerChannel receive_channel_;
+  ServerChannel send_channel_;
 };
 
 } // end network namespace

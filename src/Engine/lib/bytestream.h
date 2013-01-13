@@ -50,7 +50,7 @@ public:
   void WriteString(const std::string& string);
   void WriteBuffer(const std::vector<uint8_t>& buffer);
   void WriteBuffer(const std::vector<uint8_t>& buffer, int size);
-  void WriteStream(std::shared_ptr<ByteStream> byteStream);
+  void WriteStream(std::shared_ptr<ByteStream> stream);
 
   template <typename T>
   T Read();
@@ -61,9 +61,11 @@ public:
   uint8_t ReadByte();
   void WriteByte(uint8_t byte);
 
+  void SwapStreamBuffer(std::shared_ptr<ByteStream> stream);
+  bool CanRead();
+
   /* Accessors / Mutators */
   int read_position() const;
-  void set_read_position(int position);
 
 private:
   void Init();
@@ -220,13 +222,13 @@ inline void ByteStream::WriteBuffer(const std::vector<uint8_t>& buffer,
 /*!
   *
   */
-inline void ByteStream::WriteStream(std::shared_ptr<ByteStream> byteStream) {
-  int revert_position = byteStream->read_position();
-  byteStream->set_read_position(0);
-  for (int i = 0; i < byteStream->GetSize(); ++i) {
-    WriteByte(byteStream->ReadByte());
+inline void ByteStream::WriteStream(std::shared_ptr<ByteStream> stream) {
+  int revert_position = stream->read_position();
+  stream->read_position_ = 0;
+  for (int i = 0; i < stream->GetSize(); ++i) {
+    WriteByte(stream->ReadByte());
   }
-  byteStream->set_read_position(revert_position);
+  stream->read_position_ = revert_position;
 }
 
 /*!
@@ -246,15 +248,22 @@ inline void ByteStream::WriteByte(uint8_t byte) {
 /*!
   *
   */
-inline int ByteStream::read_position() const {
-  return read_position_;
+inline void ByteStream::SwapStreamBuffer(std::shared_ptr<ByteStream> stream) {
+  buffer_.swap(stream->buffer_);
 }
 
 /*!
   *
   */
-inline void ByteStream::set_read_position(int position) {
-  read_position_ = position;
+inline bool ByteStream::CanRead() {
+  return read_position_ < GetSize();
+}
+
+/*!
+  *
+  */
+inline int ByteStream::read_position() const {
+  return read_position_;
 }
 
 } // end lib namespace

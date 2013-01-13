@@ -40,7 +40,7 @@ public:
   virtual ~ServerMessage();
 
   void Send();
- void ServerMessage::Send(uint8_t recipient_id);
+  void Send(int client_id);
 
 private:
   std::shared_ptr<ServerMessageProcessor> processor_;
@@ -54,23 +54,11 @@ inline ServerMessage::ServerMessage(
 inline ServerMessage::~ServerMessage() {
 }
 
-inline void ServerMessage::Send() {
-  for (auto id : *processor_->GetAllRecipientIds()) {
-    Send(id);
-  }
-}
-
-inline void ServerMessage::Send(uint8_t recipient_id) {
+inline void ServerMessage::Send(int client_id) {
   if (buffer_->GetSize() > kMaximumTransmissionUnit)
     throw std::out_of_range("Message is too big.");
 
-  // Do we have enough room?
-  if (processor_->GetSendBufferSize(recipient_id) + 
-      buffer_->GetSize() > kMaximumTransmissionUnit) {
-    processor_->PushBufferOnSendBuffer(recipient_id, buffer_);
-  } else {
-    processor_->WriteStreamOnSendBuffer(recipient_id, buffer_);
-  }
+  processor_->PushOnSend(buffer_, client_id);
 }
 
 } // end network namespace
