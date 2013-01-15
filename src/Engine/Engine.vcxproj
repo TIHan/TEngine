@@ -136,9 +136,11 @@
     <ClInclude Include="network\message_base.h" />
     <ClInclude Include="network\receive_message.h" />
     <ClInclude Include="network\server.h" />
+    <ClInclude Include="network\server_channel.h" />
     <ClInclude Include="network\server_interface.h" />
     <ClInclude Include="network\server_message.h" />
     <ClInclude Include="network\server_message_processor.h" />
+    <ClInclude Include="network\server_packet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\network\socket_base.cc" />

@@ -27,7 +27,6 @@
 
 #include "server.h"
 #include "udp_socket.h"
-#include <unordered_map>
 
 #define REGISTER_MESSAGE_CALLBACK(type, func) \
   message_processor_->RegisterMessageCallback(type, \
@@ -39,7 +38,7 @@ namespace network {
 
 class ServerImpl {
 public:
-  ServerImpl();
+  ServerImpl(); 
 
   std::unique_ptr<UdpSocket> socket_;
   std::unordered_map<uint8_t, std::shared_ptr<SocketAddress>> clients_;
@@ -125,7 +124,7 @@ void Server::Stop() {
 }
 
 std::shared_ptr<ServerMessage> Server::CreateMessage(int type) {
-  return std::make_shared<ServerMessage>(message_processor_, type);
+  return message_processor_->CreateMessage(type, std::move(GetClientIds()));
 }
 
 void Server::ProcessMessages() {
@@ -142,8 +141,12 @@ void Server::SendMessages() {
   });
 }
 
-int Server::ClientCount() {
-  return static_cast<int>(impl_->clients_.size());
+std::unique_ptr<std::list<int>> Server::GetClientIds() {
+  auto clients = std::make_unique<std::list<int>>();
+  for (auto client : impl_->clients_) {
+    clients->push_back(client.first);
+  }
+  return std::move(clients);
 }
 
 int Server::port() const {

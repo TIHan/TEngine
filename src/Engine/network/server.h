@@ -51,7 +51,7 @@ public:
   virtual void ProcessMessages();
   virtual void SendMessages();
 
-  virtual int ClientCount();
+  virtual std::unique_ptr<std::list<int>> GetClientIds();
 
   /* Accessors / Mutators */
   virtual int port() const;

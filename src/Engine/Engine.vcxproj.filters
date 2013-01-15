@@ -78,6 +78,12 @@
     <ClInclude Include="network\server_interface.h">
       <Filter>network\domain</Filter>
     </ClInclude>
+    <ClInclude Include="network\server_packet.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_channel.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="network\client.cc">

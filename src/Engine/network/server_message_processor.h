@@ -29,32 +29,10 @@
 #define SERVER_MESSAGE_PROCESSOR_H_
 
 #include "receive_message.h"
+#include "server_message.h"
 
 namespace engine {
 namespace network {
-
-class ServerPacket : public ByteStream {
-public:
-  ServerPacket(int client_id);
-  virtual ~ServerPacket();
-
-  // Accessors / Mutators
-  int client_id();
-
-private:
-  int client_id_;
-};
-
-inline ServerPacket::ServerPacket(int client_id) {
-  client_id_ = client_id;
-}
-
-inline ServerPacket::~ServerPacket() {
-}
-
-inline int ServerPacket::client_id() {
-  return client_id_;
-}
 
 class ServerMessageHandler {
 public:
@@ -105,49 +83,6 @@ inline void ServerMessageHandler::Handle(
   }
 }
 
-class ServerChannel {
-public:
-  ServerChannel();
-  virtual ~ServerChannel();
-
-  void Push(std::shared_ptr<ByteStream> stream, int client_id);
-  void Flush(std::function<void(std::shared_ptr<ServerPacket> packet)> func);
-
-private:
-  std::vector<std::shared_ptr<ServerPacket>> packet_buffer_;
-  std::mutex mutex_;
-};
-
-inline ServerChannel::ServerChannel() {
-}
-
-inline ServerChannel::~ServerChannel() {
-}
-
-inline void ServerChannel::Push(std::shared_ptr<ByteStream> stream, 
-                                       int client_id) {
-  auto packet = std::make_shared<ServerPacket>(client_id);
-
-  packet->SwapStreamBuffer(stream);
-
-  mutex_.lock();
-  packet_buffer_.push_back(packet);
-  mutex_.unlock();
-}
-
-inline void ServerChannel::Flush(
-    std::function<void(std::shared_ptr<ServerPacket> packet)> func) {
-  std::vector<std::shared_ptr<ServerPacket>> packet_buffer;
-
-  mutex_.lock();
-  packet_buffer.swap(packet_buffer_);
-  mutex_.unlock();
-
-  for (auto packet : packet_buffer) {
-    func(packet);
-  }
-}
-
 class ServerMessageProcessor {
 public:
   ServerMessageProcessor();
@@ -164,7 +99,8 @@ public:
   virtual void RegisterMessageCallback(int type,
     std::function<void(std::shared_ptr<ReceiveMessage>, int)> func);
 
-  virtual void PushOnSend(std::shared_ptr<ByteStream> stream, int client_id);
+  virtual std::unique_ptr<ServerMessage> CreateMessage(int type,
+      std::shared_ptr<std::list<int>> client_ids);
 
 private:
   std::thread receive_thread_;
@@ -172,7 +108,7 @@ private:
   std::future<void> send_async_;
 
   ServerChannel receive_channel_;
-  ServerChannel send_channel_;
+  std::shared_ptr<ServerChannel> send_channel_;
   ServerMessageHandler message_handler_;
 };
 

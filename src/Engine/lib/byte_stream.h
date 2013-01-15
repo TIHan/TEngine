@@ -61,7 +61,6 @@ public:
   uint8_t ReadByte();
   void WriteByte(uint8_t byte);
 
-  void SwapStreamBuffer(std::shared_ptr<ByteStream> stream);
   bool CanRead();
 
   /* Accessors / Mutators */
@@ -243,13 +242,6 @@ inline uint8_t ByteStream::ReadByte() {
   */
 inline void ByteStream::WriteByte(uint8_t byte) {
   buffer_.push_back(byte);
-}
-
-/*!
-  *
-  */
-inline void ByteStream::SwapStreamBuffer(std::shared_ptr<ByteStream> stream) {
-  buffer_.swap(stream->buffer_);
 }
 
 /*!

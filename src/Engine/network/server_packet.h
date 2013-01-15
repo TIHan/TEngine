@@ -25,51 +25,38 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SERVER_MESSAGE_H_
-#define SERVER_MESSAGE_H_
+#ifndef SERVER_PACKET_H_
+#define SERVER_PACKET_H_
 
-#include "message_base.h"
-#include "server_channel.h"
+#include <engine_lib.h>
 
 namespace engine {
 namespace network {
 
-class ServerMessage : public MessageBase {
+class ServerPacket : public ByteStream {
 public:
-  ServerMessage(int type, std::shared_ptr<std::list<int>> client_ids,
-                std::shared_ptr<ServerChannel> channel);
-  virtual ~ServerMessage();
+  ServerPacket(int client_id);
+  virtual ~ServerPacket();
 
-  void Send();
-  void Send(int client_id);
+  // Accessors / Mutators
+  int client_id();
 
 private:
-  std::shared_ptr<std::list<int>> client_ids_;
-  std::shared_ptr<ServerChannel> channel_;
+  int client_id_;
 };
 
-inline ServerMessage::ServerMessage(int type,
-    std::shared_ptr<std::list<int>> client_ids, std::shared_ptr<ServerChannel> channel)
-    : MessageBase(type), client_ids_(client_ids), channel_(channel) {
+inline ServerPacket::ServerPacket(int client_id) {
+  client_id_ = client_id;
 }
 
-inline ServerMessage::~ServerMessage() {
+inline ServerPacket::~ServerPacket() {
 }
 
-inline void ServerMessage::Send() {
-  for (auto id : *client_ids_) {
-    Send(id);
-  }
-}
-
-inline void ServerMessage::Send(int client_id) {
-  if (buffer_->GetSize() > kMaximumTransmissionUnit)
-    throw std::out_of_range("Message is too big.");
-
-  channel_->Push(buffer_, client_id);
+inline int ServerPacket::client_id() {
+  return client_id_;
 }
 
 } // end network namespace
 } // end engine namespace
 
-#endif // SERVER_MESSAGE_H_
+#endif // SERVER_PACKET_H_

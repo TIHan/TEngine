@@ -25,51 +25,58 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SERVER_MESSAGE_H_
-#define SERVER_MESSAGE_H_
+#ifndef SERVER_CHANNEL_H_
+#define SERVER_CHANNEL_H_
 
-#include "message_base.h"
-#include "server_channel.h"
+#include "server_packet.h"
 
 namespace engine {
 namespace network {
 
-class ServerMessage : public MessageBase {
+class ServerChannel {
 public:
-  ServerMessage(int type, std::shared_ptr<std::list<int>> client_ids,
-                std::shared_ptr<ServerChannel> channel);
-  virtual ~ServerMessage();
+  ServerChannel();
+  virtual ~ServerChannel();
 
-  void Send();
-  void Send(int client_id);
+  void Push(std::shared_ptr<ByteStream> stream, int client_id);
+  void Flush(std::function<void(std::shared_ptr<ServerPacket> packet)> func);
 
 private:
-  std::shared_ptr<std::list<int>> client_ids_;
-  std::shared_ptr<ServerChannel> channel_;
+  std::vector<std::shared_ptr<ServerPacket>> packet_buffer_;
+  std::mutex mutex_;
 };
 
-inline ServerMessage::ServerMessage(int type,
-    std::shared_ptr<std::list<int>> client_ids, std::shared_ptr<ServerChannel> channel)
-    : MessageBase(type), client_ids_(client_ids), channel_(channel) {
+inline ServerChannel::ServerChannel() {
 }
 
-inline ServerMessage::~ServerMessage() {
+inline ServerChannel::~ServerChannel() {
 }
 
-inline void ServerMessage::Send() {
-  for (auto id : *client_ids_) {
-    Send(id);
+inline void ServerChannel::Push(std::shared_ptr<ByteStream> stream, 
+                                       int client_id) {
+  auto packet = std::make_shared<ServerPacket>(client_id);
+
+  packet->WriteStream(stream);
+
+  mutex_.lock();
+  packet_buffer_.push_back(packet);
+  mutex_.unlock();
+}
+
+inline void ServerChannel::Flush(
+    std::function<void(std::shared_ptr<ServerPacket> packet)> func) {
+  std::vector<std::shared_ptr<ServerPacket>> packet_buffer;
+
+  mutex_.lock();
+  packet_buffer.swap(packet_buffer_);
+  mutex_.unlock();
+
+  for (auto packet : packet_buffer) {
+    func(packet);
   }
-}
-
-inline void ServerMessage::Send(int client_id) {
-  if (buffer_->GetSize() > kMaximumTransmissionUnit)
-    throw std::out_of_range("Message is too big.");
-
-  channel_->Push(buffer_, client_id);
 }
 
 } // end network namespace
 } // end engine namespace
 
-#endif // SERVER_MESSAGE_H_
+#endif // SERVER_CHANNEL_H_

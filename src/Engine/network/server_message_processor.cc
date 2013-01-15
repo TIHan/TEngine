@@ -30,7 +30,8 @@
 namespace engine {
 namespace network {
 
-ServerMessageProcessor::ServerMessageProcessor() {
+ServerMessageProcessor::ServerMessageProcessor()
+    : send_channel_(std::make_shared<ServerChannel>()) {
   receive_close_ = false;
 }
 
@@ -53,7 +54,7 @@ void ServerMessageProcessor::StartReceiving(
 void ServerMessageProcessor::Send(
     std::function<void(const ByteStream& buffer, uint8_t recipient_id)> func) {
   send_async_ = std::async(std::launch::async, [=] {
-    send_channel_.Flush([=] (std::shared_ptr<ServerPacket> packet) {
+    send_channel_->Flush([=] (std::shared_ptr<ServerPacket> packet) {
       func(*packet, packet->client_id());
     });
   });
@@ -82,9 +83,9 @@ void ServerMessageProcessor::RegisterMessageCallback(int type,
   message_handler_.RegisterHandler(type, func);
 }
 
-void ServerMessageProcessor::PushOnSend(std::shared_ptr<ByteStream> stream,
-                                        int client_id) {
-  send_channel_.Push(stream, client_id);
+std::unique_ptr<ServerMessage> ServerMessageProcessor::CreateMessage(int type,
+    std::shared_ptr<std::list<int>> client_ids) {
+  return std::make_unique<ServerMessage>(type, client_ids, send_channel_);
 }
 
 } // end network namespace
