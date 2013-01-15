@@ -56,6 +56,55 @@ inline int ServerPacket::client_id() {
   return client_id_;
 }
 
+class ServerMessageHandler {
+public:
+  ServerMessageHandler();
+  virtual ~ServerMessageHandler();
+
+  void RegisterHandler(int type,
+      std::function<void(std::shared_ptr<ReceiveMessage>, int)> handler);
+
+  void RemoveHandler(int type);
+
+  void Handle(std::shared_ptr<ServerPacket> packet);
+
+
+private:
+  std::map<int,
+           std::function<void(std::shared_ptr<ReceiveMessage>, 
+                              int)>> handlers_;
+};
+
+inline ServerMessageHandler::ServerMessageHandler() {
+
+}
+
+inline ServerMessageHandler::~ServerMessageHandler() {
+
+}
+
+inline void ServerMessageHandler::RegisterHandler(int type, 
+    std::function<void(std::shared_ptr<ReceiveMessage>, int)> handler) {
+  handlers_[type] = handler;
+}
+
+inline void ServerMessageHandler::RemoveHandler(int type) {
+  handlers_.erase(type);
+}
+
+inline void ServerMessageHandler::Handle(
+    std::shared_ptr<ServerPacket> packet) {
+  auto message_byte = packet->ReadByte();
+  auto iter = handlers_.find(message_byte);
+  if (iter != handlers_.end()) {
+    auto handler = iter->second;
+    handler(std::make_shared<ReceiveMessage>(packet, message_byte),
+                                             packet->client_id());
+  } else {
+    throw std::logic_error("Invalid message.");
+  }
+}
+
 class ServerChannel {
 public:
   ServerChannel();
@@ -113,21 +162,18 @@ public:
   virtual void Stop();
   virtual void Process();
   virtual void RegisterMessageCallback(int type,
-      std::function<void(std::shared_ptr<ReceiveMessage>, int)> func);
+    std::function<void(std::shared_ptr<ReceiveMessage>, int)> func);
 
   virtual void PushOnSend(std::shared_ptr<ByteStream> stream, int client_id);
 
 private:
   std::thread receive_thread_;
   std::atomic_bool receive_close_;
-  std::map<int,
-           std::function<void(std::shared_ptr<ReceiveMessage>,
-                              int)>> callbacks_;
-
   std::future<void> send_async_;
 
   ServerChannel receive_channel_;
   ServerChannel send_channel_;
+  ServerMessageHandler message_handler_;
 };
 
 } // end network namespace

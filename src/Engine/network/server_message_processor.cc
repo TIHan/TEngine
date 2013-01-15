@@ -69,15 +69,7 @@ void ServerMessageProcessor::Process() {
   receive_channel_.Flush([=] (std::shared_ptr<ServerPacket> packet) {
     while (packet->CanRead()) {
       try {
-        auto message_byte = packet->ReadByte();
-        auto iter = callbacks_.find(message_byte);
-        if (iter != callbacks_.end()) {
-          auto callback = iter->second;
-          callback(std::make_shared<ReceiveMessage>(packet, message_byte),
-              packet->client_id());
-        } else {
-          throw std::logic_error("Invalid message.");
-        }
+        message_handler_.Handle(packet);
       } catch (const std::runtime_error& e) {
         throw e;
       }
@@ -87,7 +79,7 @@ void ServerMessageProcessor::Process() {
 
 void ServerMessageProcessor::RegisterMessageCallback(int type,
     std::function<void(std::shared_ptr<ReceiveMessage>, int)> func) {
-  callbacks_[type] = func;
+  message_handler_.RegisterHandler(type, func);
 }
 
 void ServerMessageProcessor::PushOnSend(std::shared_ptr<ByteStream> stream,
