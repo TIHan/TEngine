@@ -63,7 +63,7 @@ private:
   std::string server_address_;
   std::string server_port_;
   ClientMessageProcessor message_processor_;
-  std::atomic_bool connected_;
+  std::atomic<bool> connected_;
   std::function<void()> connect_func_;
   std::function<void()> disconnect_func_;
 };

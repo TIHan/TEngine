@@ -180,7 +180,7 @@ void SocketBaseImpl::Open(int socket_type, int flags,
   }
 
 #ifdef _MSC_VER
-  static std::atomic_bool once;
+  static std::atomic<bool> once;
   if (!once) {
     once = true;
     WSADATA wsa_data;

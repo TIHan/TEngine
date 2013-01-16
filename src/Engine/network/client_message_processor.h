@@ -74,7 +74,7 @@ private:
   std::queue<std::shared_ptr<ByteStream>> receive_queue_;
   std::mutex receive_mutex_;
   std::thread receive_thread_;
-  std::atomic_bool receive_close_;
+  std::atomic<bool> receive_close_;
   std::map<int,
            std::function<void(std::shared_ptr<ReceiveMessage>)>> callbacks_;
   // END RECEIVE

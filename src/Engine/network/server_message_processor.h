@@ -104,7 +104,7 @@ public:
 
 private:
   std::thread receive_thread_;
-  std::atomic_bool receive_close_;
+  std::atomic<bool> receive_close_;
   std::future<void> send_async_;
 
   ServerChannel receive_channel_;
