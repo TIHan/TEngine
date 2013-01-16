@@ -9,7 +9,7 @@ class NetworkTest : public ::testing::Test {
 #define TICK_RATE 25;
 
 TEST_F(NetworkTest, LoopTest) {
-  std::atomic_bool shutdown;
+  std::atomic<bool> shutdown;
   shutdown = false;
 
   std::thread loop1([&shutdown] {
