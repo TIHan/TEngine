@@ -54,9 +54,9 @@ static int BindSocket(int sockfd, const struct sockaddr& addr, int addrlen) {
  *
  */
 static int CloseSocket(int sockfd) {
-#ifdef __GNUC__
+#ifdef __unix__
     return close(sockfd);
-#elif _MSC_VER
+#elif _WIN32
     return closesocket(sockfd);
 #endif
 }
@@ -179,7 +179,7 @@ void SocketBaseImpl::Open(int socket_type, int flags,
       throw std::logic_error("Invalid socket type.");
   }
 
-#ifdef _MSC_VER
+#ifdef _WIN32
   static std::atomic<bool> once;
   if (!once) {
     once = true;
@@ -223,14 +223,14 @@ void SocketBaseImpl::Open(int socket_type, int flags,
 
   if (socket_ == -1) throw std::domain_error("Unable to create socket.");
 
-#ifdef _MSC_VER
+#ifdef __unix__
+if (!blocking_) {
+  fcntl(socket_, F_SETFL, O_NONBLOCK);
+}
+#elif _WIN32
   if (!blocking_) {
     u_long non_blocking = 1;
     ioctlsocket(socket_, FIONBIO, &non_blocking);
-  }
-#elif __GNUC__
-  if (!blocking_) {
-    fcntl(socket_, F_SETFL, O_NONBLOCK);
   }
 #endif
 }

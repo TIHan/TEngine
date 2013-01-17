@@ -30,17 +30,17 @@
 
 #include <engine_lib.h>
 
-#ifdef __GNUC__
+#ifdef __unix__
 # include <sys/socket.h>
-#include <sys/unistd.h>
-#include <sys/fcntl.h>
+# include <sys/unistd.h>
+# include <sys/fcntl.h>
 # include <netdb.h>
 # include <arpa/inet.h>
 # include <netinet/in.h>
 # include <cstring>
 # include <stdlib.h>
 # include <unistd.h>
-#elif _MSC_VER
+#elif _WIN32
 # include <winsock2.h>
 # include <ws2tcpip.h>
 

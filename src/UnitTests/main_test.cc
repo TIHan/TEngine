@@ -35,7 +35,7 @@ GTEST_API_ int main(int argc, char **argv) {
 
   testing::InitGoogleTest(&argc, argv);
   int results = RUN_ALL_TESTS();
-#ifdef _MSC_VER
+#ifdef _WIN32
   system("pause");
 #endif
   return results;
