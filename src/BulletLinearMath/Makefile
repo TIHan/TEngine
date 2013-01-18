@@ -1,5 +1,5 @@
 CXX		= clang++
-CXXFLAGS	= -Wall -std=c++03 -stdlib=libc++
+CXXFLAGS	= -Wall -std=c++11 -stdlib=libc++ -Wno-c++11-narrowing
 SOURCES		= $(wildcard ../../lib/bullet-2.81-rev2613/src/LinearMath/*.cpp)
 OBJECTS		= $(SOURCES:%.cpp=%.o)
 INCLUDES	= -I../../lib/bullet-2.81-rev2613/src/LinearMath
