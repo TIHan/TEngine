@@ -1,5 +1,5 @@
-CXX		= g++
-CXXFLAGS	= -Wall -Wno-variadic-macros -std=c++11 -pthread
+CXX		= clang++
+CXXFLAGS	= -Wall -std=c++11 -stdlib=libc++ -DGTEST_USE_OWN_TR1_TUPLE=1
 SOURCES		= ../../lib/gmock-1.6.0/src/gmock-all.cc ../../lib/gmock-1.6.0/gtest/src/gtest-all.cc
 OBJECTS		= $(SOURCES:%.cc=%.o)
 INCLUDES	= -I../../lib/gmock-1.6.0 -I../../lib/gmock-1.6.0/include -I../../lib/gmock-1.6.0/gtest -I../../lib/gmock-1.6.0/gtest/include

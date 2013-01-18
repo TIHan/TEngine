@@ -1,9 +1,9 @@
-CXX		= g++
-CXXFLAGS	= -Wall -Wno-variadic-macros -std=c++11 -pthread
+CXX		= clang++
+CXXFLAGS	= -Wall -std=c++11 -stdlib=libc++
 SOURCES		= $(wildcard src/Engine/lib/*.cc) $(wildcard src/Engine/network/*.cc) $(wildcard src/UnitTests/*.cc)
 OBJECTS		= $(SOURCES:%.cc=%.o)
-INCLUDES	= -Isrc/Engine/lib/include -Isrc/Engine/network/include -Ilib/gmock-1.6.0 -Ilib/gmock-1.6.0/include -Ilib/gmock-1.6.0/gtest -Ilib/gmock-1.6.0/gtest/include
-LIBS		= src/GoogleTest/libGoogleTest.a
+INCLUDES	= -Isrc/Engine/lib/include -Isrc/Engine/network/include -Ilib/gmock-1.6.0 -Ilib/gmock-1.6.0/include -Ilib/gmock-1.6.0/gtest -Ilib/gmock-1.6.0/gtest/include -Ilib/bullet-2.81-rev2613/src
+LIBS		= src/GoogleTest/libGoogleTest.a src/BulletLinearMath/libBulletLinearMath.a src/BulletDynamics/libBulletDynamics.a src/BulletCollision/libBulletCollision.a
 EXECUTABLE	= te-test
 
 release: CXXFLAGS += -O2
