@@ -203,6 +203,8 @@ void SocketBaseImpl::Open(int socket_type, int flags,
   // If the node name is empty, only pass 0 to getaddrinfo.
   if (!node_name.empty()) {
     new_node_name = static_cast<const char*>(node_name.c_str());
+  } else {
+    new_node_name = "localhost"; // HACK: This is so bad, I want to hit my face. Come back and figure it out later.
   }
 
   if (getaddrinfo(new_node_name, service_name.c_str(), &hints,
@@ -224,9 +226,9 @@ void SocketBaseImpl::Open(int socket_type, int flags,
   if (socket_ == -1) throw std::domain_error("Unable to create socket.");
 
 #ifdef __GNUC__
-if (!blocking_) {
-  fcntl(socket_, F_SETFL, O_NONBLOCK);
-}
+  if (!blocking_) {
+    fcntl(socket_, F_SETFL, O_NONBLOCK);
+  }
 #elif _WIN32
   if (!blocking_) {
     u_long non_blocking = 1;
