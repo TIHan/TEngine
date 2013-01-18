@@ -54,7 +54,7 @@ static int BindSocket(int sockfd, const struct sockaddr& addr, int addrlen) {
  *
  */
 static int CloseSocket(int sockfd) {
-#ifdef __unix__
+#ifdef __GNUC__
     return close(sockfd);
 #elif _WIN32
     return closesocket(sockfd);
@@ -223,7 +223,7 @@ void SocketBaseImpl::Open(int socket_type, int flags,
 
   if (socket_ == -1) throw std::domain_error("Unable to create socket.");
 
-#ifdef __unix__
+#ifdef __GNUC__
 if (!blocking_) {
   fcntl(socket_, F_SETFL, O_NONBLOCK);
 }

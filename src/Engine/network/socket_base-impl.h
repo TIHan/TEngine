@@ -30,7 +30,7 @@
 
 #include <engine_lib.h>
 
-#ifdef __unix__
+#ifdef __GNUC__
 # include <sys/socket.h>
 # include <sys/unistd.h>
 # include <sys/fcntl.h>
