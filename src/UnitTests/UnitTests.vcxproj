@@ -73,28 +73,24 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;$(SolutionDir)lib\bullet-2.81-rev2613\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GoogleTest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;$(SolutionDir)lib\bullet-2.81-rev2613\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GoogleTest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -103,7 +99,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;$(SolutionDir)lib\bullet-2.81-rev2613\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -111,8 +107,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GoogleTest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,7 +115,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;$(SolutionDir)lib\bullet-2.81-rev2613\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
@@ -129,8 +123,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GoogleTest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -140,8 +132,18 @@
     <ClCompile Include=".\system_test.cc" />
     <ClCompile Include="c11_test.cc" />
     <ClCompile Include="network_test.cc" />
+    <ClCompile Include="physics_test.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BulletCollision\BulletCollision.vcxproj">
+      <Project>{25a684af-97dc-4363-928b-893aac7c6998}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\BulletDynamics\BulletDynamics.vcxproj">
+      <Project>{17b63975-4f99-470f-b6b1-119842eabf96}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\BulletLinearMath\BulletLinearMath.vcxproj">
+      <Project>{b2a538d9-4bf4-44ae-b1be-72ef2dba25b5}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{f797aaa5-5886-49d9-affe-a23c77ebaa43}</Project>
     </ProjectReference>

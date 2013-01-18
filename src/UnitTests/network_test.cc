@@ -87,5 +87,3 @@ TEST_F(NetworkTest, LoopTest) {
   loop1.join();
   loop2.join();
 }
-
-                                                                               
