@@ -8,5 +8,6 @@
     <ClCompile Include="network_test.cc" />
     <ClCompile Include=".\socket_test.cc" />
     <ClCompile Include="physics_test.cc" />
+    <ClCompile Include="glfw_test.cc" />
   </ItemGroup>
 </Project>

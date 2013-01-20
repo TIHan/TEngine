@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletCollision", "src\Bull
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletDynamics", "src\BulletDynamics\BulletDynamics.vcxproj", "{17B63975-4F99-470F-B6B1-119842EABF96}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "src\GLFW\GLFW.vcxproj", "{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -96,6 +98,18 @@ Global
 		{17B63975-4F99-470F-B6B1-119842EABF96}.Release|Win32.Build.0 = Release|Win32
 		{17B63975-4F99-470F-B6B1-119842EABF96}.Release|x64.ActiveCfg = Release|x64
 		{17B63975-4F99-470F-B6B1-119842EABF96}.Release|x64.Build.0 = Release|x64
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Debug|Win32.ActiveCfg = Debug|Win32
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Debug|Win32.Build.0 = Debug|Win32
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Debug|x64.ActiveCfg = Debug|x64
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Debug|x64.Build.0 = Debug|x64
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Release|Win32.ActiveCfg = Release|Win32
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Release|Win32.Build.0 = Release|Win32
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Release|x64.ActiveCfg = Release|x64
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,5 +119,6 @@ Global
 		{B2A538D9-4BF4-44AE-B1BE-72EF2DBA25B5} = {2D76D912-2AA9-43EA-8C3D-6DED0E8480AA}
 		{25A684AF-97DC-4363-928B-893AAC7C6998} = {2D76D912-2AA9-43EA-8C3D-6DED0E8480AA}
 		{17B63975-4F99-470F-B6B1-119842EABF96} = {2D76D912-2AA9-43EA-8C3D-6DED0E8480AA}
+		{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73} = {2D76D912-2AA9-43EA-8C3D-6DED0E8480AA}
 	EndGlobalSection
 EndGlobal

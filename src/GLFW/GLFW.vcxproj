@@ -18,35 +18,59 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\enable.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\fullscreen.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\glext.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\image.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\init.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\input.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\joystick.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\stream.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\tga.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\thread.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\time.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\win32\win32_dllmain.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\win32\win32_enable.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\win32\win32_fullscreen.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\win32\win32_glext.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\win32\win32_init.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\win32\win32_joystick.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\win32\win32_thread.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\win32\win32_time.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\win32\win32_window.c" />
+    <ClCompile Include="..\..\lib\glfw-2.7.7\lib\window.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\glfw-2.7.7\lib\internal.h" />
+    <ClInclude Include="..\..\lib\glfw-2.7.7\lib\win32\platform.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and '$(VisualStudioVersion)' == ''">$(VCTargetsPath11)</VCTargetsPath>
-  </PropertyGroup>
-  <PropertyGroup Label="Globals">
-    <ProjectGuid>{57B73558-3E3C-46C9-8C9C-7553AEAC07B7}</ProjectGuid>
-    <RootNamespace>UnitTests</RootNamespace>
+    <ProjectGuid>{621EE5A1-94A6-4589-9BEA-7F4EAF64AF73}</ProjectGuid>
+    <RootNamespace>GLFW</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120_CTP_Nov2012</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120_CTP_Nov2012</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120_CTP_Nov2012</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120_CTP_Nov2012</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -73,27 +97,29 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;$(SolutionDir)lib\bullet-2.81-rev2613\src;$(SolutionDir)lib\glfw-2.7.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\glfw-2.7.7\lib;$(SolutionDir)lib\glfw-2.7.7\lib\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;$(SolutionDir)lib\bullet-2.81-rev2613\src;$(SolutionDir)lib\glfw-2.7.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\glfw-2.7.7\lib;$(SolutionDir)lib\glfw-2.7.7\lib\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -101,16 +127,17 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;$(SolutionDir)lib\bullet-2.81-rev2613\src;$(SolutionDir)lib\glfw-2.7.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\glfw-2.7.7\lib;$(SolutionDir)lib\glfw-2.7.7\lib\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -118,47 +145,18 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\lib\gmock-1.6.0\gtest\include;$(SolutionDir)\lib\gmock-1.6.0\gtest;$(SolutionDir)\lib\gmock-1.6.0;$(SolutionDir)\lib\gmock-1.6.0\include;$(SolutionDir)\src\Engine\lib\include;$(SolutionDir)\src\Engine\network\include;$(SolutionDir)lib\bullet-2.81-rev2613\src;$(SolutionDir)lib\glfw-2.7.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)lib\glfw-2.7.7\lib;$(SolutionDir)lib\glfw-2.7.7\lib\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include=".\bytestream_test.cc" />
-    <ClCompile Include=".\main_test.cc" />
-    <ClCompile Include=".\socket_test.cc" />
-    <ClCompile Include=".\system_test.cc" />
-    <ClCompile Include="c11_test.cc" />
-    <ClCompile Include="glfw_test.cc" />
-    <ClCompile Include="network_test.cc" />
-    <ClCompile Include="physics_test.cc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BulletCollision\BulletCollision.vcxproj">
-      <Project>{25a684af-97dc-4363-928b-893aac7c6998}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\BulletDynamics\BulletDynamics.vcxproj">
-      <Project>{17b63975-4f99-470f-b6b1-119842eabf96}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\BulletLinearMath\BulletLinearMath.vcxproj">
-      <Project>{b2a538d9-4bf4-44ae-b1be-72ef2dba25b5}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Engine\Engine.vcxproj">
-      <Project>{f797aaa5-5886-49d9-affe-a23c77ebaa43}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\GLFW\GLFW.vcxproj">
-      <Project>{621ee5a1-94a6-4589-9bea-7f4eaf64af73}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\GoogleTest\GoogleTest.vcxproj">
-      <Project>{a9248db5-0186-40a9-8b55-fc2b42b13d0f}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
