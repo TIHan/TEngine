@@ -1,5 +1,12 @@
-CXX		= clang++
-CXXFLAGS	= -Wall -std=c++11 -stdlib=libc++
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Linux)
+CXX		= g++
+endif
+ifeq ($(UNAME), Darwin)
+CXX		= clang++ -stdlib=libc++
+endif
+CXXFLAGS	= -Wall -std=c++11
 SOURCES		= $(wildcard ../../lib/bullet-2.81-rev2613/src/BulletDynamics/Character/*.cpp) $(wildcard ../../lib/bullet-2.81-rev2613/src/BulletDynamics/ConstraintSolver/*.cpp) $(wildcard ../../lib/bullet-2.81-rev2613/src/BulletDynamics/Dynamics/*.cpp) $(wildcard ../../lib/bullet-2.81-rev2613/src/BulletDynamics/Vehicle/*.cpp)
 OBJECTS		= $(SOURCES:%.cpp=%.o)
 INCLUDES	= -I../../lib/bullet-2.81-rev2613/src
