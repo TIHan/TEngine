@@ -11,6 +11,7 @@ LIBS		:= -pthread -lrt -lX11 -lGLU -lGL
 endif
 ifeq ($(UNAME), Darwin)
 CXX		= clang++ -stdlib=libc++
+LIBS           := -framework Cocoa -framework OpenGL -framework IOKit
 endif
 
 # Sources

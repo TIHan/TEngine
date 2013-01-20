@@ -9,14 +9,14 @@ INCLUDES	:= -I$(GFLW_PATH)/lib/x11
 endif
 ifeq ($(UNAME), Darwin)
 CXX		= clang
-SOURCES		:= $(wildcard $(GFLW_PATH)/lib/cocoa/*.c)
+SOURCES		:= $(wildcard $(GFLW_PATH)/lib/cocoa/*.m)
 INCLUDES	:= -I$(GFLW_PATH)/lib/cocoa
 endif
 
 # Global Settings
 CXXFLAGS	= -Wall
 SOURCES		:= $(wildcard $(GFLW_PATH)/lib/*.c) $(SOURCES)
-OBJECTS		= $(SOURCES:%.c=%.o)
+OBJECTS		= $(SOURCES:%.c=%.o) $(SOURCES:%.m=%.o)
 INCLUDES	:= -I$(GFLW_PATH)/lib $(INCLUDES)
 OUTPUT		= libGLFW.a
 
@@ -33,4 +33,7 @@ clean:
 	rm -f $(OBJECTS) $(OUTPUT)
 
 .c.o:
+	$(CXX) $(INCLUDES) -c -o $@ $< $(CXXFLAGS)
+
+.m.o:
 	$(CXX) $(INCLUDES) -c -o $@ $< $(CXXFLAGS)
