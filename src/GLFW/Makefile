@@ -1,16 +1,16 @@
 UNAME := $(shell uname)
 
 ifeq ($(UNAME), Linux)
-CXX		= g++
+CXX		= gcc
 endif
 ifeq ($(UNAME), Darwin)
-CXX		= clang++ -stdlib=libc++
+CXX		= clang
 endif
-CXXFLAGS	= -Wall -std=c++11
+CXXFLAGS	= -Wall -std=c++11 -fpermissive
 SOURCES		= $(wildcard ../../lib/glfw-2.7.7/lib/*.c) $(wildcard ../../lib/glfw-2.7.7/lib/x11/*.c)
 OBJECTS		= $(SOURCES:%.c=%.o)
-INCLUDES	= -I../../lib/glfw-2.7.7/include
-OUTPUT		= libBulletLinearMath.a
+INCLUDES	= -I../../lib/glfw-2.7.7/lib -I../../lib/glfw-2.7.7/lib/x11
+OUTPUT		= libGLFW.a
 
 release: CXXFLAGS += -O2
 release: $(SOURCES) $(OUTPUT)
@@ -24,5 +24,5 @@ $(OUTPUT): $(OBJECTS)
 clean:
 	rm -f $(OBJECTS) $(OUTPUT)
 
-.cpp.o:
+.c.o:
 	$(CXX) $(INCLUDES) -c -o $@ $< $(CXXFLAGS)
