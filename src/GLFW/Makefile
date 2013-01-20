@@ -1,15 +1,23 @@
 UNAME := $(shell uname)
+GFLW_PATH	= ../../lib/glfw-2.7.7/lib
 
+# OS Specifics
 ifeq ($(UNAME), Linux)
-CXX		= gcc
+CXX		= gcc -Wno-deprecated-declarations
+SOURCES		:= $(wildcard $(GFLW_PATH)/x11/*.c)
+INCLUDES	:= -I$(GFLW_PATH)/x11
 endif
 ifeq ($(UNAME), Darwin)
 CXX		= clang
+SOURCES		:= $(wildcard $(GFLW_PATH)/cocoa/*.c)
+INCLUDES	:= -I$(GFLW_PATH)/cocoa
 endif
-CXXFLAGS	= -Wall -std=c++11 -fpermissive
-SOURCES		= $(wildcard ../../lib/glfw-2.7.7/lib/*.c) $(wildcard ../../lib/glfw-2.7.7/lib/x11/*.c)
+
+# Global Settings
+CXXFLAGS	= -Wall
+SOURCES		:= $(wildcard $(GFLW_PATH)/*.c) $(SOURCES)
 OBJECTS		= $(SOURCES:%.c=%.o)
-INCLUDES	= -I../../lib/glfw-2.7.7/lib -I../../lib/glfw-2.7.7/lib/x11
+INCLUDES	:= -I$(GFLW_PATH) $(INCLUDES)
 OUTPUT		= libGLFW.a
 
 release: CXXFLAGS += -O2
