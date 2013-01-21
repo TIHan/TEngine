@@ -7,7 +7,7 @@ BULLET_PATH	= lib/bullet-2.81-rev2613/src
 # OS Specifics
 ifeq ($(UNAME), Linux)
 CXX		= g++
-LIBS		:= -pthread -lrt -lX11 -lGLU -lGL
+LIBS		:= -pthread -lrt -lX11 -lXrandr -lGLU -lGL
 endif
 ifeq ($(UNAME), Darwin)
 CXX		= clang++ -stdlib=libc++

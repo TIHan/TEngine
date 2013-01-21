@@ -3,7 +3,7 @@ GFLW_PATH	= ../../lib/glfw-2.7.7
 
 # OS Specifics
 ifeq ($(UNAME), Linux)
-CXX		= gcc -Wno-deprecated-declarations
+CXX		= gcc -Wno-deprecated-declarations -D_GLFW_USE_LINUX_JOYSTICKS -D_GLFW_HAS_XRANDR -D_GLFW_HAS_PTHREAD -D_GLFW_HAS_SCHED_YIELD -D_GLFW_HAS_GLXGETPROCADDRESS -D_GLFW_HAS_SYSCONF
 SOURCES		:= $(wildcard $(GFLW_PATH)/lib/x11/*.c)
 INCLUDES	:= -I$(GFLW_PATH)/lib/x11
 endif
