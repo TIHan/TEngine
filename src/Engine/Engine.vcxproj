@@ -151,6 +151,7 @@
     <ClInclude Include="network\server_channel.h" />
     <ClInclude Include="network\server_interface.h" />
     <ClInclude Include="network\server_message.h" />
+    <ClInclude Include="network\server_message_handler.h" />
     <ClInclude Include="network\server_message_processor.h" />
     <ClInclude Include="network\server_packet.h" />
   </ItemGroup>

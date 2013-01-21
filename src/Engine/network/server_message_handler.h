@@ -25,46 +25,62 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SERVER_PACKET_H_
-#define SERVER_PACKET_H_
+#ifndef SERVER_MESSAGE_HANDLER_H_
+#define SERVER_MESSAGE_HANDLER_H_
 
-#include <engine_lib.h>
+#include "receive_message.h"
+#include "server_packet.h"
 
 namespace engine {
 namespace network {
 
-class ServerPacket : public ByteStream {
+class ServerMessageHandler {
 public:
-  explicit ServerPacket(int client_id);
-  ServerPacket(std::pair<int, std::shared_ptr<ByteStream>> key_stream);
-  virtual ~ServerPacket();
+  ServerMessageHandler();
+  virtual ~ServerMessageHandler();
 
-  // Accessors / Mutators
-  int client_id();
+  void RegisterHandler(int type,
+    std::function<void(std::shared_ptr<ReceiveMessage>, int)> handler);
+
+  void RemoveHandler(int type);
+
+  void Handle(std::shared_ptr<ServerPacket> packet);
+
 
 private:
-  int client_id_;
+  std::map<int,
+    std::function<void(std::shared_ptr<ReceiveMessage>, 
+    int)>> handlers_;
 };
 
-inline ServerPacket::ServerPacket(int client_id) {
-  client_id_ = client_id;
+inline ServerMessageHandler::ServerMessageHandler() {
+
 }
 
-inline ServerPacket::ServerPacket(
-    std::pair<int, std::shared_ptr<ByteStream>> key_stream) {
-  auto stream = key_stream.second;
+inline ServerMessageHandler::~ServerMessageHandler() {
 
-  client_id_ = key_stream.first;
-  if (stream && stream->GetSize() > 0) {
-      WriteStream(*key_stream.second);
-  }
 }
 
-inline ServerPacket::~ServerPacket() {
+inline void ServerMessageHandler::RegisterHandler(int type, 
+  std::function<void(std::shared_ptr<ReceiveMessage>, int)> handler) {
+    handlers_[type] = handler;
 }
 
-inline int ServerPacket::client_id() {
-  return client_id_;
+inline void ServerMessageHandler::RemoveHandler(int type) {
+  handlers_.erase(type);
+}
+
+inline void ServerMessageHandler::Handle(
+  std::shared_ptr<ServerPacket> packet) {
+    auto message_byte = packet->ReadByte();
+    auto iter = handlers_.find(message_byte);
+    if (iter != handlers_.end()) {
+      auto handler = iter->second;
+      handler(std::make_shared<ReceiveMessage>(packet, message_byte),
+        packet->client_id());
+    } else {
+      throw std::logic_error("Invalid message.");
+    }
 }
 
 } // end network namespace

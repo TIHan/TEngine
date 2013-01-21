@@ -66,7 +66,7 @@ inline void ServerMessage::Send(int client_id) {
   if (buffer_->GetSize() > kMaximumTransmissionUnit)
     throw std::out_of_range("Message is too big.");
 
-  channel_->Push(buffer_, client_id);
+  channel_->Push(std::make_pair(client_id, buffer_));
 }
 
 } // end network namespace

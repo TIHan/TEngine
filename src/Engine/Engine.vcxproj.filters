@@ -30,14 +30,8 @@
     <ClInclude Include="network\include\engine_network.h">
       <Filter>network\include</Filter>
     </ClInclude>
-    <ClInclude Include="network\server.h">
-      <Filter>network</Filter>
-    </ClInclude>
     <ClInclude Include="lib\event.h">
       <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="network\client.h">
-      <Filter>network</Filter>
     </ClInclude>
     <ClInclude Include="lib\event_aggregator.h">
       <Filter>lib</Filter>
@@ -84,14 +78,17 @@
     <ClInclude Include="network\server_channel.h">
       <Filter>network\domain</Filter>
     </ClInclude>
+    <ClInclude Include="network\client.h">
+      <Filter>network\infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server.h">
+      <Filter>network\infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_message_handler.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="network\client.cc">
-      <Filter>network</Filter>
-    </ClCompile>
-    <ClCompile Include="network\server.cc">
-      <Filter>network</Filter>
-    </ClCompile>
     <ClCompile Include="network\client_message_processor.cc">
       <Filter>network\domain</Filter>
     </ClCompile>
@@ -102,6 +99,12 @@
       <Filter>network\infrastructure</Filter>
     </ClCompile>
     <ClCompile Include=".\network\socket_base.cc">
+      <Filter>network\infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="network\client.cc">
+      <Filter>network\infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="network\server.cc">
       <Filter>network\infrastructure</Filter>
     </ClCompile>
   </ItemGroup>

@@ -28,60 +28,11 @@
 #ifndef SERVER_MESSAGE_PROCESSOR_H_
 #define SERVER_MESSAGE_PROCESSOR_H_
 
-#include "receive_message.h"
 #include "server_message.h"
+#include "server_message_handler.h"
 
 namespace engine {
 namespace network {
-
-class ServerMessageHandler {
-public:
-  ServerMessageHandler();
-  virtual ~ServerMessageHandler();
-
-  void RegisterHandler(int type,
-      std::function<void(std::shared_ptr<ReceiveMessage>, int)> handler);
-
-  void RemoveHandler(int type);
-
-  void Handle(std::shared_ptr<ServerPacket> packet);
-
-
-private:
-  std::map<int,
-           std::function<void(std::shared_ptr<ReceiveMessage>, 
-                              int)>> handlers_;
-};
-
-inline ServerMessageHandler::ServerMessageHandler() {
-
-}
-
-inline ServerMessageHandler::~ServerMessageHandler() {
-
-}
-
-inline void ServerMessageHandler::RegisterHandler(int type, 
-    std::function<void(std::shared_ptr<ReceiveMessage>, int)> handler) {
-  handlers_[type] = handler;
-}
-
-inline void ServerMessageHandler::RemoveHandler(int type) {
-  handlers_.erase(type);
-}
-
-inline void ServerMessageHandler::Handle(
-    std::shared_ptr<ServerPacket> packet) {
-  auto message_byte = packet->ReadByte();
-  auto iter = handlers_.find(message_byte);
-  if (iter != handlers_.end()) {
-    auto handler = iter->second;
-    handler(std::make_shared<ReceiveMessage>(packet, message_byte),
-                                             packet->client_id());
-  } else {
-    throw std::logic_error("Invalid message.");
-  }
-}
 
 class ServerMessageProcessor {
 public:

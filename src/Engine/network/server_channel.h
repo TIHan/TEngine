@@ -38,7 +38,7 @@ public:
   ServerChannel();
   virtual ~ServerChannel();
 
-  void Push(std::shared_ptr<ByteStream> stream, int client_id);
+  void Push(std::pair<int, std::shared_ptr<ByteStream>> key_stream);
   void Flush(std::function<void(std::shared_ptr<ServerPacket> packet)> func);
 
 private:
@@ -52,11 +52,12 @@ inline ServerChannel::ServerChannel() {
 inline ServerChannel::~ServerChannel() {
 }
 
-inline void ServerChannel::Push(std::shared_ptr<ByteStream> stream, 
-                                       int client_id) {
-  auto packet = std::make_shared<ServerPacket>(client_id);
+inline void ServerChannel::Push(
+    std::pair<int, std::shared_ptr<ByteStream>> key_stream) {
+  auto packet = std::make_shared<ServerPacket>(key_stream);
 
-  packet->WriteStream(stream);
+  if (packet->GetSize() == 0)
+    return;
 
   mutex_.lock();
   packet_buffer_.push_back(packet);

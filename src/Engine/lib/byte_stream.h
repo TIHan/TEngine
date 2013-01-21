@@ -50,7 +50,7 @@ public:
   void WriteString(const std::string& string);
   void WriteBuffer(const std::vector<uint8_t>& buffer);
   void WriteBuffer(const std::vector<uint8_t>& buffer, int size);
-  void WriteStream(std::shared_ptr<ByteStream> stream);
+  void WriteStream(const ByteStream& stream);
 
   template <typename T>
   T Read();
@@ -221,13 +221,10 @@ inline void ByteStream::WriteBuffer(const std::vector<uint8_t>& buffer,
 /*!
   *
   */
-inline void ByteStream::WriteStream(std::shared_ptr<ByteStream> stream) {
-  int revert_position = stream->read_position();
-  stream->read_position_ = 0;
-  for (int i = 0; i < stream->GetSize(); ++i) {
-    WriteByte(stream->ReadByte());
+inline void ByteStream::WriteStream(const ByteStream& stream) {
+  for (int i = 0; i < stream.GetSize(); ++i) {
+    WriteByte(stream.buffer_.at(i));
   }
-  stream->read_position_ = revert_position;
 }
 
 /*!

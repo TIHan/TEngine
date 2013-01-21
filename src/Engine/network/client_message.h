@@ -67,7 +67,7 @@ inline void ClientMessage::Send() {
   if (newest_stream->GetSize() + buffer_->GetSize() > 128) {
     send_buffer_->push(buffer_);
   } else {
-    newest_stream->WriteStream(buffer_);
+    newest_stream->WriteStream(*buffer_);
   }
 }
 

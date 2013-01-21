@@ -43,10 +43,7 @@ void ServerMessageProcessor::StartReceiving(
     std::function<std::pair<int, std::shared_ptr<ByteStream>>()> func) {
   receive_thread_ = std::thread([=] () {
     while (!receive_close_) {
-      auto receive = func();
-      if (receive.second && receive.second->GetSize() != 0) {
-        receive_channel_.Push(receive.second, receive.first);
-      }
+        receive_channel_.Push(func());
     }
   });
 }
