@@ -33,6 +33,8 @@
 namespace engine {
 namespace network {
 
+const int kAllClients = -1;
+
 class ServerPacket : public ByteStream {
 public:
   explicit ServerPacket(int client_id);
