@@ -29,7 +29,7 @@
 #include "udp_socket.h"
 
 #define REGISTER_MESSAGE_CALLBACK(type, func) \
-  message_processor_->RegisterMessageCallback(type, \
+  reactor_->RegisterMessageCallback(type, \
       [=] (std::shared_ptr<network::ReceiveMessage> message, \
           uint8_t client_id) func) \
 
@@ -54,7 +54,7 @@ ServerImpl::ServerImpl() {
 
 Server::Server(int port)
     : impl_(std::make_unique<ServerImpl>()),
-      message_processor_(std::make_shared<ServerMessageProcessor>()) {
+      reactor_(std::make_shared<ServerReactor>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
 
@@ -86,7 +86,7 @@ void Server::Start() {
 
   if (success == -1) throw std::domain_error("Unable to bind port.");
 
-  message_processor_->StartReceiving([=] () {
+  reactor_->StartReceiving([=] () {
     if (impl_->socket_->WaitToRead(2500)) {
       auto receive = impl_->socket_->ReceiveFrom();
       auto buffer = std::get<0>(receive);
@@ -119,20 +119,20 @@ void Server::Start() {
 }
 
 void Server::Stop() {
-  message_processor_->Stop();
+  reactor_->Stop();
   impl_->socket_->Close();
 }
 
 std::shared_ptr<ServerMessage> Server::CreateMessage(int type) {
-  return message_processor_->CreateMessage(type, std::move(GetClientIds()));
+  return reactor_->CreateMessage(type, std::move(GetClientIds()));
 }
 
 void Server::ProcessMessages() {
-  message_processor_->Process();
+  reactor_->Process();
 }
 
 void Server::SendMessages() {
-  message_processor_->Send([=] (const ByteStream& buffer, int client_id) {
+  reactor_->Send([=] (const ByteStream& buffer, int client_id) {
     for (auto client : impl_->clients_) {
       if (client.first == client_id) {
         impl_->socket_->SendTo(buffer, *client.second);

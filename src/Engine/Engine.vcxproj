@@ -152,7 +152,7 @@
     <ClInclude Include="network\server_interface.h" />
     <ClInclude Include="network\server_message.h" />
     <ClInclude Include="network\server_message_handler.h" />
-    <ClInclude Include="network\server_message_processor.h" />
+    <ClInclude Include="network\server_reactor.h" />
     <ClInclude Include="network\server_packet.h" />
   </ItemGroup>
   <ItemGroup>
@@ -161,7 +161,7 @@
     <ClCompile Include="network\client.cc" />
     <ClCompile Include="network\client_message_processor.cc" />
     <ClCompile Include="network\server.cc" />
-    <ClCompile Include="network\server_message_processor.cc" />
+    <ClCompile Include="network\server_reactor.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

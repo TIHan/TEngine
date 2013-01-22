@@ -25,8 +25,8 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SERVER_MESSAGE_PROCESSOR_H_
-#define SERVER_MESSAGE_PROCESSOR_H_
+#ifndef SERVER_REACTOR_H_
+#define SERVER_REACTOR_H_
 
 #include "server_message.h"
 #include "server_message_handler.h"
@@ -34,16 +34,39 @@
 namespace engine {
 namespace network {
 
-class ServerMessageProcessor {
+/********************************************//**
+ * The more I think about it, the more I keep telling myself that this
+ * class is very similar to the "Reactor" pattern.
+ *
+ * Quoting from "Pattern-Oriented Software Architecture
+ *               Volume 2
+ *               Patterns for Concurrent and Networked Objects
+ *               Page 179":
+ *               - "The Reactor architectural pattern allows
+ *               event-driven applications to demultiplex and dispatch
+ *               service requests that are delivered to an application
+ *               from one or more clients."
+ *
+ * I finally came to this conclusion after noticing very similar ideas
+ * and constructs between what has been coded here and what was described
+ * in the book.
+ *
+ * Remember that patterns are guidelines, not concrete solutions
+ * for every problem. This class isn't a pure implementation of the "Reactor"
+ * pattern, but rather a few subset of ideas from the pattern; notably, the
+ * message handler and its synchronous dispatching.
+ ***********************************************/
+class ServerReactor {
 public:
-  ServerMessageProcessor();
-  virtual ~ServerMessageProcessor();
+  ServerReactor();
+  virtual ~ServerReactor();
 
   virtual void StartReceiving(
       std::function<std::pair<int, std::shared_ptr<ByteStream>>()> func);
 
   virtual void Send(
-      std::function<void(const ByteStream& buffer, uint8_t recipient_id)> func);
+      std::function<void(const ByteStream& buffer,
+                         uint8_t client_id)> func);
 
   virtual void Stop();
   virtual void Process();
@@ -66,4 +89,4 @@ private:
 } // end network namespace
 } // end engine namespace
 
-#endif // CLIENT_MESSAGE_PROCESSOR_H_
+#endif // SERVER_REACTOR_H_

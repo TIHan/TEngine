@@ -109,8 +109,7 @@ void ByteStream::Write(T value) {
   }
 }
 
-/*!
-  * \brief The constructor for the ByteStream.
+/*! \brief The constructor for the ByteStream.
   *
   */
 inline ByteStream::ByteStream() {

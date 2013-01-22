@@ -25,21 +25,38 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "server_message_processor.h"
+#include "server_reactor.h"
 
 namespace engine {
 namespace network {
 
-ServerMessageProcessor::ServerMessageProcessor()
+/********************************************//**
+ * The constructor for the ServerReactor.
+ ***********************************************/
+ServerReactor::ServerReactor()
     : send_channel_(std::make_shared<ServerChannel>()) {
   receive_close_ = false;
 }
 
-ServerMessageProcessor::~ServerMessageProcessor() {
+/********************************************//**
+ * The destructor for the ServerReactor.
+ * Stop all threads and asynchronous operations.
+ ***********************************************/
+ServerReactor::~ServerReactor() {
   Stop();
 }
 
-void ServerMessageProcessor::StartReceiving(
+/********************************************//**
+ * Takes an anonymous function as its parameter which 
+ * will contain the functionality on receiving a 
+ * client_id and a byte_stream in a looping thread.
+ * 
+ * Implementation of this function is recommended to contain
+ * a "synchronous event demultiplexer", such as the method
+ * "select()" for I/O. This is to prevent the thread from
+ * running too quickly and using unnecessary CPU time.
+ ***********************************************/
+void ServerReactor::StartReceiving(
     std::function<std::pair<int, std::shared_ptr<ByteStream>>()> func) {
   receive_thread_ = std::thread([=] () {
     while (!receive_close_) {
@@ -48,8 +65,19 @@ void ServerMessageProcessor::StartReceiving(
   });
 }
 
-void ServerMessageProcessor::Send(
-    std::function<void(const ByteStream& buffer, uint8_t recipient_id)> func) {
+/********************************************//**
+ * Takes an anonymous function as its parameter which
+ * will contain the functionality on sending data
+ * to the specified client_id.
+ * 
+ * The send_channel will flush out all of the packets
+ * while exposing iteration of the packets in an
+ * anonymous function. This is used to execute
+ * sending each flushed packet with the corresponding
+ * client_id.
+ ***********************************************/
+void ServerReactor::Send(
+    std::function<void(const ByteStream& buffer, uint8_t client_id)> func) {
   send_async_ = std::async(std::launch::async, [=] {
     send_channel_->Flush([=] (std::shared_ptr<ServerPacket> packet) {
       func(*packet, packet->client_id());
@@ -57,13 +85,22 @@ void ServerMessageProcessor::Send(
   });
 }
 
-void ServerMessageProcessor::Stop() {
+/********************************************//**
+ * Stops the receiving thread and the sending
+ * asynchronous operation.
+ ***********************************************/
+void ServerReactor::Stop() {
   receive_close_ = true;
   if (receive_thread_.joinable()) receive_thread_.join();
   if (send_async_.valid()) send_async_.wait();
 }
 
-void ServerMessageProcessor::Process() {
+/********************************************//**
+ * Essentially dispatches each message synchronously
+ * in the receive channel to its corresponding
+ * function (message handler).
+ ***********************************************/
+void ServerReactor::Process() {
   receive_channel_.Flush([=] (std::shared_ptr<ServerPacket> packet) {
     while (packet->CanRead()) {
       try {
@@ -75,12 +112,20 @@ void ServerMessageProcessor::Process() {
   });
 }
 
-void ServerMessageProcessor::RegisterMessageCallback(int type,
+/********************************************//**
+ * Allows the registration of an message type,
+ * described by an "int", to a function (handler).
+ ***********************************************/
+void ServerReactor::RegisterMessageCallback(int type,
     std::function<void(std::shared_ptr<ReceiveMessage>, int)> func) {
   message_handler_.RegisterHandler(type, func);
 }
 
-std::unique_ptr<ServerMessage> ServerMessageProcessor::CreateMessage(int type,
+/********************************************//**
+ * Creates a message to be sent to one or more
+ * clients on a server.
+ ***********************************************/
+std::unique_ptr<ServerMessage> ServerReactor::CreateMessage(int type,
     std::shared_ptr<std::list<int>> client_ids) {
   return std::make_unique<ServerMessage>(type, client_ids, send_channel_);
 }
