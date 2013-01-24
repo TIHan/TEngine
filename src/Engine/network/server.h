@@ -53,15 +53,12 @@ public:
 
   virtual std::unique_ptr<std::list<int>> GetClientIds();
 
-  /* Accessors / Mutators */
-  virtual int port() const;
-
 private:
   std::unique_ptr<ServerImpl> impl_;
 
   std::shared_ptr<ServerReactor> reactor_;
   std::atomic<uint8_t> id_count_;
-  int port_;
+  int requested_port_;
 };
 
 } // end network namespace

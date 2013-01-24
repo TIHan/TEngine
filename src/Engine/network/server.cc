@@ -56,7 +56,7 @@ Server::Server(int port)
     : impl_(std::make_unique<ServerImpl>()),
       reactor_(std::make_shared<ServerReactor>()) {
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
-  port_ = port;
+  requested_port_ = port;
 
   REGISTER_MESSAGE_HANDLER(ReservedClientMessage::kConnect, {
   });
@@ -76,10 +76,9 @@ void Server::Start() {
   impl_->socket_->Open();
   
   int success = -1;
-  for (int port = port_; port < port_ + 1000; ++port) {
+  for (int port = requested_port_; port < requested_port_ + 1000; ++port) {
     success = impl_->socket_->Bind(port);
     if (success == 0) {
-      port_ = port;
       break;
     }
   }
@@ -147,10 +146,6 @@ std::unique_ptr<std::list<int>> Server::GetClientIds() {
     clients->push_back(client.first);
   }
   return std::move(clients);
-}
-
-int Server::port() const {
-  return port_;
 }
 
 } // end network namespace

@@ -33,6 +33,33 @@
 namespace engine {
 namespace network {
 
+  //TODO: working on it
+//class Channel {
+//public:
+//  Channel();
+//  virtual ~Channel();
+//
+//  void Push(std::shared_ptr<ByteStream> stream);
+//  void Flush(std::function<void(std::shared_ptr<ByteStream> stream)> iterator);
+//
+//private:
+//  std::vector<std::shared_ptr<ByteStream>> stream_buffer_;
+//  std::mutex mutex_;
+//};
+//
+//class Router {
+//public:
+//  Router();
+//  virtual ~Router();
+//
+//  void Push(std::shared_ptr<ByteStream> stream);
+//};
+//
+//void Router::Push(std::shared_ptr<ByteStream> stream) {
+//  //stream->ReadByte() // read first byte to determine what transfer type it is
+//}
+
+
 class ServerChannel {
 public:
   ServerChannel();

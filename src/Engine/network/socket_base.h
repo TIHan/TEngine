@@ -63,7 +63,8 @@ public:
   virtual ~SocketBase();
 
   virtual int Bind(uint16_t port);
-  virtual std::string GetAddress();
+  virtual std::string GetAddressText();
+  virtual int GetPort();
   virtual void Close();
 
   /* Accessors / Mutators */

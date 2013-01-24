@@ -45,9 +45,6 @@ public:
 
   virtual void ProcessMessages() = 0;
   virtual void SendMessages() = 0;
-
-  /* Accessors / Mutators */
-  virtual int port() const = 0;
 };
 
 } // end network namespace

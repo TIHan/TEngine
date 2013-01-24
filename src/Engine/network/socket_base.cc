@@ -28,13 +28,17 @@
 #include "socket_base.h"
 #include "socket_base-impl.h"
 
-#define CAST_IN_ADDR(storage) \
-  &reinterpret_cast<struct sockaddr_in*>( \
-    const_cast<struct sockaddr_storage*>(&storage))->sin_addr \
+#define CAST_AS_SOCKADDR(storage) \
+  reinterpret_cast<struct sockaddr*>( \
+    const_cast<struct sockaddr_storage*>(storage)) \
 
-#define CAST_IN6_ADDR(storage) \
-  &reinterpret_cast<struct sockaddr_in6*>( \
-    const_cast<struct sockaddr_storage*>(&storage))->sin6_addr \
+#define CAST_AS_SOCKADDR_IN(addr) \
+  reinterpret_cast<struct sockaddr_in*>( \
+    const_cast<struct sockaddr*>(addr)) \
+
+#define CAST_AS_SOCKADDR_IN6(addr) \
+  reinterpret_cast<struct sockaddr_in6*>( \
+    const_cast<struct sockaddr*>(addr)) \
 
 /*!
  *
@@ -64,29 +68,46 @@ static int CloseSocket(int sockfd) {
 /*!
  *
  */
-static std::string GetSocketAddress(const struct sockaddr_storage& addr) {
+static std::string GetSocketAddressString(const struct sockaddr& addr) {
     std::string address(INET6_ADDRSTRLEN, '\0');
 
-    switch (addr.ss_family) {
-      case AF_INET6: {
-        auto sock_addr = CAST_IN6_ADDR(addr);
+    if (addr.sa_family == AF_INET6) {
+        auto sock_addr = CAST_AS_SOCKADDR_IN6(&addr)->sin6_addr;
         char* data = reinterpret_cast<char*>(
             const_cast<char*>(address.data()));
 
-        inet_ntop(addr.ss_family, sock_addr, data, INET6_ADDRSTRLEN);
-        break;
-      }
-      default: {
-        auto sock_addr = CAST_IN_ADDR(addr);
+        inet_ntop(addr.sa_family, &sock_addr, data, INET6_ADDRSTRLEN);
+    } else {
+        auto sock_addr = CAST_AS_SOCKADDR_IN(&addr)->sin_addr;
         char* data = reinterpret_cast<char*>(
             const_cast<char*>(address.data()));
 
-        inet_ntop(addr.ss_family, sock_addr, data, INET_ADDRSTRLEN);
-        break;
-      }
+        inet_ntop(addr.sa_family, &sock_addr, data, INET_ADDRSTRLEN);
     }
     return address.data();
 }
+
+static std::string GetSocketAddressString(const struct sockaddr_storage& storage) {
+  return GetSocketAddressString(*CAST_AS_SOCKADDR(&storage));
+}
+
+static int GetSocketPort(const struct sockaddr& addr) {
+  int port;
+
+  if (addr.sa_family == AF_INET6) {
+    auto sock_addr = CAST_AS_SOCKADDR_IN6(&addr);
+    port = ntohs(sock_addr->sin6_port);
+  } else {
+    auto sock_addr = CAST_AS_SOCKADDR_IN(&addr);
+    port = ntohs(sock_addr->sin_port);
+  }
+  return port;
+}
+
+static int GetSocketPort(const struct sockaddr_storage& storage) {
+  return GetSocketPort(*CAST_AS_SOCKADDR(&storage));
+}
+
 
 namespace engine {
 namespace network {
@@ -108,7 +129,7 @@ SocketAddress::~SocketAddress() {
   *
   */
 std::string SocketAddress::GetText() const {
-  return GetSocketAddress(impl_->data_->address);
+  return GetSocketAddressString(impl_->data_->address);
 }
 
 /*!
@@ -122,16 +143,18 @@ int SocketAddress::GetLength() const {
   *
   */
 bool SocketAddress::operator==(const SocketAddress& compare) const {
-  auto addr = impl_->data_->address;
-  auto addr_cmp = compare.impl_->data_->address;
+  auto storage = impl_->data_->address;
+  auto storage_cmp = compare.impl_->data_->address;
 
-  if (addr.ss_family == addr_cmp.ss_family) {
-    if (addr.ss_family == AF_INET6 && 
-        memcmp(CAST_IN6_ADDR(addr), CAST_IN6_ADDR(addr_cmp),
+  if (storage.ss_family == storage_cmp.ss_family) {
+    if (storage.ss_family == AF_INET6 && 
+        memcmp(&CAST_AS_SOCKADDR_IN6(CAST_AS_SOCKADDR(&storage))->sin6_addr,
+               &CAST_AS_SOCKADDR_IN6(CAST_AS_SOCKADDR(&storage_cmp))->sin6_addr,
                sizeof(struct sockaddr_in6)) == 0) {
       return true;
-    } else if (memcmp(CAST_IN_ADDR(addr), CAST_IN_ADDR(addr_cmp),
-               sizeof(struct sockaddr_in)) == 0) {
+    } else if (memcmp(&CAST_AS_SOCKADDR_IN(CAST_AS_SOCKADDR(&storage))->sin_addr,
+                      &CAST_AS_SOCKADDR_IN(CAST_AS_SOCKADDR(&storage_cmp))->sin_addr,
+                      sizeof(struct sockaddr_in)) == 0) {
       return true;
     }
   }
@@ -278,12 +301,18 @@ int SocketBase::Bind(uint16_t port) {
 /*!
   *
   */
-std::string SocketBase::GetAddress() {
+std::string SocketBase::GetAddressText() {
   if (!impl_->current_address_info_)
     return stdext::string::empty();
 
-  return GetSocketAddress(*reinterpret_cast<struct sockaddr_storage*>(
-                          impl_->current_address_info_->ai_addr));
+  return GetSocketAddressString(*impl_->current_address_info_->ai_addr);
+}
+
+int SocketBase::GetPort() {
+  if (!impl_->current_address_info_)
+    return -1;
+
+  return GetSocketPort(*impl_->current_address_info_->ai_addr);
 }
 
 /*!
