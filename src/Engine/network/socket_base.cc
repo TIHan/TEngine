@@ -87,7 +87,8 @@ static std::string GetSocketAddressString(const struct sockaddr& addr) {
     return address.data();
 }
 
-static std::string GetSocketAddressString(const struct sockaddr_storage& storage) {
+static std::string GetSocketAddressString(
+    const struct sockaddr_storage& storage) {
   return GetSocketAddressString(*CAST_AS_SOCKADDR(&storage));
 }
 
@@ -149,12 +150,13 @@ bool SocketAddress::operator==(const SocketAddress& compare) const {
   if (storage.ss_family == storage_cmp.ss_family) {
     if (storage.ss_family == AF_INET6 && 
         memcmp(&CAST_AS_SOCKADDR_IN6(CAST_AS_SOCKADDR(&storage))->sin6_addr,
-               &CAST_AS_SOCKADDR_IN6(CAST_AS_SOCKADDR(&storage_cmp))->sin6_addr,
-               sizeof(struct sockaddr_in6)) == 0) {
+        &CAST_AS_SOCKADDR_IN6(CAST_AS_SOCKADDR(&storage_cmp))->sin6_addr,
+        sizeof(struct sockaddr_in6)) == 0) {
       return true;
-    } else if (memcmp(&CAST_AS_SOCKADDR_IN(CAST_AS_SOCKADDR(&storage))->sin_addr,
-                      &CAST_AS_SOCKADDR_IN(CAST_AS_SOCKADDR(&storage_cmp))->sin_addr,
-                      sizeof(struct sockaddr_in)) == 0) {
+    } else if (memcmp(
+        &CAST_AS_SOCKADDR_IN(CAST_AS_SOCKADDR(&storage))->sin_addr,
+        &CAST_AS_SOCKADDR_IN(CAST_AS_SOCKADDR(&storage_cmp))->sin_addr,
+        sizeof(struct sockaddr_in)) == 0) {
       return true;
     }
   }
