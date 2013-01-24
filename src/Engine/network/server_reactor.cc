@@ -96,11 +96,11 @@ void ServerReactor::Stop() {
 }
 
 /********************************************//**
- * Essentially dispatches each message synchronously
+ * Dispatches each message synchronously
  * in the receive channel to its corresponding
- * function (message handler).
+ * message handler.
  ***********************************************/
-void ServerReactor::Process() {
+void ServerReactor::DispatchMessages() {
   receive_channel_.Flush([=] (std::shared_ptr<ServerPacket> packet) {
     while (packet->CanRead()) {
       try {
@@ -113,12 +113,12 @@ void ServerReactor::Process() {
 }
 
 /********************************************//**
- * Allows the registration of an message type,
- * described by an "int", to a function (handler).
+ * Allows the registration of a message type,
+ * described by an "int", to a handler.
  ***********************************************/
-void ServerReactor::RegisterMessageCallback(int type,
-    std::function<void(std::shared_ptr<ReceiveMessage>, int)> func) {
-  message_handler_.RegisterHandler(type, func);
+void ServerReactor::RegisterMessageHandler(int type,
+    std::function<void(std::shared_ptr<ReceiveMessage>, int)> handler) {
+  message_handler_.RegisterHandler(type, handler);
 }
 
 /********************************************//**

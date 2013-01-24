@@ -28,10 +28,10 @@
 #include "server.h"
 #include "udp_socket.h"
 
-#define REGISTER_MESSAGE_CALLBACK(type, func) \
-  reactor_->RegisterMessageCallback(type, \
+#define REGISTER_MESSAGE_HANDLER(type, handler) \
+  reactor_->RegisterMessageHandler(type, \
       [=] (std::shared_ptr<network::ReceiveMessage> message, \
-          uint8_t client_id) func) \
+          uint8_t client_id) handler) \
 
 namespace engine {
 namespace network {
@@ -58,10 +58,10 @@ Server::Server(int port)
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   port_ = port;
 
-  REGISTER_MESSAGE_CALLBACK(ReservedClientMessage::kConnect, {
+  REGISTER_MESSAGE_HANDLER(ReservedClientMessage::kConnect, {
   });
 
-  REGISTER_MESSAGE_CALLBACK(ReservedClientMessage::kHeartbeat, {
+  REGISTER_MESSAGE_HANDLER(ReservedClientMessage::kHeartbeat, {
     std::cout << "Client Sent a Heartbeat!" << std::endl;
     auto ack = CreateMessage(ReservedServerMessage::kAckClientHeartbeat);
     ack->Send(client_id);
@@ -128,7 +128,7 @@ std::shared_ptr<ServerMessage> Server::CreateMessage(int type) {
 }
 
 void Server::ProcessMessages() {
-  reactor_->Process();
+  reactor_->DispatchMessages();
 }
 
 void Server::SendMessages() {

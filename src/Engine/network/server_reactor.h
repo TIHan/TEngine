@@ -69,9 +69,9 @@ public:
                          uint8_t client_id)> func);
 
   virtual void Stop();
-  virtual void Process();
-  virtual void RegisterMessageCallback(int type,
-    std::function<void(std::shared_ptr<ReceiveMessage>, int)> func);
+  virtual void DispatchMessages();
+  virtual void RegisterMessageHandler(int type,
+    std::function<void(std::shared_ptr<ReceiveMessage>, int)> handler);
 
   virtual std::unique_ptr<ServerMessage> CreateMessage(int type,
       std::shared_ptr<std::list<int>> client_ids);
