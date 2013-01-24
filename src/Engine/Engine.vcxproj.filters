@@ -19,6 +19,12 @@
     <Filter Include="network\infrastructure">
       <UniqueIdentifier>{5b938e7b-620c-4342-89ac-61f94e2d6d40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="network\domain\server">
+      <UniqueIdentifier>{e176ba73-667b-4aba-9baf-adf2b86f31cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network\domain\client">
+      <UniqueIdentifier>{24a80bd4-0144-4253-9810-c92e6fefadcb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include=".\lib\common.h">
@@ -39,19 +45,10 @@
     <ClInclude Include="lib\byte_stream.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="network\client_message.h">
-      <Filter>network\domain</Filter>
-    </ClInclude>
-    <ClInclude Include="network\client_message_processor.h">
-      <Filter>network\domain</Filter>
-    </ClInclude>
     <ClInclude Include="network\message_base.h">
       <Filter>network\domain</Filter>
     </ClInclude>
     <ClInclude Include="network\receive_message.h">
-      <Filter>network\domain</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_message.h">
       <Filter>network\domain</Filter>
     </ClInclude>
     <ClInclude Include=".\network\udp_socket.h">
@@ -63,35 +60,41 @@
     <ClInclude Include=".\network\socket_base-impl.h">
       <Filter>network\infrastructure</Filter>
     </ClInclude>
-    <ClInclude Include="network\client_interface.h">
-      <Filter>network\domain</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_interface.h">
-      <Filter>network\domain</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_packet.h">
-      <Filter>network\domain</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_channel.h">
-      <Filter>network\domain</Filter>
-    </ClInclude>
     <ClInclude Include="network\client.h">
       <Filter>network\infrastructure</Filter>
     </ClInclude>
     <ClInclude Include="network\server.h">
       <Filter>network\infrastructure</Filter>
     </ClInclude>
-    <ClInclude Include="network\server_message_handler.h">
-      <Filter>network\domain</Filter>
-    </ClInclude>
     <ClInclude Include="network\server_reactor.h">
-      <Filter>network\domain</Filter>
+      <Filter>network\domain\server</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_channel.h">
+      <Filter>network\domain\server</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_interface.h">
+      <Filter>network\domain\server</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_message.h">
+      <Filter>network\domain\server</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_message_handler.h">
+      <Filter>network\domain\server</Filter>
+    </ClInclude>
+    <ClInclude Include="network\server_packet.h">
+      <Filter>network\domain\server</Filter>
+    </ClInclude>
+    <ClInclude Include="network\client_interface.h">
+      <Filter>network\domain\client</Filter>
+    </ClInclude>
+    <ClInclude Include="network\client_message.h">
+      <Filter>network\domain\client</Filter>
+    </ClInclude>
+    <ClInclude Include="network\client_message_processor.h">
+      <Filter>network\domain\client</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="network\client_message_processor.cc">
-      <Filter>network\domain</Filter>
-    </ClCompile>
     <ClCompile Include=".\network\udp_socket.cc">
       <Filter>network\infrastructure</Filter>
     </ClCompile>
@@ -105,7 +108,10 @@
       <Filter>network\infrastructure</Filter>
     </ClCompile>
     <ClCompile Include="network\server_reactor.cc">
-      <Filter>network\domain</Filter>
+      <Filter>network\domain\server</Filter>
+    </ClCompile>
+    <ClCompile Include="network\client_message_processor.cc">
+      <Filter>network\domain\client</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
