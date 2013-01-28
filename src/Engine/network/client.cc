@@ -49,9 +49,11 @@ ClientImpl::ClientImpl() {
   socket_ = std::make_unique<UdpSocket>(options);
 }
 
-Client::Client()
-    : impl_(std::make_unique<ClientImpl>()) {
+Client::Client(std::shared_ptr<EventAggregator> event_aggregator)
+    : impl_(std::make_unique<ClientImpl>()),
+      event_aggregator_(event_aggregator) {
   connected_ = false;
+  event_aggregator_->Subscribe(this);
 
   REGISTER_MESSAGE_CALLBACK(ReservedServerMessage::kAckClientConnect, {
     connected_ = true;
@@ -123,9 +125,11 @@ void Client::SendMessages() {
   });
 }
 
-void Client::SendHeartbeat() {
-  auto connect_msg = CreateMessage(ReservedClientMessage::kHeartbeat);
-  connect_msg->Send();
+void Client::Handle(TimeMessage message) {
+  if (message.milliseconds == 1000) {
+    auto connect_msg = CreateMessage(ReservedClientMessage::kHeartbeat);
+    connect_msg->Send();
+  }
 }
 
 } // end network namespace

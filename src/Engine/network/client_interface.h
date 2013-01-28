@@ -49,7 +49,6 @@ public:
   // Message Handlers
   virtual void OnConnect(std::function<void()> func) = 0;
   virtual void OnDisconnect(std::function<void()> func) = 0;
-  virtual void SendHeartbeat() = 0;
 };
 
 } // end network namespace

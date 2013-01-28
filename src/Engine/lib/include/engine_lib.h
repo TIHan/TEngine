@@ -27,5 +27,6 @@
 
 #include "../common.h"
 #include "../byte_stream.h"
+#include "../event_aggregator.h"
 
 using namespace engine::lib;

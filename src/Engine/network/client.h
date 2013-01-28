@@ -37,9 +37,9 @@ namespace network {
 const int kMaxClientTransfer = 128;
 
 class ClientImpl;
-class Client : public virtual ClientInterface {
+class Client : public virtual ClientInterface, public EventInterface<TimeMessage> {
 public:
-  Client();
+  Client(std::shared_ptr<EventAggregator> event_aggregator);
   virtual ~Client();
 
   virtual void Connect(const std::string& address, const std::string& port);
@@ -55,7 +55,8 @@ public:
   // Message Handlers
   virtual void OnConnect(std::function<void()> func);
   virtual void OnDisconnect(std::function<void()> func);
-  virtual void SendHeartbeat();
+
+  virtual void Handle(TimeMessage message);
 
 private:
   std::unique_ptr<ClientImpl> impl_;
@@ -66,6 +67,9 @@ private:
   std::atomic<bool> connected_;
   std::function<void()> connect_func_;
   std::function<void()> disconnect_func_;
+
+  // Events
+  std::shared_ptr<EventAggregator> event_aggregator_;
 };
 
 } // end network namespace

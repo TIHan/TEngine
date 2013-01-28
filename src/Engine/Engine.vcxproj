@@ -132,11 +132,14 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="core\game_loop.h" />
+    <ClInclude Include="core\include\engine_core.h" />
     <ClInclude Include="lib\byte_stream.h" />
     <ClInclude Include=".\lib\include\engine_lib.h" />
     <ClInclude Include=".\lib\common.h" />
     <ClInclude Include="lib\event.h" />
     <ClInclude Include="lib\event_aggregator.h" />
+    <ClInclude Include="lib\event_processor.h" />
     <ClInclude Include="network\client.h" />
     <ClInclude Include="network\client_interface.h" />
     <ClInclude Include="network\client_message.h" />

@@ -10,7 +10,7 @@ TEST_F(GLFWTest, Initialize) {
     glfwTerminate();
 }
 
-TEST_F(GLFWTest, Context3_2) {
+TEST_F(GLFWTest, OpenWindow) {
     EXPECT_TRUE(glfwInit());
     
     EXPECT_TRUE(glfwOpenWindow(640, 480, 0, 0, 0, 0, 32, 0, GLFW_WINDOW));

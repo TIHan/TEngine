@@ -25,61 +25,44 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef EVENT_AGGREGATOR_H_
-#define EVENT_AGGREGATOR_H_
+#ifndef EVENT_PROCESSOR_H_
+#define EVENT_PROCESSOR_H_
 
-#include "event_processor.h"
-#include "event.h"
+#include "common.h"
 
 namespace engine {
 namespace lib {
 
-class EventAggregator {
+class EventProcessor {
 public:
-  EventAggregator(std::shared_ptr<EventProcessor> event_processor);
-  virtual ~EventAggregator();
+  EventProcessor();
+  virtual ~EventProcessor();
 
-  template <typename T>
-  void Subscribe(EventInterface<T>* event);
-
-  template <typename T, typename... Args>
-  void Publish(Args&&... args);
+  void Push(std::function<void()> event_func);
+  void Process();
 
 private:
-  std::unordered_multimap<size_t, void*> events_;
-  std::shared_ptr<EventProcessor> event_processor_;
+  std::queue<std::function<void()>> queue_;
 };
 
-inline EventAggregator::EventAggregator(
-    std::shared_ptr<EventProcessor> event_processor)
-    : event_processor_(event_processor) {
+inline EventProcessor::EventProcessor() {
 }
 
-inline EventAggregator::~EventAggregator() {
+inline EventProcessor::~EventProcessor() {
 }
 
-template <typename T>
-inline void EventAggregator::Subscribe(EventInterface<T>* event) {
-  events_.emplace(typeid(T).hash_code(), event);
+inline void EventProcessor::Push(std::function<void()> event_func) {
+  queue_.push(event_func);
 }
 
-template <typename T, typename... Args>
-inline void EventAggregator::Publish(Args&&... args) {
-  auto events = events_.equal_range(typeid(T).hash_code());
-  for (auto iter = events.first; iter != events.second; ++iter) {
-    if (auto void_event = iter->second) {
-      T message(std::forward<Args>(args)...);
-      event_processor_->Push([=] {
-        auto event = reinterpret_cast<EventInterface<T>*>(void_event);
-        if (event) event->Handle(message);
-      });
-    } else {
-      events_.erase(iter);
-    }
+inline void EventProcessor::Process() {
+  while (!queue_.empty()) {
+    queue_.front()();
+    queue_.pop();
   }
 }
 
 } // end lib namespace
 } // end engine namespace
 
-#endif /* EVENT_AGGREGATOR_H_ */
+#endif /* EVENT_PROCESSOR_H_ */

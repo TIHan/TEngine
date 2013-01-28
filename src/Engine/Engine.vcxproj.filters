@@ -25,6 +25,12 @@
     <Filter Include="network\domain\client">
       <UniqueIdentifier>{24a80bd4-0144-4253-9810-c92e6fefadcb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{c2c848cd-31e3-437c-abda-3bf50f91a859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\include">
+      <UniqueIdentifier>{11a3174f-55e0-4ec7-bc48-b616b16cc7d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include=".\lib\common.h">
@@ -92,6 +98,15 @@
     </ClInclude>
     <ClInclude Include="network\client_message_processor.h">
       <Filter>network\domain\client</Filter>
+    </ClInclude>
+    <ClInclude Include="core\game_loop.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\include\engine_core.h">
+      <Filter>core\include</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\event_processor.h">
+      <Filter>lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

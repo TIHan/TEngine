@@ -25,28 +25,4 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef EVENT_H_
-#define EVENT_H_
-
-#include "common.h"
-
-namespace engine {
-namespace lib {
-
-struct TimeMessage {
-  TimeMessage(int milliseconds) : milliseconds(milliseconds) {};
-  int milliseconds;
-};
-
-template <typename T>
-class EventInterface {
-public:
-  virtual ~EventInterface() {}
-
-  virtual void Handle(T message) = 0;
-};
-
-} // end lib namespace
-} // end engine namespace
-
-#endif /* EVENT_H_ */
+#include "../game_loop.h"
