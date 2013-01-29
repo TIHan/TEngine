@@ -68,6 +68,8 @@ private:
   std::function<void()> connect_func_;
   std::function<void()> disconnect_func_;
 
+  TimeFilter time_filter_heartbeat_;
+
   // Events
   std::shared_ptr<EventAggregator> event_aggregator_;
 };

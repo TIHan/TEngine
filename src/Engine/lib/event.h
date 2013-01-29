@@ -34,8 +34,8 @@ namespace engine {
 namespace lib {
 
 struct TimeMessage {
-  TimeMessage(int milliseconds) : milliseconds(milliseconds) {};
-  int milliseconds;
+  TimeMessage(uint64_t milliseconds) : milliseconds(milliseconds) {};
+  uint64_t milliseconds;
 };
 
 template <typename T>

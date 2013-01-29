@@ -25,9 +25,50 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../common.h"
-#include "../byte_stream.h"
-#include "../event_aggregator.h"
-#include "../time_filter.h"
+#ifndef TIME_FILTER_H_
+#define TIME_FILTER_H_
 
-using namespace engine::lib;
+#include "common.h"
+
+namespace engine {
+namespace lib {
+
+class TimeFilter {
+public:
+  explicit TimeFilter(uint64_t msec);
+  virtual ~TimeFilter();
+
+  bool TryTime(uint64_t msec);
+
+private:
+  uint64_t time_;
+  uint64_t accum_time_;
+  uint64_t captured_time_;
+};
+
+inline TimeFilter::TimeFilter(uint64_t msec) {
+  time_ = msec;
+  accum_time_ = captured_time_ = 0;
+}
+
+inline TimeFilter::~TimeFilter() {
+}
+
+inline bool TimeFilter::TryTime(uint64_t msec) {
+  if (captured_time_ == 0) {
+    accum_time_ = captured_time_ = msec;
+  } else {
+    accum_time_ = msec;
+  }
+
+  if (accum_time_ - captured_time_ >= time_) {
+    accum_time_ = captured_time_ = 0;
+    return true;
+  }
+  return false;
+}
+
+} // end lib namespace
+} // end engine namespace
+
+#endif /* TIME_FILTER_H_ */

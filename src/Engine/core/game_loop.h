@@ -48,13 +48,14 @@ public:
   bool running();
 
 protected:
-  int GetTickRate();
+  uint64_t GetTickRate();
+  uint64_t GetTickTime();
 
 private:
   // Time
   std::chrono::high_resolution_clock clock_;
   std::chrono::nanoseconds rate_;
-  int current_tick_;
+  uint64_t current_tick_;
 
   // Events
   std::shared_ptr<EventProcessor> event_processor_;
@@ -69,8 +70,8 @@ inline GameLoop::GameLoop(std::shared_ptr<EventProcessor> event_processor,
     : event_processor_(event_processor),
       event_aggregator_(event_aggregator),
       rate_(static_cast<int>((1.0 / ticks_per_second) * 1000000000)) {
-  running_ = false;
   current_tick_ = 0;
+  running_ = false;
 }
 
 inline GameLoop::~GameLoop() {
@@ -78,20 +79,19 @@ inline GameLoop::~GameLoop() {
 }
 
 inline void GameLoop::Run(std::function<void()> internal_loop) {
+  current_tick_ = 0;
   running_ = true;
+
+  std::chrono::system_clock::time_point time;
   while(running_) {
-    auto pre = clock_.now();
+    time = clock_.now();
 
+    event_aggregator_->Publish<TimeMessage>(GetTickTime());
     event_processor_->Process();
-
-    // TODO: This needs some cleaning up.
-    current_tick_ = (current_tick_ == GetTickRate() ? 0 : current_tick_) + 1;
-    event_aggregator_->Publish<TimeMessage>(current_tick_ / GetTickRate() * 1000);
-
     internal_loop();
 
-    auto post = clock_.now();
-    std::this_thread::sleep_for(rate_ - (post - pre));
+    current_tick_++;
+    std::this_thread::sleep_for(rate_ - (clock_.now() - time));
   }
 }
 
@@ -103,8 +103,13 @@ inline bool GameLoop::running() {
   return running_;
 }
 
-inline int GameLoop::GetTickRate() {
-  return static_cast<int>(1000000000 / rate_.count());
+inline uint64_t GameLoop::GetTickRate() {
+  return static_cast<uint64_t>(1000000000 / rate_.count());
+}
+
+inline uint64_t GameLoop::GetTickTime() {
+  return static_cast<uint64_t>(static_cast<float>(current_tick_) /
+         static_cast<float>(GetTickRate()) * 1000);
 }
 
 } // end core namespace

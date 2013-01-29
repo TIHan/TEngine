@@ -108,6 +108,9 @@
     <ClInclude Include="lib\event_processor.h">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="lib\time_filter.h">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\network\udp_socket.cc">
