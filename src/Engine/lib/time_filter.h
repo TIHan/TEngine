@@ -35,10 +35,15 @@ namespace lib {
 
 class TimeFilter {
 public:
+  TimeFilter();
   explicit TimeFilter(uint64_t msec);
   virtual ~TimeFilter();
 
+  void Clear();
   bool TryTime(uint64_t msec);
+
+  /* A+M */
+  void set_time(uint64_t msec);
 
 private:
   uint64_t time_;
@@ -46,12 +51,22 @@ private:
   uint64_t captured_time_;
 };
 
+inline TimeFilter::TimeFilter() {
+  time_ = 0;
+  accum_time_ = captured_time_ = 0;
+}
+
 inline TimeFilter::TimeFilter(uint64_t msec) {
   time_ = msec;
   accum_time_ = captured_time_ = 0;
 }
 
 inline TimeFilter::~TimeFilter() {
+}
+
+inline void TimeFilter::Clear() {
+  time_ = 0;
+  accum_time_ = captured_time_ = 0;
 }
 
 inline bool TimeFilter::TryTime(uint64_t msec) {
@@ -66,6 +81,10 @@ inline bool TimeFilter::TryTime(uint64_t msec) {
     return true;
   }
   return false;
+}
+
+inline void TimeFilter::set_time(uint64_t msec) {
+  time_ = msec;
 }
 
 } // end lib namespace
