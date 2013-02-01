@@ -25,9 +25,46 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../common.h"
-#include "../byte_stream.h"
-#include "../event_system.h"
-#include "../time_filter.h"
+#ifndef EVENT_SYSTEM_H_
+#define EVENT_SYSTEM_H_
 
-using namespace engine::lib;
+#include "event_channel.h"
+#include "event_processor.h"
+#include "event_aggregator.h"
+
+namespace engine {
+namespace lib {
+
+class EventSystem {
+public:
+  EventSystem();
+  virtual ~EventSystem();
+
+  EventAggregator* GetAggregator();
+  EventProcessor* GetProcessor();
+
+private:
+  EventChannel channel_;
+  EventAggregator aggregator_;
+  EventProcessor processor_;
+};
+
+inline EventSystem::EventSystem() : aggregator_(&channel_),
+                                    channel_(&processor_) {
+}
+
+inline EventSystem::~EventSystem() {
+}
+
+inline EventAggregator* EventSystem::GetAggregator() {
+  return &aggregator_;
+}
+
+inline EventProcessor* EventSystem::GetProcessor() {
+  return &processor_;
+}
+
+} // end lib namespace
+} // end engine namespace
+
+#endif /* EVENT_SYSTEM_H_ */

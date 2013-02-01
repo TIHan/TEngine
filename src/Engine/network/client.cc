@@ -49,7 +49,7 @@ ClientImpl::ClientImpl() {
   socket_ = std::make_unique<UdpSocket>(options);
 }
 
-Client::Client(std::shared_ptr<EventAggregator> event_aggregator)
+Client::Client(EventAggregator* event_aggregator)
     : impl_(std::make_unique<ClientImpl>()),
       event_aggregator_(event_aggregator),
       time_filter_heartbeat_(1000) {
@@ -127,10 +127,10 @@ void Client::SendMessages() {
 }
 
 void Client::Handle(TimeMessage message) {
-  if (time_filter_heartbeat_.TryTime(message.milliseconds)) {
-    auto connect_msg = CreateMessage(ReservedClientMessage::kHeartbeat);
-    connect_msg->Send();
-  }
+  //if (time_filter_heartbeat_.TryTime(message.milliseconds)) {
+  //  auto connect_msg = CreateMessage(ReservedClientMessage::kHeartbeat);
+  //  connect_msg->Send();
+  //}
 }
 
 } // end network namespace

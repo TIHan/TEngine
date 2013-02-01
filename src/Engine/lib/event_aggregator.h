@@ -28,31 +28,31 @@
 #ifndef EVENT_AGGREGATOR_H_
 #define EVENT_AGGREGATOR_H_
 
-#include "event_processor.h"
-#include "event.h"
+#include "event_channel.h"
 
 namespace engine {
 namespace lib {
 
 class EventAggregator {
 public:
-  EventAggregator(std::shared_ptr<EventProcessor> event_processor);
+  explicit EventAggregator(EventChannel* manager);
   virtual ~EventAggregator();
 
   template <typename T>
   void Subscribe(EventInterface<T>* event);
 
+  template <typename T>
+  void Unsubscribe(EventInterface<T>* event);
+
   template <typename T, typename... Args>
   void Publish(Args&&... args);
 
 private:
-  std::unordered_multimap<size_t, void*> events_;
-  std::shared_ptr<EventProcessor> event_processor_;
+  EventChannel* channel_;
 };
 
-inline EventAggregator::EventAggregator(
-    std::shared_ptr<EventProcessor> event_processor)
-    : event_processor_(event_processor) {
+inline EventAggregator::EventAggregator(EventChannel* channel) {
+  channel_ = channel;
 }
 
 inline EventAggregator::~EventAggregator() {
@@ -60,23 +60,17 @@ inline EventAggregator::~EventAggregator() {
 
 template <typename T>
 inline void EventAggregator::Subscribe(EventInterface<T>* event) {
-  events_.emplace(typeid(T).hash_code(), event);
+  channel_->RegisterEvent(event);
+}
+
+template <typename T>
+inline void EventAggregator::Unsubscribe(EventInterface<T>* event) {
+  channel_->UnregisterEvent(event);
 }
 
 template <typename T, typename... Args>
 inline void EventAggregator::Publish(Args&&... args) {
-  auto events = events_.equal_range(typeid(T).hash_code());
-  for (auto iter = events.first; iter != events.second; ++iter) {
-    if (auto void_event = iter->second) {
-      T message(std::forward<Args>(args)...);
-      event_processor_->Push([=] {
-        auto event = reinterpret_cast<EventInterface<T>*>(void_event);
-        if (event) event->Handle(message);
-      });
-    } else {
-      events_.erase(iter);
-    }
-  }
+  channel_->PushMessage(std::move(T(std::forward<Args>(args)...)));
 }
 
 } // end lib namespace

@@ -25,9 +25,58 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../common.h"
-#include "../byte_stream.h"
-#include "../event_system.h"
-#include "../time_filter.h"
+#ifndef EVENT_CHANNEL_H_
+#define EVENT_CHANNEL_H_
 
-using namespace engine::lib;
+#include "event_processor.h"
+#include "message_adapter.h"
+
+namespace engine {
+namespace lib {
+
+class EventChannel {
+public:
+  explicit EventChannel(EventProcessor* processor);
+  virtual ~EventChannel();
+
+  template <typename T>
+  void RegisterEvent(EventInterface<T>* event);
+
+  template <typename T>
+  void UnregisterEvent(EventInterface<T>* event);
+
+  template <typename T>
+  void PushMessage(T message);
+
+private:
+  EventProcessor* processor_;
+  std::multimap<size_t, void*> events_;
+};
+
+inline EventChannel::EventChannel(EventProcessor* processor) {
+  processor_ = processor;
+}
+
+inline EventChannel::~EventChannel() {
+}
+
+template <typename T>
+inline void EventChannel::RegisterEvent(EventInterface<T>* event) {
+  events_.emplace(typeid(T).hash_code(), event);
+}
+
+template <typename T>
+inline void EventChannel::UnregisterEvent(EventInterface<T>* event) {
+  events_.erase(typeid(T).hash_code(), event);
+}
+
+template <typename T>
+inline void EventChannel::PushMessage(T message) {
+  MessageAdapter<T> adapter(&events_, std::move(message));
+  processor_->PullMessage(&adapter);
+}
+
+} // end lib namespace
+} // end engine namespace
+
+#endif /* EVENT_CHANNEL_H_ */

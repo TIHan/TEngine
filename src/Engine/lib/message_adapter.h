@@ -25,9 +25,57 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../common.h"
-#include "../byte_stream.h"
-#include "../event_system.h"
-#include "../time_filter.h"
+#ifndef MESSAGE_ADAPTER_H_
+#define MESSAGE_ADAPTER_H_
 
-using namespace engine::lib;
+#include "event.h"
+
+namespace engine {
+namespace lib {
+
+class MessageAdapterInterface {
+public:
+  virtual ~MessageAdapterInterface() {}
+
+  virtual void FlushMessage() = 0;
+};
+
+template <typename T>
+class MessageAdapter : public virtual MessageAdapterInterface {
+public:
+  MessageAdapter(std::multimap<size_t, void*>* events, T&& message);
+  virtual ~MessageAdapter();
+
+  virtual void FlushMessage();
+
+private:
+  std::multimap<size_t, void*>* events_;
+  T message_;
+};
+
+template <typename T>
+inline MessageAdapter<T>::MessageAdapter(std::multimap<size_t, void*>* events,
+                                         T&& message)
+    : events_(events), message_(std::move(message)) {
+}
+
+template <typename T>
+inline MessageAdapter<T>::~MessageAdapter() {
+}
+
+template <typename T>
+inline void MessageAdapter<T>::FlushMessage() {
+  //auto events = events_->equal_range(typeid(T).hash_code());
+  //for (auto iter = events.first; iter != events.second; ++iter) {
+  //  if (auto void_event = iter->second) {
+  //    reinterpret_cast<EventInterface<T>*>(void_event)->Handle(message_);
+  //  } else {
+  //    events_->erase(iter);
+  //  }
+  //}
+}
+
+} // end lib namespace
+} // end engine namespace
+
+#endif /* MESSAGE_ADAPTER_H_ */

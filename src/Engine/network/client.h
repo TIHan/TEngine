@@ -39,7 +39,7 @@ const int kMaxClientTransfer = 128;
 class ClientImpl;
 class Client : public virtual ClientInterface, public EventInterface<TimeMessage> {
 public:
-  Client(std::shared_ptr<EventAggregator> event_aggregator);
+  Client(EventAggregator* event_aggregator);
   virtual ~Client();
 
   virtual void Connect(const std::string& address, const std::string& port);
@@ -71,7 +71,7 @@ private:
   TimeFilter time_filter_heartbeat_;
 
   // Events
-  std::shared_ptr<EventAggregator> event_aggregator_;
+  EventAggregator* event_aggregator_;
 };
 
 } // end network namespace

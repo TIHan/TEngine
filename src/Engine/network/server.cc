@@ -52,11 +52,6 @@ ServerImpl::ServerImpl() {
   socket_ = std::make_unique<UdpSocket>(options);
 }
 
-class Service {
-public:
-
-};
-
 Server::Server(int port)
     : impl_(std::make_unique<ServerImpl>()),
       reactor_(std::make_shared<ServerReactor>()) {

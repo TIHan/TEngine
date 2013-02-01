@@ -36,9 +36,7 @@ namespace core {
 
 class GameLoop {
 public:
-  GameLoop(std::shared_ptr<EventProcessor> event_processor,
-           std::shared_ptr<EventAggregator> event_aggregator,
-           int ticks_per_second);
+  GameLoop(std::unique_ptr<EventSystem> event_system, int ticks_per_second);
   virtual ~GameLoop();
 
   void Run(std::function<void()> internal_loop);
@@ -58,17 +56,14 @@ private:
   uint64_t current_tick_;
 
   // Events
-  std::shared_ptr<EventProcessor> event_processor_;
-  std::shared_ptr<EventAggregator> event_aggregator_;
+  std::unique_ptr<EventSystem> event_system_;
 
   std::atomic<bool> running_;
 };
 
-inline GameLoop::GameLoop(std::shared_ptr<EventProcessor> event_processor,
-                          std::shared_ptr<EventAggregator> event_aggregator,
+inline GameLoop::GameLoop(std::unique_ptr<EventSystem> event_system,
                           int ticks_per_second)
-    : event_processor_(event_processor),
-      event_aggregator_(event_aggregator),
+    : event_system_(std::move(event_system)),
       rate_(static_cast<int>((1.0 / ticks_per_second) * 1000000000)) {
   current_tick_ = 0;
   running_ = false;
@@ -86,11 +81,14 @@ inline void GameLoop::Run(std::function<void()> internal_loop) {
   while(running_) {
     time = clock_.now();
 
-    event_aggregator_->Publish<TimeMessage>(GetTickTime());
-    event_processor_->Process();
+    for (int i = 0; i < 1000000; ++i) {
+      event_system_->GetAggregator()->Publish<TimeMessage>(GetTickTime());
+    }
+    event_system_->GetProcessor()->Process();
     internal_loop();
 
     current_tick_++;
+    std::cout << "TIME: " << std::chrono::duration_cast<std::chrono::milliseconds>(rate_ - (clock_.now() - time)).count() << std::endl;
     std::this_thread::sleep_for(rate_ - (clock_.now() - time));
   }
 }

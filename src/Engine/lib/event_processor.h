@@ -28,7 +28,7 @@
 #ifndef EVENT_PROCESSOR_H_
 #define EVENT_PROCESSOR_H_
 
-#include "common.h"
+#include "message_adapter.h"
 
 namespace engine {
 namespace lib {
@@ -38,28 +38,32 @@ public:
   EventProcessor();
   virtual ~EventProcessor();
 
-  void Push(std::function<void()> event_func);
+  void PullMessage(MessageAdapterInterface* adapter);
   void Process();
 
 private:
-  std::queue<std::function<void()>> queue_;
+  std::vector<MessageAdapterInterface*> vector_;
+  std::array<MessageAdapterInterface*, 1000000> asdf_;
 };
 
 inline EventProcessor::EventProcessor() {
+
 }
 
 inline EventProcessor::~EventProcessor() {
 }
 
-inline void EventProcessor::Push(std::function<void()> event_func) {
-  queue_.push(event_func);
+inline void EventProcessor::PullMessage(MessageAdapterInterface* adapter) {
+  //adapter_queue_.push(adapter);
+  //vector_.push_back(adapter);
+  asdf_[asdf_.size() - 1] = adapter;
 }
 
 inline void EventProcessor::Process() {
-  while (!queue_.empty()) {
-    queue_.front()();
-    queue_.pop();
+  for (auto v : vector_) {
+    v->FlushMessage();
   }
+  vector_.clear();
 }
 
 } // end lib namespace
