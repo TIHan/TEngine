@@ -81,9 +81,7 @@ inline void GameLoop::Run(std::function<void()> internal_loop) {
   while(running_) {
     time = clock_.now();
 
-    for (int i = 0; i < 1000000; ++i) {
-      event_system_->GetAggregator()->Publish<TimeMessage>(GetTickTime());
-    }
+    event_system_->GetAggregator()->Publish<TimeMessage>(GetTickTime());
     event_system_->GetProcessor()->Process();
     internal_loop();
 

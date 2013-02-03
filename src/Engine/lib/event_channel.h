@@ -28,37 +28,14 @@
 #ifndef EVENT_CHANNEL_H_
 #define EVENT_CHANNEL_H_
 
-#include "event.h"
+#include "message_adapter.h"
 
 namespace engine {
 namespace lib {
 
-class EventAdapterInterface {
-public:
-  virtual ~EventAdapterInterface() {}
-
-  virtual void Execute(void* message) = 0;
-};
-
-template <typename T>
-class EventAdapter : public virtual EventAdapterInterface {
-public:
-  explicit EventAdapter(EventInterface<T>* event) {
-    event_ = event;
-  }
-  
-  virtual void Execute(void* message) {
-    event_->Handle(*reinterpret_cast<T*>(message));
-  }
-
-private:
-  EventInterface<T>* event_;
-};
-
 class EventChannel {
 public:
   EventChannel();
-  virtual ~EventChannel();
 
   template <typename T>
   void RegisterEvent(EventInterface<T>* event);
@@ -73,13 +50,11 @@ public:
 
 private:
   std::unordered_multimap<size_t, void*> events_;
-  std::vector<MessageType*> message_buffer_;
+  std::vector<std::unique_ptr<MessageAdapterInterface>> message_buffer_;
 };
 
 inline EventChannel::EventChannel() {
-}
-
-inline EventChannel::~EventChannel() {
+  message_buffer_.reserve(std::numeric_limits<uint16_t>::max());
 }
 
 template <typename T>
@@ -94,14 +69,21 @@ inline void EventChannel::UnregisterEvent(EventInterface<T>* event) {
 
 template <typename T, typename... Args>
 inline void EventChannel::PushMessage(Args&&... args) {
-  message_buffer_.emplace_back(new T(args...));
+  message_buffer_.emplace_back(
+      std::make_unique<MessageAdapter<T, Args...>>(args...));
 }
 
 inline void EventChannel::Flush() {
   for (auto citer = message_buffer_.crbegin();
             citer != message_buffer_.crend(); ++citer) {
-    auto events = events_.equal_range((*citer)->type_hash_code);
-    for (auto iter = events.first; iter != events.second; ++iter) {
+    auto events = events_.equal_range((*citer)->GetTypeHashCode());
+    for (auto iter = events.first; iter != events.second;) {
+      if (iter->second) {
+        (*citer)->ExecuteEvent(iter->second);
+        ++iter;
+      } else {
+        events_.erase(iter++);
+      }
     }
   }
   message_buffer_.clear();

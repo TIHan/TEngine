@@ -142,6 +142,7 @@
     <ClInclude Include="lib\event_channel.h" />
     <ClInclude Include="lib\event_processor.h" />
     <ClInclude Include="lib\event_system.h" />
+    <ClInclude Include="lib\message_adapter.h" />
     <ClInclude Include="lib\time_filter.h" />
     <ClInclude Include="network\client.h" />
     <ClInclude Include="network\client_interface.h" />

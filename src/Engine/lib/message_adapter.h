@@ -25,51 +25,45 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef EVENT_AGGREGATOR_H_
-#define EVENT_AGGREGATOR_H_
+#ifndef MESSAGE_ADAPTER_H_
+#define MESSAGE_ADAPTER_H_
 
-#include "event_channel.h"
+#include "event.h"
 
 namespace engine {
 namespace lib {
 
-class EventAggregator {
+class MessageAdapterInterface {
 public:
-  explicit EventAggregator(EventChannel* channel);
+  virtual ~MessageAdapterInterface() {}
 
-  template <typename T>
-  void Subscribe(EventInterface<T>* event);
-
-  template <typename T>
-  void Unsubscribe(EventInterface<T>* event);
-
-  template <typename T, typename... Args>
-  void Publish(Args&&... args);
-
-private:
-  EventChannel* channel_;
+  virtual void ExecuteEvent(void* event) = 0;
+  virtual size_t GetTypeHashCode() = 0;
 };
 
-inline EventAggregator::EventAggregator(EventChannel* channel)
-    : channel_(channel) {
-}
+template <typename T, typename... Args>
+class MessageAdapter : public virtual MessageAdapterInterface {
+public:
+  explicit MessageAdapter(Args&&... args) : message_(args...) {};
 
-template <typename T>
-inline void EventAggregator::Subscribe(EventInterface<T>* event) {
-  channel_->RegisterEvent(event);
-}
+  virtual void ExecuteEvent(void* event);
+  virtual size_t GetTypeHashCode();
 
-template <typename T>
-inline void EventAggregator::Unsubscribe(EventInterface<T>* event) {
-  channel_->UnregisterEvent(event);
+private:
+  T message_;
+};
+
+template <typename T, typename... Args>
+inline void MessageAdapter<T, Args...>::ExecuteEvent(void* event) {
+  reinterpret_cast<EventInterface<T>*>(event)->Handle(message_);
 }
 
 template <typename T, typename... Args>
-inline void EventAggregator::Publish(Args&&... args) {
-  channel_->PushMessage<T>(args...);
+inline size_t MessageAdapter<T, Args...>::GetTypeHashCode() {
+  return message_.type_hash_code;
 }
 
 } // end lib namespace
 } // end engine namespace
 
-#endif /* EVENT_AGGREGATOR_H_ */
+#endif /* MESSAGE_ADAPTER_H_ */

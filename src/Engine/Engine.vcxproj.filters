@@ -117,6 +117,9 @@
     <ClInclude Include="lib\event_channel.h">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="lib\message_adapter.h">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\network\udp_socket.cc">

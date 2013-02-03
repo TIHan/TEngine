@@ -36,7 +36,6 @@ namespace lib {
 class EventProcessor {
 public:
   explicit EventProcessor(EventChannel* channel);
-  virtual ~EventProcessor();
 
   void Process();
 
@@ -46,9 +45,6 @@ private:
 
 inline EventProcessor::EventProcessor(EventChannel* channel)
     : channel_(channel) {
-}
-
-inline EventProcessor::~EventProcessor() {
 }
 
 inline void EventProcessor::Process() {
