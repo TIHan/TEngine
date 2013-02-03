@@ -114,9 +114,6 @@
     <ClInclude Include="lib\event_system.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="lib\message_adapter.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="lib\event_channel.h">
       <Filter>lib</Filter>
     </ClInclude>

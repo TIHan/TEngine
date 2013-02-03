@@ -33,7 +33,7 @@
 namespace engine {
 namespace network {
 
-enum SocketFamily {
+enum class SocketFamily : uint8_t {
   kUnspecified,
   kIpv4,
   kIpv6

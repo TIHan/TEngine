@@ -50,7 +50,7 @@ private:
 };
 
 inline EventSystem::EventSystem() : aggregator_(&channel_),
-                                    channel_(&processor_) {
+                                    processor_(&channel_) {
 }
 
 inline EventSystem::~EventSystem() {

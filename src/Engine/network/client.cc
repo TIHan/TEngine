@@ -127,10 +127,10 @@ void Client::SendMessages() {
 }
 
 void Client::Handle(TimeMessage message) {
-  //if (time_filter_heartbeat_.TryTime(message.milliseconds)) {
-  //  auto connect_msg = CreateMessage(ReservedClientMessage::kHeartbeat);
-  //  connect_msg->Send();
-  //}
+  if (time_filter_heartbeat_.TryTime(message.milliseconds)) {
+    auto connect_msg = CreateMessage(ReservedClientMessage::kHeartbeat);
+    connect_msg->Send();
+  }
 }
 
 } // end network namespace

@@ -28,42 +28,31 @@
 #ifndef EVENT_PROCESSOR_H_
 #define EVENT_PROCESSOR_H_
 
-#include "message_adapter.h"
+#include "event_channel.h"
 
 namespace engine {
 namespace lib {
 
 class EventProcessor {
 public:
-  EventProcessor();
+  explicit EventProcessor(EventChannel* channel);
   virtual ~EventProcessor();
 
-  void PullMessage(MessageAdapterInterface* adapter);
   void Process();
 
 private:
-  std::vector<MessageAdapterInterface*> vector_;
-  std::array<MessageAdapterInterface*, 1000000> asdf_;
+  EventChannel* channel_;
 };
 
-inline EventProcessor::EventProcessor() {
-
+inline EventProcessor::EventProcessor(EventChannel* channel)
+    : channel_(channel) {
 }
 
 inline EventProcessor::~EventProcessor() {
 }
 
-inline void EventProcessor::PullMessage(MessageAdapterInterface* adapter) {
-  //adapter_queue_.push(adapter);
-  //vector_.push_back(adapter);
-  asdf_[asdf_.size() - 1] = adapter;
-}
-
 inline void EventProcessor::Process() {
-  for (auto v : vector_) {
-    v->FlushMessage();
-  }
-  vector_.clear();
+  channel_->Flush();
 }
 
 } // end lib namespace

@@ -70,7 +70,7 @@ inline void EventAggregator::Unsubscribe(EventInterface<T>* event) {
 
 template <typename T, typename... Args>
 inline void EventAggregator::Publish(Args&&... args) {
-  channel_->PushMessage(std::move(T(std::forward<Args>(args)...)));
+  channel_->PushMessage<T>(std::forward<Args>(args)...);
 }
 
 } // end lib namespace

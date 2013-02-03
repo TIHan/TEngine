@@ -33,7 +33,19 @@
 namespace engine {
 namespace lib {
 
-struct TimeMessage {
+struct MessageType {
+  size_t type_hash_code;
+};
+
+template <typename Derived>
+struct MessageBase : public MessageType {
+  MessageBase() {
+    static auto hash_code = typeid(Derived).hash_code();
+    type_hash_code = hash_code;
+  }
+};
+
+struct TimeMessage : public MessageBase<TimeMessage> {
   TimeMessage(uint64_t milliseconds) : milliseconds(milliseconds) {};
   uint64_t milliseconds;
 };

@@ -139,7 +139,6 @@
     <ClInclude Include=".\lib\common.h" />
     <ClInclude Include="lib\event.h" />
     <ClInclude Include="lib\event_aggregator.h" />
-    <ClInclude Include="lib\message_adapter.h" />
     <ClInclude Include="lib\event_channel.h" />
     <ClInclude Include="lib\event_processor.h" />
     <ClInclude Include="lib\event_system.h" />
