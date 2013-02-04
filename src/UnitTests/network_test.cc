@@ -20,11 +20,13 @@ TEST_F(NetworkTest, NetworkLoopTest) {
       server.SendMessages();      
     });
   });
+    
+  std::chrono::milliseconds delay(500);
+  std::this_thread::sleep_for(delay);
 
   auto system2 = std::make_unique<EventSystem>();
   auto aggregator2 = system2->GetAggregator();
   core::GameLoop g2(std::move(system2), 20);
-
 
   std::thread loop2([&g2, &aggregator2] {
     network::Client client(aggregator2);

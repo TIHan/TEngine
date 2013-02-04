@@ -77,7 +77,7 @@ inline void GameLoop::Run(std::function<void()> internal_loop) {
   current_tick_ = 0;
   running_ = true;
 
-  std::chrono::system_clock::time_point time;
+  std::chrono::high_resolution_clock::time_point time;
   while(running_) {
     time = clock_.now();
 
