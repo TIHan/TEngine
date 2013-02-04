@@ -23,7 +23,7 @@ GFLW_INCLUDES	= -I$(GFLW_PATH)/include
 GMOCK_INCLUDES	= -I$(GMOCK_PATH) -I$(GMOCK_PATH)/include
 GTEST_INCLUDES 	= -I$(GTEST_PATH) -I$(GTEST_PATH)/include
 BULLET_INCLUDES = -I$(BULLET_PATH)
-ENGINE_INCLUDES	= -Isrc/Engine/lib/include -Isrc/Engine/network/include
+ENGINE_INCLUDES	= -Isrc/Engine/lib/include -Isrc/Engine/network/include -Isrc/Engine/core/include
 
 # Libs
 GFLW_LIBS	= src/GLFW/libGLFW.a
