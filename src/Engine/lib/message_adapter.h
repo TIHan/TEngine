@@ -63,6 +63,26 @@ inline size_t MessageAdapter<T, Args...>::GetTypeHashCode() {
   return message_.type_hash_code;
 }
 
+template <typename T>
+class MessageAdapter<T> : public virtual MessageAdapterInterface {
+public:
+  virtual void ExecuteEvent(void* event);
+  virtual size_t GetTypeHashCode();
+
+private:
+  T message_;
+};
+
+template <typename T>
+inline void MessageAdapter<T>::ExecuteEvent(void* event) {
+  reinterpret_cast<EventInterface<T>*>(event)->Handle(message_);
+}
+
+template <typename T>
+inline size_t MessageAdapter<T>::GetTypeHashCode() {
+  return message_.type_hash_code;
+}
+
 } // end lib namespace
 } // end engine namespace
 

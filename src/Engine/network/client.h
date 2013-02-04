@@ -36,8 +36,19 @@ namespace network {
 
 const int kMaxClientTransfer = 128;
 
+struct AckClientConnectMessage
+    : public lib::MessageBase<AckClientConnectMessage> {
+};
+
+struct AckClientHeartbeatMessage
+    : public lib::MessageBase<AckClientHeartbeatMessage> {
+};
+
 class ClientImpl;
-class Client : public virtual ClientInterface, public EventInterface<TimeMessage> {
+class Client : public virtual ClientInterface,
+               public virtual EventInterface<TimeMessage>,
+               public virtual EventInterface<AckClientConnectMessage>,
+               public virtual EventInterface<AckClientHeartbeatMessage> {
 public:
   Client(EventAggregator* event_aggregator);
   virtual ~Client();
@@ -56,7 +67,11 @@ public:
   virtual void OnConnect(std::function<void()> func);
   virtual void OnDisconnect(std::function<void()> func);
 
+protected:
+  // Handles
   virtual void Handle(TimeMessage message);
+  virtual void Handle(AckClientConnectMessage message);
+  virtual void Handle(AckClientHeartbeatMessage message);
 
 private:
   std::unique_ptr<ClientImpl> impl_;

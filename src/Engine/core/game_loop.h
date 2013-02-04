@@ -86,7 +86,7 @@ inline void GameLoop::Run(std::function<void()> internal_loop) {
     internal_loop();
 
     current_tick_++;
-    std::cout << "TIME: " << std::chrono::duration_cast<std::chrono::milliseconds>(rate_ - (clock_.now() - time)).count() << std::endl;
+    //std::cout << "TIME: " << std::chrono::duration_cast<std::chrono::milliseconds>(rate_ - (clock_.now() - time)).count() << std::endl;
     std::this_thread::sleep_for(rate_ - (clock_.now() - time));
   }
 }

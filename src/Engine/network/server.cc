@@ -52,19 +52,21 @@ ServerImpl::ServerImpl() {
   socket_ = std::make_unique<UdpSocket>(options);
 }
 
-Server::Server(int port)
+Server::Server(EventAggregator* event_aggregator, int port)
     : impl_(std::make_unique<ServerImpl>()),
-      reactor_(std::make_shared<ServerReactor>()) {
+      reactor_(std::make_shared<ServerReactor>()),
+      event_aggregator_(event_aggregator) {
+  event_aggregator_->Subscribe<ClientConnectMessage>(this);
+  event_aggregator_->Subscribe<ClientHeartbeatMessage>(this);
   if (port <= 0) throw std::out_of_range("port is 0 or less.");
   requested_port_ = port;
 
   REGISTER_MESSAGE_HANDLER(ReservedClientMessage::kConnect, {
+    event_aggregator_->Publish<ClientConnectMessage>(impl_->clients_[client_id]->GetText());
   });
 
   REGISTER_MESSAGE_HANDLER(ReservedClientMessage::kHeartbeat, {
-    std::cout << "Client Sent a Heartbeat!" << std::endl;
-    auto ack = CreateMessage(ReservedServerMessage::kAckClientHeartbeat);
-    ack->Send(client_id);
+    event_aggregator_->Publish<ClientHeartbeatMessage>(client_id);
   });
 }
 
@@ -146,6 +148,21 @@ std::unique_ptr<std::list<int>> Server::GetClientIds() {
     clients->push_back(client.first);
   }
   return std::move(clients);
+}
+
+// Handles
+
+void Server::Handle(TimeMessage message) {
+}
+
+void Server::Handle(ClientConnectMessage message) {
+  std::cout << "Client connected: " << message.ip << std::endl;
+}
+
+void Server::Handle(ClientHeartbeatMessage message) {
+  std::cout << "Client Sent a Heartbeat!" << std::endl;
+  auto ack = CreateMessage(ReservedServerMessage::kAckClientHeartbeat);
+  ack->Send(message.client_id);
 }
 
 } // end network namespace

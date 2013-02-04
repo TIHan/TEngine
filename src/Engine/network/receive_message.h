@@ -35,8 +35,8 @@ namespace network {
 
 enum ReservedServerMessage {
   kAckClientConnect = 248,
-  kAckClientDisconnect = 250,
-  kAckClientHeartbeat = 249
+  kAckClientDisconnect = 249,
+  kAckClientHeartbeat = 250
 };
 
 enum ReservedClientMessage {

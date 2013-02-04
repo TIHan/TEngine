@@ -37,10 +37,24 @@ namespace network {
 const int kMaxClients = 64;
 const int kMaxServerPerClientTransfer = 8192;
 
+struct ClientConnectMessage : public lib::MessageBase<ClientConnectMessage> {
+  ClientConnectMessage(const std::string& ip) : ip(ip) {}
+  std::string ip;
+};
+
+struct ClientHeartbeatMessage
+    : public lib::MessageBase<ClientHeartbeatMessage> {
+  ClientHeartbeatMessage(int client_id) : client_id(client_id) {}
+  int client_id;
+};
+
 class ServerImpl;
-class Server : public virtual ServerInterface {
+class Server : public virtual ServerInterface,
+               public virtual EventInterface<TimeMessage>,
+               public virtual EventInterface<ClientConnectMessage>,
+               public virtual EventInterface<ClientHeartbeatMessage> {
 public:
-  explicit Server(int port);
+  explicit Server(EventAggregator* event_aggregator, int port);
   virtual ~Server();
 
   virtual void Start();
@@ -53,12 +67,20 @@ public:
 
   virtual std::unique_ptr<std::list<int>> GetClientIds();
 
+protected:
+  virtual void Handle(TimeMessage message);
+  virtual void Handle(ClientConnectMessage message);
+  virtual void Handle(ClientHeartbeatMessage message);
+
 private:
   std::unique_ptr<ServerImpl> impl_;
 
   std::shared_ptr<ServerReactor> reactor_;
   std::atomic<uint8_t> id_count_;
   int requested_port_;
+
+  // Events
+  EventAggregator* event_aggregator_;
 };
 
 } // end network namespace

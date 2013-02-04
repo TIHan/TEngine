@@ -234,7 +234,7 @@ void SocketBaseImpl::Open(int socket_type, int flags,
 
   if (getaddrinfo(new_node_name, service_name.c_str(), &hints,
                   &address_info_) != 0) {
-    throw std::domain_error("Unable to get address information.");
+    throw std::runtime_error("Unable to get address information.");
   }
 
   for (p = address_info_; p != 0; p = p->ai_next) {
@@ -248,7 +248,7 @@ void SocketBaseImpl::Open(int socket_type, int flags,
     }
   }
 
-  if (socket_ == -1) throw std::domain_error("Unable to create socket.");
+  if (socket_ == -1) throw std::runtime_error("Unable to create socket.");
 
 #ifdef __GNUC__
   if (!blocking_) {

@@ -54,15 +54,16 @@ Client::Client(EventAggregator* event_aggregator)
       event_aggregator_(event_aggregator),
       time_filter_heartbeat_(1000) {
   connected_ = false;
-  event_aggregator_->Subscribe(this);
+  event_aggregator_->Subscribe<TimeMessage>(this);
+  event_aggregator_->Subscribe<AckClientConnectMessage>(this);
+  event_aggregator_->Subscribe<AckClientHeartbeatMessage>(this);
 
   REGISTER_MESSAGE_CALLBACK(ReservedServerMessage::kAckClientConnect, {
-    connected_ = true;
-    std::cout << "CONNECTED!" << std::endl;
+    event_aggregator_->Publish<AckClientConnectMessage>();
   });
 
   REGISTER_MESSAGE_CALLBACK(ReservedServerMessage::kAckClientHeartbeat, {
-    std::cout << "Server Acknowledged Heartbeat!" << std::endl;
+    event_aggregator_->Publish<AckClientHeartbeatMessage>();
   });
 }
 
@@ -126,11 +127,22 @@ void Client::SendMessages() {
   });
 }
 
+// Handles
+
 void Client::Handle(TimeMessage message) {
   if (time_filter_heartbeat_.TryTime(message.milliseconds)) {
     auto connect_msg = CreateMessage(ReservedClientMessage::kHeartbeat);
     connect_msg->Send();
   }
+}
+
+void Client::Handle(AckClientConnectMessage message) {
+  connected_ = true;
+  std::cout << "Connected to server!" << std::endl;
+}
+
+void Client::Handle(AckClientHeartbeatMessage message) {
+  std::cout << "Server Acknowledged Heartbeat!" << std::endl;
 }
 
 } // end network namespace
