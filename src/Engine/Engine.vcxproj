@@ -144,31 +144,17 @@
     <ClInclude Include="lib\event_system.h" />
     <ClInclude Include="lib\message_adapter.h" />
     <ClInclude Include="lib\time_filter.h" />
-    <ClInclude Include="network\client.h" />
-    <ClInclude Include="network\client_interface.h" />
-    <ClInclude Include="network\client_message.h" />
-    <ClInclude Include="network\client_message_processor.h" />
+    <ClInclude Include="network\connection_manager_interface.h" />
     <ClInclude Include="network\include\engine_network.h" />
     <ClInclude Include=".\network\socket_base.h" />
     <ClInclude Include=".\network\socket_base-impl.h" />
     <ClInclude Include=".\network\udp_socket.h" />
-    <ClInclude Include="network\message_base.h" />
-    <ClInclude Include="network\receive_message.h" />
-    <ClInclude Include="network\server.h" />
-    <ClInclude Include="network\server_channel.h" />
-    <ClInclude Include="network\server_interface.h" />
-    <ClInclude Include="network\server_message.h" />
-    <ClInclude Include="network\server_message_handler.h" />
-    <ClInclude Include="network\server_reactor.h" />
-    <ClInclude Include="network\server_packet.h" />
+    <ClInclude Include="network\packet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\network\socket_base.cc" />
     <ClCompile Include=".\network\udp_socket.cc" />
-    <ClCompile Include="network\client.cc" />
-    <ClCompile Include="network\client_message_processor.cc" />
-    <ClCompile Include="network\server.cc" />
-    <ClCompile Include="network\server_reactor.cc" />
+    <ClCompile Include="network\connection_manager.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

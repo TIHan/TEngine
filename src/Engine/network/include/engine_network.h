@@ -25,5 +25,4 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "../server.h"
-#include "../client.h"
+#include "../connection_manager_interface.h"

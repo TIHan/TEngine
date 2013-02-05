@@ -51,12 +51,6 @@
     <ClInclude Include="lib\byte_stream.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="network\message_base.h">
-      <Filter>network\domain</Filter>
-    </ClInclude>
-    <ClInclude Include="network\receive_message.h">
-      <Filter>network\domain</Filter>
-    </ClInclude>
     <ClInclude Include=".\network\udp_socket.h">
       <Filter>network\infrastructure</Filter>
     </ClInclude>
@@ -65,39 +59,6 @@
     </ClInclude>
     <ClInclude Include=".\network\socket_base-impl.h">
       <Filter>network\infrastructure</Filter>
-    </ClInclude>
-    <ClInclude Include="network\client.h">
-      <Filter>network\infrastructure</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server.h">
-      <Filter>network\infrastructure</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_reactor.h">
-      <Filter>network\domain\server</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_channel.h">
-      <Filter>network\domain\server</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_interface.h">
-      <Filter>network\domain\server</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_message.h">
-      <Filter>network\domain\server</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_message_handler.h">
-      <Filter>network\domain\server</Filter>
-    </ClInclude>
-    <ClInclude Include="network\server_packet.h">
-      <Filter>network\domain\server</Filter>
-    </ClInclude>
-    <ClInclude Include="network\client_interface.h">
-      <Filter>network\domain\client</Filter>
-    </ClInclude>
-    <ClInclude Include="network\client_message.h">
-      <Filter>network\domain\client</Filter>
-    </ClInclude>
-    <ClInclude Include="network\client_message_processor.h">
-      <Filter>network\domain\client</Filter>
     </ClInclude>
     <ClInclude Include="core\game_loop.h">
       <Filter>core</Filter>
@@ -120,6 +81,12 @@
     <ClInclude Include="lib\message_adapter.h">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="network\connection_manager_interface.h">
+      <Filter>network\domain\server</Filter>
+    </ClInclude>
+    <ClInclude Include="network\packet.h">
+      <Filter>network\domain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\network\udp_socket.cc">
@@ -128,17 +95,8 @@
     <ClCompile Include=".\network\socket_base.cc">
       <Filter>network\infrastructure</Filter>
     </ClCompile>
-    <ClCompile Include="network\client.cc">
+    <ClCompile Include="network\connection_manager.cc">
       <Filter>network\infrastructure</Filter>
-    </ClCompile>
-    <ClCompile Include="network\server.cc">
-      <Filter>network\infrastructure</Filter>
-    </ClCompile>
-    <ClCompile Include="network\server_reactor.cc">
-      <Filter>network\domain\server</Filter>
-    </ClCompile>
-    <ClCompile Include="network\client_message_processor.cc">
-      <Filter>network\domain\client</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -38,8 +38,9 @@ public:
   ByteStream();
   explicit ByteStream(int reserve);
   explicit ByteStream(const std::vector<uint8_t>& buffer);
+  explicit ByteStream(const ByteStream& stream);
   ByteStream(const std::vector<uint8_t>& buffer, int size);
-  virtual ~ByteStream();
+  ByteStream(const ByteStream& stream, int start_position);
 
   int GetSize() const;
   void Clear();
@@ -51,6 +52,7 @@ public:
   void WriteBuffer(const std::vector<uint8_t>& buffer);
   void WriteBuffer(const std::vector<uint8_t>& buffer, int size);
   void WriteStream(const ByteStream& stream);
+  void WriteStream(const ByteStream& stream, int start_position);
 
   template <typename T>
   T Read();
@@ -61,10 +63,10 @@ public:
   uint8_t ReadByte();
   void WriteByte(uint8_t byte);
 
-  bool CanRead();
+  bool CanRead() const;
 
-  /* Accessors / Mutators */
-  int read_position() const;
+  /* A+M */
+  int read_position() const { return read_position_; }
 
 private:
   void Init();
@@ -113,14 +115,14 @@ void ByteStream::Write(T value) {
   *
   */
 inline ByteStream::ByteStream() {
-  read_position_ = 0;
+  Init();
 }
 
 /*!
   *
   */
 inline ByteStream::ByteStream(int reserve) {
-  read_position_ = 0;
+  Init();
   buffer_.reserve(reserve);
 }
 
@@ -128,22 +130,31 @@ inline ByteStream::ByteStream(int reserve) {
   *
   */
 inline ByteStream::ByteStream(const std::vector<uint8_t>& buffer) {
-  read_position_ = 0;
+  Init();
   WriteBuffer(buffer);
 }
 
 /*!
   *
   */
+inline ByteStream::ByteStream(const ByteStream& stream) {
+  Init();
+  WriteStream(stream);
+}
+
+/*!
+  *
+  */
 inline ByteStream::ByteStream(const std::vector<uint8_t>& buffer, int size) {
-  read_position_ = 0;
+  Init();
   WriteBuffer(buffer, size);
 }
 
 /*!
   *
   */
-inline ByteStream::~ByteStream() {
+inline void ByteStream::Init() {
+  read_position_ = 0;
 }
 
 /*!
@@ -229,6 +240,15 @@ inline void ByteStream::WriteStream(const ByteStream& stream) {
 /*!
   *
   */
+inline void ByteStream::WriteStream(const ByteStream& stream, int start_position) {
+  for (int i = start_position; i < stream.GetSize(); ++i) {
+    WriteByte(stream.buffer_.at(i));
+  }
+}
+
+/*!
+  *
+  */
 inline uint8_t ByteStream::ReadByte() {
   return buffer_.at(read_position_++);
 }
@@ -243,15 +263,8 @@ inline void ByteStream::WriteByte(uint8_t byte) {
 /*!
   *
   */
-inline bool ByteStream::CanRead() {
+inline bool ByteStream::CanRead() const {
   return read_position_ < GetSize();
-}
-
-/*!
-  *
-  */
-inline int ByteStream::read_position() const {
-  return read_position_;
 }
 
 } // end lib namespace

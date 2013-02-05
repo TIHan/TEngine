@@ -25,51 +25,58 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SERVER_MESSAGE_H_
-#define SERVER_MESSAGE_H_
+#ifndef PACKET_H_
+#define PACKET_H_
 
-#include "message_base.h"
-#include "server_channel.h"
+#include <engine_lib.h>
 
 namespace engine {
 namespace network {
 
-class ServerMessage : public MessageBase {
-public:
-  ServerMessage(int type, std::shared_ptr<std::list<int>> client_ids,
-                std::shared_ptr<ServerChannel> channel);
-  virtual ~ServerMessage();
-
-  void Send();
-  void Send(int client_id);
-
-private:
-  std::shared_ptr<std::list<int>> client_ids_;
-  std::shared_ptr<ServerChannel> channel_;
+enum class PacketHeader : uint8_t {
+  kUnreliable,
+  kUnreliableSequenced,
+  kReliable,
+  kReliableSequenced,
+  kReliableOrdered,
+  kConnect,
+  kDisconnect,
+  kHeartbeat
 };
 
-inline ServerMessage::ServerMessage(int type,
-    std::shared_ptr<std::list<int>> client_ids, std::shared_ptr<ServerChannel> channel)
-    : MessageBase(type), client_ids_(client_ids), channel_(channel) {
-}
+enum class TransferMethod : uint8_t {
+  kUnreliable,
+  kUnreliableSequenced,
+  kReliable,
+  kReliableSequenced,
+  kReliableOrdered
+};
 
-inline ServerMessage::~ServerMessage() {
-}
+class Packet : ByteStream {
+public:
+  Packet(TransferMethod transfer_method, int connection_id,
+         int sequence_number, const ByteStream& stream);
 
-inline void ServerMessage::Send() {
-  for (auto id : *client_ids_) {
-    Send(id);
-  }
-}
+  /* A+M */
+  TransferMethod transfer_method() { return transfer_method_; }
+  int connection_id() { return connection_id_; }
+  int sequence_number() { return sequence_number_; }
 
-inline void ServerMessage::Send(int client_id) {
-  if (buffer_->GetSize() > kMaximumTransmissionUnit)
-    throw std::out_of_range("Message is too big.");
+private:
+  TransferMethod transfer_method_;
+  int connection_id_;
+  int sequence_number_;
+};
 
-  channel_->Push(std::make_pair(client_id, buffer_));
+inline Packet::Packet(TransferMethod transfer_method, int connection_id,
+                      int sequence_number, const ByteStream& stream)
+    : ByteStream(stream, stream.read_position()) {
+  transfer_method_ = transfer_method;
+  connection_id_ = connection_id;
+  sequence_number_ = sequence_number;
 }
 
 } // end network namespace
 } // end engine namespace
 
-#endif // SERVER_MESSAGE_H_
+#endif /* PACKET_H_ */
