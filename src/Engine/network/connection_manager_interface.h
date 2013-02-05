@@ -40,6 +40,21 @@ struct Connection {
   std::string ip;
 };
 
+struct AcceptedConnectionMessage : MessageBase<AcceptedConnectionMessage> {
+  AcceptedConnectionMessage(Connection connection) : connection(connection) {}
+  Connection connection;
+};
+
+struct KickedConnectionMessage : MessageBase<KickedConnectionMessage> {
+  KickedConnectionMessage(Connection connection) : connection(connection) {}
+  Connection connection;
+};
+
+struct BannedConnectionMessage : MessageBase<BannedConnectionMessage> {
+  BannedConnectionMessage(Connection connection) : connection(connection) {}
+  Connection connection;
+};
+
 class AddressAdapterInterface {
 public:
   virtual ~AddressAdapterInterface() {}
@@ -54,6 +69,7 @@ public:
   virtual void AcceptConnection(
       std::unique_ptr<AddressAdapterInterface> address,
       const std::unique_ptr<ByteStream> stream) = 0;
+  // TODO: DisbandConnection or DisconnectConnection
   virtual void KickConnection(Connection connection) = 0;
   virtual void BanConnection(Connection connection) = 0;
   virtual void UnbanConnection(Connection connection) = 0;

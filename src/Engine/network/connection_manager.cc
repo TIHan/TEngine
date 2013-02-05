@@ -112,9 +112,11 @@ inline void ConnectionManager::AcceptConnection(
     return;
 
   // Build a new connection.
-  connections_.emplace(std::move(address), Connection(
+  Connection connection(
       std::hash<std::unique_ptr<AddressAdapterInterface>>()(address),
-      address->GetIp()));
+      address->GetIp());
+  connections_.emplace(std::move(address), connection);
+  event_aggregator_->Publish<AcceptedConnectionMessage>(connection);
 }
 
 inline void ConnectionManager::KickConnection(Connection connection) {
@@ -123,6 +125,7 @@ inline void ConnectionManager::KickConnection(Connection connection) {
                      Connection> pair) {
     if (pair.second.hash == connection.hash) {
       connections_.erase(pair.first);
+      event_aggregator_->Publish<KickedConnectionMessage>(connection);
       return;
     }
   });
@@ -131,6 +134,7 @@ inline void ConnectionManager::KickConnection(Connection connection) {
 inline void ConnectionManager::BanConnection(Connection connection) {
   KickConnection(connection);
   banned_ips_.emplace(connection.ip);
+  event_aggregator_->Publish<BannedConnectionMessage>(connection);
 }
 
 inline void ConnectionManager::UnbanConnection(Connection connection) {
