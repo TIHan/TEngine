@@ -25,25 +25,12 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "connection_manager_interface.h"
-#include "udp_socket.h"
+#include "connection_manager.h"
 
 namespace engine {
 namespace network {
 
 // Address Adapter
-
-class AddressAdapter {
-public:
-  explicit AddressAdapter(std::unique_ptr<SocketAddress> socket_address);
-
-  virtual std::string GetIp() const;
-
-  bool operator==(const AddressAdapter& compare) const;
-
-private:
-  std::unique_ptr<SocketAddress> socket_address_;
-};
 
 inline AddressAdapter::AddressAdapter(
     std::unique_ptr<SocketAddress> socket_address)
@@ -59,25 +46,6 @@ inline bool AddressAdapter::operator==(const AddressAdapter& compare) const {
 }
 
 // Connection Manager
-
-class ConnectionManager : public virtual ConnectionManagerInterface {
-public:
-  ConnectionManager();
-  virtual ~ConnectionManager() {}
-
-  virtual void Accept(std::unique_ptr<AddressAdapterInterface> address,
-                      ByteStream* stream);
-  virtual Connection Exists(std::unique_ptr<AddressAdapterInterface> address);
-  virtual void DisbandConnection(const Connection& connection);
-  virtual void KickConnection(const Connection& connection);
-  virtual void BanConnection(const Connection& connection);
-  virtual void UnbanConnection(const Connection& connection);
-
-private:
-  std::map<
-      std::shared_ptr<AddressAdapterInterface>, Connection> connections_;
-  std::set<std::string> banned_ips_;
-};
 
 inline ConnectionManager::ConnectionManager() {
 }

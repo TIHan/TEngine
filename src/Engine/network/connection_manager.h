@@ -25,48 +25,48 @@
   THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef UDP_SOCKET_H_
-#define UDP_SOCKET_H_
+#ifndef CONNECTION_MANAGER_H_
+#define CONNECTION_MANAGER_H_
 
-#include "socket_base.h"
+#include "connection_manager_interface.h"
+#include "udp_socket.h"
 
 namespace engine {
 namespace network {
 
-struct UdpSocketOptions {
-  UdpSocketOptions() {
-    blocking = true;
-    family = SocketFamily::kUnspecified;
-    max_receive_buffer = 1024;
-  }
-  int max_receive_buffer;
-  SocketFamily family;
-  bool blocking;
-};
-
-class UdpSocket : public SocketBase {
+class AddressAdapter {
 public:
-  UdpSocket();
-  explicit UdpSocket(const UdpSocketOptions& options);
-  virtual ~UdpSocket();
+  explicit AddressAdapter(std::unique_ptr<SocketAddress> socket_address);
+  virtual ~AddressAdapter() {}
 
-  virtual void Open();
-  virtual void Open(const std::string& address, const std::string& port);
+  virtual std::string GetIp() const;
 
-  virtual std::tuple<ByteStream, SocketAddress> ReceiveFrom();
-
-  virtual int Send(const ByteStream& data);
-  virtual int SendTo(const ByteStream& data,
-                     const SocketAddress& address);
-
-  virtual bool WaitToRead(int usec);
+  bool operator==(const AddressAdapter& compare) const;
 
 private:
-  UdpSocketOptions options_;
-  std::vector<uint8_t> receive_buffer_;
+  std::unique_ptr<SocketAddress> socket_address_;
+};
+
+class ConnectionManager : public virtual ConnectionManagerInterface {
+public:
+  ConnectionManager();
+  virtual ~ConnectionManager() {}
+
+  virtual void Accept(std::unique_ptr<AddressAdapterInterface> address,
+                      ByteStream* stream);
+  virtual Connection Exists(std::unique_ptr<AddressAdapterInterface> address);
+  virtual void DisbandConnection(const Connection& connection);
+  virtual void KickConnection(const Connection& connection);
+  virtual void BanConnection(const Connection& connection);
+  virtual void UnbanConnection(const Connection& connection);
+
+private:
+  std::map<
+      std::shared_ptr<AddressAdapterInterface>, Connection> connections_;
+  std::set<std::string> banned_ips_;
 };
 
 } // end network namespace
 } // end engine namespace
 
-#endif // UDP_SOCKET_H_
+#endif /* CONNECTION_MANAGER_H_ */

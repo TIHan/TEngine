@@ -34,32 +34,25 @@ namespace network {
 /*!
   *
   */
-UdpSocket::UdpSocket() {
-  Init();
+UdpSocket::UdpSocket() : receive_buffer_(options_.max_receive_buffer) {
+  impl_->family_ = options_.family;
+  impl_->blocking_ = options_.blocking;
 }
 
 /*!
   *
   */
-UdpSocket::UdpSocket(const UdpSocketOptions& options) {
-  options_ = options;
-  Init();
+UdpSocket::UdpSocket(const UdpSocketOptions& options)
+  : receive_buffer_(options.max_receive_buffer),
+    options_(options) {
+  impl_->family_ = options_.family;
+  impl_->blocking_ = options_.blocking;
 }
 
 /*!
   *
   */
 UdpSocket::~UdpSocket() {
-}
-
-/*!
-  *
-  */
-void UdpSocket::Init() {
-  receive_buffer_ = std::make_unique<std::vector<uint8_t>>(
-      options_.max_receive_buffer);
-  impl_->family_ = options_.family;
-  impl_->blocking_ = options_.blocking;
 }
 
 /*!
@@ -85,18 +78,18 @@ std::tuple<ByteStream, SocketAddress> UdpSocket::ReceiveFrom() {
   socklen_t addr_len = sizeof(sock_addr_storage);
 
   char* data = reinterpret_cast<char*>(const_cast<uint8_t*>(
-       receive_buffer_->data()));
-  int data_size = static_cast<int>(receive_buffer_->size());
+       receive_buffer_.data()));
+  int data_size = static_cast<int>(receive_buffer_.size());
   auto sock_addr = reinterpret_cast<sockaddr*>(
       const_cast<struct sockaddr_storage*>(&sock_addr_storage));
 
-  int bytes = recvfrom(impl_->socket_, data,
-                       data_size, 0, sock_addr, &addr_len);
+  int bytes = recvfrom(impl_->socket_, data, data_size, 0, sock_addr,
+                       &addr_len);
 
   if (bytes == -1)
     bytes = 0;
   
-  return std::make_tuple(ByteStream(*receive_buffer_, bytes),
+  return std::make_tuple(ByteStream(receive_buffer_, bytes),
       SocketAddress(SocketAddressData(sock_addr_storage, addr_len)));
 }
 

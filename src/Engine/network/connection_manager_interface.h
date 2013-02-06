@@ -29,7 +29,6 @@
 #define CONNECTION_MANAGER_INTERFACE_H_
 
 #include "packet.h"
-#include "udp_socket.h"
 
 namespace engine {
 namespace network {
