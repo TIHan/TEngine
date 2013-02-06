@@ -229,7 +229,7 @@ void SocketBaseImpl::Open(int socket_type, int flags,
   if (!node_name.empty()) {
     new_node_name = static_cast<const char*>(node_name.c_str());
   } else {
-    new_node_name = "localhost";
+    new_node_name = INADDR_ANY;
   }
 
   if (getaddrinfo(new_node_name, service_name.c_str(), &hints,
