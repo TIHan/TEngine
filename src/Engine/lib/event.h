@@ -33,21 +33,45 @@
 namespace engine {
 namespace lib {
 
-struct MessageType {
-  size_t type_hash_code;
+enum class MessageType : uint8_t {
+  kUnknown,
+  kCommand,
+  kEvent
 };
 
-template <typename Derived>
-struct MessageBase : public MessageType {
-  MessageBase() {
-    static auto hash_code = typeid(Derived).hash_code();
-    type_hash_code = hash_code;
+struct Message {
+  size_t hash_code;
+  MessageType type;
+
+protected:
+  Message() {
+    type = MessageType::kUnknown;
   }
 };
 
-struct TimeMessage : public MessageBase<TimeMessage> {
-  TimeMessage(uint64_t milliseconds) : milliseconds(milliseconds) {};
-  uint64_t milliseconds;
+template <typename T>
+struct MessageBase : public Message {
+protected:
+  MessageBase() {
+    static auto hash = typeid(T).hash_code();
+    hash_code = hash;
+  }
+};
+
+template <typename T>
+struct EventMessage : public MessageBase<T> {
+protected:
+  EventMessage() {
+    MessageType::kEvent;
+  }
+};
+
+template <typename T>
+struct CommandMessage : public MessageBase<T> {
+protected:
+  CommandMessage() {
+    MessageType::kCommand;
+  }
 };
 
 template <typename T>

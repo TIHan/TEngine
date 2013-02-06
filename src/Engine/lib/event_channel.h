@@ -76,7 +76,7 @@ inline void EventChannel::PushMessage(Args&&... args) {
 inline void EventChannel::Flush() {
   for (auto citer = message_buffer_.crbegin();
             citer != message_buffer_.crend(); ++citer) {
-    auto events = events_.equal_range((*citer)->GetTypeHashCode());
+    auto events = events_.equal_range((*citer)->GetHashCode());
     for (auto iter = events.first; iter != events.second;) {
       if (iter->second) {
         (*citer)->ExecuteEvent(iter->second);

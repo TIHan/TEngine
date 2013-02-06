@@ -38,16 +38,17 @@ public:
   virtual ~MessageAdapterInterface() {}
 
   virtual void ExecuteEvent(void* event) = 0;
-  virtual size_t GetTypeHashCode() = 0;
+  virtual size_t GetHashCode() = 0;
 };
 
 template <typename T, typename... Args>
 class MessageAdapter : public virtual MessageAdapterInterface {
 public:
   explicit MessageAdapter(Args&&... args) : message_(args...) {};
+  virtual ~MessageAdapter() {}
 
   virtual void ExecuteEvent(void* event);
-  virtual size_t GetTypeHashCode();
+  virtual size_t GetHashCode();
 
 private:
   T message_;
@@ -59,8 +60,8 @@ inline void MessageAdapter<T, Args...>::ExecuteEvent(void* event) {
 }
 
 template <typename T, typename... Args>
-inline size_t MessageAdapter<T, Args...>::GetTypeHashCode() {
-  return message_.type_hash_code;
+inline size_t MessageAdapter<T, Args...>::GetHashCode() {
+  return message_.hash_code;
 }
 
 template <typename T>
@@ -80,7 +81,7 @@ inline void MessageAdapter<T>::ExecuteEvent(void* event) {
 
 template <typename T>
 inline size_t MessageAdapter<T>::GetTypeHashCode() {
-  return message_.type_hash_code;
+  return message_.hash_code;
 }
 
 } // end lib namespace

@@ -36,9 +36,9 @@ namespace lib {
 class ByteStream {
 public:
   ByteStream();
+  ByteStream(const ByteStream& copy);
   explicit ByteStream(int reserve);
   explicit ByteStream(const std::vector<uint8_t>& buffer);
-  explicit ByteStream(const ByteStream& stream);
   ByteStream(const std::vector<uint8_t>& buffer, int size);
   ByteStream(const ByteStream& stream, int start_position);
 
@@ -121,6 +121,14 @@ inline ByteStream::ByteStream() {
 /*!
   *
   */
+inline ByteStream::ByteStream(const ByteStream& copy) {
+  buffer_ = copy.buffer_;
+  read_position_ = copy.read_position_;
+}
+
+/*!
+  *
+  */
 inline ByteStream::ByteStream(int reserve) {
   Init();
   buffer_.reserve(reserve);
@@ -137,17 +145,17 @@ inline ByteStream::ByteStream(const std::vector<uint8_t>& buffer) {
 /*!
   *
   */
-inline ByteStream::ByteStream(const ByteStream& stream) {
+inline ByteStream::ByteStream(const std::vector<uint8_t>& buffer, int size) {
   Init();
-  WriteStream(stream);
+  WriteBuffer(buffer, size);
 }
 
 /*!
   *
   */
-inline ByteStream::ByteStream(const std::vector<uint8_t>& buffer, int size) {
+inline ByteStream::ByteStream(const ByteStream& stream, int start_position) {
   Init();
-  WriteBuffer(buffer, size);
+  WriteStream(stream, start_position);
 }
 
 /*!

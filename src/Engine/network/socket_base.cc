@@ -116,36 +116,42 @@ namespace network {
 /*!
   *
   */
-SocketAddress::SocketAddress(std::shared_ptr<SocketAddressData> addr_data)
+SocketAddress::SocketAddress(const SocketAddressData& addr_data)
     : impl_(std::make_unique<SocketAddressImpl>(addr_data)) {
 }
 
 /*!
   *
   */
-SocketAddress::~SocketAddress() {
+SocketAddress::SocketAddress(const SocketAddress& copy)
+    : impl_(std::make_unique<SocketAddressImpl>(copy.impl_->data_)) {
 }
 
 /*!
   *
   */
+SocketAddress::~SocketAddress() {}
+
+/*!
+  *
+  */
 std::string SocketAddress::GetText() const {
-  return GetSocketAddressString(impl_->data_->address);
+  return GetSocketAddressString(impl_->data_.address);
 }
 
 /*!
   *
   */
 int SocketAddress::GetLength() const {
-  return impl_->data_->length;
+  return impl_->data_.length;
 }
 
 /*!
   *
   */
 bool SocketAddress::operator==(const SocketAddress& compare) const {
-  auto storage = impl_->data_->address;
-  auto storage_cmp = compare.impl_->data_->address;
+  auto storage = impl_->data_.address;
+  auto storage_cmp = compare.impl_->data_.address;
 
   if (storage.ss_family == storage_cmp.ss_family) {
     if (storage.ss_family == AF_INET6 && 
@@ -166,21 +172,15 @@ bool SocketAddress::operator==(const SocketAddress& compare) const {
 /*!
   *
   */
-SocketAddressImpl::SocketAddressImpl(
-    std::shared_ptr<SocketAddressData> addr_data) : data_(addr_data) {
-}
-
-/*!
-  *
-  */
-SocketAddressImpl::~SocketAddressImpl() {
+SocketAddressImpl::SocketAddressImpl(const SocketAddressData& addr_data)
+    : data_(addr_data) {
 }
 
 /*!
   *
   */
 const void* SocketAddress::GetRaw() const {
-  return &impl_->data_->address;
+  return &impl_->data_.address;
 }
 
 /*!
@@ -229,7 +229,7 @@ void SocketBaseImpl::Open(int socket_type, int flags,
   if (!node_name.empty()) {
     new_node_name = static_cast<const char*>(node_name.c_str());
   } else {
-    new_node_name = "localhost"; // HACK: This is so bad, I want to hit my face. Come back and figure it out later.
+    new_node_name = "localhost";
   }
 
   if (getaddrinfo(new_node_name, service_name.c_str(), &hints,

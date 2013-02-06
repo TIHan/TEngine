@@ -50,6 +50,8 @@
 namespace engine {
 namespace network {
 
+// Socket Address
+
 struct SocketAddressData {
   SocketAddressData(const struct sockaddr_storage& address, int length)
       : address(address), length(length) {}
@@ -59,11 +61,13 @@ struct SocketAddressData {
 
 class SocketAddressImpl {
 public:
-  SocketAddressImpl(std::shared_ptr<SocketAddressData> addr_data);
-  virtual ~SocketAddressImpl();
+  SocketAddressImpl(const SocketAddressData& addr_data);
+  virtual ~SocketAddressImpl() {}
 
-  std::shared_ptr<SocketAddressData> data_;
+  SocketAddressData data_;
 };
+
+// SocketBase
 
 class SocketBaseImpl {
 public:

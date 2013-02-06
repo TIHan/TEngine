@@ -62,46 +62,29 @@ inline bool AddressAdapter::operator==(const AddressAdapter& compare) const {
 
 class ConnectionManager : public virtual ConnectionManagerInterface {
 public:
-  ConnectionManager(EventAggregator* event_aggregator);
+  ConnectionManager();
+  virtual ~ConnectionManager() {}
 
-  virtual void AcceptConnection(
-      std::unique_ptr<AddressAdapterInterface> address,
-      const std::unique_ptr<ByteStream> stream);
-  virtual void KickConnection(Connection connection);
-  virtual void BanConnection(Connection connection);
-  virtual void UnbanConnection(Connection connection);
-
-protected:
-  Connection ConnectionExists(
-      std::unique_ptr<AddressAdapterInterface> address);
+  virtual void Accept(std::unique_ptr<AddressAdapterInterface> address,
+                      ByteStream* stream);
+  virtual Connection Exists(std::unique_ptr<AddressAdapterInterface> address);
+  virtual void DisbandConnection(const Connection& connection);
+  virtual void KickConnection(const Connection& connection);
+  virtual void BanConnection(const Connection& connection);
+  virtual void UnbanConnection(const Connection& connection);
 
 private:
   std::map<
       std::shared_ptr<AddressAdapterInterface>, Connection> connections_;
   std::set<std::string> banned_ips_;
-
-  // Events
-  EventAggregator* event_aggregator_;
 };
 
-inline ConnectionManager::ConnectionManager(EventAggregator* event_aggregator)
-    : event_aggregator_(event_aggregator) {
+inline ConnectionManager::ConnectionManager() {
 }
 
-inline Connection ConnectionManager::ConnectionExists(
-    std::unique_ptr<AddressAdapterInterface> address) {
-  // See if the address is already connected.
-  auto iter = connections_.find(std::move(address));
-  if (iter != connections_.end()) {
-    // Return valid connection.
-    return iter->second;
-  }
-  return Connection(0, stdext::string::empty());
-}
-
-inline void ConnectionManager::AcceptConnection(
+inline void ConnectionManager::Accept(
     std::unique_ptr<AddressAdapterInterface> address,
-    const std::unique_ptr<ByteStream> stream) {
+    ByteStream* stream) {
   // See if the address is banned.
   auto ip_iter = banned_ips_.find(address->GetIp());
   if (ip_iter != banned_ips_.end()) {
@@ -116,28 +99,41 @@ inline void ConnectionManager::AcceptConnection(
       std::hash<std::unique_ptr<AddressAdapterInterface>>()(address),
       address->GetIp());
   connections_.emplace(std::move(address), connection);
-  event_aggregator_->Publish<AcceptedConnectionMessage>(connection);
 }
 
-inline void ConnectionManager::KickConnection(Connection connection) {
+inline Connection ConnectionManager::Exists(
+    std::unique_ptr<AddressAdapterInterface> address) {
+  // See if the address is already connected.
+  auto iter = connections_.find(std::move(address));
+  if (iter != connections_.end()) {
+    // Return valid connection.
+    return iter->second;
+  }
+  return Connection(0, stdext::string::empty());
+}
+
+inline void ConnectionManager::DisbandConnection(
+    const Connection& connection) {
   std::for_each(connections_.begin(), connections_.end(),
       [=] (std::pair<std::shared_ptr<AddressAdapterInterface>,
                      Connection> pair) {
     if (pair.second.hash == connection.hash) {
       connections_.erase(pair.first);
-      event_aggregator_->Publish<KickedConnectionMessage>(connection);
       return;
     }
   });
 }
 
-inline void ConnectionManager::BanConnection(Connection connection) {
-  KickConnection(connection);
-  banned_ips_.emplace(connection.ip);
-  event_aggregator_->Publish<BannedConnectionMessage>(connection);
+inline void ConnectionManager::KickConnection(const Connection& connection) {
+  DisbandConnection(connection);
 }
 
-inline void ConnectionManager::UnbanConnection(Connection connection) {
+inline void ConnectionManager::BanConnection(const Connection& connection) {
+  KickConnection(connection);
+  banned_ips_.emplace(connection.ip);
+}
+
+inline void ConnectionManager::UnbanConnection(const Connection& connection) {
   banned_ips_.erase(connection.ip);
 }
 

@@ -78,14 +78,14 @@
     <ClInclude Include="lib\event_channel.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="lib\message_adapter.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="network\connection_manager_interface.h">
       <Filter>network\domain\server</Filter>
     </ClInclude>
     <ClInclude Include="network\packet.h">
       <Filter>network\domain</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\message_adapter.h">
+      <Filter>lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

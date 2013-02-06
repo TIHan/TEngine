@@ -55,7 +55,8 @@ enum class TransferMethod : uint8_t {
 class Packet : ByteStream {
 public:
   Packet(TransferMethod transfer_method, int connection_id,
-         int sequence_number, const ByteStream& stream);
+         int sequence_number, const ByteStream& stream,
+         int stream_start_position);
 
   /* A+M */
   TransferMethod transfer_method() { return transfer_method_; }
@@ -69,8 +70,9 @@ private:
 };
 
 inline Packet::Packet(TransferMethod transfer_method, int connection_id,
-                      int sequence_number, const ByteStream& stream)
-    : ByteStream(stream, stream.read_position()) {
+                      int sequence_number, const ByteStream& stream,
+                      int stream_start_position)
+    : ByteStream(stream, stream_start_position) {
   transfer_method_ = transfer_method;
   connection_id_ = connection_id;
   sequence_number_ = sequence_number;

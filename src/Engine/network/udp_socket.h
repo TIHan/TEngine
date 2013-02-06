@@ -54,8 +54,7 @@ public:
   virtual void Open();
   virtual void Open(const std::string& address, const std::string& port);
 
-  virtual std::tuple<std::shared_ptr<ByteStream>,
-                     std::shared_ptr<SocketAddress>> ReceiveFrom();
+  virtual std::tuple<ByteStream, SocketAddress> ReceiveFrom();
 
   virtual int Send(const ByteStream& data);
   virtual int SendTo(const ByteStream& data,

@@ -39,12 +39,15 @@ enum class SocketFamily : uint8_t {
   kIpv6
 };
 
+// Socket Address
+
 struct SocketAddressData;
 
 class SocketAddressImpl;
 class SocketAddress {
 public:
-  SocketAddress(std::shared_ptr<SocketAddressData> addr_data);
+  SocketAddress(const SocketAddress& copy);
+  explicit SocketAddress(const SocketAddressData& addr_data);
   virtual ~SocketAddress();
 
   std::string GetText() const;
@@ -56,6 +59,8 @@ public:
 private:
   std::unique_ptr<SocketAddressImpl> impl_;
 };
+
+// Socket Base
 
 class SocketBaseImpl;
 class SocketBase {

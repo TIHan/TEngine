@@ -29,44 +29,38 @@
 #define GAME_LOOP_H_
 
 #include <engine_lib.h>
-#include <engine_network.h>
 
 namespace engine {
 namespace core {
 
 class GameLoop {
 public:
-  GameLoop(std::unique_ptr<EventSystem> event_system, int ticks_per_second);
+  GameLoop(int ticks_per_second);
   virtual ~GameLoop();
 
   void Run(std::function<void()> internal_loop);
   void Stop();
 
+  int GetPerformanceRate();
+  uint64_t GetTickTime();
+  int GetTickRate();
+
   /* A+M */
   bool running();
 
-protected:
-  uint64_t GetTickRate();
-  uint64_t GetTickTime();
-
 private:
-  // Time
+  std::chrono::high_resolution_clock::time_point current_time_;
+  std::chrono::duration<uint64_t, std::nano> sleep_time_;
   std::chrono::high_resolution_clock clock_;
   std::chrono::nanoseconds rate_;
-  uint64_t current_tick_;
-
-  // Events
-  std::unique_ptr<EventSystem> event_system_;
-
   std::atomic<bool> running_;
+  uint64_t current_tick_;
 };
 
-inline GameLoop::GameLoop(std::unique_ptr<EventSystem> event_system,
-                          int ticks_per_second)
-    : event_system_(std::move(event_system)),
-      rate_(static_cast<int>((1.0 / ticks_per_second) * 1000000000)) {
-  current_tick_ = 0;
+inline GameLoop::GameLoop(int ticks_per_second)
+    : rate_(static_cast<int>((1.0 / ticks_per_second) * 1000000000)) {
   running_ = false;
+  current_tick_ = 0;
 }
 
 inline GameLoop::~GameLoop() {
@@ -74,38 +68,43 @@ inline GameLoop::~GameLoop() {
 }
 
 inline void GameLoop::Run(std::function<void()> internal_loop) {
-  current_tick_ = 0;
+  if (running_)
+    throw std::logic_error("Already running.");
+
   running_ = true;
-
-  std::chrono::high_resolution_clock::time_point time;
   while(running_) {
-    time = clock_.now();
+    current_time_ = clock_.now();
 
-    event_system_->GetAggregator()->Publish<TimeMessage>(GetTickTime());
-    event_system_->GetProcessor()->Process();
     internal_loop();
 
     current_tick_++;
-    //std::cout << "TIME: " << std::chrono::duration_cast<std::chrono::milliseconds>(rate_ - (clock_.now() - time)).count() << std::endl;
-    std::this_thread::sleep_for(rate_ - (clock_.now() - time));
+    sleep_time_ = rate_ - (clock_.now() - current_time_);
+    std::this_thread::sleep_for(sleep_time_);
   }
 }
 
 inline void GameLoop::Stop() {
   running_ = false;
+  current_tick_ = 0;
 }
 
-inline bool GameLoop::running() {
-  return running_;
-}
-
-inline uint64_t GameLoop::GetTickRate() {
-  return static_cast<uint64_t>(1000000000 / rate_.count());
+inline int GameLoop::GetPerformanceRate() {
+  return static_cast<int>(
+      std::chrono::duration_cast<std::chrono::milliseconds>(
+      sleep_time_).count());
 }
 
 inline uint64_t GameLoop::GetTickTime() {
   return static_cast<uint64_t>(static_cast<float>(current_tick_) /
          static_cast<float>(GetTickRate()) * 1000);
+}
+
+inline int GameLoop::GetTickRate() {
+  return static_cast<int>(1000000000 / rate_.count());
+}
+
+inline bool GameLoop::running() {
+  return running_;
 }
 
 } // end core namespace

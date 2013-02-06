@@ -80,8 +80,7 @@ void UdpSocket::Open(const std::string& address, const std::string& port) {
 /*!
   *
   */
-std::tuple<std::shared_ptr<ByteStream>,
-           std::shared_ptr<SocketAddress>> UdpSocket::ReceiveFrom() {
+std::tuple<ByteStream, SocketAddress> UdpSocket::ReceiveFrom() {
   struct sockaddr_storage sock_addr_storage;
   socklen_t addr_len = sizeof(sock_addr_storage);
 
@@ -94,14 +93,11 @@ std::tuple<std::shared_ptr<ByteStream>,
   int bytes = recvfrom(impl_->socket_, data,
                        data_size, 0, sock_addr, &addr_len);
 
-  auto buffer = std::make_shared<ByteStream>();
-  if (bytes != -1)
-    buffer->WriteBuffer(*receive_buffer_, bytes);
+  if (bytes == -1)
+    bytes = 0;
   
-  auto address_data =
-      std::make_shared<SocketAddressData>(sock_addr_storage, addr_len);
-  auto address = std::make_shared<SocketAddress>(address_data);
-  return std::make_tuple(buffer, address);
+  return std::make_tuple(ByteStream(*receive_buffer_, bytes),
+      SocketAddress(SocketAddressData(sock_addr_storage, addr_len)));
 }
 
 /*!
