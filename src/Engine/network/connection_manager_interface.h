@@ -33,53 +33,34 @@
 namespace engine {
 namespace network {
 
-struct Connection {
-  Connection(size_t hash, std::string ip) : hash(hash), ip(ip) {}
-  size_t hash;
-  std::string ip;
-};
-
-struct AcceptedConnection : EventMessage<AcceptedConnection> {
-  AcceptedConnection(Connection connection) : connection(connection) {}
-  Connection connection;
-};
-
-struct KickedConnection : EventMessage<KickedConnection> {
-  KickedConnection(Connection connection) : connection(connection) {}
-  Connection connection;
-};
-
-struct BannedConnection : EventMessage<BannedConnection> {
-  BannedConnection(Connection connection) : connection(connection) {}
-  Connection connection;
-};
-
 class AddressAdapterInterface {
 public:
   virtual ~AddressAdapterInterface() {}
 
   virtual std::string GetIp() = 0;
+
+  virtual bool operator==(const AddressAdapterInterface& compare) const = 0;
 };
 
 class ConnectionManagerInterface {
 public:
   virtual ~ConnectionManagerInterface() {}
 
-  virtual void Accept(std::unique_ptr<AddressAdapterInterface> address,
-                      ByteStream* stream) = 0;
-  virtual Connection Exists(
-      std::unique_ptr<AddressAdapterInterface> address) = 0;
-  virtual void DisbandConnection(const Connection& connection) = 0;
-  virtual void KickConnection(const Connection& connection) = 0;
-  virtual void BanConnection(const Connection& connection) = 0;
-  virtual void UnbanConnection(const Connection& connection) = 0;
+  virtual void AcceptAddress(std::unique_ptr<AddressAdapterInterface> address,
+                             ByteStream* stream) = 0;
+  virtual size_t AddressExists(const AddressAdapterInterface& address) = 0;
+  virtual void DisconnectByHash(size_t hash) = 0;
+  virtual void KickByHash(size_t hash) = 0;
+  virtual void BanByHash(size_t hash) = 0;
+  virtual void BanByIp(const std::string& ip) = 0;
+  virtual void UnbanIp(const std::string& ip) = 0;
 };
 
 class PacketMultiplexerInterface {
 public:
   virtual ~PacketMultiplexerInterface() {}
 
-  virtual std::unique_ptr<Packet> Insert(Connection connection,
+  virtual std::unique_ptr<Packet> Insert(size_t connection_hash,
       std::unique_ptr<ByteStream> stream) = 0;
 };
 

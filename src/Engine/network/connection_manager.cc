@@ -41,8 +41,8 @@ inline std::string AddressAdapter::GetIp() const {
   return socket_address_->GetText();
 }
 
-inline bool AddressAdapter::operator==(const AddressAdapter& compare) const {
-  return *socket_address_ == *compare.socket_address_;
+inline bool AddressAdapter::operator==(const AddressAdapterInterface& compare) const {
+  return false;
 }
 
 // Connection Manager
@@ -50,7 +50,7 @@ inline bool AddressAdapter::operator==(const AddressAdapter& compare) const {
 inline ConnectionManager::ConnectionManager() {
 }
 
-inline void ConnectionManager::Accept(
+inline void ConnectionManager::AcceptAddress(
     std::unique_ptr<AddressAdapterInterface> address,
     ByteStream* stream) {
   // See if the address is banned.
@@ -62,47 +62,49 @@ inline void ConnectionManager::Accept(
   if (stream->ReadByte() != static_cast<uint8_t>(PacketHeader::kConnect))
     return;
 
-  // Build a new connection.
-  Connection connection(
-      std::hash<std::unique_ptr<AddressAdapterInterface>>()(address),
-      address->GetIp());
-  connections_.emplace(std::move(address), connection);
+  // Add connection.
+  connections_.emplace(
+      std::hash<std::unique_ptr<AddressAdapterInterface>>()(address), std::move(address));
 }
 
-inline Connection ConnectionManager::Exists(
-    std::unique_ptr<AddressAdapterInterface> address) {
+inline size_t ConnectionManager::AddressExists(
+    const AddressAdapterInterface& address) {
   // See if the address is already connected.
-  auto iter = connections_.find(std::move(address));
-  if (iter != connections_.end()) {
-    // Return valid connection.
-    return iter->second;
+  for (auto connection : connections_) {
+    if (*connection.second == address)
+      return connection.first;
   }
-  return Connection(0, stdext::string::empty());
+  return -1;
 }
 
-inline void ConnectionManager::DisbandConnection(
-    const Connection& connection) {
-  std::for_each(connections_.begin(), connections_.end(),
-      [=] (std::pair<std::shared_ptr<AddressAdapterInterface>,
-                     Connection> pair) {
-    if (pair.second.hash == connection.hash) {
-      connections_.erase(pair.first);
+inline void ConnectionManager::DisconnectByHash(size_t hash) {
+  connections_.erase(hash);
+}
+
+inline void ConnectionManager::KickByHash(size_t hash) {
+  DisconnectByHash(hash);
+}
+
+inline void ConnectionManager::BanByHash(size_t hash) {
+  auto iter = connections_.find(hash);
+  if (iter != connections_.end()) {
+    banned_ips_.emplace(iter->second->GetIp());
+    KickByHash(hash);
+  }
+}
+
+inline void ConnectionManager::BanByIp(const std::string& ip) {
+  banned_ips_.emplace(ip);
+  for (auto connection : connections_) {
+    if (connection.second->GetIp() == ip) {
+      KickByHash(connection.first);
       return;
     }
-  });
+  }
 }
 
-inline void ConnectionManager::KickConnection(const Connection& connection) {
-  DisbandConnection(connection);
-}
-
-inline void ConnectionManager::BanConnection(const Connection& connection) {
-  KickConnection(connection);
-  banned_ips_.emplace(connection.ip);
-}
-
-inline void ConnectionManager::UnbanConnection(const Connection& connection) {
-  banned_ips_.erase(connection.ip);
+inline void ConnectionManager::UnbanIp(const std::string& ip) {
+  banned_ips_.erase(ip);
 }
 
 } // end network namespace

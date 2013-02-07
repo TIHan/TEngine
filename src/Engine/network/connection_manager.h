@@ -41,7 +41,7 @@ public:
 
   virtual std::string GetIp() const;
 
-  bool operator==(const AddressAdapter& compare) const;
+  virtual bool operator==(const AddressAdapterInterface& compare) const;
 
 private:
   std::unique_ptr<SocketAddress> socket_address_;
@@ -52,17 +52,17 @@ public:
   ConnectionManager();
   virtual ~ConnectionManager() {}
 
-  virtual void Accept(std::unique_ptr<AddressAdapterInterface> address,
-                      ByteStream* stream);
-  virtual Connection Exists(std::unique_ptr<AddressAdapterInterface> address);
-  virtual void DisbandConnection(const Connection& connection);
-  virtual void KickConnection(const Connection& connection);
-  virtual void BanConnection(const Connection& connection);
-  virtual void UnbanConnection(const Connection& connection);
+  virtual void AcceptAddress(std::unique_ptr<AddressAdapterInterface> address,
+                             ByteStream* stream);
+  virtual size_t AddressExists(const AddressAdapterInterface& address);
+  virtual void DisconnectByHash(size_t hash);
+  virtual void KickByHash(size_t hash);
+  virtual void BanByHash(size_t hash);
+  virtual void BanByIp(const std::string& ip);
+  virtual void UnbanIp(const std::string& ip);
 
 private:
-  std::map<
-      std::shared_ptr<AddressAdapterInterface>, Connection> connections_;
+  std::map<size_t, std::shared_ptr<AddressAdapterInterface>> connections_;
   std::set<std::string> banned_ips_;
 };
 

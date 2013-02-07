@@ -28,6 +28,5 @@
 #include "../common.h"
 #include "../byte_stream.h"
 #include "../event_system.h"
-#include "../time_filter.h"
 
 using namespace engine::lib;
