@@ -13,14 +13,13 @@ TEST_F(GLFWTest, Initialize) {
 }
 
 TEST_F(GLFWTest, OpenWindow) {
-    EXPECT_TRUE(glfwInit());
-    
+    EXPECT_TRUE(glfwInit()); 
     EXPECT_TRUE(glfwOpenWindow(640, 480, 0, 0, 0, 0, 32, 0, GLFW_WINDOW));
+    EXPECT_TRUE(glewInit() == GLEW_OK);
 
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
-
 
     // Ensure we can capture the escape key being pressed below
     glfwEnable(GLFW_STICKY_KEYS);
