@@ -13,26 +13,29 @@ TEST_F(GLFWTest, Initialize) {
 }
 
 TEST_F(GLFWTest, OpenWindow) {
-    EXPECT_TRUE(glfwInit()); 
-    EXPECT_TRUE(glfwOpenWindow(640, 480, 0, 0, 0, 0, 32, 0, GLFW_WINDOW));
-    EXPECT_TRUE(glewInit() == GLEW_OK);
+  EXPECT_TRUE(glfwInit()); 
 
-    GLuint VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
+  glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
+#ifdef _WIN32
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
+  glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#else
+# ifdef __APPLE__
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
+  glfwOpenWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+# elif
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 0);
+# endif
+#endif
 
-    // Ensure we can capture the escape key being pressed below
-    glfwEnable(GLFW_STICKY_KEYS);
- 
-    do{
-        // Draw nothing, see you in tutorial 2 !
- 
-        // Swap buffers
-        glfwSwapBuffers();
- 
-    } // Check if the ESC key was pressed or the window was closed
-    while(glfwGetKey(GLFW_KEY_ESC) != GLFW_PRESS &&
-    glfwGetWindowParam(GLFW_OPENED));
+  EXPECT_TRUE(glfwOpenWindow(640, 360, 0, 0, 0, 0, 32, 0, GLFW_WINDOW));
+  EXPECT_TRUE(glewInit() == GLEW_OK);
+
+
     
-    glfwTerminate();
+  glfwTerminate();
 }

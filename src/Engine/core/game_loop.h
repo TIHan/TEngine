@@ -72,7 +72,7 @@ inline void GameLoop::Run(std::function<void()> internal_loop) {
     throw std::logic_error("Already running.");
 
   running_ = true;
-  while(running_) {
+  do {
     current_time_ = clock_.now();
 
     internal_loop();
@@ -80,7 +80,7 @@ inline void GameLoop::Run(std::function<void()> internal_loop) {
     current_tick_++;
     sleep_time_ = rate_ - (clock_.now() - current_time_);
     std::this_thread::sleep_for(sleep_time_);
-  }
+  } while(running_);
 }
 
 inline void GameLoop::Stop() {

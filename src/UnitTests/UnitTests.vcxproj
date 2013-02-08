@@ -161,6 +161,12 @@
       <Project>{a9248db5-0186-40a9-8b55-fc2b42b13d0f}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleFragmentShader.fragmentshader">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="SimpleVertexShader.vertexshader" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
