@@ -9,8 +9,4 @@
     <ClCompile Include="physics_test.cc" />
     <ClCompile Include="glfw_test.cc" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SimpleFragmentShader.fragmentshader" />
-    <None Include="SimpleVertexShader.vertexshader" />
-  </ItemGroup>
 </Project>
