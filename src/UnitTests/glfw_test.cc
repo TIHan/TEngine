@@ -23,7 +23,7 @@ TEST_F(GLFWTest, OpenWindow) {
   glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #endif
 
-  EXPECT_TRUE(glfwOpenWindow(640, 360, 0, 0, 0, 0, 32, 0, GLFW_WINDOW));
+  EXPECT_TRUE(glfwOpenWindow(1280, 720, 0, 0, 0, 0, 32, 0, GLFW_WINDOW));
   EXPECT_TRUE(glewInit() == GLEW_OK);
     
   glfwTerminate();

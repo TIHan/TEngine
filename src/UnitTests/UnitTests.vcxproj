@@ -134,7 +134,13 @@
     <ClCompile Include=".\main_test.cc" />
     <ClCompile Include=".\socket_test.cc" />
     <ClCompile Include="c11_test.cc" />
+    <ClCompile Include="game_test.cc" />
     <ClCompile Include="glfw_test.cc" />
+    <ClCompile Include="GLTools\src\GLBatch.cpp" />
+    <ClCompile Include="GLTools\src\GLShaderManager.cpp" />
+    <ClCompile Include="GLTools\src\GLTools.cpp" />
+    <ClCompile Include="GLTools\src\GLTriangleBatch.cpp" />
+    <ClCompile Include="GLTools\src\math3d.cpp" />
     <ClCompile Include="network_test.cc" />
     <ClCompile Include="physics_test.cc" />
   </ItemGroup>
