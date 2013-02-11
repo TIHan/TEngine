@@ -63,8 +63,9 @@ inline void ConnectionManager::AcceptAddress(
     return;
 
   // Add connection.
-  connections_.emplace(
-      std::hash<std::unique_ptr<AddressAdapterInterface>>()(address), std::move(address));
+  // TODO: When GCC 4.8 is released, use emplace here.
+  connections_.insert(std::make_pair(
+      std::hash<std::unique_ptr<AddressAdapterInterface>>()(address), std::move(address)));
 }
 
 inline size_t ConnectionManager::AddressExists(
@@ -88,13 +89,15 @@ inline void ConnectionManager::KickByHash(size_t hash) {
 inline void ConnectionManager::BanByHash(size_t hash) {
   auto iter = connections_.find(hash);
   if (iter != connections_.end()) {
-    banned_ips_.emplace(iter->second->GetIp());
+    // TODO: When GCC 4.8 is released, use emplace here.
+    banned_ips_.insert(iter->second->GetIp());
     KickByHash(hash);
   }
 }
 
 inline void ConnectionManager::BanByIp(const std::string& ip) {
-  banned_ips_.emplace(ip);
+  // TODO: When GCC 4.8 is released, use emplace here.
+  banned_ips_.insert(ip);
   for (auto connection : connections_) {
     if (connection.second->GetIp() == ip) {
       KickByHash(connection.first);
