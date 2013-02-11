@@ -218,7 +218,8 @@ void SocketBaseImpl::Open(int socket_type, int flags,
 #endif
 
   struct addrinfo hints, *p;
-  const char* new_node_name = nullptr;
+  const char* node = nullptr;
+  const char* service = service_name.c_str();
 
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = family;
@@ -227,13 +228,15 @@ void SocketBaseImpl::Open(int socket_type, int flags,
 
   // If the node name is empty, only pass 0 to getaddrinfo.
   if (!node_name.empty()) {
-    new_node_name = static_cast<const char*>(node_name.c_str());
+    node = static_cast<const char*>(node_name.c_str());
   } else {
-    new_node_name = INADDR_ANY;
+    node = 0;
+#ifdef __APPLE__
+    service = "0";
+#endif
   }
 
-  if (getaddrinfo(new_node_name, service_name.c_str(), &hints,
-                  &address_info_) != 0) {
+  if (getaddrinfo(node, service, &hints, &address_info_) != 0) {
     throw std::runtime_error("Unable to get address information.");
   }
 

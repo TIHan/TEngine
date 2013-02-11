@@ -67,7 +67,7 @@ void UdpSocket::Open() {
   *
   */
 void UdpSocket::Open(const std::string& address, const std::string& port) {
-  impl_->Open(SOCK_DGRAM, AI_PASSIVE, address, port);
+  impl_->Open(SOCK_DGRAM, 0, address, port);
 }
 
 /*!
@@ -136,7 +136,7 @@ bool UdpSocket::WaitToRead(int usec) {
   FD_ZERO(&read_set);
   FD_SET(impl_->socket_, &read_set);
 
-  // Is this right? Works for now in Windows + Linux.
+  // Is this right?
   if (select(impl_->socket_ + 1, &read_set, 0, 0, &tv) <= 0)
     return false;
 
