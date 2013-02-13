@@ -53,7 +53,7 @@ public:
   virtual ~ConnectionManager() {}
 
   virtual void AcceptAddress(std::unique_ptr<AddressAdapterInterface> address,
-                             ByteStream* stream);
+                             std::unique_ptr<ByteStream> stream);
   virtual size_t AddressExists(const AddressAdapterInterface& address);
   virtual void DisconnectByHash(size_t hash);
   virtual void KickByHash(size_t hash);

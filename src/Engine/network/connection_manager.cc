@@ -52,7 +52,7 @@ inline ConnectionManager::ConnectionManager() {
 
 inline void ConnectionManager::AcceptAddress(
     std::unique_ptr<AddressAdapterInterface> address,
-    ByteStream* stream) {
+    std::unique_ptr<ByteStream> stream) {
   // See if the address is banned.
   auto ip_iter = banned_ips_.find(address->GetIp());
   if (ip_iter != banned_ips_.end()) {

@@ -68,10 +68,23 @@ namespace std {
 
 // http://stackoverflow.com/questions/7038357/make-unique-and-perfect-forwarding
 // Note: This should be in the C++11 standard eventually.
+#ifdef _WIN32
+# define _MAKE_UNIQUE(TEMPLATE_LIST, PADDING_LIST, LIST, COMMA, X1, X2, X3, X4)  \
+\
+template<class T COMMA LIST(_CLASS_TYPE)>    \
+inline std::unique_ptr<T> make_unique(LIST(_TYPE_REFREF_ARG))    \
+{    \
+    return std::unique_ptr<T>(new T(LIST(_FORWARD_ARG)));    \
+}
+
+_VARIADIC_EXPAND_0X(_MAKE_UNIQUE, , , , )
+# undef _MAKE_UNIQUE
+#else
 template <typename T, typename... Args>
-unique_ptr<T> make_unique(Args&&... args) {
+inline unique_ptr<T> make_unique(Args&&... args) {
     return unique_ptr<T>(new T(forward<Args>(args)...));
 }
+#endif
 
 } // end std namespace
 

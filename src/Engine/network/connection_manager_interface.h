@@ -47,7 +47,7 @@ public:
   virtual ~ConnectionManagerInterface() {}
 
   virtual void AcceptAddress(std::unique_ptr<AddressAdapterInterface> address,
-                             ByteStream* stream) = 0;
+                             std::shared_ptr<ByteStream> stream) = 0;
   virtual size_t AddressExists(const AddressAdapterInterface& address) = 0;
   virtual void DisconnectByHash(size_t hash) = 0;
   virtual void KickByHash(size_t hash) = 0;
